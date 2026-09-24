@@ -1,8 +1,7 @@
 """state：设备状态原语（权限/数据/应用生命周期），不动屏幕内容。
 
-权限测试的第一选择：测"已授权/已拒绝"路径时用 grant/revoke 预置状态，
-弹窗根本不出现；只有测弹窗交互本身（用户点允许/拒绝那一刻的行为）才需要
-act --watch 的弹窗内点击。全部操作自动记入当前会话事件流。
+单项权限、数据清理与应用启停操作自动记入当前会话。
+批量授权由 tools/prepare 提供；准备策略见 docs/执行前设备环境准备.md。
 
 用法：
   python state.py grant  --package com.app --perm android.permission.CAMERA
@@ -57,7 +56,8 @@ def main() -> None:
     for name in ("grant", "revoke"):
         s = sub.add_parser(name)
         s.add_argument("--package", required=True)
-        s.add_argument("--perm", required=True, help=f"短名或全名，短名: {', '.join(PERMS)}")
+        s.add_argument("--perm", required=True,
+                       help=f"短名或全名，短名: {', '.join(PERMS)}")
 
     s = sub.add_parser("clear")
     s.add_argument("--package", required=True)

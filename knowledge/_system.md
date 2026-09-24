@@ -74,10 +74,9 @@ python session.py perm-intent --clear          # 分支测完清除
 - `state.py revoke --package <pkg> --perm <短名|全名>` 重置为"未授予"。
   注意 revoke 后 flags 只带 `USER_SET`（不是 `USER_FIXED`），**弹窗仍会再弹**，
   但按钮已是「拒绝并不再询问」形态
-- `state.py grant` 用于**预置已授权**——只在用例明确测"已授权路径"时用
-- `state.py clear` 最干净（连数据一起重置）
+- 是否预授权或清理应用数据，统一按 [执行前设备环境准备](../docs/执行前设备环境准备.md) 判断。
 
-### 双分支用例：先拒绝、后允许
+### 双分支用例示例（实际顺序按用例）
 
 ```
 第一轮：声明 deny → 触发 → 验证拒绝提示
