@@ -84,6 +84,42 @@ description: Android 真机 GUI 测试。当用户给出测试用例（步骤+�
 命令前缀省略为 `.venv\Scripts\python tools\`。多设备加 `--serial`；
 **所有公共参数写在子命令前后都可以**。
 
+### 动作清单（act.py 的 8 个子命令）
+
+**先看这张表，别自己造参数名。** 参数是**子命令级**的，不是全局的 ——
+`tap` 有 `--via` 但 `back` 没有，套错会报
+
+```
+usage error; device untouched
+```
+
+（这个错**没碰设备**，重发即可，但白跑一轮。）
+
+| 子命令 | 关键参数 | 用途 |
+|---|---|---|
+| `tap` | `--x --y` · `--via rid=xxx` · `--repeat N --gap 毫秒` · `--watch` | 点击。`--repeat` 用于"连点 ±1"这类，**别自己循环** |
+| `longclick` | `--x --y` · `--via` · `--watch` | 长按（编辑菜单、拖拽前的抓手） |
+| `input` | `--x --y` · `--text` · `--append` · `--no-click` | 填字。默认先点输入框再打；`--no-click` 是"已经聚焦了" |
+| `swipe` | `--from x,y --to x,y --dur 毫秒` · `--watch` | 滑动。**滚动列表用它** |
+| `back` | 只有 `--why` | 系统返回。**退出当前页最可靠**，优先于找那个返回按钮 |
+| `home` | 只有 `--why` | 回桌面 |
+| `key` | `--code N` | 其他键（音量、电源…），`N` 是 Android keycode |
+| `steps` | `--from --to --dry-run --max-hops --resume-from` | 按路径图批量走已知步骤 |
+
+**`--watch`（tap/longclick/swipe 有）**：动作后**等指定控件出现**再返回，
+超时用 `--watch-timeout`。用在"点了之后要等加载"的场景，
+比"点了再 observe 一次"省一个往返。
+
+公共参数（每个都有）：`--name`（证据名）`--why`（理由，会进时间轴）
+`--expect`（检查点）`--settle`（稳定窗口）`--perm-action`
+
+> ⚠️ **`back` / `home` / `key` 不接受 `--via --x --y`** —— 它们不点屏幕。
+> 实测有人按 `tap` 的格式传 `--via`，直接 usage error。
+
+> ⚠️ **滚动不要用 `tap` 硬点列表项**，用 `swipe`；
+> 但**拨滚轮类控件**（日期/时间选择器）别用 `swipe` —— 有惯性会过冲，
+> 用 `tap --repeat N`.
+
 ## 最小工作流
 
 ```powershell
