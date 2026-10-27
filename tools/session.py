@@ -439,14 +439,38 @@ def main() -> None:
     args = p.parse_args()
 
     # ══════════════════════════════════════════════════════════════
-    # ★ start 时**先建运行目录再开库**
+    # ★ 先做参数校验，**再**建运行目录
     #
-    #   顺序很重要：`get_db()` 读 ANDROID_TEST_RECORD 决定库放哪。
-    #   如果先 get_db() 再建目录，这一次会落到老的 migrations 位置
-    #   （storage/sessions.db），和新的 uuid 目录并存 —— 更难排查。
+    #   踩过（2026-10-27）：原来先建 record/<uuid>/ 再校验参数，
+    #   于是 `session.py start --title X`（漏了 --input）会：
+    #     ① 建出一个空的 record/<uuid>/ 目录
+    #     ② 打印 record_dir
+    #     ③ 然后报「需要 --case 或 --title/--input」退出
+    #   结果工作目录里堆一堆空 uuid 目录，看起来像"跑过了"。
     #
-    #   所以：start -> 建 record/<uuid>/ -> 设环境变量 -> get_db()
+    #   现在：不合法就直接退，一个字节都不写。
     # ══════════════════════════════════════════════════════════════
+    if args.cmd == "start":
+        _case = None
+        if args.case_id:
+            _db0 = get_db()
+            _case = _db0.get_case(args.case_id)
+            if not _case:
+                raise SystemExit(
+                    f"用例 #{args.case_id} 不存在，session.py case list 查看")
+        _title = maybe_file(args.title) if args.title else (
+            _case["title"] if _case else None)
+        _input = maybe_file(args.input) if args.input else (
+            _case["input"] if _case else None)
+        if not _title or not _input:
+            raise SystemExit(
+                "需要 --case <id>（复用库中用例）或 --title/--input（新用例，"
+                "中文长文本用 @文件）\n"
+                "  ⚠️ --title 和 --input 是**两个**参数：\n"
+                "     --title  用例标题（如「联想日历_167 ...」）\n"
+                "     --input  用例原文（步骤 + 预期）")
+
+    # start 时先建运行目录，再开库（get_db 读 ANDROID_TEST_RECORD 定库位置）
     if args.cmd == "start" and not current_record_dir():
         _rec = new_record_dir()
         # pin_record 同时做两件事：设环境变量（本进程内）+ 写磁盘指针
