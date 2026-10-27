@@ -129,35 +129,50 @@ def find_install_root() -> Path | None:
     return None
 
 
+def _looks_like_layer(p: Path) -> bool:
+    """这个目录本身是不是一个工具层？"""
+    return (p / "tools" / "env.py").is_file()
+
+
 def target_root(cwd: Path | None = None) -> Path:
     """工具层副本该建在哪？
 
     ## 优先级
 
-      ① `ANDROID_TEST_WORKSPACE` 环境变量  —— 明确指定，最可靠
-      ② 显式传入的 cwd 参数
-      ③ 当前工作目录
+      ① **cwd 本身已经是工具层** —— 就用它，不再套一层
+      ② `ANDROID_TEST_WORKSPACE` 环境变量
+      ③ cwd / android-ai-test
 
-    ## 为什么需要 ①（踩过）
+    ## ① 为什么必须有（踩到两个 bug）
 
-    实测：在 `D:\\dsh\\langgraph-poc>` 下跑了一次 bootstrap，
-    于是副本建到了 `D:\\dsh\\langgraph-poc\\android-ai-test\\` ——
-    那是**废弃的旧项目目录**，产物落在那里没有任何意义。
+    bug 1：自我嵌套
 
-    再在 `D:\\dsh>` 下跑一次，又建了一份。结果两份副本、两个 venv，
-    谁也说不清 AI 用的是哪个。
+        PS D:\\dsh\\android-ai-test> python .\\tools\\bootstrap.py
+        target  D:\\dsh\\android-ai-test\\android-ai-test      <- 往里又套一层
 
-    **所以要让"建在哪"能被钉死**，而不是靠"你碰巧在哪个目录开会话"。
-    推荐做法：第一次就设好
+    bug 2：install == dest 判断失灵
 
-        $env:ANDROID_TEST_WORKSPACE = "D:\\dsh"
+        在 target 内部跑时 `find_install_root()` 返回 target 自己，
+        本想靠"install == dest 就不拷"拦住，但 target_root 先加了子目录，
+        两者不等 -> 继续拷一份到 target/android-ai-test/。
 
-    之后在任何目录跑 bootstrap，落点都是 `D:\\dsh\\android-ai-test\\`。
+    加上 ① 之后：在工具层里跑 = "已经在这了"，直接返回自己，
+    上层看到 `install == dest` 就报 same-dir，不再拷。
+
+    ## ② 为什么需要
+
+    实测在 `D:\\dsh\\langgraph-poc>` 下跑，副本建到了那个**废弃目录**。
+    再在 `D:\\dsh>` 下跑一次又是另一份 —— 谁也说不清 AI 用的是哪个。
+    设 `ANDROID_TEST_WORKSPACE` 能把落点钉死。
     """
+    here = (cwd or Path.cwd()).resolve()
+    if _looks_like_layer(here):
+        return here
+
     explicit = (os.environ.get("ANDROID_TEST_WORKSPACE") or "").strip()
     if explicit:
         return Path(explicit).resolve() / WORKSPACE_DIRNAME
-    return (cwd or Path.cwd()).resolve() / WORKSPACE_DIRNAME
+    return here / WORKSPACE_DIRNAME
 
 
 def is_installed(root: Path | None = None) -> bool:
@@ -328,22 +343,41 @@ def check_venv(dest: Path) -> dict:
     用户原话：「告诉用户如何安装吧…太慢了。自己装也没这么慢」
     """
     py = venv_python(dest)
-    install_cmd = (
-        f'cd "{dest}"'
-        + ("\n" if os.name == "nt" else "\n")
-        + ('python -m venv .venv\n'
-           '.venv\\Scripts\\pip install -r requirements.txt'
-           if os.name == "nt" else
-           'python3 -m venv .venv\n'
-           '.venv/bin/pip install -r requirements.txt'))
+    # ★ 安装命令必须是**可直接复制粘贴**的，并且带国内镜像源。
+    #
+    #   踩过两次：
+    #     ① 命令分多行、没有 cd，用户复制后跑在错误的目录
+    #     ② 没配镜像 -> 直连 pypi.org，200MB 拉十几分钟甚至超时
+    #        实测：腾讯镜像 48ms / pypi 306ms，差 6 倍
+    #
+    #   所以这里给两条命令：建 venv 一条、装依赖一条（带镜像）。
+    if os.name == "nt":
+        install_lines = [
+            f'cd /d "{dest}"',
+            "python -m venv .venv",
+            # 换清华源；--trusted-host 是给老 pip 的保险
+            r".venv\Scripts\python.exe -m pip install -r requirements.txt "
+            "-i https://pypi.tuna.tsinghua.edu.cn/simple "
+            "--trusted-host pypi.tuna.tsinghua.edu.cn",
+        ]
+    else:
+        install_lines = [
+            f'cd "{dest}"',
+            "python3 -m venv .venv",
+            ".venv/bin/python -m pip install -r requirements.txt "
+            "-i https://pypi.tuna.tsinghua.edu.cn/simple "
+            "--trusted-host pypi.tuna.tsinghua.edu.cn",
+        ]
+    install_cmd = "\n".join(install_lines)
 
     if not py.is_file():
         return {
             "status": "missing",
             "message": "工作目录下还没有 python 环境（.venv）",
             "install_cmd": install_cmd,
-            "note": "要装 uiautomator2 / rapidocr / onnxruntime / opencv，"
-                    "约 200MB，第一次几分钟。也可以让 AI 带 --with-venv 装。",
+            "note": "约 200MB，用国内源一般 2-5 分钟。"
+                    "**请用户自己在终端里跑，不要由 AI 执行** —— "
+                    "会话一中断 pip 就被杀掉（实测两次）。",
         }
 
     # 有 venv，查依赖
@@ -472,7 +506,7 @@ def main(argv: list[str] | None = None) -> int:
             for k in ("status", "message", "install_root", "target",
                       "files", "size_kb", "locked",
                       "venv", "venv_base", "venv_missing", "venv_message",
-                      "venv_install_cmd", "next"):
+                      "venv_install_cmd", "venv_note", "next"):
                 v = payload.get(k)
                 if v not in (None, ""):
                     print(f"{k:14} {v}")
@@ -496,6 +530,10 @@ def main(argv: list[str] | None = None) -> int:
                 payload["venv_message"] = v.get("message")
             if v.get("install_cmd"):
                 payload["venv_install_cmd"] = v["install_cmd"]
+            if v.get("note"):
+                # ★ 这句话必须传出来 —— 它是"别让 AI 装"的唯一出口。
+                #   丢了的话 AI 会自己 pip install，然后会话一中断就白装。
+                payload["venv_note"] = v["note"]
             py = v.get("python")
 
         payload["next"] = (

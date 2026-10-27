@@ -1,10 +1,20 @@
 # Android 测试工具层 —— 运行依赖
 #
-# 装法（推荐）：
-#     python tools/bootstrap.py          # 会建 .venv 并装这些
-# 或手动：
-#     <python> -m venv .venv
-#     .venv\Scripts\pip install -r requirements.txt
+# ══════════════════════════════════════════════════════════════════════
+# 怎么装（复制粘贴，别让 AI 跑）
+# ══════════════════════════════════════════════════════════════════════
+#
+#   cd /d <工作目录>\android-ai-test
+#   python -m venv .venv
+#   .venv\Scripts\python.exe -m pip install -r requirements.txt ^
+#     -i https://pypi.tuna.tsinghua.edu.cn/simple ^
+#     --trusted-host pypi.tuna.tsinghua.edu.cn
+#
+# ⚠️ 一定要带 `-i` 那行。不带的话直连 pypi.org，
+#    200MB 在国内经常十几分钟甚至超时（实测腾讯源 48ms vs pypi 306ms）。
+#
+# ⚠️ 也别让 AI 在会话里装 —— 会话一中断 pip 进程就被杀，
+#    看起来像"跑了半天什么都没装"。自己开个终端跑最稳。
 #
 # ══════════════════════════════════════════════════════════════════════
 # Python 版本：3.10+（3.13 也可以）
