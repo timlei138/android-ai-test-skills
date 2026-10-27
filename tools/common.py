@@ -385,9 +385,9 @@ def knowledge_hint(package: str | None, shown: bool = False,
 def case_spec_hint(case_id: int | None) -> dict | None:
     """告诉 AI"这条用例有一份写好的执行规格"，并给出摘要。
 
-    ⚠️ 为什么需要（2026-10-15 真实缺口）：用例规格（`storage/cases/*.yaml`）
+    ⚠️ 为什么需要（2026-10-15 真实缺口）：用例规格（`assets/cases/<应用>/*.yaml`）
     沉淀了首轮踩到的**全部坑**与每步的**入口判据**，但 `session start` 的返回里
-    **一个字都没提到它** —— 实测 `storage/cases` 出现次数为 0。于是复跑时
+    **一个字都没提到它** —— 实测 `assets/cases` 出现次数为 0。于是复跑时
     AI 只能从零重探，第一遍踩过的坑**原封不动再踩一遍**，规格等于白写。
     这与当年"知识卡存在却全链路无提示"是同一类失效：**有资产，但没有交付面**。
 

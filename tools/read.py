@@ -53,9 +53,24 @@ def main() -> None:
 
     try:
         with stage("ocr_import"):
-            from rapidocr_onnxruntime import RapidOCR
+            # ★ 2026-10-27：OCR 库改名了。
+            #
+            #   旧：rapidocr-onnxruntime（模块名 rapidocr_onnxruntime）
+            #       它停更在 1.2.3，元数据写死 requires_python="<3.13"，
+            #       在 Python 3.13 上根本装不了 —— 这也是 setup.ps1 当年
+            #       把上限卡在 3.12 的原因。
+            #
+            #   新：rapidocr（3.x，模块名 rapidocr），原生支持 3.13。
+            #       同一套 API：`RapidOCR()` 构造 + `ocr(path)` 调用。
+            #
+            #   先试新包名，再退回旧包名 —— 两种环境都能跑。
+            from rapidocr import RapidOCR
     except ImportError:
-        fail("缺依赖：pip install rapidocr-onnxruntime")
+        try:
+            from rapidocr_onnxruntime import RapidOCR   # 旧环境兜底
+        except ImportError:
+            fail("缺依赖：pip install rapidocr "
+                 "（或 pwsh -File scripts/install.ps1 一键装）")
 
     if args.image:
         img_path = Path(args.image)

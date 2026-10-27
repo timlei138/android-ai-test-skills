@@ -641,7 +641,7 @@ class SessionDB:
         连带删除的内容：
           ① 该用例关联的每个会话 → 复用 delete_session（含 events/findings/
              finding_events 及磁盘截图、dump、日志）；
-          ② 用例自身的 YAML / 渲染 MD（storage/cases/<标题>.yaml|.md）。
+          ② 用例自身的 YAML / 渲染 MD（assets/cases/<应用>/<标题>.yaml|.md）。
 
         ⚠️ 不可恢复。调用方负责二次确认。
         """
@@ -665,9 +665,19 @@ class SessionDB:
 
             # ② 用例的程序化描述文件
             if title:
-                cases_dir = Path(self.path).parent / "cases"
-                for suf in (".yaml", ".md"):
-                    fp = cases_dir / f"{title}{suf}"
+                # ★ 2026-10-27：用例搬到 assets/cases/<应用>/ 了，且按应用分目录。
+                #
+                #   早先这里是 `Path(self.path).parent / "cases"` —— 那是
+                #   storage/cases/（旧位置），删的时候永远找不到文件，
+                #   spec_files 一直是 0，看起来"用例没有规格文件"。
+                #
+                #   现在要在 assets/cases 下**递归**找同名文件。
+                from runtime import CASES_DIR as _CASES
+                found: list[Path] = []
+                if _CASES.is_dir():
+                    for suf in (".yaml", ".md"):
+                        found.extend(_CASES.rglob(f"{title}{suf}"))
+                for fp in found:
                     try:
                         if fp.is_file():
                             fp.unlink()

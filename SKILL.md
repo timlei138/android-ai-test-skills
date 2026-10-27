@@ -81,8 +81,22 @@ description: Android 真机 GUI 测试。当用户给出测试用例（步骤+�
 `setup.ps1` 会自动挑出合格的解释器；机器上若只有 3.13，它会**列出被拒的解释器和原因**。
 指定解释器：`pwsh -File scripts/setup.ps1 -Python "C:\Python312\python.exe"`
 
-命令前缀省略为 `.venv\Scripts\python tools\`。多设备加 `--serial`；
-**所有公共参数写在子命令前后都可以**。
+### 命令前缀（**必须用 venv 里的解释器**）
+
+下面所有命令都写成 `python xxx.py` 的简写。**实际执行时换成**：
+
+```powershell
+"<target>\.venv\Scripts\python.exe" "<target>\tools\xxx.py"
+```
+
+`<target>` 是 `bootstrap.py` 输出的那个路径（形如
+`D:\<工作目录>\android-ai-test`）。
+
+**为什么不能直接敲 `python`**：PATH 里的 `python` 是系统解释器，
+大概率没装 `uiautomator2` / `adbutils` —— 跑起来会 ImportError。
+实测那台机器上 `python` 是 3.13.3，一个依赖都没有。
+
+多设备加 `--serial`；**所有公共参数写在子命令前后都可以**。
 
 ### 命令写法：看 `session start` 返回的 `env`
 
@@ -117,6 +131,9 @@ description: Android 真机 GUI 测试。当用户给出测试用例（步骤+�
 > 工具脚本本身（`python tools/*.py`）是**跨平台**的，不用改写法：
 > `python tools/act.py tap --x 1 --y 2` 在哪个系统上都一样。
 > 需要适配的只有**辅助命令**（列目录、看文件、过滤输出）。
+>
+> ⚠️ 但**解释器**要挑对：用 `<target>\.venv\Scripts\python.exe`，
+> 不是 PATH 里的 `python`（那上面没装依赖）。
 
 ### `shell` 是 powershell 时
 
