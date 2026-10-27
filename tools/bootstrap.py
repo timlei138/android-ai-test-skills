@@ -130,6 +130,33 @@ def find_install_root() -> Path | None:
 
 
 def target_root(cwd: Path | None = None) -> Path:
+    """工具层副本该建在哪？
+
+    ## 优先级
+
+      ① `ANDROID_TEST_WORKSPACE` 环境变量  —— 明确指定，最可靠
+      ② 显式传入的 cwd 参数
+      ③ 当前工作目录
+
+    ## 为什么需要 ①（踩过）
+
+    实测：在 `D:\\dsh\\langgraph-poc>` 下跑了一次 bootstrap，
+    于是副本建到了 `D:\\dsh\\langgraph-poc\\android-ai-test\\` ——
+    那是**废弃的旧项目目录**，产物落在那里没有任何意义。
+
+    再在 `D:\\dsh>` 下跑一次，又建了一份。结果两份副本、两个 venv，
+    谁也说不清 AI 用的是哪个。
+
+    **所以要让"建在哪"能被钉死**，而不是靠"你碰巧在哪个目录开会话"。
+    推荐做法：第一次就设好
+
+        $env:ANDROID_TEST_WORKSPACE = "D:\\dsh"
+
+    之后在任何目录跑 bootstrap，落点都是 `D:\\dsh\\android-ai-test\\`。
+    """
+    explicit = (os.environ.get("ANDROID_TEST_WORKSPACE") or "").strip()
+    if explicit:
+        return Path(explicit).resolve() / WORKSPACE_DIRNAME
     return (cwd or Path.cwd()).resolve() / WORKSPACE_DIRNAME
 
 

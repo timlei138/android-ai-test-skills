@@ -53,15 +53,38 @@ from runtime import (  # noqa: E402
 ensure_utf8_stdio()
 
 
+def _deps_ok() -> str:
+    """关键依赖在不在？返回 "ok" 或缺失列表。
+
+    为什么 env.py 要报这个：AI 拿到 `python` 路径后直接用它跑命令，
+    但那个解释器可能一个依赖都没有（比如刚建的空 venv）。
+    提前说清，比跑到 act.py 才 ImportError 好。
+    """
+    import importlib.util
+    need = ("uiautomator2", "adbutils", "yaml", "PIL")
+    miss = [m for m in need if not importlib.util.find_spec(m)]
+    return "ok" if not miss else "缺: " + ",".join(miss)
+
+
 def main() -> None:
     env = detect_shell()
     if "--json" in sys.argv:
         payload = dict(env)
         payload.update({
+            # ★ 这条最关键：**用哪个解释器跑后面的命令**
+            #
+            #   不能写死在 skill 里，因为"哪个 venv 装了依赖"是运行时状态：
+            #     本机：安装位置的 venv 有依赖，target 的是空的
+            #     别人：可能反过来（跑了 install.ps1 之后）
+            #
+            #   所以由这里报出来，AI 拿到什么就用什么 —— 换机器自动跟着变。
+            "python": sys.executable,
+            "tools_dir": str(Path(__file__).resolve().parent),
             "storage_dir": str(STORAGE_DIR),
             "record_dir": str(RECORD_DIR),
             "tmp_output": str(TMP_DIR),
             "knowledge_dir": str(KNOWLEDGE_DIR),
+            "deps_ok": _deps_ok(),
             "storage_source": (
                 "env:ANDROID_TEST_STORAGE"
                 if os.environ.get("ANDROID_TEST_STORAGE")
@@ -81,6 +104,12 @@ def main() -> None:
     src = ("环境变量 ANDROID_TEST_STORAGE"
            if os.environ.get("ANDROID_TEST_STORAGE")
            else "默认 = 当前工作目录下的 storage/")
+    print("★ 用这个解释器跑后面的所有命令：")
+    print(f"  {sys.executable}")
+    deps = _deps_ok()
+    if deps != "ok":
+        print(f"  ⚠️ 但它{deps} —— 先跑 install.ps1 装依赖")
+    print()
     print("运行产物目录（来源：%s）：" % src)
     print(f"  storage  = {STORAGE_DIR}")
     print(f"  record   = {RECORD_DIR}")

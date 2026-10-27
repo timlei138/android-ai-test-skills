@@ -81,20 +81,30 @@ description: Android 真机 GUI 测试。当用户给出测试用例（步骤+�
 `setup.ps1` 会自动挑出合格的解释器；机器上若只有 3.13，它会**列出被拒的解释器和原因**。
 指定解释器：`pwsh -File scripts/setup.ps1 -Python "C:\Python312\python.exe"`
 
-### 命令前缀（**必须用 venv 里的解释器**）
+### 命令前缀（**用 env.py 报出来的解释器**）
 
-下面所有命令都写成 `python xxx.py` 的简写。**实际执行时换成**：
+下面所有命令都写成 `python xxx.py` 的简写。**实际执行时用**：
 
 ```powershell
-"<target>\.venv\Scripts\python.exe" "<target>\tools\xxx.py"
+"<env.py 报的 python>" "<target>\tools\xxx.py"
 ```
 
-`<target>` 是 `bootstrap.py` 输出的那个路径（形如
-`D:\<工作目录>\android-ai-test`）。
+**开工第一条命令就是 `env.py`**，它会告诉你：
 
-**为什么不能直接敲 `python`**：PATH 里的 `python` 是系统解释器，
-大概率没装 `uiautomator2` / `adbutils` —— 跑起来会 ImportError。
-实测那台机器上 `python` 是 3.13.3，一个依赖都没有。
+```
+★ 用这个解释器跑后面的所有命令：
+  D:\...\.venv\Scripts\python.exe        <- 就是它
+运行产物目录：
+  storage  = <target>\storage
+```
+
+拿到那个路径，**后面所有命令都用它**。别用 PATH 里的 `python` ——
+那是系统解释器，大概率没装 `uiautomator2`/`adbutils`，跑起来 ImportError
+（实测那台机器上 `python` 是 3.13.3，一个依赖都没有）。
+
+**为什么不在文档里写死解释器路径**：哪个 venv 装了依赖是**运行时状态**。
+本机是安装位置的 venv 有、target 的空；别人跑过 `install.ps1` 就反过来。
+让 `env.py` 报，换机器自动跟着对。
 
 多设备加 `--serial`；**所有公共参数写在子命令前后都可以**。
 
