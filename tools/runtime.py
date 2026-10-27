@@ -42,20 +42,51 @@ def _resolve_storage_root() -> Path:
     **所以不再猜。** 显式指定（环境变量）是唯一可靠的路，
     默认值只保证"本地正常使用"这一种情况。
 
-    ## 调用方该做什么
+    ## 解析顺序（★ 2026-10-27 第三次修正：bootstrap 之后）
 
-    子 Agent 在沙箱里跑时，主 Agent 派发时应当带上：
+      ① `ANDROID_TEST_STORAGE` 环境变量
+      ② **`ROOT / "storage"`**  ← 工具层旁边（bootstrap 的标准形态）
+      ③ `cwd / "storage"`        ← 兜底
 
-        $env:ANDROID_TEST_STORAGE = "<workspace>/storage"
+    ## 为什么改成"工具层旁边"优先
 
-    `tools/env.py` 会把最终解析结果打出来，一眼能看出对不对。
+    bootstrap 会把工具层拷到 `<workspace>/android-ai-test/`，之后一切走那份。
+    此时理想形态是：
+
+        <workspace>/android-ai-test/
+            tools/  assets/  storage/     ← 三者并排，自包含
+
+    但 ② 之前是 `cwd/storage`，而子 Agent 的 cwd 通常是 `<workspace>`，
+    于是 storage 会跑到 `<workspace>/storage/`，和 `android-ai-test/` 并排 ——
+    看起来"东西散了两处"，而且换个工具层副本就分不清谁是谁的产物。
+
+    **工具层旁边**才符合直觉：哪个副本在用，产物就在那份里。
+
+    ## 什么时候还看 cwd
+
+    工具层直接从安装位置跑（没 bootstrap）时，`ROOT/storage` 是安装目录 ——
+    那里不该放产物（用户原话「storage 的数据不应该提交」）。
+    这种情况退回 cwd。
+
+    判定"工具层是不是某个 workspace 里的副本"：看它是否在 cwd 之下。
+    是 -> 用 ROOT/storage（自包含）；否 -> 用 cwd/storage。
     """
     explicit = (os.environ.get("ANDROID_TEST_STORAGE") or "").strip()
     if explicit:
         return Path(explicit).resolve()
 
-    # 默认：cwd/storage。不上溯、不换取别的位置。
-    return (Path.cwd() / "storage").resolve()
+    cwd = Path.cwd().resolve()
+    root = ROOT.resolve()
+
+    # 工具层在工作目录下（bootstrap 拷过来的一份）-> 产物放它旁边
+    try:
+        if root.is_relative_to(cwd):
+            return (root / "storage").resolve()
+    except (OSError, ValueError):
+        pass
+
+    # 工具层在别处（直接从安装位置跑）-> 产物放 cwd，别写进安装目录
+    return (cwd / "storage").resolve()
 
 
 STORAGE_DIR = _resolve_storage_root()
