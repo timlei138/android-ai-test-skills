@@ -22,7 +22,7 @@ STORAGE_DIR = Path(os.environ.get("ANDROID_TEST_STORAGE", str(ROOT / "storage"))
 #     cases/<应用>/              ← 按应用分目录
 #       <标题>.md                ← 原始用例（人写的，或从需求文档粘的）
 #       <标题>.yaml              ← 跑过之后生成的结构化用例（AI 读这个）
-#     knowledge/<包名>.md        ← 知识卡（见下，暂时还在 knowledge/）
+#     knowledge/<包名>.md        ← 知识卡 + paths/<包名>.md 路径图
 #
 #   storage/                     ← **不进 git**，纯本地运行产物
 #     record/<uuid>/             ← 每次运行一个目录，互不干扰
@@ -44,7 +44,16 @@ STORAGE_DIR = Path(os.environ.get("ANDROID_TEST_STORAGE", str(ROOT / "storage"))
 
 ASSETS_DIR = Path(os.environ.get("ANDROID_TEST_ASSETS", str(ROOT / "assets"))).resolve()
 CASES_DIR = ASSETS_DIR / "cases"
-KNOWLEDGE_DIR = Path(os.environ.get("ANDROID_TEST_KNOWLEDGE", str(ROOT / "knowledge"))).resolve()
+# ★ 2026-10-27：知识卡也搬到 assets/ 下（用户要求"把 knowledge 也放到 assets 下面"）。
+#
+#   为什么它该在 assets 而不在根目录：
+#     知识卡是**资产**（进 git、跨设备跨会话复用、决定下次跑得更快），
+#     和用例是同一类东西。放根目录会让人以为是代码的一部分。
+#
+#   新位置：assets/knowledge/<包名>.md + assets/knowledge/paths/<包名>.md
+KNOWLEDGE_DIR = Path(os.environ.get(
+    "ANDROID_TEST_KNOWLEDGE", str(ASSETS_DIR / "knowledge"))).resolve()
+PATHS_DIR = KNOWLEDGE_DIR / "paths"
 RECORD_DIR = STORAGE_DIR / "record"
 TMP_DIR = STORAGE_DIR / "tmp"
 

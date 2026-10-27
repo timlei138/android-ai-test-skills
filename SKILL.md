@@ -267,7 +267,7 @@ python act.py tap --x 1520 --y 1717 --via "rid=btnCreateManually" \
 > 但如果同一个用例第二次跑还一样慢，说明**落点没沉淀进路径图** —— 那是漏了收尾动作。
 
 **采集的产出要落到路径图，不能只留在对话里**：只有写进
-`knowledge/paths/<pkg>.md`，换设备、换人、换会话才用得上。
+`assets/knowledge/paths/<pkg>.md`，换设备、换人、换会话才用得上。
 写进对话里的东西，下个会话就没了。
 
 ### ⚠️ 已知路径用 `act steps` 批量走，不要逐步"看一眼想一下"
@@ -407,9 +407,9 @@ python act.py steps --from "日历首页" --to "课程表基本信息编辑页" 
 
 ```json
 "knowledge_hint": {
-  "path_map": "knowledge/paths/com.zui.calendar.md",
+  "path_map": "assets/knowledge/paths/com.zui.calendar.md",
   "nodes": ["日历首页", "菜单（弹层）", "课程表页-空态", "课程表页-周视图", ...],
-  "card": "knowledge/com.zui.calendar.md",
+  "card": "assets/knowledge/com.zui.calendar.md",
   "sections": ["坑-图库导入解析", "坑-必填校验（与规格不符）", ...],
   "tip": "执行前先定位：路径图是节点图（节点=落脚点，边=认什么锚点→去哪）"
 }
@@ -787,7 +787,7 @@ observe/act/read 返回 `call_id`、`event_ids` 与执行状态；计时默认�
 | `docs/环境与工具参数.md` | 查某个工具的参数 / 环境细节 |
 | `docs/知识卡与路径图.md` | 查卡、写卡、路径图模型 |
 | `docs/视觉通道.md` | 需要工具级视觉断言（无对话场景） |
-| `knowledge/_system.md` | 前台包名不在任何 App 卡时（系统界面兜底） |
+| `assets/knowledge/_system.md` | 前台包名不在任何 App 卡时（系统界面兜底） |
 
 > ⚠️ 改过 `scripts/*.ps1` 后跑 `pwsh -File scripts/check_bom.ps1`：
 > Windows PowerShell 5.1 读无 BOM 的 `.ps1` 会按 GBK 解析，中文/emoji 会直接语法崩溃；

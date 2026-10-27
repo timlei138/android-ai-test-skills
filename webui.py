@@ -23,7 +23,9 @@ from db import get_db  # noqa: E402
 
 WEBUI_DIR = ROOT / "webui"
 STORAGE_DIR = ROOT / "storage"
-KNOWLEDGE_DIR = ROOT / "knowledge"
+KNOWLEDGE_DIR = ROOT / "assets" / "knowledge"
+# 路由名 /api/knowledge 指的是这个目录（名字没改，前端在用）；
+# 它和文件路径 assets/knowledge/ 是两回事。
 MD_NAME_RE = re.compile(r"^[\w\u4e00-\u9fff.\-]+\.md$")
 
 # 用例程序化描述：YAML 是唯一执行真相，同名 .md 是渲染产物（由 tools/case_md.py 生成）。

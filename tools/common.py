@@ -12,7 +12,10 @@ import os
 import runtime
 from datetime import datetime
 from pathlib import Path
-from runtime import CALL_ID, EVENT_IDS, STORAGE_DIR, recording_issues, stage, timed, timing_snapshot
+from runtime import (
+    CALL_ID, EVENT_IDS, KNOWLEDGE_DIR, PATHS_DIR, STORAGE_DIR,
+    recording_issues, stage, timed, timing_snapshot,
+)
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_EVIDENCE_DIR = STORAGE_DIR / "evidence"
@@ -177,7 +180,7 @@ def _card_keywords(card: Path) -> list[str]:
 
     ⚠️ 注意匹配 `com.zui.calendar.md` 这种带后缀的写法：旧实现用
     ``\\b(com\\.[a-z0-9_.]+)\\b``，会把 ``.md`` 一起吃进包名（得到
-    ``com.zui.calendar.md``），再去拼 ``knowledge/com.zui.calendar.md.md``
+    ``com.zui.calendar.md``），再去拼 ``assets/knowledge/com.zui.calendar.md.md``
     必然不存在，于是**跨卡指路静默失效**。这里显式剥掉已知后缀。
     """
     try:
@@ -296,7 +299,7 @@ def knowledge_hint(package: str | None, shown: bool = False,
                    screen: str | None = None) -> dict | None:
     """知识卡浮现：告诉 AI"这个包有卡、卡里有哪些小节"。
 
-    ⚠️ 为什么需要（真实教训）：`knowledge/` 下有 5 张真机实测的卡
+    ⚠️ 为什么需要（真实教训）：`assets/knowledge/` 下有 5 张真机实测的卡
     （`com.zui.calendar.md` 500 行经验），但**全链路没有任何地方提示卡存在**——
     跑 168/169 那几轮，AI 从头到尾没读过那张卡，把"首次启动三连弹框""图库导入
     标准链路"这些已经沉淀好的坑重新探了一遍。**已有资产完全没被用上。**
@@ -316,8 +319,8 @@ def knowledge_hint(package: str | None, shown: bool = False,
     """
     if not package or shown:
         return None
-    card = ROOT / "knowledge" / f"{package}.md"
-    path_map = ROOT / "knowledge" / "paths" / f"{package}.md"
+    card = KNOWLEDGE_DIR / f"{package}.md"
+    path_map = PATHS_DIR / f"{package}.md"
     # 路径图节点（落脚点），有就一并给出 —— 它才是"先定位，再找出边"的入口
     path_nodes: list[str] = []
     # 这些小节不是落脚点，是路径图的辅助段，别混进节点索引
@@ -334,9 +337,9 @@ def knowledge_hint(package: str | None, shown: bool = False,
     if not card.is_file() and not path_nodes:
         return {
             "card": None,
-            "system_card": "knowledge/_system.md",
+            "system_card": "assets/knowledge/_system.md",
             "tip": ("本包暂无专属知识卡。系统界面（权限弹窗/系统对话框/预装应用"
-                    "卸载恢复）看 knowledge/_system.md"),
+                    "卸载恢复）看 assets/knowledge/_system.md"),
         }
     sections: list[str] = []
     if card.is_file():
@@ -348,19 +351,19 @@ def knowledge_hint(package: str | None, shown: bool = False,
         for other in set(_card_keywords(card)):
             if other == package:
                 continue
-            other_card = ROOT / "knowledge" / f"{other}.md"
+            other_card = KNOWLEDGE_DIR / f"{other}.md"
             if other_card.is_file():
-                cross[other] = f"knowledge/{other}.md"
+                cross[other] = f"assets/knowledge/{other}.md"
 
     out: dict = {
-        "card": f"knowledge/{package}.md" if card.is_file() else None,
+        "card": f"assets/knowledge/{package}.md" if card.is_file() else None,
         "sections": sections,
         "tip": ("**执行前先定位**：路径图是节点图（节点=落脚点，边=认什么锚点→去哪）。"
                 "先认自己在哪个节点（看 activity + 屏幕上有什么），再检索该节点的出边。"
                 "知识卡是坑与行为规律（按交互类型词检索命中标题，只读对应小节）。"
                 "**动手前先在这张卡里 grep 本用例的关键词**（界面名/控件名/功能词），"
                 "已有坐标和坑通常就在卡里，别重新探索。"),
-        "system_card": "knowledge/_system.md",
+        "system_card": "assets/knowledge/_system.md",
     }
     relevant = _sections_matching(sections, screen)
     if relevant:
@@ -373,7 +376,7 @@ def knowledge_hint(package: str | None, shown: bool = False,
             "本包卡片正文引用了这些包的内容 —— 若当前界面属于它们，"
             "对应知识可能就写在本包里，别只按被测包名找卡。")
     if path_nodes:
-        out["path_map"] = f"knowledge/paths/{package}.md"
+        out["path_map"] = f"assets/knowledge/paths/{package}.md"
         # 字段名直说用途：这是"节点索引"，供先定位、再 grep 对应节
         out["nodes"] = path_nodes
     return out

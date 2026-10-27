@@ -43,7 +43,7 @@ except (AttributeError, ValueError):
     pass
 
 ROOT = Path(__file__).resolve().parent.parent
-KNOWLEDGE = ROOT / "knowledge"
+KNOWLEDGE = ROOT / "assets" / "knowledge"
 PATHS = KNOWLEDGE / "paths"
 
 # 「去向」允许是这些**页内动作/弹层**，不必单独立节点（有意为之）

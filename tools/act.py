@@ -250,7 +250,7 @@ def _run_steps_inner(args, pathmap) -> None:
             pkg = None
     if not pkg:
         # 没有活动会话/没记包名 → 看路径图目录：只有一张图时无歧义，直接用
-        maps = sorted((ROOT / "knowledge" / "paths").glob("*.md"))
+        maps = sorted(PATHS_DIR.glob("*.md"))
         if len(maps) == 1:
             pkg = maps[0].stem
         elif maps:
@@ -259,13 +259,13 @@ def _run_steps_inner(args, pathmap) -> None:
                                   + "。加 --package <包名> 指定。"})
             return
     if not pkg:
-        emit(False, {"error": "找不到路径图 knowledge/paths/*.md"
+        emit(False, {"error": "找不到路径图 assets/knowledge/paths/*.md"
                               "（act steps 依赖路径图；没有图就先手动跑一遍采边）"})
         return
 
-    path_map = ROOT / "knowledge" / "paths" / f"{pkg}.md"
+    path_map = PATHS_DIR / f"{pkg}.md"
     if not path_map.is_file():
-        emit(False, {"error": f"路径图不存在: knowledge/paths/{pkg}.md"})
+        emit(False, {"error": f"路径图不存在: assets/knowledge/paths/{pkg}.md"})
         return
     nodes = pathmap.load(path_map)
     plan = pathmap.path_between(nodes, args.src, args.dst, args.max_hops)

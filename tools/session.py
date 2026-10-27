@@ -107,9 +107,9 @@ def apply_pending_paths(only: str | None = None,
         if not m:
             return {"ok": False, "error": "草稿里没有 app 包名"}
         pkg = m.group(1)
-    path = ROOT / "knowledge" / "paths" / f"{pkg}.md"
+    path = PATHS_DIR / f"{pkg}.md"
     if not path.is_file():
-        return {"ok": False, "error": f"路径图不存在：knowledge/paths/{pkg}.md"}
+        return {"ok": False, "error": f"路径图不存在：assets/knowledge/paths/{pkg}.md"}
 
     # 解析草稿里的边：`N. **源** --[锚点]--> **目标**`
     picks = set()
@@ -164,7 +164,7 @@ def apply_pending_paths(only: str | None = None,
     return {"ok": True, "package": pkg,
             "applied": len(added_lines), "skipped_duplicate": len(rows) - len(added_lines),
             "remaining": len(rest),
-            "path": f"knowledge/paths/{pkg}.md"}
+            "path": f"assets/knowledge/paths/{pkg}.md"}
 
 
 def collect_paths(db, session_id: int) -> str | None:
@@ -190,7 +190,7 @@ def collect_paths(db, session_id: int) -> str | None:
     if not pkg:
         return None
 
-    path = ROOT / "knowledge" / "paths" / f"{pkg}.md"
+    path = PATHS_DIR / f"{pkg}.md"
     nodes = _parse_path_nodes(path.read_text(encoding="utf-8")) if path.is_file() else []
 
     def _snapshot_keys(ev) -> set[str]:
@@ -258,7 +258,7 @@ def collect_paths(db, session_id: int) -> str | None:
     block = [
         f"# 路径图更新建议（会话 #{session_id}）",
         "",
-        f"app: `{pkg}`　路径图: `knowledge/paths/{pkg}.md`",
+        f"app: `{pkg}`　路径图: `assets/knowledge/paths/{pkg}.md`",
         "",
         "> 自动整理出的**待确认草稿**，尚未写入路径图。",
         "> 确认后执行：`python tools/session.py paths-apply --id "
@@ -668,7 +668,7 @@ def main() -> None:
                if crash_n else "无崩溃事件"}
         if path_note:
             out["paths_collected"] = path_note
-            out["note"] = ("已采集路径边到 knowledge/paths/<包名>.md"
+            out["note"] = ("已采集路径边到 assets/knowledge/paths/<包名>.md"
                            "（落脚点 + 锚点 + 去向；下次操作可直接查，不用探索）")
         emit(True, out)
         # ★ 会话收尾 -> 清掉"当前 record"指针。
