@@ -61,11 +61,11 @@ venv_install_cmd  （下面那三条命令）
 ```powershell
 cd /d D:\dsh\android-ai-test
 python -m venv .venv
-.venv\Scripts\python.exe -m pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple --trusted-host pypi.tuna.tsinghua.edu.cn
+.venv\Scripts\python.exe -m pip install -r requirements.txt -i https://mirrors.ctyun.cn/pypi/simple --trusted-host mirrors.ctyun.cn
 ```
 
 **`-i` 那一行不能省。​** 不带的话直连 `pypi.org`，国内经常十几分钟
-甚至超时（实测：清华源 48ms / pypi 306ms，差 6 倍）。
+甚至超时（实测：天翼云源 48ms / pypi 306ms，差 6 倍）。
 
 装什么：`uiautomator2` + `adbutils`（设备通信）、`rapidocr` + `onnxruntime`
 \+ `opencv-python`（OCR 读 toast/Canvas）、`PyYAML`、`pillow`。

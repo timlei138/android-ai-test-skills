@@ -355,18 +355,18 @@ def check_venv(dest: Path) -> dict:
         install_lines = [
             f'cd /d "{dest}"',
             "python -m venv .venv",
-            # 换清华源；--trusted-host 是给老 pip 的保险
+            # 换天翼云源；--trusted-host 是给老 pip 的保险
             r".venv\Scripts\python.exe -m pip install -r requirements.txt "
-            "-i https://pypi.tuna.tsinghua.edu.cn/simple "
-            "--trusted-host pypi.tuna.tsinghua.edu.cn",
+            "-i https://mirrors.ctyun.cn/pypi/simple "
+            "--trusted-host mirrors.ctyun.cn",
         ]
     else:
         install_lines = [
             f'cd "{dest}"',
             "python3 -m venv .venv",
             ".venv/bin/python -m pip install -r requirements.txt "
-            "-i https://pypi.tuna.tsinghua.edu.cn/simple "
-            "--trusted-host pypi.tuna.tsinghua.edu.cn",
+            "-i https://mirrors.ctyun.cn/pypi/simple "
+            "--trusted-host mirrors.ctyun.cn",
         ]
     install_cmd = "\n".join(install_lines)
 
@@ -614,3 +614,4 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
