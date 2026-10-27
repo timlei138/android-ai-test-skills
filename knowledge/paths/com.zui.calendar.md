@@ -52,6 +52,10 @@
 
 ## 节点索引（先认自己在哪）
 
+> 下表**与文中 `## 节点名` 一一对应**（名字必须完全一致，才 grep 得到）。
+> 标 ⚠️ 的是"有去向、但本文还没单独建节点"的页面 —— 走到那里时需要现场探索，
+> 或补一个节点。
+
 | 节点 | 认出它 |
 |---|---|
 | 日历首页 | activity `.AllInOneActivity` + 顶部大月历 |
@@ -64,8 +68,12 @@
 | 课程表基本信息编辑页 | activity `EditTimetableActivity` |
 | 课程时间设置页 | activity `TimeSlotSettingsActivity` |
 | 课程列表弹层 | activity `CourseListActivity` |
-| 添加/编辑课程页 | activity `EditCourseActivity` |
+| 添加 / 编辑课程页 | activity `EditCourseActivity` |
 | 设置页 / 备份与恢复 | `GeneralSettingsActivity` / `LenovoSettingsBackupActivity` |
+| 跨 App 的系统落点 | 相机 / PhotoPicker / 权限框等日历之外的落点 |
+| 自动采集的边 | 框架自动记录的边（非人工维护） |
+| ⚠️ 新建事件页 | `NewBuildActivity`（首页「+」可到，尚未建节点） |
+| ⚠️ 纵览视图 / 年视图 | 首页菜单可到，尚未建节点 |
 
 ---
 
@@ -116,7 +124,7 @@
 | 锚点 | rid | desc | text | → 去向 |
 |---|---|---|---|---|
 | 页面上「从图库导入课程表」 | `btnImportFromGallery` | — | 从图库导入课程表 | → 图库导入流程 |
-| 页面上「拍照导入课程表」 | `btnImportFromPhoto` | — | 拍照导入课程表 | 提示框 → 相机 |
+| 页面上「拍照导入课程表」 | `btnImportFromPhoto` | — | 拍照导入课程表 | 提示框 → 跨 App 的系统落点（相机） |
 | 页面上「手动创建课程表」 | `btnCreateManually` | — | 手动创建课程表 | → 课程表基本信息编辑页 |
 
 > 💡 要进「课程表基本信息编辑页」时，**这条是最短路径（1 步）** ——
@@ -138,10 +146,12 @@
 | 顶栏「导入课程表」 | `action_curriculum_table_import` | 导入课程表 | — | → 导入方式弹层 |
 | 顶栏「课程表设置」 | `action_curriculum_table_settings` | 课程表设置 | — | → 全部课程表列表页 |
 | 顶栏「第N周」（切周次） | — | — | 第N周 | 切换课表/周次弹框 |
-| 周网格里某一节课格子 | `cv_empty_content` | — | — | 首次点击出加号 `iv_add_hint`，**再点** → 添加/编辑课程页 |
+| 周网格里某一节课格子 | `cv_empty_content` | — | — | **点两次** → 添加 / 编辑课程页 |
 | 已有课程卡片 | `curriculum_card_view` | — | （课程名） | → 课程列表弹层 |
 
-> ⚠️ **点空格要两次**：第一次只浮出加号（`iv_add_hint`），第二次才进页面。
+> ⚠️ **点空格要两次**：第一次点击被"吸收"（画面无变化），第二次才进页面。
+> **不要再等加号浮标 `iv_add_hint`** —— 该中间态已随改版移除，现在点第一次
+> 连 UI 树都不变（详见知识卡「坑-周视图空格子点击」）。
 
 ---
 
@@ -154,7 +164,7 @@
 
 | 锚点 | rid | desc | text | → 去向 |
 |---|---|---|---|---|
-| 「拍照导入课程表」 | — | — | 拍照导入课程表 | 提示框 → 相机 |
+| 「拍照导入课程表」 | — | — | 拍照导入课程表 | 提示框 → 跨 App 的系统落点（相机） |
 | 「图库导入课程表」 | — | — | 图库导入课程表 | → 图库导入流程 |
 
 ---
@@ -276,7 +286,7 @@
 
 | 锚点 | rid | desc | text | → 去向 |
 |---|---|---|---|---|
-| 课程条目 | `clCourseDetail` | — | （课程名 + 节次/周数） | → 添加/编辑课程页 |
+| 课程条目 | `clCourseDetail` | — | （课程名 + 节次/周数） | → 添加 / 编辑课程页 |
 
 ---
 
@@ -332,3 +342,31 @@
 <!-- 执行时自动累积；重新执行即更新。人工可把高频边整理进上方各节点 -->
 - `菜单（弹层）` --[text=课程表]--> `课程表页-空态`
 - `课程表页-空态` --[rid=btnCreateManually]--> `课程表基本信息编辑页`
+- `.drawer.NormalLauncher` --[countdownLlNo 倒数日部件占位区]--> `.widget.countdown.CountdownListActivity`
+- `.widget.countdown.CountdownListActivity` --[countdown_action_add]--> `.reminder.EditCountDownActivity`
+- `.drawer.NormalLauncher` --[desc=编辑小部件]--> `.widget.countdown.CountdownListActivity`
+- `.reminder.EditCountDownActivity` --[save_view 完成]--> `.widget.countdown.CountdownListActivity`
+- `日历首页` --[agenda_item_text_container C121倒数日]--> `.reminder.CountDownInfoActivity`
+- `.reminder.CountDownInfoActivity` --[button1 删除]--> `日历首页`
+- `课程表基本信息编辑页` --[layout_time_settings]--> `课程时间设置页`
+- `菜单（弹层）` --[menu 课程表]--> `课程表页-周视图`
+- `课程表页-周视图` --[转到上一层级]--> `日历首页`
+- `课程表页-周视图` --[action_curriculum_table_settings]--> `全部课程表列表页`
+- `全部课程表列表页` --[课表名(空课表)]--> `课程表基本信息编辑页`
+- `课程表基本信息编辑页` --[转到上一层级]--> `全部课程表列表页`
+- `课程表页-周视图` --[空白小节(周一第1节)]--> `添加 / 编辑课程页`
+- `添加 / 编辑课程页` --[关闭]--> `课程表页-周视图`
+- `全部课程表列表页` --[课表名(学生课程表)]--> `课程表基本信息编辑页`
+- `全部课程表列表页` --[转到上一层级]--> `课程表页-周视图`
+- `课程表页-周视图` --[curriculum_card_view(语文)]--> `课程列表弹层`
+- `课程列表弹层` --[ivEdit(编辑)]--> `添加 / 编辑课程页`
+- `.timetable.course.EditCourseActivity` --[button1(删除)]--> `课程表页-周视图`
+- `课程表页-周视图` --[cv_empty_content(552,648)]--> `添加 / 编辑课程页`
+- `课程时间设置页` --[转到上一层级]--> `课程表基本信息编辑页`
+- `.AllInOneActivity` --[button1(同意)]--> `.timetable.widget.TimetableGuideActivity`
+- `.timetable.widget.TimetableGuideActivity` --[timetable_guide_button(我知道了)]--> `日历首页`
+- `菜单（弹层）` --[菜单-课程表]--> `课程表页-空态`
+- `图库导入流程` --[button1(知道了)]--> `.CaptureActivity`
+- `图库导入流程` --[取消]--> `课程表页-空态`
+- `图库导入流程` --[btnCancel(上一步)]--> `课程表页-空态`
+- `课程表页-空态` --[btnCreateManually(手动创建课程表)]--> `课程表基本信息编辑页`

@@ -377,19 +377,83 @@ I uidumper: detect toast:[未找到可用的备份记录]
   （也可直接 `am start -n com.zui.launcher/.settings.ZuiLauncherSettings`）。
 - ❌ 若长按落在了负一屏页面上，只会唤出负一屏自身内容（屏幕使用时间等），**不会**出现桌面编辑菜单。
 
-**2. 负一屏开关的真实位置**
+**2. 负一屏开关的位置**
 
 `ZuiLauncherSettings` 首行即「负一屏」：
-`title` b=[121,344][271,417]，`summary`「在桌面负一屏开启天气、资讯等服务。」，
-右侧 **`android:id/switch_widget` b=[2759,342][2919,474]（点 **(2839,408)**）**。
-该页后续行的 switch 依次为 b=[2759,870] / [2759,1031] / [2759,1237] / [2759,1443]（**别点错行**，要按 bounds 区分）。
+`title`「负一屏」 + `summary`「在桌面负一屏开启天气、资讯等服务。」，
+右侧是 **`android:id/switch_widget`**。
 
-**3. HOME 落在负一屏还是主屏，由 `settings_contextual_home` 决定**
+⚠️ **别点错行**：该页所有行的开关 **rid 完全相同**（都是 `android:id/switch_widget`），
+**只能靠 `bounds` 的 y 区分**。定位方式：先取「负一屏」这个 `title` 节点的 bounds 取 y，
+再找 y 最接近它的那个 `switch_widget`——不要按"第几个 switch"去数。
 
-- `settings get secure settings_contextual_home` → `1` 时按 HOME 直接落在**负一屏**；
-  置 `0` 则落在主屏。这是本机负一屏「赖着不走、`act back`/右滑/重启 launcher 都退不掉」的真正原因。
-  （曾被误判为 launcher 卡死；`am force-stop com.zui.launcher` 也不管用。）
-- 恢复：`settings put secure settings_contextual_home 1`。
+> 📌 **历史记录自相矛盾，已作废**：本卡旧版曾写"负一屏 switch b=[2759,342]"，
+> 与 2026-10-14 实测（b=[3585,311]，同机型 TB522FU）**不符**。
+> 原因就是上面这条——旧记录把**行号/坐标当稳定数据**记了下来。
+> **结论：本机坐标不可信、不可复用，一律现场从 dump 取 bounds。**
+
+**2.1 负一屏开关状态怎么判（重要）**
+
+- 开关是 `android:id/switch_widget`，**用 `checked` 属性判**：`checked="true"` 为开，`"false"` 为关。
+- ⚠️ **`settings get secure settings_contextual_home` 在本机返回 `null`**，且与开关状态**不对应** ——
+  不要用它判断负一屏开没开（旧记录说它=1 时 HOME 落负一屏，本机读不到该键）。
+  判断开关只看 dump 里对应行的 `checked`。
+- 点完开关**必须回读一次**：动作返回 `ok` 不代表开关变了，可能因页面未加载完而点空。
+  实测点一次即 `checked: false→true`，且 **home 后重进设置页仍为 true**（非瞬时态）。
+
+**2.2 链路（每步都带 --expect 断言落点）**
+
+```
+长按桌面空白          --expect rid=btn_settings                → 编辑菜单
+点 btn_settings       --expect activity=ZuiLauncherSettings    → 桌面设置页
+点该行 switch_widget  （无 expect，靠回读 checked 判定）        → 负一屏开关
+```
+⚠️ `--expect` 只吃 package 已渲染出来的锚点；开关切换**不能用 expect 断言**，
+必须再 `observe` 回读 `checked`（见 2.1）。
+
+**2.3 ⏱️ 为什么「长按桌面 → 桌面设置 → 开负一屏」感觉慢（实测归因）**
+
+单步墙钟 **4.4~6.7s**，其中**真正点下去的动作只占 0.1~1.4s**，其余全是固定开销。
+连跑 3 次最小动作（`act home`）实测：**6.67s / 6.48s / 6.36s**——与"这步要干什么"几乎无关。
+一次 `act home`（合计 5316ms）的构成：
+
+| 阶段 | 耗时 | 说明 |
+|---|---|---|
+| `permission` | ~1.2s | **每次动作都全量探测权限弹窗** ⚠️ **这是故意的**：为防"页面卡在权限框点不到"，不要当浪费去掉 |
+| `device_connect` | ~1.1s | 每次调用**重新建立设备连接** |
+| `png_save` | ~0.65s | 截图落盘 |
+| `settle_wait` | 0.6s | 动作后固定等待 |
+| `screenshot` | ~0.47s | 3840×2560 全尺寸截图 |
+| `device_import` | ~0.41s | 每次**冷启动 Python 重新 import uiautomator2** |
+| `foreground`/`rotation` | ~0.3/0.2s | 取前台与旋转 |
+| **动作本身** | **0.1~1.4s** | 真正干的事 |
+
+**根因**：工具是**每次调用一个独立进程**（`run.py` 启动 `act.py`），
+"导入+连接+权限探测+截图+固定等待"这 ~4s 固定成本**每一步都要重付**。
+
+**⚠️ 没有"批量动作"原语**：`act steps` 是**按路径图从节点 A 导航到节点 B**
+（`--from/--to`），**不是**批量执行一串裸动作。别指望用它把 N 个动作塞进一次调用。
+要省固定开销只能改工具（常驻服务复用连接+import，可省 ~1.5s/步），
+`permission` 那 1.2s **不要动**。
+
+**⚠️ 比工具开销更值钱的教训**：2026-10-14 实测一条"长按→设置→开开关"三步走了 **5 分钟**，
+其中工具执行仅约 15s，**其余 ~285s 是 AI 自己在两次调用之间的空转**
+（每步重新全量解析输出 + 反复插入无用的 `observe`）。
+**先查自己的调用方式，再查工具。**
+
+**还有一个尖峰**：某些 observe/act 会到 **13s+**（实测连续 3 次），
+原因是那几次 `permission` 阶段飙到 **5.2~5.3s**（正常 1.2s）——
+权限探测在无弹窗时仍有轮询等待，画面变化时会跑满窗口。这是**当前最大的单点抖动源**。
+
+**3. HOME 落在负一屏还是主屏 —— ⚠️ 本机该键读不到，此条不可用**
+
+- 📌 旧记录说：`settings get secure settings_contextual_home` → `1` 时 HOME 落**负一屏**，`0` 落主屏。
+- ⚠️ **2026-10-14 实测该键在本机返回 `null`**（`contextual_home` / `negative_screen` 同样为 null），
+  且**与负一屏开关的实际状态不对应**（开关已 `checked=true`，该键仍为 null）。
+- **结论：不要用这个键判断负一屏状态，也不要指望用它切主屏/负一屏。**
+  判断开关状态一律读设置页 `switch_widget` 的 `checked`（见 2.1）。
+- 本机实测没再出现"HOME 赖在负一屏退不掉"的现象；若再次遇到，
+  **先怀疑前台不是 launcher 主屏，而不是这个设置键**。
 
 **4. ⚠️ 负一屏的「预授权弹窗 / 日历权限弹窗」在本机**无法重现
 
@@ -405,7 +469,63 @@ I uidumper: detect toast:[未找到可用的备份记录]
 （已上滑翻查整屏确认）。用例备注里「未获得日历权限后『今日日程』卡片呈现缺省态」在本机**没有对应卡片**。
 另：`com.zui.launcher` 的 `READ_CALENDAR` 为 **granted=false**，但负一屏卡片仍正常显示。
 
+## 倒数日小部件（widget 2x1）与倒数日列表/详情页
+
+> 实测于 2026-10-14（会话 #432，用例 121）。**本卡约定不写坐标**，只写 rid/文案/activity，
+> 定位时用 `observe` 现场取 bounds。
+
+### 三个页面要分清（用例常把它们混为一谈）
+
+| 页面 | activity | 怎么进 | 关键 rid |
+|---|---|---|---|
+| **倒数日列表页** | `.widget.countdown.CountdownListActivity` | 点桌面 widget 占位区 / 长按 widget→「编辑小部件」 | `toolbar_title`/`countDownTip`/`date_left`/`todaynull_tv`/`bottom_tv`/`countdown_action_add` |
+| **新建倒数日页** | `.reminder.EditCountDownActivity` | **只能**从列表页点右上 `countdown_action_add` | `countDownTvTitle`/`countDownLlDate`/`countdownLlReminder`/`countDownTvDescription`/`save_view` |
+| **倒数日详情页** | `.reminder.CountDownInfoActivity` | **只能**从日历首页 agenda 条目 `agenda_item_text_container` 点该倒数日 | `countTvTitle`/`countTvDate`/`countTvReminderLabel`/`countTvOtherDate`/`bottom_bar` |
+
+⚠️ **最易踩的坑**：**点 widget 永远不会进「新建倒数日页」，也永远不会进「详情页」**，
+一律只到 `CountdownListActivity`（无论有无数据）。用例若写"点小部件进新建/详情页"，
+实测**不成立**——新建页要点列表页的 `+`，详情页要从**日历 App 首页 agenda** 进。
+
+### 桌面 widget 的 rid 与占位态
+
+- 桌面 widget 本体在 UI 树里以 `content-desc="倒数日 2x1"` 暴露（无 rid）；
+  其内部节点是日历进程的：容器 `countdownLlNo`（`clickable=true`）、
+  占位文案 `countdownTvNo`（`clickable=false`）。
+- **无数据占位文案是「暂无倒数日」**（不是"无倒数日"/"无事件"）。
+- 列表页无数据时是 `todaynull_tv` = **「无事件」**（与此不同，别混）。
+- ⚠️ **点 widget 请点 `countdownLlNo` 的中心**；`countdownTvNo` 自身 `clickable=false`。
+
+### ⌨️ 长按 widget 本体 → 编辑菜单（步骤3 的备选路径）
+
+长按**桌面 widget 本体**（不是长按桌面空白）弹出两项：`编辑小部件` / `移除`。
+点「编辑小部件」进入 `CountdownListActivity` —— **这就是用例说的"编辑菜单页"**。
+（注意：长按桌面空白出的是 launcher 菜单「壁纸和主题风格/添加小部件/桌面设置」，不是这个。）
+
+### ✅ 已验证行为（2026-10-14）
+
+- 无数据时点 widget → `CountdownListActivity`，无数据空态 `todaynull_tv='无事件'` ✅
+- 点 `countdown_action_add` → `EditCountDownActivity`（`toolbar_title='新建倒数日'`）✅
+- 新建页填 `countDownTvTitle` → 点 `save_view`「完成」→ 回列表页并出现该条目 ✅
+  （列表页从「无事件」变为 `title`=条目名 + `time1`='全天'；日历首页 agenda 也同步出现）
+- 详情页点左底部按钮 → 二次确认框 `alertTitle='确定删除此事件吗'`，`button1`='删除'/`button2`='取消' ✅
+- 点「删除」→ 回日历首页且 agenda 条目消失；回桌面 widget 恢复「暂无倒数日」✅
+
+### ❌ 已实测的缺陷（2026-10-14，用例 121，FAIL）
+
+1. **有数据时 widget 不展示最近一条**：建好倒数日后回桌面，widget **仍显示「暂无倒数日」**。
+   已排除刷新延迟（切页+等待后重取仍为占位）与取错页（桌面仅一页，bounds 一致）。
+   ⚠️ 同现象在 **#425** 已出现过一次，**两次独立会话复现**，非偶发。
+2. **列表页点选倒数日卡片不返回桌面**：条目容器 `click_layout` 虽 `clickable=true`，
+   点其中心/左/右三种位置**均无任何反应**（activity 不变、无选中态、无 checked 变化）。
+   用例预期"点选中的倒数日卡片即返回桌面，切换完成"→ 不成立。
+3. **列表页无选中态**：点击后 `checked=true` 数为 0、无 `selected` 属性，无法判断"选中的是哪个"。
+
+> 另注：`com.zui.calendar` 的倒数日数据不通过 provider 暴露，
+> `content query` / `sqlite3` 直接查不到，**验证数据是否存在要靠 UI 回显对比**
+> （列表页「无事件」↔ 条目名、日历首页 agenda 是否出现），不要因"查不到库"误判未保存。
+
 ## 页面-列表页（全部课程表）
+
 
 - 标题「全部课程表」；列表项 `tv_schedule_name`（名称）/ `tv_default_badge`（「当前」角标）/
   `tv_schedule_info`（「设置」）
@@ -589,18 +709,29 @@ I uidumper: detect toast:[未找到可用的备份记录]
   （选中即时更新行内，弹框里没有"确定"）或看截图
 - 点其它项即时换行内值；点「取消」/点外面关弹框都**保留新值**
 
-### 弹框滚轮-上课时长循环、课间休息钳制
+### 弹框滚轮-上课时长循环、课间休息也是循环
 
-两个轮的边界行为**不一样**：
+两个轮的边界行为**实测一致，都是循环**：
 
-- **每节课上课时长**（`{30,35,…,120}`，每档 5）：**循环** —— 实测 `120 再拨 5 档 → 50分钟`
-- **课间休息**（`{5,10,15,20,25,30}`，每档 5）：**钳制** —— 实测 `30 再拨 5 档 → 30分钟`
+- **每节课上课时长**（`{30,35,…,120}`，每档 5）：**循环** —— 实测 `120 再拨 → 30分钟`
+- **课间休息**（`{5,10,15,20,25,30}`，每档 5）：**循环** —— 实测 `5 再上拨 → 30分钟`（下界回绕）、`30 再上拨 → 25分钟`（上界回绕）
+
+⚠️ **本节曾把课间休息记为「钳制」（`30 再拨 5 档 → 30分钟`），会话473 实测推翻了该结论**：
+课间休息与上课时长**同构，都是双向循环**。此前的"钳制"很可能是**拨档次数不足**
+（gap 太小导致点击被丢弃，见下）造成的误判。
 
 方向：**上=减小、下=增大**（两轮一致）。
 
-所以「可选择 30-120 / 5-30」的验证姿势：**拨到上端核对到位 → 再越界多拨几档 →
-断言值仍落在值域内**（循环与钳制都满足诉求），实际行为记 INFO。
-**不要**断言"必然回绕"（历史上 5 次 2 通过 3 失败，全是这条）。
+**滚轮几何（会话473 实测，可跨弹框复用）**：Canvas 自绘，`dump` 读不到值，只能 `read.py` OCR。
+选中行 `y=1025`，**格距 163px** ⇒ 上格 `y=862`、下格 `y=1192`。**按格点按（非 swipe）**。
+
+⚠️ **拨档 `--gap` 不能太小**：`--gap 350` 时点 14 次**只生效 5 格**（点击被丢弃）；
+`--gap 800` 时点 9 次**全部生效**。**别把"点了几次"当拨了几档，一律以 OCR 回读为准。**
+
+所以「可选择 30-120 / 5-30」的验证姿势：**拨到上端核对到位 → 再越界拨一格 →
+回读确认回绕到另一端**。两轮都是循环，可直接断言回绕点。
+（历史注记：旧结论"不要断言必然回绕"是基于把课间休息误判为钳制而写的，**该禁忌现已解除**；
+但仍须**先拨到端点、再越界一格**，不要在中间值上断言。）
 
 ### 坑-OCR 偶发漏读时别让 OCR 进判定循环
 

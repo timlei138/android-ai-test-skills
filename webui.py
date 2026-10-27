@@ -26,6 +26,29 @@ STORAGE_DIR = ROOT / "storage"
 KNOWLEDGE_DIR = ROOT / "knowledge"
 MD_NAME_RE = re.compile(r"^[\w\u4e00-\u9fff.\-]+\.md$")
 
+# 用例程序化描述：YAML 是唯一执行真相，同名 .md 是渲染产物（由 tools/case_md.py 生成）。
+#
+# ★ 2026-10-27 重构：用例从 `storage/cases/` 搬到 `assets/cases/<应用>/`。
+#   · assets 是**资产**（进 git），storage 是**运行产物**（不进 git）
+#   · 按应用分子目录，所以下面查文件一律 rglob / 用 _find_spec 定位
+CASES_DIR = ROOT / "assets" / "cases"
+SPEC_NAME_RE = re.compile(r"^[\w\u4e00-\u9fff.\-（）()]+$")
+
+
+def _find_spec(title: str, suffix: str) -> Path | None:
+    """按名字在 assets/cases/**/ 下找文件。
+
+    为什么不能直接 `CASES_DIR / f"{title}{suffix}"`：
+    分子目录后，文件在 `cases/<应用>/<title>.yaml`，
+    直接拼根目录会永远找不到（而且报"还没渲染"这种误导性错误）。
+    """
+    if not CASES_DIR.is_dir():
+        return None
+    for fp in CASES_DIR.rglob(f"{title}{suffix}"):
+        if fp.is_file():
+            return fp
+    return None
+
 # ── 视觉模型配置（OpenAI 兼容多模态通道，vision.py 消费）────────────
 VISION_KEYS = ("base_url", "model", "api_key")
 
@@ -293,6 +316,52 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"error": "not found"}, 404)
             return self._json({"name": name, "content": fp.read_text(encoding="utf-8")})
 
+        # ── 用例程序化描述（storage/cases/*.yaml，MD 为渲染产物）──
+        if path == "/api/case-specs":
+            items = []
+            for fp in sorted(CASES_DIR.rglob("*.yaml")):
+                st = fp.stat()
+                title = fp.stem
+                cid = None
+                try:
+                    import yaml as _y
+                    cid = ((_y.safe_load(fp.read_text(encoding="utf-8")) or {})
+                           .get("meta") or {}).get("case_id")
+                except Exception:  # noqa: BLE001
+                    pass
+                md = fp.with_suffix(".md")
+                items.append({
+                    "name": fp.name, "title": title, "case_id": cid,
+                    "size": st.st_size,
+                    "has_md": md.is_file(),
+                    "mtime": datetime.fromtimestamp(st.st_mtime)
+                    .isoformat(timespec="seconds"),
+                })
+            return self._json({"items": items})
+
+        # 渲染后的 MD（只读视图）
+        m = re.match(r"^/api/case-specs/(.+)/rendered$", path)
+        if m:
+            title = urllib.parse.unquote(m.group(1))
+            if not SPEC_NAME_RE.match(title):
+                return self._json({"error": "bad name"}, 400)
+            md = _find_spec(title, ".md") or (CASES_DIR / f"{title}.md")
+            if not md.is_file():
+                return self._json({"error": "not rendered yet"}, 404)
+            return self._json({"name": md.name, "content": md.read_text(encoding="utf-8")})
+
+        # YAML 源（可编辑）
+        m = re.match(r"^/api/case-specs/(.+)$", path)
+        if m:
+            title = urllib.parse.unquote(m.group(1))
+            if not SPEC_NAME_RE.match(title):
+                return self._json({"error": "bad name"}, 400)
+            fp = _find_spec(title, ".yaml") or (CASES_DIR / f"{title}.yaml")
+            if not fp.is_file():
+                return self._json({"error": "not found"}, 404)
+            return self._json({"name": fp.name,
+                               "content": fp.read_text(encoding="utf-8")})
+
         return self._json({"error": "not found"}, 404)
 
     # ── POST ────────────────────────────────────────────────────
@@ -354,16 +423,28 @@ class Handler(BaseHTTPRequestHandler):
 
         m = re.match(r"^/api/cases/(\d+)$", path)
         if m:
-            length = int(self.headers.get("Content-Length") or 0)
-            try:
-                data = json.loads(self.rfile.read(length).decode("utf-8"))
-            except ValueError:
-                return self._json({"error": "bad body"}, 400)
-            ok = get_db().update_case(int(m.group(1)),
-                                      data.get("title") or None,
-                                      data.get("input") or None,
-                                      data.get("package") or None)
-            return self._json({"ok": ok})
+            # 用例**只读**：case.input 与同名 YAML 是同一份用例的两种形态，
+            # 只改一个会让两者静默不一致（"合法但对不上"）。
+            # 正解是 改原文 → 重跑 → 重新沉淀 YAML，该流程在 WebUI 之外完成。
+            return self._json({
+                "error": "用例为只读，不支持通过 WebUI 修改。"
+                         "如需调整请改用例文件后重跑，再重新沉淀程序化描述。",
+                "readonly": True,
+            }, 403)
+
+        m = re.match(r"^/api/case-specs/(.+)$", path)
+        if m:
+            title = urllib.parse.unquote(m.group(1))
+            if not SPEC_NAME_RE.match(title):
+                return self._json({"error": "bad name"}, 400)
+            # 用例程序化描述在本阶段**只读**：YAML 由"已验证成功的会话"沉淀生成，
+            # 手工改动会破坏它与证据/知识卡的对应关系。
+            # 前端不提供编辑入口；服务端这里也一并拒绝，避免绕过前端直接改。
+            return self._json({
+                "error": "用例程序化描述为只读，不支持通过 WebUI 修改。"
+                         "如需调整请直接编辑文件并重新渲染。",
+                "readonly": True,
+            }, 403)
 
         m = re.match(r"^/api/knowledge/(.+\.md)$", path)
         if not m:
@@ -388,8 +469,9 @@ class Handler(BaseHTTPRequestHandler):
         path = urllib.parse.urlparse(self.path).path
         m = re.match(r"^/api/cases/(\d+)$", path)
         if m:
-            ok = get_db().delete_case(int(m.group(1)))
-            return self._json({"ok": ok}, 200 if ok else 404)
+            # 级联删除：用例 + 全部历史测试记录（数据库与磁盘证据）+ 程序化描述文件。
+            # 不可恢复，前端已做二次确认。
+            return self._json(get_db().delete_case_cascade(int(m.group(1))))
         m = re.match(r"^/api/sessions/(\d+)$", path)
         if m:
             # 默认连带删除磁盘证据；?evidence=0 只删库记录

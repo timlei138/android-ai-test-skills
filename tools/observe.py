@@ -113,7 +113,8 @@ def main() -> None:
         from db import current_session, get_db
         _sid = current_session()
         if _sid and not get_db().knowledge_shown(_sid):
-            k_hint = knowledge_hint(info.get("package"))
+            k_hint = knowledge_hint(info.get("package"),
+                                    screen=info.get("activity"))
             # ⚠️ 条件必须是"发出了 hint"而非"有专属卡"：无卡包返回的也是非 None
             # （card=None + system_card 提示），若按 card 判就永远不落标记，
             # 导致**每次 observe 都重复带一遍 system 提示**（实测确认）。

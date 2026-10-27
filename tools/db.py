@@ -15,11 +15,52 @@ import sqlite3
 import threading
 from datetime import datetime
 from pathlib import Path
-from runtime import CALL_ID, STORAGE_DIR, recording_issues
+from runtime import CALL_ID, STORAGE_DIR, current_record_dir, recording_issues
 
 ROOT = Path(__file__).resolve().parent.parent
-DB_PATH = STORAGE_DIR / "sessions.db"
-CURRENT_FILE = STORAGE_DIR / "current_session"
+
+
+def _resolve_db_path() -> Path:
+    """库放哪？
+
+    ## 新约定（2026-10-27）
+
+        storage/record/<uuid>/db.sqlite3     每次运行一个，互不干扰
+
+    `ANDROID_TEST_RECORD` 由 `session.py start` 建目录后设好，
+    后续 observe/act/finding 都继承这个环境变量。
+
+    ## 兜底
+
+    没有 record 目录（跑一次性探针、或老脚本）时退回
+    `storage/sessions.db` —— 那条路径还有历史数据，不能直接废掉。
+
+    ## 为什么不干脆全用 record/
+
+    探针脚本（`storage/tmp/*.py`）经常要读历史会话做对比，
+    它们不 start 会话，拿不到 ANDROID_TEST_RECORD。
+    退回老路径让它们继续能读。
+    """
+    rec = current_record_dir()
+    if rec is not None:
+        return rec / "db.sqlite3"
+    return STORAGE_DIR / "sessions.db"
+
+
+def _current_file() -> Path:
+    """'当前会话号' 记在哪。
+
+    跟着库走 —— 库按 record 分了，指针也得跟着分，
+    否则 A 运行的指针会指到 B 运行的库里去。
+    """
+    rec = current_record_dir()
+    if rec is not None:
+        return rec / "current_session"
+    return STORAGE_DIR / "current_session"
+
+
+DB_PATH = _resolve_db_path()
+CURRENT_FILE = _current_file()   # 仅为兼容旧引用；内部一律用 _current_file()，它会跟着 record 走
 
 STATUSES = ("PASS", "FAIL", "WARN", "BLOCKED", "ERROR")
 # 会话中间态：不是结论，不计入通过率统计；必须以 pause 保持或 finish 收尾
@@ -105,8 +146,22 @@ FORMAL_KINDS = ("test",)
 class SessionDB:
     """Thread-local connections; trust-critical writes raise on failure."""
 
-    def __init__(self, path: Path = DB_PATH):
-        self.path = str(path)
+    def __init__(self, path: Path | None = None):
+        # ★ 必须**调用时**才解析路径，不能用 `path: Path = DB_PATH`。
+        #
+        #   默认参数在**函数定义时**求值 —— 也就是模块 import 那一刻。
+        #   而 `session.py start` 的流程是：
+        #
+        #     from db import ...        ← 这一刻 DB_PATH 已定（那时还没 record 目录）
+        #     parse_args()
+        #     os.environ["ANDROID_TEST_RECORD"] = ...   ← 才设环境变量
+        #     get_db()                  ← 太晚了
+        #
+        #   实测后果：record/<uuid>/ 目录建出来了，但 db.sqlite3 跑到
+        #   老的 storage/sessions.db 去了 —— 目录里只有 4 个空子目录。
+        #
+        #   改成 None 默认值 + 调用时解析，环境变量就能生效。
+        self.path = str(path if path is not None else _resolve_db_path())
         self._local = threading.local()
 
     def _conn(self) -> sqlite3.Connection:
@@ -441,6 +496,39 @@ class SessionDB:
         except sqlite3.Error:
             return 0
 
+    def efficiency_stats(self, session_id: int) -> dict:
+        """操作效率自查（finish 时提示，防止"跑得很脏"却无人察觉）。
+
+        判据来自 SKILL.md「执行节奏 → 操作循环」：
+          · **observe 次数应明显少于 act 次数**（0 也正常）——
+            第一反应是读上一步的 `next`，不是再 observe 一次。
+          · **swipe 用于拨滚轮是反模式** —— 有惯性会过冲，
+            重复手势应用 `act tap --repeat N`。
+
+        这里只**如实统计并提示**，不阻断 finish（效率差不等于用例结论错）。
+        """
+        out = {"act": 0, "observe": 0, "swipe": 0, "cp_miss": 0, "ratio": None}
+        try:
+            rows = self._conn().execute(
+                "SELECT kind, data_json FROM events WHERE session_id=?",
+                (session_id,)).fetchall()
+        except sqlite3.Error:
+            return out
+        for kind, dj in rows:
+            if kind == "observe":
+                out["observe"] += 1
+            elif kind == "act":
+                out["act"] += 1
+                if not dj:
+                    continue
+                if '"type": "swipe"' in dj or '"type":"swipe"' in dj:
+                    out["swipe"] += 1
+                if '"ok": false' in dj or '"ok":false' in dj:
+                    out["cp_miss"] += 1
+        if out["act"]:
+            out["ratio"] = round(out["observe"] / out["act"], 2)
+        return out
+
     # ── 用例库（正式用例资产：口述文本的沉淀与复用）─────────────────
     def add_case(self, title: str, user_input: str, package: str | None = None,
                  kind: str = "test") -> int:
@@ -520,7 +608,11 @@ class SessionDB:
         return [dict(r) for r in rows]
 
     def delete_case(self, case_id: int) -> bool:
-        """删除用例（不牵连历史会话：sessions.case_id 置空而非级联删）。"""
+        """删除用例（**不牵连**历史会话：sessions.case_id 置空而非级联删）。
+
+        ⚠️ WebUI 的「删除用例」走的是 `delete_case_cascade`（连记录一起删），
+        不是本方法。本方法保留给"只想去掉用例、留住记录"的场景（如 CLI 整理用例库）。
+        """
         try:
             cur = self._conn().execute("DELETE FROM cases WHERE id=?", (case_id,))
             self._conn().execute(
@@ -529,6 +621,58 @@ class SessionDB:
             return cur.rowcount > 0
         except sqlite3.Error:
             return False
+
+    def delete_case_cascade(self, case_id: int) -> dict:
+        """删除用例，**并连带删除其全部历史测试记录**（数据库 + 磁盘证据）。
+
+        与 delete_case（只解关联、保留会话）的区别：
+          本方法用于 WebUI「删除用例」——语义是"这条用例连同它的记录一起不要了"。
+
+        连带删除的内容：
+          ① 该用例关联的每个会话 → 复用 delete_session（含 events/findings/
+             finding_events 及磁盘截图、dump、日志）；
+          ② 用例自身的 YAML / 渲染 MD（storage/cases/<标题>.yaml|.md）。
+
+        ⚠️ 不可恢复。调用方负责二次确认。
+        """
+        out = {"ok": False, "case": False, "sessions": 0,
+               "files": 0, "dirs": 0, "spec_files": 0}
+        try:
+            row = self._conn().execute(
+                "SELECT id, title FROM cases WHERE id=?", (case_id,)).fetchone()
+            if row is None:
+                return out
+            title = row["title"]
+
+            # ① 逐会话级联删（删一个提交一次，中途失败不会留下半删状态）
+            sids = [r["id"] for r in self._conn().execute(
+                "SELECT id FROM sessions WHERE case_id=?", (case_id,))]
+            for sid in sids:
+                r = self.delete_session(sid, remove_evidence=True)
+                out["files"] += r.get("files", 0)
+                out["dirs"] += r.get("dirs", 0)
+            out["sessions"] = len(sids)
+
+            # ② 用例的程序化描述文件
+            if title:
+                cases_dir = Path(self.path).parent / "cases"
+                for suf in (".yaml", ".md"):
+                    fp = cases_dir / f"{title}{suf}"
+                    try:
+                        if fp.is_file():
+                            fp.unlink()
+                            out["spec_files"] += 1
+                    except OSError:
+                        pass
+
+            # ③ 最后删用例本身。此时已无会话引用它，无需再解关联。
+            cur = self._conn().execute("DELETE FROM cases WHERE id=?", (case_id,))
+            self._conn().commit()
+            out["case"] = cur.rowcount > 0
+            out["ok"] = out["case"]
+            return out
+        except sqlite3.Error:
+            return out
 
     def delete_session(self, session_id: int, remove_evidence: bool = True) -> dict:
         """删除一次测试记录：数据库行 + **连带磁盘证据**（截图/日志）。
@@ -765,18 +909,20 @@ def get_db() -> SessionDB:
 
 # ── 当前会话（工具层自动挂接）────────────────────────────────────
 def set_current(session_id: int) -> None:
-    CURRENT_FILE.parent.mkdir(parents=True, exist_ok=True)
-    CURRENT_FILE.write_text(str(session_id), encoding="utf-8")
+    # 用 _current_file() 而不是模块级 CURRENT_FILE —— 它要跟着 record 目录走
+    cf = _current_file()
+    cf.parent.mkdir(parents=True, exist_ok=True)
+    cf.write_text(str(session_id), encoding="utf-8")
 
 
 def clear_current(expected_id: int | None = None) -> None:
     if expected_id is not None:
         try:
-            if int(CURRENT_FILE.read_text(encoding="utf-8").strip()) != expected_id:
+            if int(_current_file().read_text(encoding="utf-8").strip()) != expected_id:
                 return
         except FileNotFoundError:
             return
-    CURRENT_FILE.unlink(missing_ok=True)
+    _current_file().unlink(missing_ok=True)
 
 
 def current_session() -> int | None:
@@ -784,6 +930,6 @@ def current_session() -> int | None:
     if explicit is not None:
         return int(explicit)
     try:
-        return int(CURRENT_FILE.read_text(encoding="utf-8").strip())
+        return int(_current_file().read_text(encoding="utf-8").strip())
     except FileNotFoundError:
         return None

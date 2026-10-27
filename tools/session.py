@@ -12,14 +12,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 from pathlib import Path
 
-from common import emit, knowledge_hint
+from common import case_spec_hint, emit, knowledge_hint
 import sqlite3
 from db import ROOT, STATUSES, clear_current, current_session, get_db, set_current
-from runtime import STORAGE_DIR
+from runtime import STORAGE_DIR, current_record_dir, new_record_dir, pin_record, unpin_record
 
 # Windows 控制台默认 GBK，中文/特殊符号会炸 → 全部 CLI 输出强制 UTF-8
 try:
@@ -50,7 +51,10 @@ def _parse_path_nodes(text: str) -> list[dict]:
     for ln in text.splitlines():
         if ln.startswith("## "):
             name = ln[3:].strip()
-            if name in ("节点索引（先认自己在哪）", "自动采集的边"):
+            # 非节点小节：索引 / 自动采集的边，以及以符号开头的说明性小节
+            # （如「## ⚠️ 同 rid 多态：…」「## 📌 说明」）—— 它们不是落脚点。
+            if (name in ("节点索引（先认自己在哪）", "自动采集的边")
+                    or not name[0].isalnum() and not ("\u4e00" <= name[0] <= "\u9fff")):
                 cur = None
                 continue
             cur = {"name": name, "activity": "", "keys": []}
@@ -354,6 +358,11 @@ def main() -> None:
     s.add_argument("--related", default="",
                    help="关联包（逗号分隔），其崩溃同样按 BLOCKED 处理；"
                         "权限框宿主默认已含")
+    s.add_argument("--no-restart", action="store_true", dest="no_restart",
+                   help="跳过冷启动复位。**默认会 force-stop 并冷启动被测包**，"
+                        "把起点钉死在 App 首页——这样用例 YAML 的步骤顺序可直接执行，"
+                        "不必迁就「上次停在哪」。仅在用例前提要求「App 已处于某状态」"
+                        "（如接着上一步继续）时才跳过。注意：只关进程、不清数据。")
 
     s = sub.add_parser("finding")
     s.add_argument("--status", required=True, choices=STATUSES)
@@ -425,6 +434,23 @@ def main() -> None:
     sub.add_parser("abandon", help="放弃当前会话（不写结论，仅解绑）")
 
     args = p.parse_args()
+
+    # ══════════════════════════════════════════════════════════════
+    # ★ start 时**先建运行目录再开库**
+    #
+    #   顺序很重要：`get_db()` 读 ANDROID_TEST_RECORD 决定库放哪。
+    #   如果先 get_db() 再建目录，这一次会落到老的 migrations 位置
+    #   （storage/sessions.db），和新的 uuid 目录并存 —— 更难排查。
+    #
+    #   所以：start -> 建 record/<uuid>/ -> 设环境变量 -> get_db()
+    # ══════════════════════════════════════════════════════════════
+    if args.cmd == "start" and not current_record_dir():
+        _rec = new_record_dir()
+        # pin_record 同时做两件事：设环境变量（本进程内）+ 写磁盘指针
+        # （供后续 observe/act 这些独立进程读）
+        pin_record(_rec)
+        print(json.dumps({"record_dir": str(_rec)}, ensure_ascii=False))
+
     db = get_db()
 
     if args.cmd == "start":
@@ -478,6 +504,32 @@ def main() -> None:
             device_note = "；".join(notes)
         else:
             device_note = "设备未连接（连上后手动跑 logcat.py setup + logcat.py clear）"
+
+        # ── 冷启动复位：把起点钉死在「App 冷启动后的首页」────────────────
+        # 为什么默认做（2026-10-15 定）：起点如果取决于「上一次停在哪个界面」，
+        # 那么用例 YAML 的步骤顺序就没法直接用 —— 复跑时设备可能停在链路中间，
+        # 判据对不上，只能靠人去「迁就设备现在在哪」（这正是「融合」要解决的问题）。
+        # 冷启动把这个问题从根上消掉：**不管上次停在哪，冷启动后一定在首页**，
+        # 于是「从首页按固定路径走到 s1」成为可能，YAML 顺序即可直接执行。
+        #
+        # ⚠️ 只 force-stop（关进程），**不清数据**。
+        # 「清数据」（pm clear / pm revoke）是**用例明确要求**时才做的事
+        # （如「首次使用」「清除日历的数据」「测首次授权」）——见 SKILL「清理的范围跟着用例走」。
+        # 拿 pm clear 当默认复位＝拿大锤砸一切：会清掉本用例要用的前置数据。
+        restart_note = None
+        pkg = args.package or (case["package"] if case else None)
+        if d is not None and pkg and not args.no_restart:
+            try:
+                d.app_stop(pkg)
+                d.app_start(pkg)
+                restart_note = f"已冷启动复位 {pkg}（起点固定为 App 首页）"
+            except Exception as e:  # noqa: BLE001
+                restart_note = f"冷启动复位失败：{e}（起点未固定，需自行确认当前界面）"
+        elif args.no_restart:
+            restart_note = "已跳过冷启动复位（--no-restart），**起点不固定**，需自行确认当前界面"
+        if restart_note:
+            device_note = f"{device_note}；{restart_note}"
+
         (STORAGE_DIR / f".crash_seen_{sid}").unlink(missing_ok=True)
         out = {"ok": True, "session_id": sid, "related": related,
                "note": f"后续 observe/act/read 自动记入本会话；{device_note}"}
@@ -487,6 +539,12 @@ def main() -> None:
             out["knowledge_hint"] = hint
             # 只要发出了 hint 就落标记（无卡包也有 system_card 提示，同样别重复发）
             db.mark_knowledge_shown(sid)
+        # 用例规格浮现：该用例有沉淀好的 YAML 时，**开场就给**。
+        # 为什么必须在这里（2026-10-15 真实缺口）：规格里写着首轮踩过的全部坑，
+        # 但 start 的返回里原本一个字都没提它，复跑只能从零重探、坑原样再踩一遍。
+        spec = case_spec_hint(args.case_id)
+        if spec:
+            out["case_spec"] = spec
         # 用例库关联提醒：**当场提示**才有用（finish 时才提示＝会话已结束，等于没用）
         if existing_case:
             out["case_exists"] = {
@@ -564,6 +622,22 @@ def main() -> None:
         self_check = []
         if cleanup_warning:
             self_check.append(cleanup_warning)
+        # 操作效率自查（SKILL.md「执行节奏」）：
+        # 只提示不阻断 —— 效率差不等于用例结论错，但**必须让人看见**，
+        # 否则"跑得很脏"会悄悄过去（实测有的会话 44% 的 act 是无效试探）。
+        eff = db.efficiency_stats(sid)
+        if eff["act"]:
+            if eff["observe"] >= eff["act"]:
+                self_check.append(
+                    f"⚠️ observe({eff['observe']}) 不少于 act({eff['act']}) —— "
+                    f"SKILL 要求 observe 明显少于 act（第一反应该是读上一步的 next）")
+            if eff["swipe"]:
+                self_check.append(
+                    f"⚠️ 用了 {eff['swipe']} 次 swipe —— 拨滚轮/重复手势请改用 "
+                    f"act tap --repeat N（swipe 有惯性会过冲）")
+            if eff["cp_miss"]:
+                self_check.append(
+                    f"⚠️ 有 {eff['cp_miss']} 次检查点未命中 —— 确认是否为无效试探步")
         # bug1 修复：会话没有关联用例时主动提示入库。
         # 用例不会自动进库（什么时候沉淀是人的决定），但**必须提醒**，
         # 否则跑完的用例悄悄丢掉、仪表盘/用例库永远是旧的。
@@ -597,10 +671,17 @@ def main() -> None:
             out["note"] = ("已采集路径边到 knowledge/paths/<包名>.md"
                            "（落脚点 + 锚点 + 去向；下次操作可直接查，不用探索）")
         emit(True, out)
+        # ★ 会话收尾 -> 清掉"当前 record"指针。
+        #
+        #   不清的后果：下一次不属于任何会话的 observe/act
+        #   会误接到上一次的目录里，把这次的证据写进历史运行。
+        #   PAUSED 不走这里（它还要接着跑）。
+        unpin_record()
     elif args.cmd == "case":
         run_case_cmd(db, args)
     elif args.cmd == "abandon":
         clear_current()
+        unpin_record()
         print(json.dumps({"ok": True}, ensure_ascii=False))
     elif args.cmd == "perm-intent":
         sid = args.id if getattr(args, "id", None) else current_session()

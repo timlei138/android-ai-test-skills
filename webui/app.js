@@ -694,8 +694,7 @@ async function viewCaseLib() {
           <span class="c-run">${c.run_count ?? 0} 次</span>
           <span class="c-start">${esc(fmtTime(c.last_run_at))}</span>
           <span class="c-act">
-            <button class="ghost sm" data-edit="${c.id}">修改</button>
-            <button class="ghost sm danger" data-del="${c.id}">删除</button>
+            <button class="ghost sm" data-del="${c.id}">删除</button>
           </span>
         </div>`).join("") || "<div class='lt-empty'>该分类下暂无用例。跑完一次会话后用 <code>session.py case save --session &lt;id&gt;</code> 提升。</div>"}
     </div>`;
@@ -704,8 +703,6 @@ async function viewCaseLib() {
     el.addEventListener("click", () => { caseFilter = el.dataset.g; viewCaseLib(); }));
   $$(".row-link", main).forEach(el =>
     el.addEventListener("click", () => openCaseView(el.dataset.id)));
-  $$("[data-edit]", main).forEach(el =>
-    el.addEventListener("click", () => openCaseEdit(el.dataset.edit)));
   $$("[data-del]", main).forEach(el =>
     el.addEventListener("click", () => confirmDeleteCase(el.dataset.del)));
   $("#case-add").addEventListener("click", openCaseAdd);
@@ -747,64 +744,96 @@ function openCaseAdd() {
 
 async function openCaseView(id) {
   const c = await api(`/api/cases/${id}`);
+  // 该用例是否已有程序化描述（YAML）。有则开第二个页签，**只读**。
+  let spec = null;
+  try {
+    const { items } = await api("/api/case-specs");
+    spec = (items || []).find(x => String(x.case_id) === String(c.id)) || null;
+  } catch { /* 用例描述接口不可用时，静默降级为只有原文 */ }
+
+  const tabs = spec
+    ? `<div class="casetabs">
+         <button class="casetab active" data-tab="src">用例原文</button>
+         <button class="casetab" data-tab="yaml">程序化描述 (YAML)</button>
+       </div>`
+    : "";
+
   const m = modal(`用例 #${c.id} · ${c.title || ""}`, `
     <div class="meta" style="margin-bottom:8px">
       模块 ${esc(c.package || "未识别")} · 跑过 ${c.run_count ?? 0} 次 ·
       最近 ${esc(fmtTime(c.last_run_at))} ${statusChip(c.last_status)} ·
       关联记录 ${c.last_session_id ? "#" + c.last_session_id : "—"}
     </div>
-    <div class="panel-title">用例原文</div>
-    <pre class="case-pre">${esc(c.input || "(空)")}</pre>`,
-    `<button class="ghost" data-cancel>关闭</button>
-     <button data-edit>修改</button>`);
+    ${tabs}
+    <div data-pane="src">
+      <div class="panel-title">用例原文</div>
+      <pre class="case-pre">${esc(c.input || "(空)")}</pre>
+    </div>
+    ${spec ? `<div data-pane="yaml" hidden>
+      <div class="panel-title">程序化描述
+        <span class="muted" style="font-weight:400;font-size:12px">
+          · ${esc(spec.name)} · <b>只读</b>（${spec.readonly_reason || "由会话沉淀生成"}）</span>
+      </div>
+      <pre class="case-pre" id="cyaml">加载中…</pre>
+    </div>` : ""}`,
+    `<button class="ghost" data-cancel>关闭</button>`);
   $("[data-cancel]", m.el).addEventListener("click", m.close);
-  $("[data-edit]", m.el).addEventListener("click", () => {
-    m.close();
-    openCaseEdit(id);
-  });
+
+  if (spec) {
+    // 惰性加载：切到 YAML 页签时才取内容
+    let loaded = false;
+    const showTab = async which => {
+      $$(".casetab", m.el).forEach(b => b.classList.toggle("active", b.dataset.tab === which));
+      $$("[data-pane]", m.el).forEach(p => { p.hidden = p.dataset.pane !== which; });
+      if (which === "yaml" && !loaded) {
+        loaded = true;
+        try {
+          const { content } = await api(`/api/case-specs/${encodeURIComponent(spec.title)}`);
+          $("#cyaml", m.el).textContent = content;
+        } catch (e) {
+          $("#cyaml", m.el).textContent = "读取失败：" + e.message;
+        }
+      }
+    };
+    $$(".casetab", m.el).forEach(b =>
+      b.addEventListener("click", () => showTab(b.dataset.tab)));
+  }
 }
 
-async function openCaseEdit(id) {
-  const c = await api(`/api/cases/${id}`);
-  const m = modal(`修改用例 #${c.id}`, `
-    <label class="fld">标题
-      <input id="ce-title" value="${esc(c.title || "")}"></label>
-    <label class="fld">模块（包名）
-      <input id="ce-pkg" placeholder="如 com.zui.calendar"
-             value="${esc(c.package || "")}"></label>
-    <label class="fld">用例原文
-      <textarea id="ce-input" spellcheck="false">${esc(c.input || "")}</textarea></label>
-    <div class="meta" id="ce-state"></div>`,
-    `<button class="ghost" data-cancel>取消</button>
-     <button data-ok>保存</button>`);
-  $("[data-cancel]", m.el).addEventListener("click", m.close);
-  $("[data-ok]", m.el).addEventListener("click", async () => {
-    $("#ce-state", m.el).textContent = "保存中…";
-    await api(`/api/cases/${id}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: $("#ce-title", m.el).value,
-        package: $("#ce-pkg", m.el).value,
-        input: $("#ce-input", m.el).value,
-      }),
-    });
-    m.close();
-    viewCaseLib();
-  });
-}
+// ⚠️ 用例**不提供 WebUI 修改入口**（有意为之，勿加回）：
+//    case.input（用例原文）与同名 YAML（程序化描述）是同一份用例的两种形态，
+//    一旦只改其中一个，两者就会静默不一致 —— 属于"合法但内容对不上"，
+//    和"YAML 能解析但中文已被编码毁掉"是同一类问题。
+//    正确姿势：改原文 → 重跑用例 → 重新沉淀 YAML。该流程在 WebUI 之外完成。
+//    服务端 POST /api/cases/<id> 也已一并拒绝（见 webui.py）。
+
 
 function confirmDeleteCase(id) {
   const m = modal("删除用例", `
     <div class="warn-text">确定删除用例 <b>#${esc(id)}</b> 吗？</div>
-    <div class="meta">历史测试记录会保留（仅解除关联），<b>不可恢复</b>。</div>`,
+    <div class="meta">将<b>一并删除</b>：<br>
+      · 该用例的<b>全部历史测试记录</b>（含截图、dump、日志）<br>
+      · 该用例的程序化描述文件（.yaml / .md）<br>
+      <b class="danger-text">不可恢复。</b></div>`,
     `<button class="ghost" data-cancel>取消</button>
      <button class="danger" data-ok>确认删除</button>`);
   $("[data-cancel]", m.el).addEventListener("click", m.close);
   $("[data-ok]", m.el).addEventListener("click", async () => {
-    await api(`/api/cases/${id}`, { method: "DELETE" });
-    m.close();
-    viewCaseLib();
+    const btn = $("[data-ok]", m.el);
+    btn.disabled = true;
+    btn.textContent = "删除中…";
+    try {
+      const r = await api(`/api/cases/${id}`, { method: "DELETE" });
+      m.close();
+      viewCaseLib();
+      toast(`已删除用例 #${id}` +
+            (r && r.sessions ? `，连带 ${r.sessions} 条测试记录` : "") +
+            (r && r.spec_files ? `、${r.spec_files} 个描述文件` : ""));
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = "确认删除";
+      toast("删除失败：" + e.message);
+    }
   });
 }
 
