@@ -28,18 +28,32 @@ AI 自己写 `uname -s` 或 `python -c "import sys..."` 也能探，
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from runtime import detect_shell  # noqa: E402
+from runtime import (  # noqa: E402
+    KNOWLEDGE_DIR, RECORD_DIR, STORAGE_DIR, TMP_DIR, detect_shell,
+)
 
 
 def main() -> None:
     env = detect_shell()
     if "--json" in sys.argv:
-        print(json.dumps(env, ensure_ascii=False, indent=2))
+        payload = dict(env)
+        payload.update({
+            "storage_dir": str(STORAGE_DIR),
+            "record_dir": str(RECORD_DIR),
+            "tmp_output": str(TMP_DIR),
+            "knowledge_dir": str(KNOWLEDGE_DIR),
+            "storage_source": (
+                "env:ANDROID_TEST_STORAGE"
+                if os.environ.get("ANDROID_TEST_STORAGE")
+                else "默认 = cwd/storage"),
+        })
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
         return
 
     print(f"platform : {env['platform']}")
@@ -48,6 +62,25 @@ def main() -> None:
     print()
     print(env["hint"])
     print()
+
+    # ── 产物目录：这个必须打出来，AI 才能确认它对不对 ────────────
+    src = ("环境变量 ANDROID_TEST_STORAGE"
+           if os.environ.get("ANDROID_TEST_STORAGE")
+           else "默认 = 当前工作目录下的 storage/")
+    print("运行产物目录（来源：%s）：" % src)
+    print(f"  storage  = {STORAGE_DIR}")
+    print(f"  record   = {RECORD_DIR}")
+    print(f"  tmp      = {TMP_DIR}")
+    print(f"  knowledge= {KNOWLEDGE_DIR}")
+    print()
+    print("⚠️ 如果你在**受限沙箱**里跑（只能写某个 workspace），")
+    print("   而这个 storage 不在可写范围内，先设环境变量再调工具：")
+    print()
+    print('   $env:ANDROID_TEST_STORAGE = "<你的可写目录>\\storage"')
+    print()
+    print("   设完重跑这条命令，确认上面的 storage 变了。")
+    print()
+
     if env["shell"] == "powershell":
         print("本机常用对照：")
         print("  ls -la dir        ->  dir dir   /  Get-ChildItem dir")

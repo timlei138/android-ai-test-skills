@@ -17,46 +17,45 @@ ROOT = Path(__file__).resolve().parent.parent
 def _resolve_storage_root() -> Path:
     """storage/ 放哪？
 
-    ## 用户的要求（2026-10-27 原话）
+    ## 用户要求（2026-10-27）
 
     「storage 应该是当前工作目录下新建 storage 目录。里面有 tmp 和 record 两个路径。
       record 里面包含 webui 相关的数据库。和每次的记录。」
 
-    ## 优先级
+    ## 解析顺序
 
-      ① `ANDROID_TEST_STORAGE` 环境变量（显式指定，测试和特殊场景用）
-      ② **当前工作目录下的 `storage/`**  ← 默认，用户要的就是这个
-      ③ cwd 不可写时，退回本文件所在项目的 `storage/`
+      ① `ANDROID_TEST_STORAGE` 环境变量  —— **显式指定，最可靠**
+      ② `cwd / "storage"`               —— 默认，用户要的就是这个
+      ③ 都写不了 -> 返回 ②，让上游第一次写就报错，**不静默换地方**
 
-    ## 为什么默认是 cwd 而不是项目目录
+    ## 为什么不再"自动上溯找能写的地方"（踩过两次）
 
-    这是一套「从任何目录都能调」的 CLI 工具。产物应该落在**用户干活的目录**，
-    不是落在工具自己的安装目录 —— 否则：
-      · 换个项目用，两个项目的证据混在一个 storage 里
-      · 工具升级/重装，历史产物跟着丢
-      · 别人 clone 这个仓库，会看到一堆别人的运行记录
+    子 Agent 跑在 DSH 沙箱里（workspace-write，只能写 workspace 根）。
+    它为了跑 `python tools/xxx.py` 通常先 cd 到 skill 项目目录（沙箱外）。
 
-    ## 为什么 cwd 不可写要兜底
+      · 第一版：`cwd/storage` -> D:\\Project\\...\\storage -> WinError 5
+      · 第二版：写不进去就上溯 -> 找到 D:\\Project\\storage -> 还是沙箱外
 
-    CI / 只读挂载 / 从系统目录误跑 —— 这种情况下不能直接崩，
-    退到项目目录至少能跑完。
+    而且 `_writable()` 探测在子 Agent 进程里**不可信**：
+    进程本身有管理员权限，探针能过，但真正的写入被 DSH 沙箱拦掉。
+
+    **所以不再猜。** 显式指定（环境变量）是唯一可靠的路，
+    默认值只保证"本地正常使用"这一种情况。
+
+    ## 调用方该做什么
+
+    子 Agent 在沙箱里跑时，主 Agent 派发时应当带上：
+
+        $env:ANDROID_TEST_STORAGE = "<workspace>/storage"
+
+    `tools/env.py` 会把最终解析结果打出来，一眼能看出对不对。
     """
     explicit = (os.environ.get("ANDROID_TEST_STORAGE") or "").strip()
     if explicit:
         return Path(explicit).resolve()
 
-    cwd_storage = (Path.cwd() / "storage").resolve()
-    try:
-        cwd_storage.mkdir(parents=True, exist_ok=True)
-        # 真写一个探针文件，确认不是"能建目录但不能写"
-        probe = cwd_storage / ".write_probe"
-        probe.write_text("ok", encoding="utf-8")
-        probe.unlink(missing_ok=True)
-        return cwd_storage
-    except OSError:
-        # cwd 不可写（CI / 只读挂载 / 从系统目录误跑）时的最后兜底。
-        # 这不是"正常路径"，只是不想直接崩 —— 所以只在写不进去时才走。
-        return (ROOT / "storage").resolve()
+    # 默认：cwd/storage。不上溯、不换取别的位置。
+    return (Path.cwd() / "storage").resolve()
 
 
 STORAGE_DIR = _resolve_storage_root()
