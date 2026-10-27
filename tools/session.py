@@ -20,7 +20,10 @@ from pathlib import Path
 from common import case_spec_hint, emit, knowledge_hint
 import sqlite3
 from db import ROOT, STATUSES, clear_current, current_session, get_db, set_current
-from runtime import STORAGE_DIR, current_record_dir, new_record_dir, pin_record, unpin_record
+from runtime import (
+    STORAGE_DIR, current_record_dir, detect_shell, new_record_dir,
+    pin_record, unpin_record,
+)
 
 # Windows 控制台默认 GBK，中文/特殊符号会炸 → 全部 CLI 输出强制 UTF-8
 try:
@@ -533,6 +536,15 @@ def main() -> None:
         (STORAGE_DIR / f".crash_seen_{sid}").unlink(missing_ok=True)
         out = {"ok": True, "session_id": sid, "related": related,
                "note": f"后续 observe/act/read 自动记入本会话；{device_note}"}
+
+        # ★ 环境探测：告诉 AI 这台机器上该用什么 shell 语法。
+        #
+        #   用户要求：「skills 应该能够根据当前用户的设备情况。
+        #             自动调整命令的格式和写法。而不是我们强制限定死。」
+        #
+        #   所以不是让 AI 自己猜、也不是在 SKILL 里写死"Windows 用 PS"，
+        #   而是在开场把探测结果直接给它。
+        out["env"] = detect_shell()
         # 知识卡浮现：有卡就提示路径 + 小节索引（只提示一次，见 common.knowledge_hint）
         hint = knowledge_hint(args.package or (case["package"] if case else None))
         if hint:

@@ -84,6 +84,77 @@ description: Android 真机 GUI 测试。当用户给出测试用例（步骤+�
 命令前缀省略为 `.venv\Scripts\python tools\`。多设备加 `--serial`；
 **所有公共参数写在子命令前后都可以**。
 
+### 命令写法：看 `session start` 返回的 `env`
+
+**不要假设平台，也不要自己去探测 —— 工具已经探好了。**
+
+`session.py start` 的返回里有一个 `env` 字段：
+
+```json
+{
+  "env": {
+    "platform": "win32",
+    "shell": "powershell",
+    "path_sep": "\\",
+    "tmp_dir": "C:\\Users\\xxx\\AppData\\Local\\Temp",
+    "hint": "当前是 Windows（PowerShell）。`ls -la` / `head` / `&&` / `2>/dev/null`
+             会失败 —— 用 `dir` / `Get-Content -TotalCount` / `;` / `2>$null`。
+             但 `adb shell \"...\"` 里的内容仍是 Android 的 Linux，照常用 grep。"
+  }
+}
+```
+
+**按 `shell` 决定后面所有命令的写法：**
+
+| `shell` | 怎么写 |
+|---|---|
+| `bash` / `zsh` | `ls -la`、`head -20`、`&&`、`2>/dev/null`、`/tmp` 随便用 |
+| `powershell` | 见下面那张对照表 |
+| `unknown` | 先用最简单的写法试一条，看它成不成，再决定 |
+
+**`tmp_dir` 也直接用它** —— 别写死 `/tmp` 或 `$env:TEMP`。
+
+> 工具脚本本身（`python tools/*.py`）是**跨平台**的，不用改写法：
+> `python tools/act.py tap --x 1 --y 2` 在哪个系统上都一样。
+> 需要适配的只有**辅助命令**（列目录、看文件、过滤输出）。
+
+### `shell` 是 powershell 时
+
+Windows 的 PowerShell 5.1 缺一些 bash 惯用工具：
+
+| bash 习惯 | PowerShell 替代 |
+|---|---|
+| `ls -la dir` | `Get-ChildItem dir` / `dir dir`（别名不认 `-la`）|
+| `head -20 f` | `Get-Content f -TotalCount 20` |
+| `tail -50 f` | `Get-Content f -Tail 50` |
+| `grep -r x .` | `Select-String -Path * -Pattern "x"` |
+| `cmd1 && cmd2` | `cmd1; cmd2`，或 `if ($?) { }` |
+| `cmd 2>/dev/null` | `cmd 2>$null` |
+| `cmd \| head` | `cmd \| Select-Object -First 20` |
+| `sed -n '1,20p' f` | `Get-Content f -TotalCount 20` |
+| `which x` | `Get-Command x` |
+| `/tmp/x` | `$env:TEMP\x` |
+| `export A=1` | `$env:A = "1"` |
+
+**但以 `env.shell` 为准，别看到 "win32" 就一律换掉** ——
+有些 Windows 环境装了 Git Bash 或 WSL，`ls -la` 反而能用。
+`detect_shell()` 已经替你判过：它先看 `SHELL` 环境变量里有没有 bash，
+有就报 `bash`（哪怕 `platform` 是 win32）。
+
+### 唯一不需要看 `env` 的例外
+
+`adb shell "..."` **里面的内容永远是 Android 的 Linux**，与宿主平台无关：
+
+```bash
+# ✅ 一定对（不管你在 Windows 还是 Linux 上跑）
+adb -s <serial> shell "dumpsys window | grep mCurrentFocus"
+
+# ❌ 这个 grep 在宿主上跑，要看探测结果
+adb devices | grep 51e8
+```
+
+记法：**引号里给手机跑的永远是 Linux；引号外给宿主的，看探测结果。**
+
 ### 动作清单（act.py 的 8 个子命令）
 
 **先看这张表，别自己造参数名。** 参数是**子命令级**的，不是全局的 ——

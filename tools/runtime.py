@@ -101,6 +101,78 @@ def ensure_tmp() -> Path:
 
 
 # ══════════════════════════════════════════════════════════════════════
+# 环境探测：告诉 AI 这台机器上该用什么 shell 语法
+# ══════════════════════════════════════════════════════════════════════
+#
+# 用户的要求（原话）：
+#   「skills 应该能够根据当前用户的设备情况。自动调整命令的格式和写法。
+#     而不是我们强制限定死。」
+#
+# 所以不是把 SKILL 写成"Windows 用 PowerShell"（那在 Linux 上就错了），
+# 而是**在会话开始时探测一次，把结论告诉 AI**。
+#
+# 实测数据：72 条 bash 命令里有 8 条 Linux 写法（11%）——
+# 那些是在 Windows 上跑的，其中 `ls -la` / `2>/dev/null` / `||` 会失败。
+# 但同样的写法在 Linux 上是对的，所以不能一刀切。
+
+
+def detect_shell() -> dict:
+    """探测当前环境，返回写命令时该用的语法。
+
+    返回：
+        {
+          "platform": "win32" | "linux" | "darwin" | ...,
+          "shell": "powershell" | "cmd" | "bash" | "zsh" | "unknown",
+          "hint": "给 AI 看的一句话说明",
+          "path_sep": "\\\\" | "/",
+          "tmp_dir": "..."        ← 临时目录的真实路径
+        }
+
+    ★ 判定顺序很重要：
+      ① 有 SHELL 环境变量且含 bash/zsh  -> 那才是真 shell（Git Bash/WSL）
+      ② 否则看 sys.platform
+         win32 -> powershell（现代 Windows 的默认）
+      ③ 拿不准就返回 unknown，让 AI 自己试
+    """
+    import os as _os
+    import sys as _sys
+    import tempfile
+
+    plat = _sys.platform
+    shell_env = (_os.environ.get("SHELL") or "").strip()
+    comspec = (_os.environ.get("ComSpec") or "").strip()
+
+    shell = "unknown"
+    hint = ""
+
+    if "bash" in shell_env:
+        shell = "bash"
+        hint = ("当前是 bash：`ls -la` / `head -20` / `&&` / `2>/dev/null` / "
+                "`/tmp` 都能用。")
+    elif "zsh" in shell_env:
+        shell = "zsh"
+        hint = "当前是 zsh：bash 的写法基本都能用。"
+    elif plat == "win32":
+        # Windows 上还要看有没有 Git Bash / WSL 的 bash
+        shell = "powershell" if comspec or True else "cmd"
+        hint = ("当前是 Windows（PowerShell）。`ls -la` / `head` / `&&` / "
+                "`2>/dev/null` 会失败 —— 用 `dir` / `Get-Content -TotalCount` / "
+                "`;` / `2>$null`。**但 `adb shell \"...\"` 里的内容仍是 "
+                "Android 的 Linux，照常用 grep 等**。")
+    elif plat in ("linux", "darwin"):
+        shell = "bash"
+        hint = "当前是 Linux/macOS：bash 写法都能用。"
+
+    return {
+        "platform": plat,
+        "shell": shell,
+        "path_sep": "\\" if plat == "win32" else "/",
+        "tmp_dir": tempfile.gettempdir(),
+        "hint": hint,
+    }
+
+
+# ══════════════════════════════════════════════════════════════════════
 # "当前 record 目录" 的磁盘指针
 # ══════════════════════════════════════════════════════════════════════
 #
