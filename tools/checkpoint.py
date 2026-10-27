@@ -14,6 +14,15 @@ AI 不必再花 10~15s 读 dump 自己认页面（那是会话时长的大头）
 from __future__ import annotations
 
 
+
+# ★ UTF-8 兜底：Windows 控制台默认 GBK，print 一个 ⚠️/✅ 就崩。
+#   必须在任何输出之前调用（含 argparse 的报错输出）。
+try:
+    from common import ensure_utf8_stdio
+    ensure_utf8_stdio()
+except Exception:  # noqa: BLE001  common 不可用时不要因此崩掉
+    pass
+
 # 临时弹窗白名单：**每次不一定出现**的浮层（活动/引导/升级提示）。
 # 判据是"是不是每次都在" —— 每次都在的属于**流程节点**（该进路径图），
 # 不在这里；时有时无的才算临时弹窗，命中后自动关掉、继续走。

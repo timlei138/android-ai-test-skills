@@ -23,6 +23,15 @@ import sqlite3
 from runtime import STORAGE_DIR
 from common import rel
 
+
+# ★ UTF-8 兜底：Windows 控制台默认 GBK，print 一个 ⚠️/✅ 就崩。
+#   必须在任何输出之前调用（含 argparse 的报错输出）。
+try:
+    from common import ensure_utf8_stdio
+    ensure_utf8_stdio()
+except Exception:  # noqa: BLE001  common 不可用时不要因此崩掉
+    pass
+
 ROOT = Path(__file__).resolve().parent.parent
 
 

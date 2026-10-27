@@ -18,6 +18,15 @@ from datetime import datetime
 from runtime import stage, timed_call
 
 
+
+# ★ UTF-8 兜底：Windows 控制台默认 GBK，print 一个 ⚠️/✅ 就崩。
+#   必须在任何输出之前调用（含 argparse 的报错输出）。
+try:
+    from common import ensure_utf8_stdio
+    ensure_utf8_stdio()
+except Exception:  # noqa: BLE001  common 不可用时不要因此崩掉
+    pass
+
 def main() -> None:
     p = argparse.ArgumentParser(description="read：OCR 读取屏幕/截图文字")
     # 只挂 read 真正用得到的参数：read 不产出 nodes，

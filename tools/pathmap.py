@@ -19,6 +19,15 @@ from pathlib import Path
 import checkpoint
 
 
+
+# ★ UTF-8 兜底：Windows 控制台默认 GBK，print 一个 ⚠️/✅ 就崩。
+#   必须在任何输出之前调用（含 argparse 的报错输出）。
+try:
+    from common import ensure_utf8_stdio
+    ensure_utf8_stdio()
+except Exception:  # noqa: BLE001  common 不可用时不要因此崩掉
+    pass
+
 def _cells(line: str) -> list[str]:
     """把 markdown 表格行切成单元格（去掉首尾空 cell）。"""
     parts = [c.strip() for c in line.strip().strip("|").split("|")]

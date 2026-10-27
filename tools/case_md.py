@@ -16,6 +16,15 @@ import io
 import sys
 from pathlib import Path
 
+
+# ★ UTF-8 兜底：Windows 控制台默认 GBK，print 一个 ⚠️/✅ 就崩。
+#   必须在任何输出之前调用（含 argparse 的报错输出）。
+try:
+    from common import ensure_utf8_stdio
+    ensure_utf8_stdio()
+except Exception:  # noqa: BLE001  common 不可用时不要因此崩掉
+    pass
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 # Windows 控制台默认 GBK，输出 ✅/⚠️ 这类字符会 UnicodeEncodeError。

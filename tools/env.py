@@ -34,9 +34,23 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from common import ensure_utf8_stdio  # noqa: E402
 from runtime import (  # noqa: E402
     KNOWLEDGE_DIR, RECORD_DIR, STORAGE_DIR, TMP_DIR, detect_shell,
 )
+
+# ★ 必须第一件事就切 UTF-8。
+#
+#   踩过（2026-10-27，代价很大）：
+#     Windows 控制台默认 GBK，`print("⚠️ ...")` 直接抛
+#         UnicodeEncodeError: 'gbk' codec can't encode character '\u26a0'
+#     整个脚本崩掉 -> AI 拿不到 platform / shell / storage 提示 ->
+#     它只能自己瞎试（敲 Linux 命令、猜路径、反复重启 webui），
+#     一条用例还没开始就烧掉 37 次工具调用。
+#
+#   `common.ensure_utf8_stdio()` 就是干这个的（session.py 等早就调了），
+#   env.py 是新加的，当时忘了 —— 所以它自己反而是最不可靠的那个。
+ensure_utf8_stdio()
 
 
 def main() -> None:

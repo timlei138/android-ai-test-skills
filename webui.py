@@ -22,6 +22,15 @@ sys.path.insert(0, str(ROOT / "tools"))
 from db import get_db  # noqa: E402
 from runtime import KNOWLEDGE_DIR, RECORD_DIR, STORAGE_DIR  # noqa: E402
 
+# ★ UTF-8 兜底：Windows 控制台默认 GBK，启动日志里 print 一个 ⚠️ 就崩。
+#   实测踩过：webui 起不来，AI 以为是端口问题，换了 5 种启动方式都没想明白 ——
+#   实际是一个 print 里的 emoji 编码失败。
+try:
+    from common import ensure_utf8_stdio
+    ensure_utf8_stdio()
+except Exception:  # noqa: BLE001
+    pass
+
 WEBUI_DIR = ROOT / "webui"
 # ★ 2026-10-27：不再自己算 `ROOT / "storage"`。
 #

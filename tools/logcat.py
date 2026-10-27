@@ -24,6 +24,15 @@ from common import (ROOT, add_common_args_all_subcommands, connect, emit, fail,
                     log_auto, rel)
 from runtime import STORAGE_DIR, timed_call, execution
 
+
+# ★ UTF-8 兜底：Windows 控制台默认 GBK，print 一个 ⚠️/✅ 就崩。
+#   必须在任何输出之前调用（含 argparse 的报错输出）。
+try:
+    from common import ensure_utf8_stdio
+    ensure_utf8_stdio()
+except Exception:  # noqa: BLE001  common 不可用时不要因此崩掉
+    pass
+
 # 注意：crash buffer 每行有 logcat 标准前缀，标记在行中间，不能用 ^ 锚定
 # ⚠️ native crash（*** FATAL / tombstone）结构不同：无标准前缀与 Process: 行，
 # 大概率解析为 process=None → 归 other，由 AI 人工判读——未覆盖，勿当已支持。
