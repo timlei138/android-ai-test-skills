@@ -1,4 +1,4 @@
-#!/usr/bin/env pwsh
+﻿#!/usr/bin/env pwsh
 # android-ai-test-skills 一键环境安装（Windows）
 #
 # 用法:
@@ -11,14 +11,18 @@
 #   <项目根>\.venv\Scripts\python.exe      （venv 就放在项目里，工具直接用它）
 #   <项目根>\storage\                       （证据/会话库等运行产物）
 #
-# 版本要求：Python 3.10 ~ 3.12（**有上限，不是 >=3.10 都行**）
+# 版本要求：Python 3.10+（**没有上限**）
 #   下限 3.10：pillow 12 起要求 >=3.10（3.9 装不上新版 pillow）
-#   上限 3.12：rapidocr-onnxruntime 的元数据写死 requires_python="<3.13"，
-#              3.13 上 pip 找不到任何满足 >=1.3.0 的版本，直接报
-#              "No matching distribution found"。
-#              实测：3.13 上 rapidocr 最高只能装到 1.2.3（1.3.0+ 全被挡）。
-#   想支持 3.13 的话，得把 requirements.txt 里 rapidocr 放宽到 >=1.2.3
-#   （代价是用旧版 OCR）。当前选择是保新版、限解释器。
+#
+# ⚠️ 这里历史上写着「上限 3.12」，理由是 rapidocr-onnxruntime 的元数据
+#    写死 requires_python="<3.13"。那个包已经改名成 `rapidocr`（3.x），
+#    原生支持 3.13 —— 所以上限取消了。
+#
+#    D:\dsh\langgraph-poc 验证过的组合：
+#        Python 3.13.3 + rapidocr 3.10.0 + onnxruntime 1.31.0 + pillow 13
+#
+#    教训：那种"卡在某个小版本"的限制，通常是某个依赖停更/改名的副作用。
+#    换包或升级大版本之后要重新确认，别把旧结论一直抄下去。
 
 [CmdletBinding()]
 param(
@@ -36,7 +40,9 @@ $VenvDir = Join-Path $Root '.venv'
 $VenvPy  = Join-Path $VenvDir 'Scripts\python.exe'
 
 $MinPy = [version]'3.10.0'
-$MaxPy = [version]'3.13.0'   # 不含：rapidocr 要求 <3.13
+# 上限放宽到 4.0（等于没有）—— 依赖已换成支持 3.13 的 rapidocr 3.x。
+# 保留这个变量是为了"太高/太低"的判断逻辑不用大改。
+$MaxPy = [version]'4.0.0'
 
 function Write-Step { param([string]$t) Write-Host "▶ $t" -ForegroundColor Cyan }
 function Write-Ok   { param([string]$t) Write-Host "  [OK] $t" -ForegroundColor Green }
@@ -84,7 +90,7 @@ function Test-PythonPath {
         return $null
     }
     if ($v -ge $MaxPy) {
-        [void]$script:Skipped.Add("$Path  （$v 太高，rapidocr 要求 <$($MaxPy.Major).$($MaxPy.Minor)）")
+        [void]$script:Skipped.Add("$Path  （$v 太旧，最低要求 $($MinPy.Major).$($MinPy.Minor)）")
         return $null
     }
     return @{ Path = $Path; Version = $v }
@@ -157,11 +163,11 @@ $py = Resolve-Python $Python
 if (-not $py) {
     Write-Fail "未找到可用的 Python（本工具需要 $MinPy ~ $($MaxPy.Major).$($MaxPy.Minor - 1)）"
     Write-Host ''
-    Write-Info '为什么有上限：rapidocr-onnxruntime 要求 <3.13 —— 在 3.13 上 pip 会报'
+    Write-Info '没有上限：OCR 库已换成 rapidocr 3.x（支持 3.13）'
     Write-Info '  "No matching distribution found"（最高只到 1.2.3，装不了 1.3.0+）'
     Write-Info '为什么有下限：pillow 12 起要求 >=3.10'
     Write-Host ''
-    Write-Info '装一个 3.10/3.11/3.12: https://www.python.org/downloads/（勾选 Add to PATH）'
+    Write-Info '装一个 3.10 以上: https://www.python.org/downloads/（勾选 Add to PATH）'
     Write-Info '或显式指定: pwsh -File scripts/setup.ps1 -Python "C:\Python312\python.exe"'
     Write-Info '已知安装位置会 / 也可用 py -0p 列出本机所有解释器'
     if ($script:Skipped.Count) {
@@ -206,7 +212,7 @@ if ($SkipDeps) {
     (Invoke-Native $VenvPy @('-m','pip','install','--upgrade','pip','setuptools','wheel')).Output |
         Select-Object -Last 3 | ForEach-Object { Write-Info $_ }
 
-    Write-Info '安装 uiautomator2 / rapidocr-onnxruntime / pillow（首次较慢，请耐心）...'
+    Write-Info '安装 uiautomator2 / rapidocr / pillow 等（首次较慢，请耐心）...'
     $req = Join-Path $Root 'requirements.txt'
     $r = Invoke-Native $VenvPy @('-m','pip','install','-r',$req)
     $r.Output | Select-Object -Last 5 | ForEach-Object { Write-Info $_ }
@@ -218,7 +224,7 @@ if ($SkipDeps) {
 
     # import 自检：装上了但导不进来的隐性失败在这里暴露
     Write-Info '依赖 import 自检 ...'
-    $r = Invoke-Native $VenvPy @('-c','import uiautomator2, rapidocr_onnxruntime, PIL')
+    $r = Invoke-Native $VenvPy @('-c','import uiautomator2, rapidocr, PIL, yaml')
     if (-not $r.Ok) {
         Write-Fail '依赖 import 自检失败（包装上了但无法导入）'
         $r.Output | Select-Object -Last 5 | ForEach-Object { Write-Info $_ }
@@ -258,7 +264,7 @@ Write-Host ' 自检' -ForegroundColor Cyan
 $ok = $true
 $r = Invoke-Native $VenvPy @('-c','import sys;print(sys.version.split()[0])')
 if ($r.Ok) { Write-Ok "venv Python $($r.Output[-1])" } else { Write-Fail 'venv Python 不可用'; $ok = $false }
-foreach ($m in @('uiautomator2','rapidocr_onnxruntime')) {
+foreach ($m in @('uiautomator2','rapidocr','yaml','PIL')) {
     $r = Invoke-Native $VenvPy @('-c',"import $m")
     if ($r.Ok) { Write-Ok $m } else { Write-Fail "$m 不可用"; $ok = $false }
 }

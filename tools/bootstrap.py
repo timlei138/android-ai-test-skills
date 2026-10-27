@@ -63,6 +63,7 @@ from __future__ import annotations
 import argparse
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -221,6 +222,205 @@ def unlock_code(dest: Path) -> int:
     return n
 
 
+# ══════════════════════════════════════════════════════════════════════
+# venv：在工作目录里重建 python 环境
+# ══════════════════════════════════════════════════════════════════════
+#
+# ⚠️ **venv 不能拷贝**。
+#
+#   第一条实现我试过"把安装位置的 .venv 一起拷过去" —— 不行：
+#   venv 里的 python.exe 是个壳，pyvenv.cfg 里写的是**绝对路径**
+#   （home = ...\uv\python\cpython-3.12.14-windows-x86_64-none）。
+#   拷到别的目录/别的机器，那个路径不存在，整个环境就废了。
+#
+#   所以必须在目标机用 `python -m venv` 重建，再 pip install。
+#
+# 另一个坑：`python` 命令可能指向很旧的版本。
+#   实测这台机器：C:\Program Files\python\3.11\python.exe 里其实是 3.13.3
+#   （目录名骗人），而且没装任何依赖 —— 子 Agent 敲 `python tools/act.py`
+#   就会 ImportError。
+
+MIN_PY = (3, 10)
+
+
+def find_base_python() -> tuple[str | None, str]:
+    """找一个 >= 3.10 的 python 来建 venv。返回 (命令, 版本说明)。"""
+    explicit = (os.environ.get("ANDROID_TEST_PYTHON") or "").strip()
+    candidates: list[list[str]] = []
+    if explicit:
+        candidates.append([explicit])
+
+    # Windows launcher：能精确挑版本
+    if os.name == "nt":
+        for v in ("3.12", "3.13", "3.11", "3.10"):
+            candidates.append(["py", f"-{v}"])
+
+    candidates += [["python"], ["python3"]]
+
+    for cmd in candidates:
+        try:
+            r = subprocess.run(
+                cmd + ["-c",
+                       "import sys;print('%d.%d.%d' % sys.version_info[:3])"],
+                capture_output=True, text=True, timeout=20,
+                encoding="utf-8", errors="replace")
+        except (OSError, subprocess.SubprocessError):
+            continue
+        if r.returncode != 0:
+            continue
+        ver = (r.stdout or "").strip()
+        parts = ver.split(".")
+        if len(parts) < 2:
+            continue
+        try:
+            major, minor = int(parts[0]), int(parts[1])
+        except ValueError:
+            continue
+        if (major, minor) >= MIN_PY:
+            return " ".join(cmd), ver
+
+    return None, ""
+
+
+def venv_python(dest: Path) -> Path:
+    """这个目录下 venv 的解释器路径（不管存不存在）。"""
+    venv_dir = dest / ".venv"
+    if os.name == "nt":
+        return venv_dir / "Scripts" / "python.exe"
+    return venv_dir / "bin" / "python"
+
+
+DEPS = ("uiautomator2", "adbutils", "yaml", "PIL")
+
+
+def check_venv(dest: Path) -> dict:
+    """**只检查**，不安装。返回状态 + 一条安装命令。
+
+    为什么单独一个函数：pip install 要拉 200MB+、几分钟起步。
+    放进 bootstrap 会让"第一次跑"变成"等十分钟不知道在干嘛"。
+    用户原话：「告诉用户如何安装吧…太慢了。自己装也没这么慢」
+    """
+    py = venv_python(dest)
+    install_cmd = (
+        f'cd "{dest}"'
+        + ("\n" if os.name == "nt" else "\n")
+        + ('python -m venv .venv\n'
+           '.venv\\Scripts\\pip install -r requirements.txt'
+           if os.name == "nt" else
+           'python3 -m venv .venv\n'
+           '.venv/bin/pip install -r requirements.txt'))
+
+    if not py.is_file():
+        return {
+            "status": "missing",
+            "message": "工作目录下还没有 python 环境（.venv）",
+            "install_cmd": install_cmd,
+            "note": "要装 uiautomator2 / rapidocr / onnxruntime / opencv，"
+                    "约 200MB，第一次几分钟。也可以让 AI 带 --with-venv 装。",
+        }
+
+    # 有 venv，查依赖
+    code = (
+        "import importlib,sys\n"
+        "miss=[m for m in %r if not __import__('importlib').util.find_spec(m)]\n"
+        "print('MISSING:'+','.join(miss))\n" % (list(DEPS),)
+    )
+    try:
+        r = subprocess.run([str(py), "-c", code], capture_output=True,
+                           text=True, timeout=60, encoding="utf-8",
+                           errors="replace")
+        out = (r.stdout or "") + (r.stderr or "")
+    except (OSError, subprocess.SubprocessError) as exc:
+        return {"status": "broken", "python": str(py),
+                "message": str(exc)[:200], "install_cmd": install_cmd}
+
+    miss = ""
+    for ln in out.splitlines():
+        if ln.startswith("MISSING:"):
+            miss = ln[8:].strip()
+
+    if not miss:
+        return {"status": "ok", "python": str(py)}
+    return {
+        "status": "incomplete",
+        "python": str(py),
+        "missing": miss,
+        "message": f"venv 在，但缺依赖：{miss}",
+        "install_cmd": (f'"{py}" -m pip install -r "{dest / "requirements.txt"}"'),
+    }
+
+
+def ensure_venv(dest: Path, *, quiet: bool = False) -> dict:
+    """在 dest 下建 .venv 并装 requirements.txt。**慢**（几分钟），只在明确要求时调。"""
+    venv_dir = dest / ".venv"
+    venv_py = venv_python(dest)
+
+    # 已经有了就跳过（幂等）
+    if venv_py.is_file():
+        return {"status": "exists", "python": str(venv_py)}
+
+    base, ver = find_base_python()
+    if base is None:
+        return {
+            "status": "no-base-python",
+            "message": f"找不到 >= {MIN_PY[0]}.{MIN_PY[1]} 的 python。"
+                       f" 装一个，或设 ANDROID_TEST_PYTHON 指向它",
+        }
+
+    # 建 venv
+    try:
+        r = subprocess.run(
+            base.split() + ["-m", "venv", str(venv_dir)],
+            capture_output=True, text=True, timeout=300,
+            encoding="utf-8", errors="replace")
+    except (OSError, subprocess.SubprocessError) as exc:
+        return {"status": "venv-failed", "message": str(exc)}
+
+    if r.returncode != 0 or not venv_py.is_file():
+        return {
+            "status": "venv-failed",
+            "message": ((r.stderr or "") + (r.stdout or ""))[:400],
+        }
+
+    # 装依赖
+    req = dest / "requirements.txt"
+    if not req.is_file():
+        return {"status": "ok-no-req", "python": str(venv_py),
+                "base": base, "base_version": ver}
+
+    try:
+        r2 = subprocess.run(
+            [str(venv_py), "-m", "pip", "install", "--quiet",
+             "--disable-pip-version-check", "-r", str(req)],
+            capture_output=True, text=True, timeout=1800,
+            encoding="utf-8", errors="replace")
+    except (OSError, subprocess.SubprocessError) as exc:
+        return {"status": "pip-failed", "python": str(venv_py),
+                "message": str(exc)[:400]}
+
+    if r2.returncode != 0:
+        return {
+            "status": "pip-failed",
+            "python": str(venv_py),
+            "message": ((r2.stderr or "") + (r2.stdout or ""))[-600:],
+        }
+
+    # 自检：真能 import 吗
+    check = ("import uiautomator2, adbutils, yaml, PIL; print('ok')")
+    r3 = subprocess.run([str(venv_py), "-c", check],
+                        capture_output=True, text=True, timeout=120,
+                        encoding="utf-8", errors="replace")
+    ok = r3.returncode == 0 and "ok" in (r3.stdout or "")
+
+    return {
+        "status": "ok" if ok else "import-failed",
+        "python": str(venv_py),
+        "base": base,
+        "base_version": ver,
+        "message": "" if ok else ((r3.stderr or "") + (r3.stdout or ""))[:400],
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(
         description="把 Android 测试工具层拷到当前工作目录")
@@ -229,6 +429,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--force", action="store_true",
                     help="覆盖已存在的（会先解锁再删）")
     ap.add_argument("--json", action="store_true", help="机器可读输出")
+    ap.add_argument("--with-venv", action="store_true",
+                    help="同时创建 .venv 并装依赖（慢，几分钟；"
+                         "默认只检查并给出安装命令）")
     args = ap.parse_args(argv)
 
     cwd = Path.cwd().resolve()
@@ -240,19 +443,47 @@ def main(argv: list[str] | None = None) -> int:
             print(_json.dumps(payload, ensure_ascii=False, indent=2))
         else:
             for k in ("status", "message", "install_root", "target",
-                      "files", "size_kb", "locked", "next"):
+                      "files", "size_kb", "locked",
+                      "venv", "venv_base", "venv_missing", "venv_message",
+                      "venv_install_cmd", "next"):
                 v = payload.get(k)
                 if v not in (None, ""):
                     print(f"{k:14} {v}")
 
+    def venv_payload(payload: dict) -> dict:
+        """把 venv 状态并进 payload（默认只检查，--with-venv 才装）。"""
+        if args.with_venv:
+            v = ensure_venv(dest)
+            payload["venv"] = v.get("status")
+            if v.get("base"):
+                payload["venv_base"] = f"{v.get('base')} ({v.get('base_version')})"
+            if v.get("message"):
+                payload["venv_message"] = v.get("message")
+            py = v.get("python")
+        else:
+            v = check_venv(dest)
+            payload["venv"] = v.get("status")
+            if v.get("missing"):
+                payload["venv_missing"] = v["missing"]
+            if v.get("message"):
+                payload["venv_message"] = v.get("message")
+            if v.get("install_cmd"):
+                payload["venv_install_cmd"] = v["install_cmd"]
+            py = v.get("python")
+
+        payload["next"] = (
+            f'"{py}" "{dest / "tools" / "env.py"}"'
+            if py else
+            f'（先建环境）然后 "{dest / "tools" / "env.py"}"')
+        return payload
+
     # 已安装？
     if is_installed(dest) and not args.force:
-        out({
+        out(venv_payload({
             "status": "already-installed",
             "message": "工作目录下已有工具层，直接用",
             "target": str(dest),
-            "next": f'python "{dest / "tools" / "env.py"}"',
-        })
+        }))
         return 0
 
     # 找安装位置
@@ -290,7 +521,7 @@ def main(argv: list[str] | None = None) -> int:
     files, size = copy_layer(install, dest)
     locked, lock_fail = lock_code(dest)
 
-    out({
+    payload = {
         "status": "installed",
         "message": "已拷到工作目录，之后都用这个",
         "install_root": str(install),
@@ -299,10 +530,21 @@ def main(argv: list[str] | None = None) -> int:
         "size_kb": f"{size / 1024:.0f}",
         "locked": f"{locked} 个代码文件已设只读"
                   + (f"（{lock_fail} 个失败）" if lock_fail else ""),
-        "next": (f'python "{dest / "tools" / "env.py"}"  '
-                 f'# 确认 storage 指向 {dest / "storage"}'),
-    })
-    return 0
+    }
+    payload = venv_payload(payload)
+
+    # 只有 python 环境也好了，才算完全就绪
+    ready = payload.get("venv") in ("ok", "exists", "ok-no-req")
+    if not ready:
+        payload["status"] = "installed-need-venv"
+        payload["message"] = (
+            "代码拷好了。**还差 python 环境** —— 见 venv_install_cmd，"
+            "或者让 AI 跑 bootstrap --with-venv（要几分钟）")
+    elif ready and not args.with_venv:
+        payload["message"] = "已拷到工作目录，python 环境也已就绪"
+
+    out(payload)
+    return 0 if ready or not args.with_venv else 3
 
 
 if __name__ == "__main__":
