@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T17:14:43",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.course.EditCourseActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1022,
+    "via": "rid=llCourseTime",
+    "why": "YAML s2：打开课程时间双滚轮弹框（坐标现查，YAML 里记的 1206 实为 llCourseWeeks）"
+  },
+  "call_id": "817c07ce021e47a2b44ae9e96021b4a2",
+  "timing": {
+    "call_id": "817c07ce021e47a2b44ae9e96021b4a2",
+    "measured_at": "2026-10-15T17:14:43.425",
+    "process_observed_ms": 14747.517,
+    "stages_ms": {
+      "device_import": 618.515,
+      "device_connect": 1348.317,
+      "action": 181.572,
+      "settle_wait": 600.632,
+      "permission": 5379.758,
+      "screenshot": 435.483,
+      "png_save": 314.631,
+      "ui_dump": 75.208,
+      "rotation": 253.064,
+      "xml_save": 9.13,
+      "foreground": 5383.457
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

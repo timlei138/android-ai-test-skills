@@ -1,0 +1,72 @@
+{
+  "call_id": "8dbc7ab5efe242c0bb97d87b0aadc581",
+  "session_id": 336,
+  "tool": "read",
+  "started_at": "2026-10-09T13:39:56.063",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T13:40:10.065",
+  "wall_ms": 14003.282,
+  "result": {
+    "ok": true,
+    "image": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\336\\step0153\\shot.png",
+    "lines": [
+      {
+        "text": "学生课程表",
+        "score": 1.0,
+        "center": [
+          167,
+          666
+        ],
+        "norm": [
+          0.0549,
+          0.3498
+        ],
+        "bounds": [
+          114,
+          651,
+          219,
+          681
+        ]
+      }
+    ],
+    "hint": "center 可直接用于 act.py tap；toast 断言请在 act 后尽快 read（浮层会消失）",
+    "call_id": "8dbc7ab5efe242c0bb97d87b0aadc581",
+    "event_ids": [
+      1172
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "8dbc7ab5efe242c0bb97d87b0aadc581",
+    "measured_at": "2026-10-09T13:40:09.884",
+    "process_observed_ms": 11923.138,
+    "stages_ms": {
+      "device_import": 331.19,
+      "device_connect": 1187.277,
+      "ocr_import": 1725.729,
+      "screenshot": 323.695,
+      "png_save": 185.937,
+      "ocr_initialize": 1783.265,
+      "ocr_inference": 6282.409,
+      "ocr_image_info": 0.79,
+      "ocr_result_conversion": 0.104,
+      "event_write": 1.725,
+      "serialization": 0.106
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 625
+  },
+  "response_bytes": 625,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1172
+    ]
+  }
+}

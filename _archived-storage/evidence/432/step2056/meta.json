@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-14T15:05:57",
+  "package": "com.zui.launcher",
+  "activity": ".drawer.NormalLauncher",
+  "rotation": 1,
+  "size": [
+    3840,
+    2560
+  ],
+  "action": {
+    "type": "longclick",
+    "x": 2726,
+    "y": 608,
+    "via": "倒数日widget本体",
+    "why": "步骤3备选：长按widget唤出编辑菜单"
+  },
+  "call_id": "ed7507b9ab1c4986aa284884b7d0e2c3",
+  "timing": {
+    "call_id": "ed7507b9ab1c4986aa284884b7d0e2c3",
+    "measured_at": "2026-10-14T15:05:57.410",
+    "process_observed_ms": 5639.022,
+    "stages_ms": {
+      "device_import": 487.594,
+      "device_connect": 1062.641,
+      "action": 568.794,
+      "settle_wait": 600.161,
+      "permission": 1196.377,
+      "screenshot": 429.977,
+      "png_save": 634.949,
+      "ui_dump": 67.918,
+      "rotation": 174.797,
+      "xml_save": 4.972,
+      "foreground": 297.691
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

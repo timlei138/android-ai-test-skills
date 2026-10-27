@@ -1,0 +1,164 @@
+{
+  "call_id": "2da814696b904f2ba2656d921e39ac37",
+  "session_id": 347,
+  "tool": "observe",
+  "started_at": "2026-10-09T15:11:48.720",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T15:11:54.303",
+  "wall_ms": 5583.868,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-09T15:11:54",
+    "package": "com.zui.calendar",
+    "activity": ".newbuild.NewBuildActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "2da814696b904f2ba2656d921e39ac37",
+    "timing": {
+      "call_id": "2da814696b904f2ba2656d921e39ac37",
+      "measured_at": "2026-10-09T15:11:54.071",
+      "process_observed_ms": 3517.867,
+      "stages_ms": {
+        "device_import": 309.068,
+        "device_connect": 1091.057,
+        "permission": 924.24,
+        "screenshot": 308.452,
+        "png_save": 75.381,
+        "ui_dump": 114.8,
+        "rotation": 250.294,
+        "xml_save": 5.445,
+        "foreground": 376.925
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=parentPanel",
+      "rid=customPanel",
+      "rid=custom",
+      "rid=title",
+      "text=2026年10月9日  周五  15:09",
+      "rid=date_time_picker",
+      "rid=parent",
+      "rid=selector_top_divider",
+      "rid=switch_layout",
+      "rid=lunarToggle",
+      "text=按照农历选择",
+      "rid=button_divider2",
+      "rid=left_button",
+      "text=取消",
+      "rid=right_button",
+      "text=确定"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\347\\step0285\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\347\\step0285\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\347\\step0285\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1798,
+          1175
+        ],
+        "t": "按照农历选择",
+        "r": "lunarToggle"
+      },
+      {
+        "c": [
+          1244,
+          1374
+        ],
+        "t": "取消",
+        "r": "left_button"
+      },
+      {
+        "c": [
+          1795,
+          1374
+        ],
+        "t": "确定",
+        "r": "right_button"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          1798,
+          1175
+        ],
+        "t": "按照农历选择",
+        "r": "lunarToggle"
+      },
+      {
+        "i": 1,
+        "c": [
+          1244,
+          1374
+        ],
+        "t": "取消",
+        "r": "left_button"
+      },
+      {
+        "i": 2,
+        "c": [
+          1795,
+          1374
+        ],
+        "t": "确定",
+        "r": "right_button"
+      }
+    ],
+    "nodes_count": 3,
+    "nodes_mode": "nav",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      1306
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "2da814696b904f2ba2656d921e39ac37",
+    "measured_at": "2026-10-09T15:11:54.225",
+    "process_observed_ms": 3675.783,
+    "stages_ms": {
+      "device_import": 309.068,
+      "device_connect": 1091.057,
+      "permission": 924.24,
+      "screenshot": 308.452,
+      "png_save": 75.381,
+      "ui_dump": 114.8,
+      "rotation": 250.294,
+      "xml_save": 5.445,
+      "foreground": 376.925,
+      "meta_save": 2.464,
+      "screen_signature": 30.853,
+      "crash_detection": 115.263,
+      "event_write": 3.057,
+      "node_summary": 0.48,
+      "node_labels": 0.33,
+      "next_targets": 0.013,
+      "serialization": 0.09
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 2710
+  },
+  "response_bytes": 2710,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1306
+    ]
+  }
+}

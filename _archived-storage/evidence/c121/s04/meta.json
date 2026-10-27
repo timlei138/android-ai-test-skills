@@ -1,0 +1,28 @@
+{
+  "ts": "2026-10-14T15:04:34",
+  "package": "com.zui.calendar",
+  "activity": ".reminder.EditCountDownActivity",
+  "rotation": 1,
+  "size": [
+    3840,
+    2560
+  ],
+  "call_id": "9fdf074e7e74403f8fe5bf88e83877a6",
+  "timing": {
+    "call_id": "9fdf074e7e74403f8fe5bf88e83877a6",
+    "measured_at": "2026-10-14T15:04:34.895",
+    "process_observed_ms": 13177.17,
+    "stages_ms": {
+      "device_import": 400.191,
+      "device_connect": 1104.096,
+      "permission": 5280.4,
+      "screenshot": 397.626,
+      "png_save": 347.833,
+      "ui_dump": 92.981,
+      "rotation": 203.542,
+      "xml_save": 5.863,
+      "foreground": 5277.249
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

@@ -1,0 +1,310 @@
+{
+  "call_id": "3af10fe7daf14e78930967916250031e",
+  "session_id": 368,
+  "tool": "act",
+  "started_at": "2026-10-09T18:32:25.356",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T18:32:32.157",
+  "wall_ms": 6793.134,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 1520,
+      "y": 1268,
+      "via": "1小时前",
+      "why": "选1小时前"
+    },
+    "ts": "2026-10-09T18:32:31",
+    "package": "com.zui.calendar",
+    "activity": ".event.options.EventAheadActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "3af10fe7daf14e78930967916250031e",
+    "timing": {
+      "call_id": "3af10fe7daf14e78930967916250031e",
+      "measured_at": "2026-10-09T18:32:31.908",
+      "process_observed_ms": 4607.265,
+      "stages_ms": {
+        "device_import": 352.988,
+        "device_connect": 1081.891,
+        "action": 223.565,
+        "settle_wait": 600.376,
+        "permission": 921.714,
+        "screenshot": 358.136,
+        "png_save": 195.523,
+        "ui_dump": 100.522,
+        "rotation": 260.939,
+        "xml_save": 6.499,
+        "foreground": 405.61
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "rid=toolbar_title",
+      "text=提醒",
+      "rid=aheadNoReminderLl",
+      "text=不提醒",
+      "rid=aheadNoReminderSwitch",
+      "rid=divider_line_view",
+      "rid=eventAheadListView",
+      "rid=select",
+      "rid=aheadName",
+      "text=任务发生时",
+      "text=5分钟前",
+      "text=15分钟前",
+      "text=30分钟前",
+      "text=1小时前",
+      "text=2小时前",
+      "text=3小时前",
+      "text=1天前",
+      "text=2天前"
+    ],
+    "checkpoint": {
+      "checked": true,
+      "ok": false,
+      "matched": [],
+      "missed": [
+        "activity=EditEventActivity（实际 .event.options.EventAheadActivity）"
+      ]
+    },
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\368\\step0795\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\368\\step0795\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\368\\step0795\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1520,
+          1190
+        ],
+        "t": "1小时前",
+        "r": "eventAheadListView",
+        "s": true
+      },
+      {
+        "c": [
+          107,
+          203
+        ],
+        "t": "提醒"
+      },
+      {
+        "c": [
+          1520,
+          564
+        ],
+        "t": "任务发生时"
+      },
+      {
+        "c": [
+          1520,
+          740
+        ],
+        "t": "5分钟前"
+      },
+      {
+        "c": [
+          1520,
+          916
+        ],
+        "t": "15分钟前"
+      },
+      {
+        "c": [
+          1520,
+          1092
+        ],
+        "t": "30分钟前"
+      },
+      {
+        "c": [
+          1520,
+          1268
+        ],
+        "t": "1小时前"
+      },
+      {
+        "c": [
+          1520,
+          1444
+        ],
+        "t": "2小时前"
+      },
+      {
+        "c": [
+          1520,
+          1620
+        ],
+        "t": "3小时前"
+      },
+      {
+        "c": [
+          1520,
+          1796
+        ],
+        "t": "1天前"
+      },
+      {
+        "c": [
+          1520,
+          1894
+        ],
+        "t": "2天前"
+      },
+      {
+        "c": [
+          1595,
+          386
+        ],
+        "r": "aheadNoReminderSwitch"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          107,
+          203
+        ]
+      },
+      {
+        "i": 1,
+        "c": [
+          1595,
+          386
+        ],
+        "r": "aheadNoReminderSwitch"
+      },
+      {
+        "i": 2,
+        "c": [
+          1520,
+          1190
+        ],
+        "r": "eventAheadListView",
+        "s": true
+      },
+      {
+        "i": 3,
+        "c": [
+          1520,
+          564
+        ]
+      },
+      {
+        "i": 4,
+        "c": [
+          1520,
+          740
+        ]
+      },
+      {
+        "i": 5,
+        "c": [
+          1520,
+          916
+        ]
+      },
+      {
+        "i": 6,
+        "c": [
+          1520,
+          1092
+        ]
+      },
+      {
+        "i": 7,
+        "c": [
+          1520,
+          1268
+        ]
+      },
+      {
+        "i": 8,
+        "c": [
+          1520,
+          1444
+        ]
+      },
+      {
+        "i": 9,
+        "c": [
+          1520,
+          1620
+        ]
+      },
+      {
+        "i": 10,
+        "c": [
+          1520,
+          1796
+        ]
+      },
+      {
+        "i": 11,
+        "c": [
+          1520,
+          1894
+        ]
+      }
+    ],
+    "nodes_count": 12,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "checkpoint_hint": "⚠️ 落点与预期不符：未命中 activity=EditEventActivity（实际 .event.options.EventAheadActivity）。先判断是「多余的临时弹窗」（不影响主流程 → 关掉继续）还是「用例要的东西不存在了」（主流程被改 → 停止并如实记录）。",
+    "event_ids": [
+      1817
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "3af10fe7daf14e78930967916250031e",
+    "measured_at": "2026-10-09T18:32:32.056",
+    "process_observed_ms": 4761.577,
+    "stages_ms": {
+      "device_import": 352.988,
+      "device_connect": 1081.891,
+      "action": 223.565,
+      "settle_wait": 600.376,
+      "permission": 921.714,
+      "screenshot": 358.136,
+      "png_save": 195.523,
+      "ui_dump": 100.522,
+      "rotation": 260.939,
+      "xml_save": 6.499,
+      "foreground": 405.61,
+      "meta_save": 4.444,
+      "crash_detection": 99.457,
+      "screen_signature": 39.937,
+      "event_write": 1.155,
+      "node_summary": 0.721,
+      "node_labels": 0.962,
+      "next_targets": 0.08,
+      "serialization": 0.39
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 4850
+  },
+  "response_bytes": 4850,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1817
+    ]
+  }
+}

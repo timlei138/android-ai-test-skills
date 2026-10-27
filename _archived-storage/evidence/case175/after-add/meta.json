@@ -1,0 +1,28 @@
+{
+  "ts": "2026-10-15T13:39:11",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimeSlotSettingsActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "call_id": "27fe80792043423f9892d3a56960f6f3",
+  "timing": {
+    "call_id": "27fe80792043423f9892d3a56960f6f3",
+    "measured_at": "2026-10-15T13:39:11.372",
+    "process_observed_ms": 13139.449,
+    "stages_ms": {
+      "device_import": 469.131,
+      "device_connect": 1095.466,
+      "permission": 5297.757,
+      "screenshot": 278.729,
+      "png_save": 166.046,
+      "ui_dump": 94.021,
+      "rotation": 273.628,
+      "xml_save": 3.285,
+      "foreground": 5399.109
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

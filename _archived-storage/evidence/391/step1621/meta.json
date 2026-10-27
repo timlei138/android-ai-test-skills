@@ -1,0 +1,44 @@
+{
+  "ts": "2026-10-10T12:11:19",
+  "package": "com.android.soundpicker",
+  "activity": "com.lenovo.soundpicker.ZuiRingtonePickerActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "swipe",
+    "from": [
+      1520,
+      600
+    ],
+    "to": [
+      1520,
+      1500
+    ],
+    "dur_ms": 300,
+    "via": "scroll-up",
+    "why": "find-none"
+  },
+  "call_id": "64fdb0ab896a497db235ba02720c42f4",
+  "timing": {
+    "call_id": "64fdb0ab896a497db235ba02720c42f4",
+    "measured_at": "2026-10-10T12:11:19.872",
+    "process_observed_ms": 6171.981,
+    "stages_ms": {
+      "device_import": 306.693,
+      "device_connect": 1077.419,
+      "action": 1633.409,
+      "settle_wait": 600.111,
+      "permission": 1106.951,
+      "screenshot": 358.189,
+      "png_save": 259.01,
+      "ui_dump": 109.787,
+      "rotation": 231.574,
+      "xml_save": 4.439,
+      "foreground": 390.987
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

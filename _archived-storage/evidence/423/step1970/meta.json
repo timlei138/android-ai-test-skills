@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-10T16:25:31",
+  "package": "com.zui.launchersdk",
+  "activity": ".card.dialog.PermissionCardDialog",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1519,
+    "y": 1375,
+    "via": "enable-minus1",
+    "why": "agree"
+  },
+  "call_id": "acf07bb8889f45b9b2a1da3e2e33d56b",
+  "timing": {
+    "call_id": "acf07bb8889f45b9b2a1da3e2e33d56b",
+    "measured_at": "2026-10-10T16:25:31.923",
+    "process_observed_ms": 4496.488,
+    "stages_ms": {
+      "device_import": 317.2,
+      "device_connect": 1149.571,
+      "action": 190.109,
+      "settle_wait": 600.143,
+      "permission": 940.888,
+      "screenshot": 406.041,
+      "png_save": 113.757,
+      "ui_dump": 76.426,
+      "rotation": 216.697,
+      "xml_save": 12.948,
+      "foreground": 387.297
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

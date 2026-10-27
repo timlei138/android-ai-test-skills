@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-26T21:01:41",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimetableListActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 176,
+    "y": 391,
+    "via": "rid=checkbox_select[bounds 143,358][209,424]",
+    "why": "前提准备：勾选学生课程表"
+  },
+  "call_id": "244c00f41c0b421599d51f554b8a1f56",
+  "timing": {
+    "call_id": "244c00f41c0b421599d51f554b8a1f56",
+    "measured_at": "2026-10-26T21:01:41.362",
+    "process_observed_ms": 4554.899,
+    "stages_ms": {
+      "device_import": 403.929,
+      "device_connect": 1064.307,
+      "action": 213.159,
+      "settle_wait": 600.17,
+      "permission": 916.654,
+      "screenshot": 416.93,
+      "png_save": 135.281,
+      "ui_dump": 71.668,
+      "rotation": 272.61,
+      "xml_save": 3.478,
+      "foreground": 380.859
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

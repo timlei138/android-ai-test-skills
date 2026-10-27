@@ -1,0 +1,169 @@
+{
+  "call_id": "4efc61cf0cb24d2a9f3399abb5446915",
+  "session_id": 381,
+  "tool": "act",
+  "started_at": "2026-10-09T20:32:42.148",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T20:32:48.765",
+  "wall_ms": 6612.856,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 2835,
+      "y": 203,
+      "via": "iv_more",
+      "why": "menu"
+    },
+    "ts": "2026-10-09T20:32:48",
+    "package": "com.zui.calendar",
+    "activity": ".AllInOneActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "4efc61cf0cb24d2a9f3399abb5446915",
+    "timing": {
+      "call_id": "4efc61cf0cb24d2a9f3399abb5446915",
+      "measured_at": "2026-10-09T20:32:48.529",
+      "process_observed_ms": 4573.891,
+      "stages_ms": {
+        "device_import": 290.334,
+        "device_connect": 1055.863,
+        "action": 176.263,
+        "settle_wait": 600.177,
+        "permission": 1027.354,
+        "screenshot": 387.614,
+        "png_save": 238.624,
+        "ui_dump": 69.775,
+        "rotation": 200.282,
+        "xml_save": 4.947,
+        "foreground": 441.241
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=rv_more_menu",
+      "rid=item_title",
+      "text=课程表",
+      "text=纵览",
+      "text=年视图",
+      "text=设置"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\381\\step1172\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\381\\step1172\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\381\\step1172\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          2697,
+          371
+        ],
+        "t": "课程表"
+      },
+      {
+        "c": [
+          2697,
+          532
+        ],
+        "t": "纵览"
+      },
+      {
+        "c": [
+          2697,
+          693
+        ],
+        "t": "年视图"
+      },
+      {
+        "c": [
+          2697,
+          854
+        ],
+        "t": "设置"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          2697,
+          371
+        ]
+      },
+      {
+        "i": 1,
+        "c": [
+          2697,
+          532
+        ]
+      },
+      {
+        "i": 2,
+        "c": [
+          2697,
+          693
+        ]
+      },
+      {
+        "i": 3,
+        "c": [
+          2697,
+          854
+        ]
+      }
+    ],
+    "nodes_count": 4,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2194
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "4efc61cf0cb24d2a9f3399abb5446915",
+    "measured_at": "2026-10-09T20:32:48.677",
+    "process_observed_ms": 4726.9,
+    "stages_ms": {
+      "device_import": 290.334,
+      "device_connect": 1055.863,
+      "action": 176.263,
+      "settle_wait": 600.177,
+      "permission": 1027.354,
+      "screenshot": 387.614,
+      "png_save": 238.624,
+      "ui_dump": 69.775,
+      "rotation": 200.282,
+      "xml_save": 4.947,
+      "foreground": 441.241,
+      "meta_save": 4.788,
+      "crash_detection": 97.5,
+      "screen_signature": 39.451,
+      "event_write": 1.943,
+      "node_summary": 0.886,
+      "node_labels": 0.639,
+      "next_targets": 0.037,
+      "serialization": 0.204
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 2514
+  },
+  "response_bytes": 2514,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2194
+    ]
+  }
+}

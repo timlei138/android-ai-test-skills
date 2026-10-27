@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T20:55:23",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimetableListActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 176,
+    "y": 615,
+    "via": "checkbox_select(第2行)",
+    "why": "勾选第2个课表"
+  }
+}

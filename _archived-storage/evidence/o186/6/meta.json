@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T20:51:23",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimetableListActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1244,
+    "y": 1109,
+    "via": "text=取消",
+    "why": "步骤3: 点击取消"
+  }
+}

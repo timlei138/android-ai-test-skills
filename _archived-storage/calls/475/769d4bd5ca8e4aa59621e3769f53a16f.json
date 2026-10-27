@@ -1,0 +1,177 @@
+{
+  "call_id": "769d4bd5ca8e4aa59621e3769f53a16f",
+  "session_id": 475,
+  "tool": "act",
+  "started_at": "2026-10-26T21:01:58.807",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-26T21:02:03.729",
+  "wall_ms": 4912.358,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 1795,
+      "y": 1109,
+      "via": "rid=button1,text=确定",
+      "why": "前提准备：确认删除课程表"
+    },
+    "ts": "2026-10-26T21:02:03",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.management.TimetableListActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "769d4bd5ca8e4aa59621e3769f53a16f",
+    "timing": {
+      "call_id": "769d4bd5ca8e4aa59621e3769f53a16f",
+      "measured_at": "2026-10-26T21:02:03.520",
+      "process_observed_ms": 4306.356,
+      "stages_ms": {
+        "device_import": 387.785,
+        "device_connect": 1142.027,
+        "action": 199.713,
+        "settle_wait": 600.274,
+        "permission": 938.939,
+        "screenshot": 379.195,
+        "png_save": 148.596,
+        "ui_dump": 47.24,
+        "rotation": 134.783,
+        "xml_save": 2.647,
+        "foreground": 232.342
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "desc=转到上一层级",
+      "rid=toolbar_title",
+      "text=全部课程表",
+      "rid=action_schedule",
+      "desc=编辑",
+      "rid=action_add_schedule",
+      "desc=添加课程表",
+      "rid=emptyView",
+      "text=没有课程表",
+      "text=点击 + 创建新课程表"
+    ],
+    "checkpoint": {
+      "checked": true,
+      "ok": true,
+      "matched": [
+        "activity=TimetableListActivity"
+      ],
+      "missed": []
+    },
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "D:\\Project\\deepseek\\android-ai-test-skills\\storage\\evidence\\475\\step2660\\shot.png",
+      "xml": "D:\\Project\\deepseek\\android-ai-test-skills\\storage\\evidence\\475\\step2660\\dump.xml",
+      "meta": "D:\\Project\\deepseek\\android-ai-test-skills\\storage\\evidence\\475\\step2660\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          2754,
+          203
+        ],
+        "t": "编辑",
+        "r": "action_schedule"
+      },
+      {
+        "c": [
+          2891,
+          203
+        ],
+        "t": "添加课程表",
+        "r": "action_add_schedule"
+      },
+      {
+        "c": [
+          123,
+          203
+        ],
+        "t": "转到上一层级"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          123,
+          203
+        ],
+        "t": "转到上一层级"
+      },
+      {
+        "i": 1,
+        "c": [
+          2754,
+          203
+        ],
+        "t": "编辑",
+        "r": "action_schedule"
+      },
+      {
+        "i": 2,
+        "c": [
+          2891,
+          203
+        ],
+        "t": "添加课程表",
+        "r": "action_add_schedule"
+      }
+    ],
+    "nodes_count": 3,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      3805
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "769d4bd5ca8e4aa59621e3769f53a16f",
+    "measured_at": "2026-10-26T21:02:03.629",
+    "process_observed_ms": 4416.744,
+    "stages_ms": {
+      "device_import": 387.785,
+      "device_connect": 1142.027,
+      "action": 199.713,
+      "settle_wait": 600.274,
+      "permission": 938.939,
+      "screenshot": 379.195,
+      "png_save": 148.596,
+      "ui_dump": 47.24,
+      "rotation": 134.783,
+      "xml_save": 2.647,
+      "foreground": 232.342,
+      "meta_save": 2.855,
+      "crash_detection": 58.197,
+      "screen_signature": 39.172,
+      "event_write": 5.345,
+      "node_summary": 0.413,
+      "node_labels": 0.332,
+      "next_targets": 0.015,
+      "serialization": 0.115
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 2967
+  },
+  "response_bytes": 2967,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3805
+    ]
+  }
+}

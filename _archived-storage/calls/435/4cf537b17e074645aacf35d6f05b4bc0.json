@@ -1,0 +1,449 @@
+{
+  "call_id": "4cf537b17e074645aacf35d6f05b4bc0",
+  "session_id": 435,
+  "tool": "observe",
+  "started_at": "2026-10-15T10:42:13.965",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-15T10:42:27.657",
+  "wall_ms": 13685.576,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-15T10:42:27",
+    "package": "com.android.providers.media.module",
+    "activity": "com.android.providers.media.photopicker.PhotoPickerGetContentActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "4cf537b17e074645aacf35d6f05b4bc0",
+    "timing": {
+      "call_id": "4cf537b17e074645aacf35d6f05b4bc0",
+      "measured_at": "2026-10-15T10:42:27.404",
+      "process_observed_ms": 13063.039,
+      "stages_ms": {
+        "device_import": 387.488,
+        "device_connect": 1064.889,
+        "permission": 5265.45,
+        "screenshot": 392.643,
+        "png_save": 217.334,
+        "ui_dump": 83.799,
+        "rotation": 236.229,
+        "xml_save": 8.043,
+        "foreground": 5339.327
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=photo_picker_base",
+      "rid=bottom_sheet",
+      "rid=drag_bar",
+      "rid=privacy_text",
+      "text=此应用只能访问您选择的照片",
+      "rid=fragment_container",
+      "rid=picker_tab_viewpager",
+      "rid=picker_tab_recyclerview",
+      "desc=拍摄于 2026年10月9日 下午4:46:59的照片",
+      "rid=icon_thumbnail",
+      "desc=拍摄于 2026年10月9日 下午4:46:02的照片",
+      "desc=拍摄于 2026年10月9日 下午4:45:06的照片",
+      "desc=拍摄于 2026年10月9日 下午4:44:48的照片",
+      "desc=拍摄于 2026年10月9日 下午4:30:25的照片",
+      "desc=拍摄于 2026年10月9日 下午4:29:20的照片",
+      "desc=拍摄于 2026年10月9日 下午3:54:39的照片",
+      "desc=拍摄于 2026年10月9日 下午3:52:28的照片",
+      "desc=拍摄于 2026年10月9日 下午3:49:21的照片",
+      "desc=拍摄于 2026年10月9日 下午3:48:03的照片",
+      "desc=拍摄于 2026年10月9日 下午3:47:14的照片",
+      "desc=拍摄于 2026年10月9日 下午3:46:37的照片",
+      "desc=拍摄于 2026年10月9日 下午3:43:27的照片",
+      "desc=拍摄于 2026年10月9日 下午3:25:38的照片",
+      "desc=拍摄于 2026年10月9日 下午3:25:06的照片",
+      "desc=拍摄于 2026年10月9日 下午3:17:37的照片",
+      "desc=拍摄于 2026年10月9日 下午3:17:02的照片",
+      "desc=拍摄于 2026年10月9日 下午3:13:12的照片",
+      "desc=拍摄于 2026年10月9日 下午3:10:35的照片",
+      "desc=拍摄于 2026年10月9日 下午3:05:17的照片",
+      "desc=拍摄于 2026年10月9日 下午3:04:10的照片",
+      "rid=date_header_title",
+      "text=8月7日周五",
+      "desc=拍摄于 2026年8月7日 上午11:46:18的照片",
+      "rid=toolbar",
+      "desc=取消",
+      "rid=tab_layout",
+      "desc=照片",
+      "text=照片",
+      "desc=相册",
+      "text=相册",
+      "desc=更多选项"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\e168\\picker\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\e168\\picker\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\e168\\picker\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          165,
+          600
+        ],
+        "t": "拍摄于 2026年10月9日 下午4:46:59的照片"
+      },
+      {
+        "c": [
+          503,
+          600
+        ],
+        "t": "拍摄于 2026年10月9日 下午4:46:02的照片"
+      },
+      {
+        "c": [
+          842,
+          600
+        ],
+        "t": "拍摄于 2026年10月9日 下午4:45:06的照片"
+      },
+      {
+        "c": [
+          1181,
+          600
+        ],
+        "t": "拍摄于 2026年10月9日 下午4:44:48的照片"
+      },
+      {
+        "c": [
+          1519,
+          600
+        ],
+        "t": "拍摄于 2026年10月9日 下午4:30:25的照片"
+      },
+      {
+        "c": [
+          1858,
+          600
+        ],
+        "t": "拍摄于 2026年10月9日 下午4:29:20的照片"
+      },
+      {
+        "c": [
+          2197,
+          600
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:54:39的照片"
+      },
+      {
+        "c": [
+          2536,
+          600
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:52:28的照片"
+      },
+      {
+        "c": [
+          2874,
+          600
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:49:21的照片"
+      },
+      {
+        "c": [
+          165,
+          882
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:48:03的照片"
+      },
+      {
+        "c": [
+          503,
+          882
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:47:14的照片"
+      },
+      {
+        "c": [
+          842,
+          882
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:46:37的照片"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          1520,
+          1181
+        ],
+        "r": "picker_tab_viewpager",
+        "s": true
+      },
+      {
+        "i": 1,
+        "c": [
+          1520,
+          1181
+        ],
+        "s": true
+      },
+      {
+        "i": 2,
+        "c": [
+          1520,
+          1181
+        ],
+        "r": "picker_tab_recyclerview",
+        "s": true
+      },
+      {
+        "i": 3,
+        "c": [
+          165,
+          600
+        ],
+        "t": "拍摄于 2026年10月9日 下午4:46:59的照片"
+      },
+      {
+        "i": 4,
+        "c": [
+          503,
+          600
+        ],
+        "t": "拍摄于 2026年10月9日 下午4:46:02的照片"
+      },
+      {
+        "i": 5,
+        "c": [
+          842,
+          600
+        ],
+        "t": "拍摄于 2026年10月9日 下午4:45:06的照片"
+      },
+      {
+        "i": 6,
+        "c": [
+          1181,
+          600
+        ],
+        "t": "拍摄于 2026年10月9日 下午4:44:48的照片"
+      },
+      {
+        "i": 7,
+        "c": [
+          1519,
+          600
+        ],
+        "t": "拍摄于 2026年10月9日 下午4:30:25的照片"
+      },
+      {
+        "i": 8,
+        "c": [
+          1858,
+          600
+        ],
+        "t": "拍摄于 2026年10月9日 下午4:29:20的照片"
+      },
+      {
+        "i": 9,
+        "c": [
+          2197,
+          600
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:54:39的照片"
+      },
+      {
+        "i": 10,
+        "c": [
+          2536,
+          600
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:52:28的照片"
+      },
+      {
+        "i": 11,
+        "c": [
+          2874,
+          600
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:49:21的照片"
+      },
+      {
+        "i": 12,
+        "c": [
+          165,
+          882
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:48:03的照片"
+      },
+      {
+        "i": 13,
+        "c": [
+          503,
+          882
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:47:14的照片"
+      },
+      {
+        "i": 14,
+        "c": [
+          842,
+          882
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:46:37的照片"
+      },
+      {
+        "i": 15,
+        "c": [
+          1181,
+          882
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:43:27的照片"
+      },
+      {
+        "i": 16,
+        "c": [
+          1519,
+          882
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:25:38的照片"
+      },
+      {
+        "i": 17,
+        "c": [
+          1858,
+          882
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:25:06的照片"
+      },
+      {
+        "i": 18,
+        "c": [
+          2197,
+          882
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:17:37的照片"
+      },
+      {
+        "i": 19,
+        "c": [
+          2536,
+          882
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:17:02的照片"
+      },
+      {
+        "i": 20,
+        "c": [
+          2874,
+          882
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:13:12的照片"
+      },
+      {
+        "i": 21,
+        "c": [
+          165,
+          1221
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:10:35的照片"
+      },
+      {
+        "i": 22,
+        "c": [
+          503,
+          1221
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:05:17的照片"
+      },
+      {
+        "i": 23,
+        "c": [
+          842,
+          1221
+        ],
+        "t": "拍摄于 2026年10月9日 下午3:04:10的照片"
+      },
+      {
+        "i": 24,
+        "c": [
+          165,
+          1706
+        ],
+        "t": "拍摄于 2026年8月7日 上午11:46:18的照片"
+      },
+      {
+        "i": 25,
+        "c": [
+          99,
+          404
+        ],
+        "t": "取消"
+      },
+      {
+        "i": 26,
+        "c": [
+          1663,
+          404
+        ],
+        "t": "相册"
+      },
+      {
+        "i": 27,
+        "c": [
+          2952,
+          404
+        ],
+        "t": "更多选项"
+      }
+    ],
+    "nodes_count": 28,
+    "nodes_mode": "nav",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      3148
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "4cf537b17e074645aacf35d6f05b4bc0",
+    "measured_at": "2026-10-15T10:42:27.565",
+    "process_observed_ms": 13223.438,
+    "stages_ms": {
+      "device_import": 387.488,
+      "device_connect": 1064.889,
+      "permission": 5265.45,
+      "screenshot": 392.643,
+      "png_save": 217.334,
+      "ui_dump": 83.799,
+      "rotation": 236.229,
+      "xml_save": 8.043,
+      "foreground": 5339.327,
+      "meta_save": 6.669,
+      "screen_signature": 49.447,
+      "crash_detection": 83.146,
+      "event_write": 3.7,
+      "node_summary": 2.587,
+      "node_labels": 2.476,
+      "next_targets": 0.106,
+      "serialization": 0.605
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 8712
+  },
+  "response_bytes": 8712,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3148
+    ]
+  }
+}

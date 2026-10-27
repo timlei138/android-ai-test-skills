@@ -1,0 +1,349 @@
+{
+  "call_id": "f0a768751c4846ed8ee6538fcfef3106",
+  "session_id": 420,
+  "tool": "observe",
+  "started_at": "2026-10-10T15:58:18.750",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T15:58:24.069",
+  "wall_ms": 5307.339,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-10T15:58:23",
+    "package": "com.zui.calendar",
+    "activity": ".newbuild.NewBuildActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "f0a768751c4846ed8ee6538fcfef3106",
+    "timing": {
+      "call_id": "f0a768751c4846ed8ee6538fcfef3106",
+      "measured_at": "2026-10-10T15:58:23.819",
+      "process_observed_ms": 3424.52,
+      "stages_ms": {
+        "device_import": 320.655,
+        "device_connect": 1066.605,
+        "permission": 900.641,
+        "screenshot": 286.873,
+        "png_save": 71.871,
+        "ui_dump": 78.849,
+        "rotation": 247.078,
+        "xml_save": 15.511,
+        "foreground": 386.606
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "rid=backtext",
+      "rid=toolbar_title",
+      "text=新建事件",
+      "rid=action_menu_view",
+      "rid=save_view",
+      "text=完成",
+      "rid=categoryList",
+      "rid=categoryLayout",
+      "rid=categoryIcon",
+      "rid=categoryName",
+      "text=提醒",
+      "text=日程",
+      "text=课程",
+      "text=倒数日",
+      "text=生日",
+      "text=纪念日",
+      "rid=pager_container",
+      "rid=birthdayTvName",
+      "text=请输入姓名",
+      "rid=birthdayIvAddFromContact",
+      "rid=birthdayLlDate",
+      "rid=birthdayTvEdit",
+      "text=10月10日",
+      "rid=birthdayLlReminder",
+      "rid=birthdayTvReminder",
+      "text=任务发生当天",
+      "rid=birthdayTvContactPhone",
+      "text=手机",
+      "rid=birthdayEtNotes",
+      "text=备注"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\420\\step1891\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\420\\step1891\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\420\\step1891\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          162,
+          203
+        ],
+        "t": "新建事件",
+        "r": "backtext"
+      },
+      {
+        "c": [
+          2847,
+          203
+        ],
+        "t": "完成",
+        "r": "save_view"
+      },
+      {
+        "c": [
+          2128,
+          1074
+        ],
+        "t": "手机",
+        "r": "pager_container",
+        "s": true
+      },
+      {
+        "c": [
+          2084,
+          469
+        ],
+        "t": "请输入姓名",
+        "r": "birthdayTvName"
+      },
+      {
+        "c": [
+          2128,
+          642
+        ],
+        "t": "10月10日",
+        "r": "birthdayLlDate"
+      },
+      {
+        "c": [
+          2128,
+          815
+        ],
+        "t": "任务发生当天",
+        "r": "birthdayLlReminder"
+      },
+      {
+        "c": [
+          2128,
+          1043
+        ],
+        "t": "手机",
+        "r": "birthdayTvContactPhone"
+      },
+      {
+        "c": [
+          2128,
+          1216
+        ],
+        "t": "备注",
+        "r": "birthdayEtNotes"
+      },
+      {
+        "c": [
+          608,
+          472
+        ],
+        "t": "提醒"
+      },
+      {
+        "c": [
+          608,
+          651
+        ],
+        "t": "日程"
+      },
+      {
+        "c": [
+          608,
+          830
+        ],
+        "t": "课程"
+      },
+      {
+        "c": [
+          608,
+          1009
+        ],
+        "t": "倒数日"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          162,
+          203
+        ],
+        "r": "backtext"
+      },
+      {
+        "i": 1,
+        "c": [
+          2847,
+          203
+        ],
+        "t": "完成",
+        "r": "save_view"
+      },
+      {
+        "i": 2,
+        "c": [
+          608,
+          472
+        ]
+      },
+      {
+        "i": 3,
+        "c": [
+          608,
+          651
+        ]
+      },
+      {
+        "i": 4,
+        "c": [
+          608,
+          830
+        ]
+      },
+      {
+        "i": 5,
+        "c": [
+          608,
+          1009
+        ]
+      },
+      {
+        "i": 6,
+        "c": [
+          608,
+          1188
+        ]
+      },
+      {
+        "i": 7,
+        "c": [
+          608,
+          1367
+        ]
+      },
+      {
+        "i": 8,
+        "c": [
+          2128,
+          1074
+        ],
+        "r": "pager_container",
+        "s": true
+      },
+      {
+        "i": 9,
+        "c": [
+          2128,
+          1074
+        ],
+        "s": true
+      },
+      {
+        "i": 10,
+        "c": [
+          2084,
+          469
+        ],
+        "t": "请输入姓名",
+        "r": "birthdayTvName"
+      },
+      {
+        "i": 11,
+        "c": [
+          2875,
+          469
+        ],
+        "r": "birthdayIvAddFromContact"
+      },
+      {
+        "i": 12,
+        "c": [
+          2128,
+          642
+        ],
+        "r": "birthdayLlDate"
+      },
+      {
+        "i": 13,
+        "c": [
+          2128,
+          815
+        ],
+        "r": "birthdayLlReminder"
+      },
+      {
+        "i": 14,
+        "c": [
+          2128,
+          1043
+        ],
+        "t": "手机",
+        "r": "birthdayTvContactPhone"
+      },
+      {
+        "i": 15,
+        "c": [
+          2128,
+          1216
+        ],
+        "t": "备注",
+        "r": "birthdayEtNotes"
+      }
+    ],
+    "nodes_count": 16,
+    "nodes_mode": "nav",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      2911
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "f0a768751c4846ed8ee6538fcfef3106",
+    "measured_at": "2026-10-10T15:58:23.984",
+    "process_observed_ms": 3595.081,
+    "stages_ms": {
+      "device_import": 320.655,
+      "device_connect": 1066.605,
+      "permission": 900.641,
+      "screenshot": 286.873,
+      "png_save": 71.871,
+      "ui_dump": 78.849,
+      "rotation": 247.078,
+      "xml_save": 15.511,
+      "foreground": 386.606,
+      "meta_save": 8.146,
+      "screen_signature": 33.376,
+      "crash_detection": 117.204,
+      "event_write": 1.927,
+      "node_summary": 1.147,
+      "node_labels": 0.85,
+      "next_targets": 0.063,
+      "serialization": 0.259
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 5235
+  },
+  "response_bytes": 5235,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2911
+    ]
+  }
+}

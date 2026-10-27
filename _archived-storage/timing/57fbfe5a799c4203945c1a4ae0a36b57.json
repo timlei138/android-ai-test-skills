@@ -1,0 +1,1 @@
+{"call_id": "57fbfe5a799c4203945c1a4ae0a36b57", "measured_at": "2026-10-10T12:03:55.310", "process_observed_ms": 5091.826, "stages_ms": {"device_import": 306.253, "device_connect": 1026.356, "action": 3390.506, "input_focus_wait": 300.572, "serialization": 0.065}, "scope": "since runtime import; startup and earlier imports require launcher timing", "response_bytes": 397}

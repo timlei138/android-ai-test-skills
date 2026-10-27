@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-10T16:19:46",
+  "package": "com.zui.calendar",
+  "activity": ".settings.GrabVoteSettingsActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1519,
+    "y": 1010,
+    "via": "month-wheel",
+    "why": "next"
+  },
+  "call_id": "803a3a4d55654b7b87a810dc575a0c23",
+  "timing": {
+    "call_id": "803a3a4d55654b7b87a810dc575a0c23",
+    "measured_at": "2026-10-10T16:19:46.603",
+    "process_observed_ms": 4386.996,
+    "stages_ms": {
+      "device_import": 286.229,
+      "device_connect": 1156.13,
+      "action": 180.337,
+      "settle_wait": 600.099,
+      "permission": 912.647,
+      "screenshot": 364.287,
+      "png_save": 108.122,
+      "ui_dump": 88.423,
+      "rotation": 224.468,
+      "xml_save": 2.08,
+      "foreground": 364.036
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

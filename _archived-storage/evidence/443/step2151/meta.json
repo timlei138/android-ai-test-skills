@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T12:03:16",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.crop.CropImageActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1268,
+    "via": "rid=button1(知道了)",
+    "why": "关网络提示框"
+  },
+  "call_id": "189168d7cc72469eb33bf430245663ec",
+  "timing": {
+    "call_id": "189168d7cc72469eb33bf430245663ec",
+    "measured_at": "2026-10-15T12:03:16.522",
+    "process_observed_ms": 14000.096,
+    "stages_ms": {
+      "device_import": 399.804,
+      "device_connect": 1123.89,
+      "action": 192.113,
+      "settle_wait": 600.329,
+      "permission": 5361.617,
+      "screenshot": 360.139,
+      "png_save": 207.745,
+      "ui_dump": 92.922,
+      "rotation": 231.525,
+      "xml_save": 3.949,
+      "foreground": 5340.145
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

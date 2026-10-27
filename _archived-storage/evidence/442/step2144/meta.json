@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T11:58:13",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.display.TimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 123,
+    "y": 203,
+    "via": "desc=关闭",
+    "why": "用例176步骤6"
+  },
+  "call_id": "eb7559af2b234c3bb1bb320c30f11f05",
+  "timing": {
+    "call_id": "eb7559af2b234c3bb1bb320c30f11f05",
+    "measured_at": "2026-10-15T11:58:13.009",
+    "process_observed_ms": 14486.096,
+    "stages_ms": {
+      "device_import": 357.873,
+      "device_connect": 1148.627,
+      "action": 489.369,
+      "settle_wait": 600.702,
+      "permission": 5382.051,
+      "screenshot": 417.87,
+      "png_save": 167.44,
+      "ui_dump": 147.888,
+      "rotation": 253.687,
+      "xml_save": 7.262,
+      "foreground": 5438.402
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

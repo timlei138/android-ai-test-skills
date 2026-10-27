@@ -1,0 +1,388 @@
+# 用例程序化描述（Programmatic Case Spec）
+#
+# 用途：把「已验证成功的路径」沉淀成**可直接回放**的结构化文件。
+#       执行时不再由 AI 临场判断，只按本文件走。
+#
+# 与用例库的关系：一个 case 对应一个 yaml，文件名 = 用例标题。
+#   用例原文（步骤/预期）→ storage/sessions.db 的 cases.input
+#   本文件              → 用例的**可执行形态**
+#
+# ⚠️ 三条硬规矩（写本文件时务必遵守）：
+#   1. **定位一律用 rid/文案，坐标只作兜底**——换设备/换分辨率后坐标必失效。
+#   2. **on_fail 必须显式**——失败就是失败，**不允许**「换个入口再试试」。
+#   3. **判据必须是机器可判的**（rid/activity/文案），不接受「显示正常」这类主观描述。
+#
+# ⚠️ 第 4 条硬规矩（**活的 next vs 死的 YAML**，会话454 回放实测后加）：
+#   `next` 是**活的**：它只报告"当前这一屏实际能点什么"；YAML 是**死的**：
+#   它写死了"应该点哪个 rid"。两者对不上时**不会报错**，只会静默跑偏。
+#   三种失败形态（实测）：
+#     ① 目标 rid 当前屏不存在 -> 点击落在空处，activity 不变，**无任何报错**
+#        （会话454：设备停在时间设置页时点 iv_more，sig 里 iv_more=False，点空）
+#     ② 目标 rid 存在但位置不同 -> 若信任 YAML 里的坐标会**点到旁边的东西**，
+#        可能执行错误动作并改坏状态  ← 最危险
+#     ③ 目标 rid 存在但语义变了 -> 同一个 button1 在不同弹框里可能是"删除"/"确定"
+#   ⇒ **回放规则（必须遵守）**：
+#     a. 每个 step 执行前，先从**当前屏**的 next/nodes 里**按 rid（或 text/desc）查**该目标；
+#     b. 找到 -> 用**本次查到的位置**执行，**不要**抄本文件里的坐标；
+#     c. **找不到 -> 立即停，按该 step 的 on_fail 处理**（通常是 BLOCKED），
+#        **绝不**改用坐标硬点、也绝不"换个入口再试试"；
+#     d. 坐标**只在元素无 rid 且无 text/desc（自绘控件）时**才用，且必须按规则现算。
+#   一句话：**rid 是判据，坐标是注释。**
+#
+# ⚠️ 已废除 `coords_hint`（2026-10-15）：它写的是"当时的实测值"，既会变、又容易被当成权威直接抄。
+#    真实事故：会话465 抄了 llCourseTime 的坐标点，实际点到 llCourseWeeks，开错弹框白扔 2 次调用。
+#    ⇒ 有 rid/text 的一律按组合定位。
+#
+# ⚠️ 编码：本文件必须为 UTF-8（无 BOM）。经 GBK 管道写入会产生大量 '?'
+#    且 YAML **仍能解析**——即「合法但内容已毁」。保存后务必肉眼确认中文正常。
+#
+# ⚠️ 引号约定：**字符串定界符一律用半角双引号**（YAML 语法）；
+#    正文中需要强调/引用时用中文引号「」『』。**切勿混用** ——
+#    中文引号在 YAML 里不是定界符，会把引号本身变成值的一部分。
+#
+# ⚠️ 本用例**未跑完**（会话453 因工具层中断锁定，4 条预期 BLOCKED）。
+#    本文件只沉淀**已实测到的部分**，未验证处一律在 todo 与 assertions 中显式标注，
+#    不臆测、不补全。补跑后应回头修订本文件。
+
+meta:
+  case_id: 16
+  title: "联想日历_178_手动创建课程表-课程时间设置"
+  package: "com.zui.calendar"
+  derived_from:
+    session: 453
+    status: "BLOCKED"
+    device: "TB323FU (51e8bf1c)"
+    resolution: [3040, 1904]
+    date: "2026-10-15"
+
+# ── 执行须知（渲染到 MD 顶部，回放前必读）────────────────
+# 为什么写在这里而不是 SKILL.md：这些是**跟着这条用例走**的操作约束，
+# 不是通用规约。放 SKILL 里会被当背景噪音跳过，放这里才会在回放前被读到。
+playbook:
+  - title: "坑挂在步骤上，不放在文件级"
+    body: |
+      本文件的坑一律写在**它真正会出现的那一步**的 `pitfalls:` 下。
+      回放是**按步走**的 —— 跑到第 2 步时第 1 步的坑还在眼前，**信息被稀释**，
+      真正相关的那条反而看不见。**走到哪一步，就只看那一步的 `pitfalls`。**
+
+  - title: "工具层的坑（与 App 无关，知识卡里不一定有）"
+    body: |
+      这类坑不属于任何页面，是**工具或操作方式本身**的问题：
+      · ❌ `act input` 清空输入框会触发工具层崩溃
+        （`ADB_KEYBOARD_CLEAR_TEXT` → `ExtractedText.text on a null object reference`），
+        且崩溃后会话状态不明（`execution_state=may_have_executed`）
+        —— 按规约**禁止重放**，会话只能以 BLOCKED 收尾。
+      · ❌ 用 `swipe` 拨滚轮/滑列表：**有惯性会过冲**，来回震荡无法收敛。
+        重复手势一律用 `act tap --repeat N --gap MS`。
+      · ❌ 用 PowerShell 的 `for`/`foreach` 包 `run.py`：**中断即锁死会话**。
+      ⚠️ 实测教训：某次**连拨滚轮 37 次**才想起查卡，而知识卡那节标题叫
+      「弹框滚轮-上课时长循环」—— 从"我在拨滚轮"这个**现象根本检索不到它**。
+      ⇒ 检索知识卡时，用你脑子里的**现象词**（拨不准/过冲/没反应）换几个说法多 grep 几次。
+
+# ── 前置条件 ──────────────────────────────────────────
+# 不满足就 BLOCKED。**绝不自己去凑条件**。
+# ── 前置条件 ──────────────────────────────────────────
+# 分三类（2026-10-15 定）——**因为"能不能动手改"是三种不同的事**：
+#   goto    🧭 导航：把 App 开到某界面。起点由 session start 的冷启动钉死在首页，故必写。
+#   prepare 🔧 准备：要动手改设备状态。**已有则跳过**（skip_if），做法写死在 do 里。
+#   assert  🔒 断言：只能检查、改不了。不满足即 BLOCKED。
+# ⚠️ 为什么必须分：原先笼统一个列表，AI 分不清该"动手做"还是"直接停"——
+#    同一份 YAML 里，「存在课表」动手建了，「周视图有空白格」却不敢动而卡住。
+# ⚠️ 清理类（pm clear / pm revoke）**只在用例明确要求时**才用（如「首次使用」）。
+#    会话开始只 force-stop（关进程、不碰数据）。
+# ⚠️ 条目**只增不删**：老条目里常含用例前提（如「未授予相机权限」「记下节数基线」），
+#    那是断言依据，删掉了就没法判卷。
+preconditions:
+  - desc: 从日历首页进到课程表基本信息编辑页（会话已冷启动复位，起点必为首页）
+    type: goto
+    target: 课程表基本信息编辑页（.timetable.management.EditTimetableActivity）
+    path: >
+      日历首页 → 点右上角「更多」`iv_more` → 菜单里点「课程表」（→ TimetableActivity 课程表页）
+      → 点 `btnCreateManually`「手动创建课程表」→ EditTimetableActivity。
+      ⚠️ 菜单**四项共用 rid `item_title`**（课程表/纵览/年视图/设置），必须按 text 区分。
+      ⚠️ **共 3 次调用**（会话470 实测 ev#3681 ev#3682 ev#3683）——
+      本用例起点是**编辑页**而不是课程表页，别只走到课程表页就停（这是本用例最容易走错的一步）。
+    skip_if:
+      activity: .timetable.management.EditTimetableActivity
+    on_fail: BLOCKED
+    verified_by: 会话470 ev#3681 ev#3682 ev#3683 实测三次调用到编辑页
+  - desc: ★起点：当前停在**课程表基本信息编辑页**（『新建课程表』或『编辑课程表』）
+    check:
+      activity: .timetable.management.EditTimetableActivity
+    how: 读 activity 确认；不是则先经空态 btnCreateManually 或有课表时经列表页进入。
+    on_fail: BLOCKED
+    note: s1 依赖起点是编辑页（要点其上的 layout_time_settings 行）。
+    verified_by: 会话453 起于会话452 遗留的『新建课程表』编辑页
+    type: assert
+  - desc: 从「手动创建课程表」路径进入课程表基本信息编辑页（用例前提原文）
+    check:
+      activity: .timetable.management.EditTimetableActivity
+      title: 新建课程表
+    how: '课程表空态点 btnCreateManually（手动创建课程表）。 本用例前提写的是「**手动创建**课程表」，不是图库/拍照导入 —— **两条路径的时间设置页默认值不同**（见 s1 的 why_this），不可混用。
+
+      '
+    on_fail: BLOCKED
+    note: '⚠️ 若已有课表，也可从「周视图 → action_curriculum_table_settings → 课表名 → 编辑课程表页」进入，但那是**已保存课表**， 其时序/默认值可能与「新建」不同，回放时需注意。
+
+      '
+    verified_by: 会话453 实测：由会话452 的未保存新建课表页直接进入
+    type: assert
+steps:
+  - id: s1
+    desc: "在基本信息编辑页点「课程时间设置」，进入课程时间设置页"
+    case_step: "1. 进入课程时间设置页"
+    do:
+      - tap: {rid: layout_time_settings}
+    know:
+      where: >
+        课程表基本信息编辑页 (.timetable.management.EditTimetableActivity)
+        → 课程时间设置页 (.timetable.management.TimeSlotSettingsActivity)
+      why_this: |
+        点 layout_time_settings（『课程时间设置』行，本机 c=[1520,1694]）
+        直接进入 TimeSlotSettingsActivity。
+        ⚠️ **本页默认值随课表来源而变**（实测对比）：
+          手动创建：上课时长 **50分钟**、上午4节、下午4节、上午第1节 **08:00-08:50**
+          图库导入：上课时长 **30分钟**、上午4节、下午5节、上午第1节 **08:00-08:30**
+        因此**不能拿导入课表的数值来核对本用例**（本用例是手动创建路径）。
+      locate: "rid=layout_time_settings"
+    expect:
+      activity: ".timetable.management.TimeSlotSettingsActivity"
+      # ★ 位置判据：s1/s2 的 activity **完全相同**，光看它认不出"走到哪了"。
+      #   用**设置项节点是否已读到**区分：
+      #   s1 做完 = 刚进这页（本步不读值）；s2 做完 = 5 类设置项均可读到。
+      node_present: {rid: layout_lesson_duration}
+      note: "刚进页：确认 `layout_lesson_duration`（『每节课上课时长』行）在屏上即算到位。若已读到 tv_lesson_duration=50分钟 等具体值，说明 s2 已跑过，直接从 s2 之后接续。"
+    on_fail: "BLOCKED"
+    pitfalls:
+      - "⚠️ **本页默认值随课表来源不同**：手动创建 50分钟/上午第1节08:00-08:50；图库导入 30分钟/上午第1节08:00-08:30。就本页而言**别把本页数值与『导入课程表信息编辑页』的数值混为一谈**，两者默认上课时长不同（本用例是手动创建路径）——核对数值前先确认课表来源。"
+    evidence: "会话453 ev#3542 ev#3543"
+
+  - id: s2
+    desc: "查看页面上全部设置项（上课时长 / 课间休息 / 上午节数 / 下午节数 / 各行时间）"
+    case_step: "1. 设置项包括：每节课上课时长、课间休息时长、上午、下午、晚上课程节数和每节课时间设置"
+    do:
+      - observe: {full: true, no_filter: true}
+    know:
+      where: "课程时间设置页 (.timetable.management.TimeSlotSettingsActivity)"
+      why_this: |
+        本页可直接从 UI 树读全（**不需要逐个点开**），实测节点：
+          layout_lesson_duration  → tv_lesson_duration      （本机 50分钟）
+          layout_break_duration   → tv_break_duration       （本机 10分钟）
+          layout_morning_header   → tv_morning_slot_count   （本机 4节）
+          layout_afternoon_header → tv_afternoon_slot_count （本机 4节）
+          每个节行：tv_slot_number（第N节）+ tv_time_range（08:00-08:50）+ iv_arrow（desc=编辑）
+        **先用一次 --full observe 读全，不要一节一节点开去看**。
+      locate: "见上列 rid"
+    expect:
+      activity: ".timetable.management.TimeSlotSettingsActivity"
+      # ★ 位置判据：与 s1 同为 TimeSlotSettingsActivity，靠"值已读到"区分。
+      #   s2 做完 = 5 类设置项的**值节点**均可读到（不只是标题行）。
+      nodes_present:
+        - {rid: tv_lesson_duration}
+        - {rid: tv_break_duration}
+        - {rid: tv_morning_slot_count}
+        - {rid: tv_afternoon_slot_count}
+      note: "读完应能同时看到课的时长/课间/上午节数/下午节数**四个值节点**。若只有 `layout_*` 标题行、读不到 `tv_*` 值，说明 s2 尚未跑。"
+    on_fail: "BLOCKED"
+    pitfalls:
+      - "⚠️ **『晚上课程』分组不存在**：对本页完整 dump 检索 晚上/evening/night 均 **0 处命中**，页面只有 上午课程、下午课程 两组。用例预期1/4/5 里所有『晚上』相关项（含『晚上课程节数』『晚上第一小节』）在此**无法验证**（与用例175 的观察一致）。"
+      - "⚠️ 本页是**只读观察**：本步只用一次 `--full observe` 读全（layout_lesson_duration→tv_lesson_duration、layout_break_duration→tv_break_duration、layout_morning_header→tv_morning_slot_count、layout_afternoon_header→tv_afternoon_slot_count、每节行 tv_slot_number/tv_time_range/iv_arrow），**不要一节一节点开去看**。"
+    evidence: "会话453 ev#3543"
+
+  - id: s3
+    desc: "点「每节课上课时长」打开弹框，读取默认值与档位"
+    case_step: "2. 点击后弹框可选择每节课上课时长（分钟）"
+    do:
+      - tap: {rid: layout_lesson_duration}
+      - read: {name: "读取弹框内选中行动作"}
+      - tap: {rid: button2, text: "取消"}
+    know:
+      where: "课程时间设置页上的模态弹框"
+      why_this: |
+        点 layout_lesson_duration → 弹框 alertTitle=『每节课上课时长（分钟）』，
+        button2=取消 / button1=确定（⚠️ 用例写的是「完成/取消」，**实机是「取消/确定」**）。
+        滚轮为 **Canvas 自绘，dump 读不到当前值**，只能用 `read.py` OCR。
+      locate: "rid=layout_lesson_duration；弹框 button1/button2"
+    expect:
+      dialog_present: {alertTitle: "每节课上课时长（分钟）"}
+    on_fail: "BLOCKED"
+    pitfalls:
+      - "⚠️ 该弹框默认值为 **50分钟**（手动创建课表），OCR 邻档为 45 / 55，**步长 5**。"
+      - "⚠️⚠️ **该弹框滚轮不要用 swipe 拨，要点格**：Canvas 自绘滚轮 dump 读不到值，且 swipe 有惯性会过冲（实测一次滑动跳过好几档，来回震荡无法收敛）。正确做法是**点选中行的上一格/下一格 = ∓1 档**，用 `act tap --x .. --y .. --repeat N` 一次点到位。"
+      - "❌ **更不要用 PowerShell 循环包 `run.py`** —— 会话453 就是那样做的，中途被中断后会话直接锁死（incomplete recording），4 条预期只能记 BLOCKED。"
+      - "⚠️ **别用 OCR 反馈驱动循环**：知识卡记载过「目标值5但OCR返回None → 脚本以为没动继续点 → 绕圈14分钟」的事故。正确做法是**按档位次数点按（不读 OCR 反馈）**，点确定，再**读 UI 树文本**（tv_lesson_duration / tv_break_duration）作判据。"
+      - "⚠️ 弹框按钮文案实机为『取消/确定』（本机 button2=取消 c=[1244,1359]、button1=确定 c=[1795,1359]；用例写「完成/取消」）—— **按 rid 定位，别按文案找『完成』**。"
+      - "⚠️ 滚轮为 Canvas 自绘、**dump 读不到当前值**，读值只能用 `read.py` OCR。"
+      - text: >-
+          ⚠️ **收尾时 `act back` 第一次会被吞** —— 从课程时间设置页 back 一次只回到
+          `EditTimetableActivity`，**再 back 一次才退回课程表页**（会话470 实测 ev#3688→3689→3690）。
+          原因：编辑页的课程表名是必填项、未填，App 拦了首次返回。
+          ⇒ 别把「back 一次没退出去」当成卡死或需要强杀；**再 back 一次**即可。
+          ⚠️ 本用例**不要点 `save_view`「完成」** —— 那会真建出一个课表、改变设备状态
+          （用例只做设置项验证，未要求保存）。
+        evidence: "会话470 ev#3688 ev#3689 ev#3690 实测 back 两次才退出；退出后课程表页仍为空态，确认未保存"
+    evidence: "会话453 ev#3544 ev#3545；会话470 ev#3684~ev#3690"
+
+# ── 断言（对应用例的预期）─────────────────────────────
+assertions:
+  - id: a1
+    case_expect: "1. 进入课程时间设置页，设置项包括：每节课上课时长、课间休息时长、上午、下午、晚上课程节数和每节课时间设置"
+    desc: "页面含各设置项；**但『晚上』一项不存在**"
+    check:
+      nodes_present:
+        - {rid: layout_lesson_duration, text: "50分钟"}
+        - {rid: layout_break_duration, text: "10分钟"}
+        - {rid: layout_morning_header}
+        - {rid: tv_morning_slot_count, text: "4节"}
+        - {rid: layout_afternoon_header}
+        - {rid: tv_afternoon_slot_count, text: "4节"}
+        - {rid: iv_arrow, desc: "编辑"}
+      node_absent: {keyword: ["晚上", "evening", "night"], scope: "整个页面 dump"}
+    status_last_run: "PASS"
+    evidence: "会话453 finding#346"
+    actual: >
+      **页面与各设置项成立，但『晚上』一项在页面上不存在。**
+      进入方式：编辑课程表页点 layout_time_settings -> TimeSlotSettingsActivity。
+      节行可点开编辑（iv_arrow desc=编辑，y=915/1076/1237/1398/1779）。
+      对完整 dump 检索 晚上 / evening / night 均 **0 处命中** ——
+      本页只有 上午课程、下午课程 两个分组，**不存在『晚上课程节数』设置项**。
+      注：本次下午为 **4节**（图库导入时为 5节），上午第1节 08:00-08:50
+      （图库导入时为 08:00-08:30，因其上课时长为30分钟）。
+
+  - id: a2
+    case_expect: "2. 默认50分钟；点击后弹框可选择每节课上课时长（分钟），选择分钟数后点击完成设置成功，点击取消后不修改设置；可选择30-120分钟"
+    desc: "默认 50 分钟；弹框成立；**值域 30-120 与保存/取消行为均已实测**"
+    check:
+      default_value: {rid: tv_lesson_duration, equals: "50分钟"}
+      dialog_on_tap: {alertTitle: "每节课上课时长（分钟）"}
+      value_range: "30-120，每档 5（会话473 实测）"
+      save_behavior: "确定→生效；取消→不修改（会话473 实测）"
+      wrap_behavior: "循环：越过 120 回绕到 30（会话473 实测）"
+    status_last_run: "PASS"
+    evidence: "会话453 finding#345 / ev#3544 ev#3545；**会话473 finding#394 ev#3783~ev#3796 补测值域与保存行为**"
+    actual: >
+      **全部通过（会话473 补测，原『未取到证据』项已补齐）。**
+      默认值 ✅ tv_lesson_duration=50分钟。
+      弹框 ✅ 点 layout_lesson_duration 弹出 alertTitle=『每节课上课时长（分钟）』，
+      button2=取消/button1=确定（⚠️ 用例写「完成/取消」，实机是「取消/确定」）。
+      ★值域 ✅ **{30,35,…,120} 每档 5**：从 50 上拨 14+9 格，**越过 120 后回绕到 30**
+      （读得 120在上 / 30选中 / 35在下）。上下界**均为循环**。
+      ★保存 ✅ 拨到 25 点确定 → tv_break_duration 类同，tv_lesson_duration 确定后生效。
+      ★取消不修改 ✅ 滚轮拨到 115 → 点取消 → 页面仍为 **50分钟**。
+      ⚠️ 拨档 `--gap` 不能太小：**gap 350 点 14 次只生效 5 格**、gap 800 点 9 次全生效。
+      ⚠️ 开弹框**不能用 `--repeat 2`**（会开了又关），必须点 1 次。
+    note: >
+      ⚠️ 原 note 称「值域 30-120 引自知识卡、非本次实测」——**会话473 已补实测，结论一致**。
+      同时**推翻**了知识卡「课间休息为钳制」的说法（实测课间休息也是循环，见 a3）。
+      滚动几何：选中行 y=1025、**格距 163px**（上格 862 / 下格 1192），按格点按非 swipe。
+
+  - id: a3
+    case_expect: "3. 默认10分钟；点击后弹框可选择课间休息时长（分钟），选择分钟数后点击完成设置成功，点击取消后不修改设置；可选择5-30分钟"
+    desc: "默认 10 分钟；弹框可开；**值域 5-30 与保存/取消行为均已实测**"
+    check:
+      default_value: {rid: tv_break_duration, equals: "10分钟"}
+      dialog_on_tap: {alertTitle: "课间休息时长（分钟）"}
+      value_range: "5-30，每档 5，共 6 档（会话473 实测）"
+      save_behavior: "确定→生效；取消→不修改（会话473 实测）"
+      wrap_behavior: "循环：5 上拨回绕到 30、30 上拨回绕到 25（会话473 实测）"
+    status_last_run: "PASS"
+    evidence: "会话453 finding#348；**会话473 finding#393 ev#3736~ev#3756 补测**"
+    actual: >
+      **全部通过（会话473 补测，原『未验证』项已补齐）。**
+      默认值 ✅ tv_break_duration=10分钟。
+      ★值域 ✅ **{5,10,15,20,25,30} 每档 5 共 6 档，且为双向循环**：
+      10 上拨 1 格得 5（上方露出 30）；5 再上拨 → **30**（下界回绕）；
+      30 再上拨 → **25**（上界回绕）。
+      ★『选择分钟数后点击完成设置成功』✅ 拨到 25 点确定 → tv_break_duration **25分钟**。
+      ★『点击取消后不修改设置』✅ 再开弹框拨到 5 → 点取消 → **仍为 25分钟**（未回滚成 5）。
+      ⚠️ 点确定/取消后会**连带弹出「上午课程 第N节」弹框**，需再取消一次才回设置页。
+    note: >
+      ⚠️⚠️ **原 note 称课间休息为「钳制」，会话473 实测推翻**：实测是**循环**，
+      与上课时长同构（5↔30 双向回绕）。原「钳制」很可能是拨档次数不足
+      （gap 太小丢点）造成的误判。知识卡该条已同步更正。
+      滚动几何：选中行 y=1025、**格距 163px**（上格 862 / 下格 1192），按格点按非 swipe。
+
+  - id: a4
+    case_expect: "4. 默认早中晚各4节课；点击可修改节数最少为0节(只需验证一个时间段即可)"
+    desc: "未验证（部分旁证）"
+    check:
+      default_counts: {morning: "4节", afternoon: "4节"}
+      min_zero: "未验证"
+    status_last_run: "BLOCKED"
+    evidence: "会话453 finding#349"
+    actual: >
+      **未验证到（部分旁证）。** 旁证：tv_morning_slot_count=4节、
+      tv_afternoon_slot_count=4节，与用例『各4节课』吻合；
+      但『点击可修改』『最少为0节』未取得实测证据，且页面无晚上分组故『晚』无法核对。
+
+  - id: a5
+    case_expect: "5.上午第一小节时间默认为：8：00-8：50；下午第一小节时间默认为：14：00-15：50；晚上第一小节时间默认为：19：00-19：50；"
+    desc: "上午项精确吻合；下午项不符；晚上项不存在"
+    check:
+      morning_first: {rid: tv_time_range, equals: "08:00-08:50"}
+      afternoon_first: {rid: tv_time_range, measured: "14:00-14:50"}
+      evening_first: {node_absent: true}
+    status_last_run: "PARTIAL"
+    evidence: "会话453 finding#347；**会话473 ev#3782 二次复核（读数一致）**"
+    actual: >
+      **部分通过：上午项精确吻合，下午项不符，晚上项不存在。**
+      上午第一小节 ✅ tv_slot_number=第1节、tv_time_range=**08:00-08:50**，
+      与用例『8:00-8:50』**完全吻合**（本课表上课时长50分钟，
+      8:50=08:00+50min，自洽）。
+      下午第一小节 ❌ 实测 tv_time_range=**14:00-14:50**（第5节），
+      用例写『14：00-15：50』。按本课表50分钟时长推算应为 14:00-14:50，
+      实测与时长自洽（15:50 = 14:00 + 110min，与50分钟时长不符）。
+      晚上第一小节 ❌ 无法验证：页面无『晚上课程』分组，不存在『晚上第一小节』。
+      ★会话473 二次复核：完整读到 第1节08:00-08:50 / 第2节09:00-09:50 /
+      第3节10:00-10:50 / 第4节11:00-11:50 / **第5节14:00-14:50**，
+      与上述结论**逐项一致**（上午 50 分钟一节、下午首节仍为 14:00 起、无晚上分组）。
+    note: "下午项按如实记录，不替用例改写；括注中的推算仅作说明，不作为判据。⚠️ 本项**保持 PARTIAL 是正确的**——不是漏测，而是用例原文（14:00-15:50）与实机（14:00-14:50）不符，且『晚上』分组不存在；按『测试员不替用例改写』如实记录。"
+
+  - id: a6
+    case_expect: "6.点击后弹框可根据已设置的上课时长选择上课下课时间；点击完成后显示弹框询问是否根据课程时长和休息时长自动调整其他课程；点击确定自动调整其他课程时间，点击取消不调整其他课程时间；"
+    desc: "未验证"
+    check: {schedule_confirm_dialog: "未验证"}
+    status_last_run: "BLOCKED"
+    evidence: "会话453 finding#350"
+    actual: >
+      **未验证到。** 会话在验证预期2 过程中，一次 act 调用被中断
+      （audit: status=started, outcome=interrupted, executed=null），
+      会话随即被锁，未能执行到步骤6。**未做重放。**
+    note: >
+      参考（非本次实测，来自知识卡）：节行弹窗改值确定后会弹
+      『是否根据课程时长和休息时长自动调整其他课程？』确认框（**真实产品流程**）；
+      同步规则实测为：上午后续节 = 前节结束 + 课间休息，**下午/晚上不受影响**。
+
+  - id: a7
+    case_expect: "7. 课程提醒时间默认5分钟前，点击可修改提醒时间"
+    desc: "未验证"
+    check: {reminder_entry: "未验证"}
+    status_last_run: "BLOCKED"
+    evidence: "会话453 finding#351"
+    actual: >
+      **未验证到。** 同预期6，会话被锁未能执行到步骤7。
+    note: >
+      旁证：知识卡记载课程提醒时间入口在**编辑课程表页**（layout_default_reminder，
+      默认『5分钟前』），而**不在**本课程时间设置页；
+      本次在 TimeSlotSettingsActivity 的完整 dump 中亦未出现该入口，与知识卡一致，
+      但未取得本次实测的点击与修改证据。
+      ⚠️ 回放本用例时请先确认该入口到底在哪个页面。
+
+# ── 坑 ────────────────────────────────────────────────
+# ⚠️ **坑一律挂在具体步骤上**（每步的 `pitfalls:`），本文件**不再设文件级 pitfalls**。
+#    原因（2026-10-15 定）：文件级是"全用例的坑混在一起"，
+#    跑到第 2 步时第 1 步的坑还在眼前，**信息被稀释**；
+#    而回放时是按步走的，坑必须跟着步走才用得上。
+
+# ── 元信息 ────────────────────────────────────────────
+confidence:
+  level: "single-run"
+  reason: >
+    本用例于会话 #453 执行但**未跑完**（3 条部分通过 + 4 条 BLOCKED）。
+    已实测部分（页面设置项、默认值、弹框契约）证据充分；
+    未验证部分已逐条标注，**不臆测**。
+  todo:
+    - "❗**补跑预期3/4/6/7**（课间休息弹框、节数可改到0、自动调整确认框、课程提醒入口），补跑后回头修订 a3/a4/a6/a7 与 confidence.level。"
+    - "❗补验**预期2 的值域 30-120 与保存行为**（拨到上端 + 越界多拨 + 确定/取消的落库）。"
+    - "确认『课程提醒时间』入口究竟在编辑课程表页还是本页（现有证据指向编辑课程表页）。"
+    - "确认『晚上课程』是否存在（本页无；用例175/178 一致观察为无）—— 若产品确有此设计，需复查是否被 ROM 裁剪。"

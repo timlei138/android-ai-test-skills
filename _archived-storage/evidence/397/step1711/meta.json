@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-10T13:09:51",
+  "package": "com.zui.launcher",
+  "activity": ".settings.ZuiLauncherSettings",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2839,
+    "y": 408,
+    "via": "负一屏 switch_widget",
+    "why": "turn-on-negative-screen"
+  },
+  "call_id": "5253321ed447498787b9b6cbe0dbb409",
+  "timing": {
+    "call_id": "5253321ed447498787b9b6cbe0dbb409",
+    "measured_at": "2026-10-10T13:09:51.309",
+    "process_observed_ms": 5477.883,
+    "stages_ms": {
+      "device_import": 287.352,
+      "device_connect": 1108.837,
+      "action": 181.965,
+      "settle_wait": 600.271,
+      "permission": 994.225,
+      "screenshot": 289.616,
+      "png_save": 163.403,
+      "ui_dump": 99.111,
+      "rotation": 237.857,
+      "xml_save": 2.325,
+      "foreground": 1445.005
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

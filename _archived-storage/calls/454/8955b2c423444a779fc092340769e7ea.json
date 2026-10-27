@@ -1,0 +1,46 @@
+{
+  "call_id": "8955b2c423444a779fc092340769e7ea",
+  "session_id": 454,
+  "tool": "session",
+  "started_at": "2026-10-15T15:07:14.178",
+  "status": "ended",
+  "expects_event": false,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-15T15:07:14.777",
+  "wall_ms": 591.71,
+  "result": {
+    "ok": true,
+    "session_id": 454,
+    "crash_events": 0,
+    "findings": {
+      "PASS": 1
+    },
+    "self_check": [],
+    "case_hint": null,
+    "hint": "无崩溃事件",
+    "paths_collected": "草稿已生成 storage/pending_paths.md（1 条待确认边）；确认后执行 `session.py paths-apply --id 454`",
+    "note": "已采集路径边到 knowledge/paths/<包名>.md（落脚点 + 锚点 + 去向；下次操作可直接查，不用探索）",
+    "call_id": "8955b2c423444a779fc092340769e7ea",
+    "event_ids": [],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "8955b2c423444a779fc092340769e7ea",
+    "measured_at": "2026-10-15T15:07:14.759",
+    "process_observed_ms": 61.026,
+    "stages_ms": {
+      "serialization": 0.043
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 543
+  },
+  "response_bytes": 543,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": []
+  }
+}

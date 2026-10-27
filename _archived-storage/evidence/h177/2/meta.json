@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T19:46:40",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.EditTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 391,
+    "via": "课表行(空课表176)",
+    "why": "前提: 进课程表基本信息编辑页"
+  }
+}

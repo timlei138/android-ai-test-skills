@@ -1,0 +1,415 @@
+{
+  "call_id": "82ac7581b9314c32aef697deef58d3f7",
+  "session_id": 370,
+  "tool": "act",
+  "started_at": "2026-10-09T18:49:45.915",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T18:49:52.825",
+  "wall_ms": 6902.289,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "swipe",
+      "from": [
+        2200,
+        600
+      ],
+      "to": [
+        2200,
+        1500
+      ],
+      "dur_ms": 220,
+      "via": "build_list_content",
+      "why": "上滑"
+    },
+    "ts": "2026-10-09T18:49:52",
+    "package": "com.zui.calendar",
+    "activity": ".agenda.NewBuildList",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "82ac7581b9314c32aef697deef58d3f7",
+    "timing": {
+      "call_id": "82ac7581b9314c32aef697deef58d3f7",
+      "measured_at": "2026-10-09T18:49:52.602",
+      "process_observed_ms": 5043.2,
+      "stages_ms": {
+        "device_import": 299.002,
+        "device_connect": 1015.005,
+        "action": 874.189,
+        "settle_wait": 600.31,
+        "permission": 924.016,
+        "screenshot": 329.733,
+        "png_save": 175.01,
+        "ui_dump": 109.019,
+        "rotation": 262.885,
+        "xml_save": 5.266,
+        "foreground": 342.516
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=dashLine",
+      "rid=build_list_content",
+      "rid=toolbar",
+      "rid=backtext",
+      "rid=toolbar_title",
+      "text=纵览",
+      "rid=action_menu_view",
+      "rid=new_build_action_today",
+      "desc=更多选项",
+      "rid=sixpage",
+      "rid=landTabs",
+      "rid=all_layoutx",
+      "rid=allx",
+      "rid=all_tvx",
+      "text=全部",
+      "rid=reminder_layoutx",
+      "rid=reminderx",
+      "rid=reminder_tvx",
+      "text=提醒",
+      "rid=event_layoutx",
+      "rid=eventx",
+      "rid=event_tvx",
+      "text=日程",
+      "rid=curriculum_layoutx",
+      "rid=curriculumx",
+      "rid=curriculum_tvx",
+      "text=课程",
+      "rid=countdown_layoutx",
+      "rid=countdownx",
+      "rid=countdown_tvx",
+      "text=倒数日",
+      "rid=birthday_layoutx",
+      "rid=birthdayx",
+      "rid=birthday_tvx",
+      "text=生日",
+      "rid=creditcard_layoutx",
+      "rid=creditcardx",
+      "rid=creditcard_tvx",
+      "text=纪念日",
+      "rid=trip_layoutx",
+      "rid=tripx",
+      "rid=trip_tvx",
+      "text=出行",
+      "rid=pager",
+      "rid=agendaRefreshView",
+      "rid=agendaRv",
+      "rid=head_layout",
+      "rid=date_left",
+      "text=2026年 9月25日（八月十五）周五",
+      "rid=click_layout",
+      "rid=title",
+      "text=中秋节",
+      "text=2026年 9月30日（八月二十）周三",
+      "text=烈士纪念日",
+      "text=2026年 10月1日（八月廿一）周四",
+      "text=国庆节",
+      "text=2026年 10月8日（八月廿八）周四",
+      "text=寒露"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\370\\step0869\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\370\\step0869\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\370\\step0869\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          162,
+          203
+        ],
+        "t": "纵览",
+        "r": "backtext"
+      },
+      {
+        "c": [
+          608,
+          388
+        ],
+        "t": "全部",
+        "r": "all_layoutx"
+      },
+      {
+        "c": [
+          608,
+          565
+        ],
+        "t": "提醒",
+        "r": "reminder_layoutx"
+      },
+      {
+        "c": [
+          608,
+          742
+        ],
+        "t": "日程",
+        "r": "event_layoutx"
+      },
+      {
+        "c": [
+          608,
+          919
+        ],
+        "t": "课程",
+        "r": "curriculum_layoutx"
+      },
+      {
+        "c": [
+          608,
+          1096
+        ],
+        "t": "倒数日",
+        "r": "countdown_layoutx"
+      },
+      {
+        "c": [
+          608,
+          1273
+        ],
+        "t": "生日",
+        "r": "birthday_layoutx"
+      },
+      {
+        "c": [
+          608,
+          1450
+        ],
+        "t": "纪念日",
+        "r": "creditcard_layoutx"
+      },
+      {
+        "c": [
+          608,
+          1627
+        ],
+        "t": "出行",
+        "r": "trip_layoutx"
+      },
+      {
+        "c": [
+          2853,
+          203
+        ],
+        "t": "更多选项"
+      },
+      {
+        "c": [
+          2740,
+          203
+        ],
+        "r": "new_build_action_today"
+      },
+      {
+        "c": [
+          2128,
+          1102
+        ],
+        "r": "pager",
+        "s": true
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          162,
+          203
+        ],
+        "r": "backtext"
+      },
+      {
+        "i": 1,
+        "c": [
+          2740,
+          203
+        ],
+        "r": "new_build_action_today"
+      },
+      {
+        "i": 2,
+        "c": [
+          2853,
+          203
+        ],
+        "t": "更多选项"
+      },
+      {
+        "i": 3,
+        "c": [
+          608,
+          388
+        ],
+        "r": "all_layoutx",
+        "selected": true
+      },
+      {
+        "i": 4,
+        "c": [
+          608,
+          565
+        ],
+        "r": "reminder_layoutx"
+      },
+      {
+        "i": 5,
+        "c": [
+          608,
+          742
+        ],
+        "r": "event_layoutx"
+      },
+      {
+        "i": 6,
+        "c": [
+          608,
+          919
+        ],
+        "r": "curriculum_layoutx"
+      },
+      {
+        "i": 7,
+        "c": [
+          608,
+          1096
+        ],
+        "r": "countdown_layoutx"
+      },
+      {
+        "i": 8,
+        "c": [
+          608,
+          1273
+        ],
+        "r": "birthday_layoutx"
+      },
+      {
+        "i": 9,
+        "c": [
+          608,
+          1450
+        ],
+        "r": "creditcard_layoutx"
+      },
+      {
+        "i": 10,
+        "c": [
+          608,
+          1627
+        ],
+        "r": "trip_layoutx"
+      },
+      {
+        "i": 11,
+        "c": [
+          2128,
+          1102
+        ],
+        "r": "pager",
+        "s": true
+      },
+      {
+        "i": 12,
+        "c": [
+          2128,
+          1102
+        ],
+        "r": "agendaRefreshView"
+      },
+      {
+        "i": 13,
+        "c": [
+          2128,
+          1102
+        ],
+        "r": "agendaRv",
+        "s": true
+      },
+      {
+        "i": 14,
+        "c": [
+          2111,
+          497
+        ],
+        "r": "click_layout"
+      },
+      {
+        "i": 15,
+        "c": [
+          2111,
+          953
+        ],
+        "r": "click_layout"
+      },
+      {
+        "i": 16,
+        "c": [
+          2111,
+          1409
+        ],
+        "r": "click_layout"
+      },
+      {
+        "i": 17,
+        "c": [
+          2111,
+          1834
+        ],
+        "r": "click_layout"
+      }
+    ],
+    "nodes_count": 18,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      1891
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "82ac7581b9314c32aef697deef58d3f7",
+    "measured_at": "2026-10-09T18:49:52.754",
+    "process_observed_ms": 5197.298,
+    "stages_ms": {
+      "device_import": 299.002,
+      "device_connect": 1015.005,
+      "action": 874.189,
+      "settle_wait": 600.31,
+      "permission": 924.016,
+      "screenshot": 329.733,
+      "png_save": 175.01,
+      "ui_dump": 109.019,
+      "rotation": 262.885,
+      "xml_save": 5.266,
+      "foreground": 342.516,
+      "meta_save": 4.574,
+      "crash_detection": 114.167,
+      "screen_signature": 23.389,
+      "event_write": 1.211,
+      "node_summary": 1.781,
+      "node_labels": 1.937,
+      "next_targets": 0.147,
+      "serialization": 0.56
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 6519
+  },
+  "response_bytes": 6519,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1891
+    ]
+  }
+}

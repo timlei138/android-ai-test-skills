@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-14T15:15:02",
+  "package": "com.zui.calendar",
+  "activity": ".reminder.CountDownInfoActivity",
+  "rotation": 1,
+  "size": [
+    3840,
+    2560
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2855,
+    "y": 654,
+    "via": "agenda_item_text_container C121倒数日",
+    "why": "进倒数日详情页（预期2b的删除/编辑按键在此）"
+  },
+  "call_id": "3b52a328ee5c48fc822ab6ba8990be8f",
+  "timing": {
+    "call_id": "3b52a328ee5c48fc822ab6ba8990be8f",
+    "measured_at": "2026-10-14T15:15:02.135",
+    "process_observed_ms": 13743.312,
+    "stages_ms": {
+      "device_import": 401.787,
+      "device_connect": 1002.5,
+      "action": 205.402,
+      "settle_wait": 600.471,
+      "permission": 5258.505,
+      "screenshot": 321.234,
+      "png_save": 260.636,
+      "ui_dump": 82.28,
+      "rotation": 192.634,
+      "xml_save": 7.237,
+      "foreground": 5294.651
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

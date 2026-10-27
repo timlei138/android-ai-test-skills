@@ -1,0 +1,162 @@
+{
+  "call_id": "c97860bbbe5645eab86d765fa69365af",
+  "session_id": 475,
+  "tool": "act",
+  "started_at": "2026-10-26T21:01:48.006",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-26T21:01:53.207",
+  "wall_ms": 5201.066,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 1520,
+      "y": 1761,
+      "via": "rid=btn_delete",
+      "why": "前提准备：删除选中的课表"
+    },
+    "ts": "2026-10-26T21:01:52",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.management.TimetableListActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "c97860bbbe5645eab86d765fa69365af",
+    "timing": {
+      "call_id": "c97860bbbe5645eab86d765fa69365af",
+      "measured_at": "2026-10-26T21:01:52.962",
+      "process_observed_ms": 4556.67,
+      "stages_ms": {
+        "device_import": 413.946,
+        "device_connect": 1146.272,
+        "action": 181.217,
+        "settle_wait": 600.451,
+        "permission": 966.227,
+        "screenshot": 359.777,
+        "png_save": 186.028,
+        "ui_dump": 56.836,
+        "rotation": 186.833,
+        "xml_save": 4.624,
+        "foreground": 359.605
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=parentPanel",
+      "rid=contentPanel",
+      "rid=scrollView",
+      "rid=message",
+      "text=确定删除此课程表吗？",
+      "rid=divider",
+      "rid=buttonPanel",
+      "rid=button2",
+      "text=取消",
+      "rid=button_divider",
+      "rid=button1",
+      "text=确定"
+    ],
+    "checkpoint": {
+      "checked": true,
+      "ok": true,
+      "matched": [
+        "text=确定"
+      ],
+      "missed": []
+    },
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "D:\\Project\\deepseek\\android-ai-test-skills\\storage\\evidence\\475\\step2659\\shot.png",
+      "xml": "D:\\Project\\deepseek\\android-ai-test-skills\\storage\\evidence\\475\\step2659\\dump.xml",
+      "meta": "D:\\Project\\deepseek\\android-ai-test-skills\\storage\\evidence\\475\\step2659\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1244,
+          1109
+        ],
+        "t": "取消",
+        "r": "button2"
+      },
+      {
+        "c": [
+          1795,
+          1109
+        ],
+        "t": "确定",
+        "r": "button1"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          1244,
+          1109
+        ],
+        "t": "取消",
+        "r": "button2"
+      },
+      {
+        "i": 1,
+        "c": [
+          1795,
+          1109
+        ],
+        "t": "确定",
+        "r": "button1"
+      }
+    ],
+    "nodes_count": 2,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      3804
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "c97860bbbe5645eab86d765fa69365af",
+    "measured_at": "2026-10-26T21:01:53.118",
+    "process_observed_ms": 4715.084,
+    "stages_ms": {
+      "device_import": 413.946,
+      "device_connect": 1146.272,
+      "action": 181.217,
+      "settle_wait": 600.451,
+      "permission": 966.227,
+      "screenshot": 359.777,
+      "png_save": 186.028,
+      "ui_dump": 56.836,
+      "rotation": 186.833,
+      "xml_save": 4.624,
+      "foreground": 359.605,
+      "meta_save": 9.656,
+      "crash_detection": 98.419,
+      "screen_signature": 36.114,
+      "event_write": 6.32,
+      "node_summary": 0.67,
+      "node_labels": 0.285,
+      "next_targets": 0.013,
+      "serialization": 0.103
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 2638
+  },
+  "response_bytes": 2638,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3804
+    ]
+  }
+}

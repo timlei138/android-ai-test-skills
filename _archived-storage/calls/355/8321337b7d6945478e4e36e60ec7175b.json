@@ -1,0 +1,51 @@
+{
+  "call_id": "8321337b7d6945478e4e36e60ec7175b",
+  "session_id": 355,
+  "tool": "vision",
+  "started_at": "2026-10-09T16:30:28.233",
+  "status": "ended",
+  "expects_event": false,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T16:30:31.682",
+  "wall_ms": 3447.766,
+  "result": {
+    "ok": true,
+    "text": "2026年10月12日",
+    "usage": {
+      "prompt_tokens": 983,
+      "completion_tokens": 166,
+      "total_tokens": 1149,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 158
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 983
+    },
+    "hint": "视觉模型输出是辅助判据，PASS/FAIL 结论仍需结合 dump/OCR 证据",
+    "call_id": "8321337b7d6945478e4e36e60ec7175b",
+    "event_ids": [],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "8321337b7d6945478e4e36e60ec7175b",
+    "measured_at": "2026-10-09T16:30:31.666",
+    "process_observed_ms": 1701.876,
+    "stages_ms": {
+      "serialization": 0.052
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 548
+  },
+  "response_bytes": 548,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": []
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T19:08:01",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.temp.TempTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 135,
+    "y": 203,
+    "via": "rid=btn_previous(上一步=左上角返回)",
+    "why": "步骤3: 点左上角返回"
+  }
+}

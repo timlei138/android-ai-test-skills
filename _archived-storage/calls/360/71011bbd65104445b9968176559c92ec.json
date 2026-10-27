@@ -1,0 +1,51 @@
+{
+  "call_id": "71011bbd65104445b9968176559c92ec",
+  "session_id": 360,
+  "tool": "vision",
+  "started_at": "2026-10-09T17:01:18.660",
+  "status": "ended",
+  "expects_event": false,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T17:01:22.848",
+  "wall_ms": 4178.49,
+  "result": {
+    "ok": true,
+    "text": "2026年10月9日",
+    "usage": {
+      "prompt_tokens": 983,
+      "completion_tokens": 175,
+      "total_tokens": 1158,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 167
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 983
+    },
+    "hint": "视觉模型输出是辅助判据，PASS/FAIL 结论仍需结合 dump/OCR 证据",
+    "call_id": "71011bbd65104445b9968176559c92ec",
+    "event_ids": [],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "71011bbd65104445b9968176559c92ec",
+    "measured_at": "2026-10-09T17:01:22.821",
+    "process_observed_ms": 2029.277,
+    "stages_ms": {
+      "serialization": 0.051
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 547
+  },
+  "response_bytes": 547,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": []
+  }
+}

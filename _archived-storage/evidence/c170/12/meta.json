@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T18:29:02",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimetableListActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2880,
+    "y": 203,
+    "via": "rid=btn_finish(完成)",
+    "why": "步骤3: 完成导入创建新课表"
+  }
+}

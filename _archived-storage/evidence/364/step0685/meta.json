@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-09T17:44:27",
+  "package": "com.zui.calendar",
+  "activity": ".newbuild.NewBuildActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 297,
+    "y": 650,
+    "via": "categoryName=日程",
+    "why": "切日程"
+  },
+  "call_id": "3aba99592a9f4ffd91dc49517f6c484e",
+  "timing": {
+    "call_id": "3aba99592a9f4ffd91dc49517f6c484e",
+    "measured_at": "2026-10-09T17:44:27.673",
+    "process_observed_ms": 4334.924,
+    "stages_ms": {
+      "device_import": 287.512,
+      "device_connect": 1059.926,
+      "action": 186.193,
+      "settle_wait": 600.175,
+      "permission": 985.692,
+      "screenshot": 352.081,
+      "png_save": 194.226,
+      "ui_dump": 72.095,
+      "rotation": 171.561,
+      "xml_save": 5.338,
+      "foreground": 317.61
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

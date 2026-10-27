@@ -1,0 +1,406 @@
+{
+  "call_id": "aaa3ccd39701475e84ca594c5df5ac88",
+  "session_id": 413,
+  "tool": "act",
+  "started_at": "2026-10-10T15:38:15.694",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T15:38:22.423",
+  "wall_ms": 6716.67,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 2128,
+      "y": 469,
+      "via": "event_title",
+      "why": "event_title"
+    },
+    "ts": "2026-10-10T15:38:22",
+    "package": "com.zui.calendar",
+    "activity": ".newbuild.NewBuildActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "aaa3ccd39701475e84ca594c5df5ac88",
+    "timing": {
+      "call_id": "aaa3ccd39701475e84ca594c5df5ac88",
+      "measured_at": "2026-10-10T15:38:22.210",
+      "process_observed_ms": 4592.873,
+      "stages_ms": {
+        "device_import": 332.088,
+        "device_connect": 1108.885,
+        "action": 206.261,
+        "settle_wait": 600.187,
+        "permission": 1289.72,
+        "screenshot": 267.897,
+        "png_save": 124.628,
+        "ui_dump": 71.571,
+        "rotation": 223.355,
+        "xml_save": 16.046,
+        "foreground": 273.769
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "rid=backtext",
+      "rid=toolbar_title",
+      "text=新建事件",
+      "rid=action_menu_view",
+      "rid=save_view",
+      "text=完成",
+      "rid=categoryList",
+      "rid=categoryLayout",
+      "rid=categoryIcon",
+      "rid=categoryName",
+      "text=提醒",
+      "text=日程",
+      "text=课程",
+      "text=倒数日",
+      "text=生日",
+      "text=纪念日",
+      "rid=pager_container",
+      "rid=scroll_view",
+      "rid=event_title",
+      "text=请输入日程",
+      "rid=is_all_day",
+      "text=全天事件",
+      "rid=start_layout",
+      "text=开始时间",
+      "rid=start_date",
+      "text=2026年10月10日 周六 15:37",
+      "desc=开始日期",
+      "rid=end_layout",
+      "text=结束时间",
+      "rid=end_date",
+      "text=2026年10月10日 周六 16:37",
+      "desc=结束日期",
+      "rid=reminders_row",
+      "rid=reminder_minutes_value1",
+      "text=15分钟前",
+      "desc=15",
+      "rid=reminder_remove",
+      "desc=删除提醒",
+      "rid=rrule_layout",
+      "text=重复",
+      "rid=rrule",
+      "text=不重复",
+      "desc=重复活动",
+      "rid=calendar_selector_group2",
+      "text=日历账户",
+      "rid=tv_type",
+      "text=本地日程",
+      "rid=busy_layout",
+      "text=我的状态",
+      "rid=busy_text",
+      "text=忙碌"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\413\\step1862\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\413\\step1862\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\413\\step1862\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          162,
+          203
+        ],
+        "t": "新建事件",
+        "r": "backtext"
+      },
+      {
+        "c": [
+          2847,
+          203
+        ],
+        "t": "完成",
+        "r": "save_view"
+      },
+      {
+        "c": [
+          2128,
+          469
+        ],
+        "t": "请输入日程",
+        "r": "event_title"
+      },
+      {
+        "c": [
+          2128,
+          642
+        ],
+        "t": "全天事件",
+        "r": "is_all_day"
+      },
+      {
+        "c": [
+          2128,
+          815
+        ],
+        "t": "2026年10月10日 周六 15:37",
+        "r": "start_layout"
+      },
+      {
+        "c": [
+          2128,
+          988
+        ],
+        "t": "2026年10月10日 周六 16:37",
+        "r": "end_layout"
+      },
+      {
+        "c": [
+          2128,
+          1216
+        ],
+        "t": "15分钟前",
+        "r": "reminders_row"
+      },
+      {
+        "c": [
+          2128,
+          1389
+        ],
+        "t": "不重复",
+        "r": "rrule_layout"
+      },
+      {
+        "c": [
+          2128,
+          1617
+        ],
+        "t": "本地日程",
+        "r": "calendar_selector_group2"
+      },
+      {
+        "c": [
+          2128,
+          1735
+        ],
+        "t": "忙碌",
+        "r": "busy_layout"
+      },
+      {
+        "c": [
+          608,
+          472
+        ],
+        "t": "提醒"
+      },
+      {
+        "c": [
+          608,
+          651
+        ],
+        "t": "日程"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          162,
+          203
+        ],
+        "r": "backtext"
+      },
+      {
+        "i": 1,
+        "c": [
+          2847,
+          203
+        ],
+        "t": "完成",
+        "r": "save_view"
+      },
+      {
+        "i": 2,
+        "c": [
+          608,
+          472
+        ]
+      },
+      {
+        "i": 3,
+        "c": [
+          608,
+          651
+        ]
+      },
+      {
+        "i": 4,
+        "c": [
+          608,
+          830
+        ]
+      },
+      {
+        "i": 5,
+        "c": [
+          608,
+          1009
+        ]
+      },
+      {
+        "i": 6,
+        "c": [
+          608,
+          1188
+        ]
+      },
+      {
+        "i": 7,
+        "c": [
+          608,
+          1367
+        ]
+      },
+      {
+        "i": 8,
+        "c": [
+          2128,
+          1074
+        ],
+        "r": "pager_container",
+        "s": true
+      },
+      {
+        "i": 9,
+        "c": [
+          2128,
+          1074
+        ],
+        "s": true
+      },
+      {
+        "i": 10,
+        "c": [
+          2128,
+          1074
+        ],
+        "r": "scroll_view",
+        "s": true
+      },
+      {
+        "i": 11,
+        "c": [
+          2128,
+          469
+        ],
+        "t": "请输入日程",
+        "r": "event_title"
+      },
+      {
+        "i": 12,
+        "c": [
+          2128,
+          642
+        ],
+        "t": "全天事件",
+        "r": "is_all_day"
+      },
+      {
+        "i": 13,
+        "c": [
+          2128,
+          815
+        ],
+        "r": "start_layout"
+      },
+      {
+        "i": 14,
+        "c": [
+          2128,
+          988
+        ],
+        "r": "end_layout"
+      },
+      {
+        "i": 15,
+        "c": [
+          2128,
+          1216
+        ],
+        "r": "reminders_row"
+      },
+      {
+        "i": 16,
+        "c": [
+          2128,
+          1389
+        ],
+        "r": "rrule_layout"
+      },
+      {
+        "i": 17,
+        "c": [
+          2128,
+          1617
+        ],
+        "r": "calendar_selector_group2"
+      },
+      {
+        "i": 18,
+        "c": [
+          2128,
+          1735
+        ],
+        "r": "busy_layout"
+      }
+    ],
+    "nodes_count": 19,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2882
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "aaa3ccd39701475e84ca594c5df5ac88",
+    "measured_at": "2026-10-10T15:38:22.351",
+    "process_observed_ms": 4733.701,
+    "stages_ms": {
+      "device_import": 332.088,
+      "device_connect": 1108.885,
+      "action": 206.261,
+      "settle_wait": 600.187,
+      "permission": 1289.72,
+      "screenshot": 267.897,
+      "png_save": 124.628,
+      "ui_dump": 71.571,
+      "rotation": 223.355,
+      "xml_save": 16.046,
+      "foreground": 273.769,
+      "meta_save": 7.151,
+      "crash_detection": 94.53,
+      "screen_signature": 31.561,
+      "event_write": 1.395,
+      "node_summary": 0.688,
+      "node_labels": 0.906,
+      "next_targets": 0.086,
+      "serialization": 0.283
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 6274
+  },
+  "response_bytes": 6274,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2882
+    ]
+  }
+}

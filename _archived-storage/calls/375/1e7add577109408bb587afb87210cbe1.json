@@ -1,0 +1,53 @@
+{
+  "call_id": "1e7add577109408bb587afb87210cbe1",
+  "session_id": 375,
+  "tool": "read",
+  "started_at": "2026-10-09T19:49:02.831",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T19:49:14.661",
+  "wall_ms": 11820.846,
+  "result": {
+    "ok": true,
+    "image": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\375\\step1003\\shot.png",
+    "lines": [],
+    "hint": "center 可直接用于 act.py tap；toast 断言请在 act 后尽快 read（浮层会消失）",
+    "call_id": "1e7add577109408bb587afb87210cbe1",
+    "event_ids": [
+      2025
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "1e7add577109408bb587afb87210cbe1",
+    "measured_at": "2026-10-09T19:49:14.495",
+    "process_observed_ms": 9883.864,
+    "stages_ms": {
+      "device_import": 328.595,
+      "device_connect": 1102.832,
+      "ocr_import": 594.247,
+      "screenshot": 312.892,
+      "png_save": 68.312,
+      "ocr_initialize": 1391.219,
+      "ocr_inference": 5982.687,
+      "ocr_image_info": 0.562,
+      "ocr_result_conversion": 0.139,
+      "event_write": 1.556,
+      "serialization": 0.117
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 372
+  },
+  "response_bytes": 372,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2025
+    ]
+  }
+}

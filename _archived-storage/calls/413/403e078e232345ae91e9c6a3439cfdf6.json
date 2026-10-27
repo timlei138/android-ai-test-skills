@@ -1,0 +1,353 @@
+{
+  "call_id": "403e078e232345ae91e9c6a3439cfdf6",
+  "session_id": 413,
+  "tool": "act",
+  "started_at": "2026-10-10T15:37:49.167",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T15:37:55.674",
+  "wall_ms": 6493.45,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 2566,
+      "y": 203,
+      "via": "action_add_all_event",
+      "why": "action_add_all_event"
+    },
+    "ts": "2026-10-10T15:37:55",
+    "package": "com.zui.calendar",
+    "activity": ".newbuild.NewBuildActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "403e078e232345ae91e9c6a3439cfdf6",
+    "timing": {
+      "call_id": "403e078e232345ae91e9c6a3439cfdf6",
+      "measured_at": "2026-10-10T15:37:55.480",
+      "process_observed_ms": 4463.146,
+      "stages_ms": {
+        "device_import": 344.356,
+        "device_connect": 1185.346,
+        "action": 202.526,
+        "settle_wait": 600.353,
+        "permission": 840.194,
+        "screenshot": 347.748,
+        "png_save": 128.844,
+        "ui_dump": 91.302,
+        "rotation": 285.745,
+        "xml_save": 14.169,
+        "foreground": 341.558
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "rid=backtext",
+      "rid=toolbar_title",
+      "text=新建事件",
+      "rid=action_menu_view",
+      "rid=save_view",
+      "text=完成",
+      "rid=categoryList",
+      "rid=categoryLayout",
+      "rid=categoryIcon",
+      "rid=categoryName",
+      "text=提醒",
+      "text=日程",
+      "text=课程",
+      "text=倒数日",
+      "text=生日",
+      "text=纪念日",
+      "rid=pager_container",
+      "rid=reminder_title",
+      "text=请输入提醒",
+      "rid=eventTimeLayout",
+      "text=时间",
+      "rid=eventTimeTxt",
+      "text=2026年10月10日 周六 15:37",
+      "desc=开始日期",
+      "rid=reminder_custom_linearlayout",
+      "rid=reminderTimeLayout",
+      "rid=reminderTimeTxt",
+      "text=任务发生时",
+      "rid=reminderRepeatLayout",
+      "text=重复",
+      "rid=reminderRepeatTxt",
+      "text=不重复",
+      "rid=reminder_repeattype_arrow_custom",
+      "rid=reminderDescription",
+      "text=备注"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\413\\step1860\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\413\\step1860\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\413\\step1860\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          162,
+          203
+        ],
+        "t": "新建事件",
+        "r": "backtext"
+      },
+      {
+        "c": [
+          2847,
+          203
+        ],
+        "t": "完成",
+        "r": "save_view"
+      },
+      {
+        "c": [
+          2128,
+          469
+        ],
+        "t": "请输入提醒",
+        "r": "reminder_title"
+      },
+      {
+        "c": [
+          2128,
+          642
+        ],
+        "t": "2026年10月10日 周六 15:37",
+        "r": "eventTimeLayout"
+      },
+      {
+        "c": [
+          2128,
+          988
+        ],
+        "t": "不重复",
+        "r": "reminderRepeatLayout"
+      },
+      {
+        "c": [
+          2128,
+          1161
+        ],
+        "t": "备注",
+        "r": "reminderDescription"
+      },
+      {
+        "c": [
+          608,
+          472
+        ],
+        "t": "提醒"
+      },
+      {
+        "c": [
+          608,
+          651
+        ],
+        "t": "日程"
+      },
+      {
+        "c": [
+          608,
+          830
+        ],
+        "t": "课程"
+      },
+      {
+        "c": [
+          608,
+          1009
+        ],
+        "t": "倒数日"
+      },
+      {
+        "c": [
+          608,
+          1188
+        ],
+        "t": "生日"
+      },
+      {
+        "c": [
+          608,
+          1367
+        ],
+        "t": "纪念日"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          162,
+          203
+        ],
+        "r": "backtext"
+      },
+      {
+        "i": 1,
+        "c": [
+          2847,
+          203
+        ],
+        "t": "完成",
+        "r": "save_view"
+      },
+      {
+        "i": 2,
+        "c": [
+          608,
+          472
+        ]
+      },
+      {
+        "i": 3,
+        "c": [
+          608,
+          651
+        ]
+      },
+      {
+        "i": 4,
+        "c": [
+          608,
+          830
+        ]
+      },
+      {
+        "i": 5,
+        "c": [
+          608,
+          1009
+        ]
+      },
+      {
+        "i": 6,
+        "c": [
+          608,
+          1188
+        ]
+      },
+      {
+        "i": 7,
+        "c": [
+          608,
+          1367
+        ]
+      },
+      {
+        "i": 8,
+        "c": [
+          2128,
+          1074
+        ],
+        "r": "pager_container",
+        "s": true
+      },
+      {
+        "i": 9,
+        "c": [
+          2128,
+          1074
+        ],
+        "s": true
+      },
+      {
+        "i": 10,
+        "c": [
+          2128,
+          469
+        ],
+        "t": "请输入提醒",
+        "r": "reminder_title"
+      },
+      {
+        "i": 11,
+        "c": [
+          2128,
+          642
+        ],
+        "r": "eventTimeLayout"
+      },
+      {
+        "i": 12,
+        "c": [
+          2128,
+          815
+        ],
+        "r": "reminderTimeLayout"
+      },
+      {
+        "i": 13,
+        "c": [
+          2128,
+          988
+        ],
+        "r": "reminderRepeatLayout"
+      },
+      {
+        "i": 14,
+        "c": [
+          2128,
+          1161
+        ],
+        "t": "备注",
+        "r": "reminderDescription"
+      }
+    ],
+    "nodes_count": 15,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2880
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "403e078e232345ae91e9c6a3439cfdf6",
+    "measured_at": "2026-10-10T15:37:55.596",
+    "process_observed_ms": 4580.086,
+    "stages_ms": {
+      "device_import": 344.356,
+      "device_connect": 1185.346,
+      "action": 202.526,
+      "settle_wait": 600.353,
+      "permission": 840.194,
+      "screenshot": 347.748,
+      "png_save": 128.844,
+      "ui_dump": 91.302,
+      "rotation": 285.745,
+      "xml_save": 14.169,
+      "foreground": 341.558,
+      "meta_save": 8.059,
+      "crash_detection": 73.576,
+      "screen_signature": 25.31,
+      "event_write": 2.395,
+      "node_summary": 0.638,
+      "node_labels": 0.564,
+      "next_targets": 0.06,
+      "serialization": 0.181
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 5410
+  },
+  "response_bytes": 5410,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2880
+    ]
+  }
+}

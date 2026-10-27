@@ -1,0 +1,43 @@
+{
+  "call_id": "57fbfe5a799c4203945c1a4ae0a36b57",
+  "session_id": 390,
+  "tool": "act",
+  "started_at": "2026-10-10T12:03:48.386",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 1,
+  "ended_at": "2026-10-10T12:03:55.397",
+  "wall_ms": 7004.632,
+  "result": {
+    "ok": false,
+    "error": "动作执行失败: broadcast ADB_KEYBOARD_CLEAR_TEXT failed: error:Attempt to read from field 'java.lang.CharSequence android.view.inputmethod.ExtractedText.text' on a null object reference in method 'void com.github.uiautomator.AdbKeyboard.clearText()'",
+    "call_id": "57fbfe5a799c4203945c1a4ae0a36b57",
+    "event_ids": [],
+    "execution_state": "may_have_executed"
+  },
+  "timing": {
+    "call_id": "57fbfe5a799c4203945c1a4ae0a36b57",
+    "measured_at": "2026-10-10T12:03:55.310",
+    "process_observed_ms": 5091.826,
+    "stages_ms": {
+      "device_import": 306.253,
+      "device_connect": 1026.356,
+      "action": 3390.506,
+      "input_focus_wait": 300.572,
+      "serialization": 0.065
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 397
+  },
+  "response_bytes": 397,
+  "audit": {
+    "complete": false,
+    "outcome": "failed",
+    "issues": [
+      "no recorded observation/action event"
+    ],
+    "executed": true,
+    "event_ids": []
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-09T18:34:23",
+  "package": "com.zui.calendar",
+  "activity": ".event.edit.EditEventActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 765,
+    "via": "text1=每天",
+    "why": "设每天重复"
+  },
+  "call_id": "0393a44f751c4dd1a24a30f06865790c",
+  "timing": {
+    "call_id": "0393a44f751c4dd1a24a30f06865790c",
+    "measured_at": "2026-10-09T18:34:23.415",
+    "process_observed_ms": 4965.515,
+    "stages_ms": {
+      "device_import": 296.181,
+      "device_connect": 1124.692,
+      "action": 488.555,
+      "settle_wait": 600.48,
+      "permission": 1032.712,
+      "screenshot": 382.69,
+      "png_save": 186.018,
+      "ui_dump": 94.465,
+      "rotation": 242.981,
+      "xml_save": 7.171,
+      "foreground": 419.177
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

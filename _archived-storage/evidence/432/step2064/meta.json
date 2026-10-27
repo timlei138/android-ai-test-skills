@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-14T15:12:58",
+  "package": "com.zui.calendar",
+  "activity": ".widget.countdown.CountdownListActivity",
+  "rotation": 1,
+  "size": [
+    3840,
+    2560
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1000,
+    "y": 573,
+    "via": "倒数日条目行左区",
+    "why": "复测：点条目是否返回桌面"
+  },
+  "call_id": "14e20a2e768948c389c75c44e7e26937",
+  "timing": {
+    "call_id": "14e20a2e768948c389c75c44e7e26937",
+    "measured_at": "2026-10-14T15:12:58.637",
+    "process_observed_ms": 13917.601,
+    "stages_ms": {
+      "device_import": 394.742,
+      "device_connect": 1060.962,
+      "action": 162.433,
+      "settle_wait": 600.297,
+      "permission": 5290.994,
+      "screenshot": 336.967,
+      "png_save": 310.743,
+      "ui_dump": 145.512,
+      "rotation": 185.16,
+      "xml_save": 6.865,
+      "foreground": 5304.909
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

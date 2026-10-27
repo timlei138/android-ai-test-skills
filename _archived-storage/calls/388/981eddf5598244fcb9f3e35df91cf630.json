@@ -1,0 +1,338 @@
+{
+  "call_id": "981eddf5598244fcb9f3e35df91cf630",
+  "session_id": 388,
+  "tool": "act",
+  "started_at": "2026-10-10T11:39:41.577",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T11:39:48.807",
+  "wall_ms": 7223.96,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "back",
+      "why": "back2"
+    },
+    "ts": "2026-10-10T11:39:48",
+    "package": "com.zui.calendar",
+    "activity": ".AllInOneActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "981eddf5598244fcb9f3e35df91cf630",
+    "timing": {
+      "call_id": "981eddf5598244fcb9f3e35df91cf630",
+      "measured_at": "2026-10-10T11:39:48.556",
+      "process_observed_ms": 4993.043,
+      "stages_ms": {
+        "device_import": 312.39,
+        "device_connect": 1082.72,
+        "action": 604.989,
+        "settle_wait": 600.277,
+        "permission": 974.518,
+        "screenshot": 378.82,
+        "png_save": 189.653,
+        "ui_dump": 121.526,
+        "rotation": 234.332,
+        "xml_save": 6.501,
+        "foreground": 388.141
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=month_week_pane",
+      "rid=toolbar",
+      "rid=top_button_date_layout",
+      "rid=top_button_month",
+      "text=10",
+      "rid=top_button_year",
+      "text=2026年",
+      "rid=top_button_month_unit",
+      "text=月",
+      "rid=top_button_day",
+      "text=10日",
+      "rid=top_button_lunar_countdown",
+      "text=今天",
+      "rid=action_add_all_event",
+      "rid=action_back_today",
+      "rid=iv_more",
+      "rid=calendarView",
+      "rid=frameContent",
+      "text=一",
+      "text=二",
+      "text=三",
+      "text=四",
+      "text=五",
+      "text=六",
+      "text=日",
+      "rid=line",
+      "rid=vp_month",
+      "rid=divider",
+      "rid=list_frame",
+      "rid=full_day_containter_layout",
+      "rid=eventList",
+      "rid=top_button_lunar_month",
+      "text=农历九月初一  (丙午马年 戊戌月 丁巳日)",
+      "rid=iconyi",
+      "text=宜:",
+      "rid=titleyi",
+      "text=嫁娶 求嗣  纳采 进人口 纳财 结网 纳畜 牧养 会亲友",
+      "rid=iconji",
+      "text=忌:",
+      "rid=titleji",
+      "text=上梁 作灶 伐木 出行 安葬 安门 理发",
+      "rid=agenda_item_text_container",
+      "rid=date_ll",
+      "rid=date_tv",
+      "text=全天",
+      "rid=title",
+      "text=新建日程",
+      "text=11:22",
+      "text=T83HT",
+      "text=11:29",
+      "text=T83KILL",
+      "text=17:44\n18:44",
+      "text=编辑后事件B",
+      "rid=event_location_tv",
+      "text=测试地点深圳"
+    ],
+    "checkpoint": {
+      "checked": true,
+      "ok": true,
+      "matched": [
+        "activity=AllInOneActivity"
+      ],
+      "missed": []
+    },
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\388\\step1563\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\388\\step1563\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\388\\step1563\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          339,
+          203
+        ],
+        "t": "2026年",
+        "r": "top_button_date_layout"
+      },
+      {
+        "c": [
+          2252,
+          757
+        ],
+        "t": "新建日程",
+        "r": "agenda_item_text_container"
+      },
+      {
+        "c": [
+          2252,
+          1039
+        ],
+        "t": "T83HT",
+        "r": "agenda_item_text_container"
+      },
+      {
+        "c": [
+          2252,
+          1321
+        ],
+        "t": "T83KILL",
+        "r": "agenda_item_text_container"
+      },
+      {
+        "c": [
+          2252,
+          1603
+        ],
+        "t": "编辑后事件B",
+        "r": "agenda_item_text_container"
+      },
+      {
+        "c": [
+          2252,
+          437
+        ],
+        "t": "嫁娶 求嗣  纳采 进人口 纳财 结网 纳畜 牧养 会亲友"
+      },
+      {
+        "c": [
+          2566,
+          203
+        ],
+        "r": "action_add_all_event"
+      },
+      {
+        "c": [
+          2704,
+          203
+        ],
+        "r": "action_back_today"
+      },
+      {
+        "c": [
+          2835,
+          203
+        ],
+        "r": "iv_more"
+      },
+      {
+        "c": [
+          779,
+          1036
+        ],
+        "r": "vp_month",
+        "s": true
+      },
+      {
+        "c": [
+          779,
+          1036
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          339,
+          203
+        ],
+        "r": "top_button_date_layout"
+      },
+      {
+        "i": 1,
+        "c": [
+          2566,
+          203
+        ],
+        "r": "action_add_all_event"
+      },
+      {
+        "i": 2,
+        "c": [
+          2704,
+          203
+        ],
+        "r": "action_back_today"
+      },
+      {
+        "i": 3,
+        "c": [
+          2835,
+          203
+        ],
+        "r": "iv_more"
+      },
+      {
+        "i": 4,
+        "c": [
+          779,
+          1036
+        ],
+        "r": "vp_month",
+        "s": true
+      },
+      {
+        "i": 5,
+        "c": [
+          779,
+          1036
+        ]
+      },
+      {
+        "i": 6,
+        "c": [
+          2252,
+          437
+        ]
+      },
+      {
+        "i": 7,
+        "c": [
+          2252,
+          757
+        ],
+        "r": "agenda_item_text_container"
+      },
+      {
+        "i": 8,
+        "c": [
+          2252,
+          1039
+        ],
+        "r": "agenda_item_text_container"
+      },
+      {
+        "i": 9,
+        "c": [
+          2252,
+          1321
+        ],
+        "r": "agenda_item_text_container"
+      },
+      {
+        "i": 10,
+        "c": [
+          2252,
+          1603
+        ],
+        "r": "agenda_item_text_container"
+      }
+    ],
+    "nodes_count": 11,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2584
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "981eddf5598244fcb9f3e35df91cf630",
+    "measured_at": "2026-10-10T11:39:48.712",
+    "process_observed_ms": 5148.593,
+    "stages_ms": {
+      "device_import": 312.39,
+      "device_connect": 1082.72,
+      "action": 604.989,
+      "settle_wait": 600.277,
+      "permission": 974.518,
+      "screenshot": 378.82,
+      "png_save": 189.653,
+      "ui_dump": 121.526,
+      "rotation": 234.332,
+      "xml_save": 6.501,
+      "foreground": 388.141,
+      "meta_save": 4.164,
+      "crash_detection": 104.895,
+      "screen_signature": 33.764,
+      "event_write": 3.42,
+      "node_summary": 0.962,
+      "node_labels": 1.321,
+      "next_targets": 0.098,
+      "serialization": 0.363
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 5608
+  },
+  "response_bytes": 5608,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2584
+    ]
+  }
+}

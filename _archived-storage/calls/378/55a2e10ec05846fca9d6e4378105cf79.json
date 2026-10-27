@@ -1,0 +1,202 @@
+{
+  "call_id": "55a2e10ec05846fca9d6e4378105cf79",
+  "session_id": 378,
+  "tool": "act",
+  "started_at": "2026-10-09T20:15:20.406",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T20:15:26.918",
+  "wall_ms": 6504.247,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 2274,
+      "y": 1006,
+      "via": "title=纵览2日程",
+      "why": "open"
+    },
+    "ts": "2026-10-09T20:15:26",
+    "package": "com.zui.calendar",
+    "activity": ".event.info.EventsInfoActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "55a2e10ec05846fca9d6e4378105cf79",
+    "timing": {
+      "call_id": "55a2e10ec05846fca9d6e4378105cf79",
+      "measured_at": "2026-10-09T20:15:26.702",
+      "process_observed_ms": 4249.683,
+      "stages_ms": {
+        "device_import": 342.32,
+        "device_connect": 1050.305,
+        "action": 183.874,
+        "settle_wait": 600.513,
+        "permission": 875.732,
+        "screenshot": 351.616,
+        "png_save": 123.671,
+        "ui_dump": 52.351,
+        "rotation": 204.21,
+        "xml_save": 5.341,
+        "foreground": 346.356
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "rid=toolbar_title",
+      "text=日程详情",
+      "rid=main_frame",
+      "rid=event_info_ll",
+      "rid=event_info_scroll_view",
+      "rid=event_title_bar",
+      "rid=title",
+      "text=纵览2日程",
+      "rid=when_datetime",
+      "text=今天",
+      "rid=when_time",
+      "text=20:10–21:10",
+      "rid=divider_line_view",
+      "rid=event_reminder_layout",
+      "rid=reminder_text",
+      "text=提醒: 15分钟前",
+      "desc=15",
+      "rid=when_repeat",
+      "text=不重复",
+      "rid=calendar_account_name",
+      "text=本地日程",
+      "rid=button_layout",
+      "rid=bottom_bar"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\378\\step1100\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\378\\step1100\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\378\\step1100\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1520,
+          569
+        ],
+        "t": "提醒: 15分钟前",
+        "r": "event_reminder_layout"
+      },
+      {
+        "c": [
+          107,
+          203
+        ],
+        "t": "日程详情"
+      },
+      {
+        "c": [
+          690,
+          1805
+        ]
+      },
+      {
+        "c": [
+          1520,
+          1805
+        ]
+      },
+      {
+        "c": [
+          2350,
+          1805
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          107,
+          203
+        ]
+      },
+      {
+        "i": 1,
+        "c": [
+          1520,
+          569
+        ],
+        "r": "event_reminder_layout"
+      },
+      {
+        "i": 2,
+        "c": [
+          690,
+          1805
+        ]
+      },
+      {
+        "i": 3,
+        "c": [
+          1520,
+          1805
+        ]
+      },
+      {
+        "i": 4,
+        "c": [
+          2350,
+          1805
+        ]
+      }
+    ],
+    "nodes_count": 5,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2122
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "55a2e10ec05846fca9d6e4378105cf79",
+    "measured_at": "2026-10-09T20:15:26.843",
+    "process_observed_ms": 4391.33,
+    "stages_ms": {
+      "device_import": 342.32,
+      "device_connect": 1050.305,
+      "action": 183.874,
+      "settle_wait": 600.513,
+      "permission": 875.732,
+      "screenshot": 351.616,
+      "png_save": 123.671,
+      "ui_dump": 52.351,
+      "rotation": 204.21,
+      "xml_save": 5.341,
+      "foreground": 346.356,
+      "meta_save": 4.636,
+      "crash_detection": 87.664,
+      "screen_signature": 40.894,
+      "event_write": 1.483,
+      "node_summary": 0.817,
+      "node_labels": 0.776,
+      "next_targets": 0.036,
+      "serialization": 0.191
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 3229
+  },
+  "response_bytes": 3229,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2122
+    ]
+  }
+}

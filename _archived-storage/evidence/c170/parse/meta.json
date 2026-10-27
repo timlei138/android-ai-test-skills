@@ -1,0 +1,10 @@
+{
+  "ts": "2026-09-22T18:27:40",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.temp.TempTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ]
+}

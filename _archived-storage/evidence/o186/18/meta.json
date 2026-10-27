@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T20:57:27",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.display.TimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2835,
+    "y": 203,
+    "via": "rid=iv_more",
+    "why": "更多"
+  }
+}

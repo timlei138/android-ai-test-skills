@@ -1,0 +1,338 @@
+{
+  "call_id": "543004a8e7e141da8e550b2550806c19",
+  "session_id": 351,
+  "tool": "observe",
+  "started_at": "2026-10-09T15:55:15.659",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T15:55:21.351",
+  "wall_ms": 5683.962,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-09T15:55:21",
+    "package": "com.zui.calendar",
+    "activity": ".newbuild.NewBuildActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "543004a8e7e141da8e550b2550806c19",
+    "timing": {
+      "call_id": "543004a8e7e141da8e550b2550806c19",
+      "measured_at": "2026-10-09T15:55:21.122",
+      "process_observed_ms": 3786.731,
+      "stages_ms": {
+        "device_import": 294.472,
+        "device_connect": 1150.839,
+        "permission": 973.216,
+        "screenshot": 367.972,
+        "png_save": 144.366,
+        "ui_dump": 92.785,
+        "rotation": 286.426,
+        "xml_save": 4.775,
+        "foreground": 409.569
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=parentPanel",
+      "rid=customPanel",
+      "rid=custom",
+      "rid=title",
+      "text=2026年10月9日  周五  15:50",
+      "rid=date_time_picker",
+      "rid=parent",
+      "rid=selector_top_divider",
+      "rid=button_divider2",
+      "rid=left_button",
+      "text=取消",
+      "rid=right_button",
+      "text=确定"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\351\\step0405\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\351\\step0405\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\351\\step0405\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1519,
+          694
+        ],
+        "t": "2026年10月9日  周五  15:50",
+        "r": "title"
+      },
+      {
+        "c": [
+          1244,
+          1294
+        ],
+        "t": "取消",
+        "r": "left_button"
+      },
+      {
+        "c": [
+          1795,
+          1294
+        ],
+        "t": "确定",
+        "r": "right_button"
+      },
+      {
+        "c": [
+          1520,
+          988
+        ],
+        "r": "content"
+      },
+      {
+        "c": [
+          1520,
+          988
+        ],
+        "r": "parentPanel"
+      },
+      {
+        "c": [
+          1520,
+          988
+        ],
+        "r": "customPanel"
+      },
+      {
+        "c": [
+          1520,
+          988
+        ],
+        "r": "custom"
+      },
+      {
+        "c": [
+          1520,
+          1097
+        ],
+        "r": "date_time_picker"
+      },
+      {
+        "c": [
+          1520,
+          989
+        ],
+        "r": "parent"
+      },
+      {
+        "c": [
+          1520,
+          920
+        ],
+        "r": "selector_top_divider"
+      },
+      {
+        "c": [
+          1520,
+          1211
+        ],
+        "r": "button_divider2"
+      }
+    ],
+    "nodes": [
+      {
+        "bounds": [
+          970,
+          600,
+          2070,
+          1377
+        ],
+        "center": [
+          1520,
+          988
+        ],
+        "rid": "android:id/content"
+      },
+      {
+        "bounds": [
+          970,
+          600,
+          2070,
+          1377
+        ],
+        "center": [
+          1520,
+          988
+        ],
+        "rid": "com.zui.calendar:id/parentPanel"
+      },
+      {
+        "bounds": [
+          970,
+          600,
+          2070,
+          1377
+        ],
+        "center": [
+          1520,
+          988
+        ],
+        "rid": "com.zui.calendar:id/customPanel"
+      },
+      {
+        "bounds": [
+          970,
+          600,
+          2070,
+          1377
+        ],
+        "center": [
+          1520,
+          988
+        ],
+        "rid": "com.zui.calendar:id/custom"
+      },
+      {
+        "bounds": [
+          1113,
+          655,
+          1926,
+          734
+        ],
+        "center": [
+          1519,
+          694
+        ],
+        "rid": "com.zui.calendar:id/title",
+        "text": "2026年10月9日  周五  15:50"
+      },
+      {
+        "bounds": [
+          970,
+          817,
+          2070,
+          1377
+        ],
+        "center": [
+          1520,
+          1097
+        ],
+        "rid": "com.zui.calendar:id/date_time_picker"
+      },
+      {
+        "bounds": [
+          970,
+          817,
+          2070,
+          1161
+        ],
+        "center": [
+          1520,
+          989
+        ],
+        "rid": "com.zui.calendar:id/parent"
+      },
+      {
+        "bounds": [
+          1036,
+          919,
+          2004,
+          922
+        ],
+        "center": [
+          1520,
+          920
+        ],
+        "rid": "com.zui.calendar:id/selector_top_divider"
+      },
+      {
+        "bounds": [
+          970,
+          1210,
+          2070,
+          1212
+        ],
+        "center": [
+          1520,
+          1211
+        ],
+        "rid": "com.zui.calendar:id/button_divider2"
+      },
+      {
+        "bounds": [
+          970,
+          1212,
+          1519,
+          1377
+        ],
+        "center": [
+          1244,
+          1294
+        ],
+        "rid": "com.zui.calendar:id/left_button",
+        "text": "取消",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1520,
+          1212,
+          2070,
+          1377
+        ],
+        "center": [
+          1795,
+          1294
+        ],
+        "rid": "com.zui.calendar:id/right_button",
+        "text": "确定",
+        "clickable": true
+      }
+    ],
+    "nodes_count": 11,
+    "nodes_mode": "full",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      1426
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "543004a8e7e141da8e550b2550806c19",
+    "measured_at": "2026-10-09T15:55:21.270",
+    "process_observed_ms": 3935.112,
+    "stages_ms": {
+      "device_import": 294.472,
+      "device_connect": 1150.839,
+      "permission": 973.216,
+      "screenshot": 367.972,
+      "png_save": 144.366,
+      "ui_dump": 92.785,
+      "rotation": 286.426,
+      "xml_save": 4.775,
+      "foreground": 409.569,
+      "meta_save": 4.814,
+      "screen_signature": 23.727,
+      "crash_detection": 108.182,
+      "event_write": 1.848,
+      "node_summary": 1.448,
+      "node_labels": 0.975,
+      "next_targets": 0.068,
+      "serialization": 0.683
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 5225
+  },
+  "response_bytes": 5225,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1426
+    ]
+  }
+}

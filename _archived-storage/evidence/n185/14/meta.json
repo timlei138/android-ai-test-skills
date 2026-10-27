@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T20:45:52",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimetableListActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 176,
+    "y": 391,
+    "via": "checkbox_select(课表A)",
+    "why": "取消勾选当前课表，只留课表B"
+  }
+}

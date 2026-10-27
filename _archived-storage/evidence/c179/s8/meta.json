@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T12:30:28",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimeSlotSettingsActivity",
+  "rotation": 1,
+  "size": [
+    3840,
+    2560
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2169,
+    "y": 1689,
+    "via": "text=确定",
+    "why": "步骤3: 确定 11:03-14:53（晚于下午14:00）"
+  }
+}

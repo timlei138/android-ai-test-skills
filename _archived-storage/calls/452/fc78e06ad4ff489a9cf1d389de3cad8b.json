@@ -1,0 +1,41 @@
+{
+  "call_id": "fc78e06ad4ff489a9cf1d389de3cad8b",
+  "session_id": 452,
+  "tool": "session",
+  "started_at": "2026-10-15T14:45:04.581",
+  "status": "ended",
+  "expects_event": false,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-15T14:45:05.231",
+  "wall_ms": 640.341,
+  "result": {
+    "ok": true,
+    "finding_id": 343,
+    "evidence_event_ids": [
+      3538,
+      3539
+    ],
+    "call_id": "fc78e06ad4ff489a9cf1d389de3cad8b",
+    "event_ids": [],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "fc78e06ad4ff489a9cf1d389de3cad8b",
+    "measured_at": "2026-10-15T14:45:05.198",
+    "process_observed_ms": 41.969,
+    "stages_ms": {
+      "serialization": 0.041
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 189
+  },
+  "response_bytes": 189,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": []
+  }
+}

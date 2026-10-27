@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T20:20:42",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.display.TimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 552,
+    "y": 648,
+    "via": "cv_empty_content(第一次)",
+    "why": "步骤1: 点空白日历某一小节"
+  }
+}

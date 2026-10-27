@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T20:25:37",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.course.EditCourseActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1244,
+    "y": 1382,
+    "via": "text=取消",
+    "why": "关色板"
+  }
+}

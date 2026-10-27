@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T17:15:33",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.course.EditCourseActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1244,
+    "y": 1367,
+    "via": "rid=button2,text=取消",
+    "why": "YAML s2：取消关闭课程时间弹框"
+  },
+  "call_id": "2e964d7e12b34b63af935c1d9c01569d",
+  "timing": {
+    "call_id": "2e964d7e12b34b63af935c1d9c01569d",
+    "measured_at": "2026-10-15T17:15:33.050",
+    "process_observed_ms": 14658.682,
+    "stages_ms": {
+      "device_import": 659.553,
+      "device_connect": 1295.243,
+      "action": 215.552,
+      "settle_wait": 600.294,
+      "permission": 5322.538,
+      "screenshot": 315.413,
+      "png_save": 328.988,
+      "ui_dump": 136.073,
+      "rotation": 235.703,
+      "xml_save": 8.645,
+      "foreground": 5375.219
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T14:36:13",
+  "package": "com.zui.camera",
+  "activity": ".CaptureActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1268,
+    "via": "button1(知道了)",
+    "why": "关提示框，继续走权限流程"
+  },
+  "call_id": "1c3d234023404d349f7744941997cdfb",
+  "timing": {
+    "call_id": "1c3d234023404d349f7744941997cdfb",
+    "measured_at": "2026-10-15T14:36:13.560",
+    "process_observed_ms": 20412.3,
+    "stages_ms": {
+      "device_import": 386.325,
+      "device_connect": 1096.869,
+      "action": 183.272,
+      "settle_wait": 600.223,
+      "permission": 11516.921,
+      "screenshot": 373.653,
+      "png_save": 581.954,
+      "ui_dump": 45.324,
+      "rotation": 191.529,
+      "xml_save": 2.542,
+      "foreground": 5350.59
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

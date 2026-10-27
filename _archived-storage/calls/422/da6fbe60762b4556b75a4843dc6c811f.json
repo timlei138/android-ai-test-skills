@@ -1,0 +1,216 @@
+{
+  "call_id": "da6fbe60762b4556b75a4843dc6c811f",
+  "session_id": 422,
+  "tool": "read",
+  "started_at": "2026-10-10T16:11:21.476",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T16:11:31.427",
+  "wall_ms": 9940.343,
+  "result": {
+    "ok": true,
+    "image": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\picker70b\\shot.png",
+    "lines": [
+      {
+        "text": "2025",
+        "score": 0.999,
+        "center": [
+          1197,
+          861
+        ],
+        "norm": [
+          0.3937,
+          0.4522
+        ],
+        "bounds": [
+          1138,
+          837,
+          1256,
+          886
+        ]
+      },
+      {
+        "text": "05",
+        "score": 0.998,
+        "center": [
+          1520,
+          861
+        ],
+        "norm": [
+          0.5,
+          0.4522
+        ],
+        "bounds": [
+          1487,
+          836,
+          1553,
+          886
+        ]
+      },
+      {
+        "text": "09",
+        "score": 0.998,
+        "center": [
+          1843,
+          861
+        ],
+        "norm": [
+          0.6062,
+          0.4522
+        ],
+        "bounds": [
+          1811,
+          837,
+          1875,
+          886
+        ]
+      },
+      {
+        "text": "2026",
+        "score": 1.0,
+        "center": [
+          1195,
+          972
+        ],
+        "norm": [
+          0.3931,
+          0.5105
+        ],
+        "bounds": [
+          1130,
+          945,
+          1261,
+          999
+        ]
+      },
+      {
+        "text": "06",
+        "score": 0.985,
+        "center": [
+          1519,
+          974
+        ],
+        "norm": [
+          0.4997,
+          0.5116
+        ],
+        "bounds": [
+          1481,
+          947,
+          1556,
+          1000
+        ]
+      },
+      {
+        "text": "10",
+        "score": 0.999,
+        "center": [
+          1841,
+          974
+        ],
+        "norm": [
+          0.6056,
+          0.5116
+        ],
+        "bounds": [
+          1811,
+          948,
+          1872,
+          1000
+        ]
+      },
+      {
+        "text": "2027",
+        "score": 0.999,
+        "center": [
+          1197,
+          1090
+        ],
+        "norm": [
+          0.3937,
+          0.5725
+        ],
+        "bounds": [
+          1138,
+          1066,
+          1256,
+          1115
+        ]
+      },
+      {
+        "text": "07",
+        "score": 0.994,
+        "center": [
+          1521,
+          1092
+        ],
+        "norm": [
+          0.5003,
+          0.5735
+        ],
+        "bounds": [
+          1490,
+          1069,
+          1552,
+          1115
+        ]
+      },
+      {
+        "text": "11",
+        "score": 0.964,
+        "center": [
+          1841,
+          1090
+        ],
+        "norm": [
+          0.6056,
+          0.5725
+        ],
+        "bounds": [
+          1824,
+          1071,
+          1858,
+          1110
+        ]
+      }
+    ],
+    "hint": "center 可直接用于 act.py tap；toast 断言请在 act 后尽快 read（浮层会消失）",
+    "call_id": "da6fbe60762b4556b75a4843dc6c811f",
+    "event_ids": [
+      2944
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "da6fbe60762b4556b75a4843dc6c811f",
+    "measured_at": "2026-10-10T16:11:31.263",
+    "process_observed_ms": 8378.093,
+    "stages_ms": {
+      "device_import": 351.621,
+      "device_connect": 1157.845,
+      "ocr_import": 799.323,
+      "screenshot": 315.236,
+      "png_save": 105.343,
+      "ocr_initialize": 822.228,
+      "ocr_inference": 4742.415,
+      "ocr_image_info": 0.487,
+      "ocr_result_conversion": 0.461,
+      "event_write": 1.95,
+      "serialization": 0.267
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 2569
+  },
+  "response_bytes": 2569,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2944
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "ts": "2026-10-09T11:07:32",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.EditTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "swipe",
+    "from": [
+      1520,
+      1400
+    ],
+    "to": [
+      1520,
+      700
+    ],
+    "dur_ms": 400,
+    "via": "scroll",
+    "why": "下滑编辑页查找课程提醒时间入口"
+  },
+  "call_id": "d53d5fba4d524b948b6b91ec02effbc0",
+  "timing": {
+    "call_id": "d53d5fba4d524b948b6b91ec02effbc0",
+    "measured_at": "2026-10-09T11:07:32.349",
+    "process_observed_ms": 6313.499,
+    "stages_ms": {
+      "device_import": 315.601,
+      "device_connect": 1136.853,
+      "action": 2031.706,
+      "settle_wait": 600.498,
+      "permission": 968.47,
+      "screenshot": 264.023,
+      "png_save": 164.728,
+      "ui_dump": 128.672,
+      "rotation": 242.16,
+      "xml_save": 6.704,
+      "foreground": 355.906
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

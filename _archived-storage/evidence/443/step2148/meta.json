@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T12:02:01",
+  "package": "com.android.providers.media.module",
+  "activity": "com.android.providers.media.photopicker.PhotoPickerGetContentActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1268,
+    "via": "rid=button1(知道了)",
+    "why": "关提示框进照片选择器"
+  },
+  "call_id": "20cb47bea41a4500af29d7df92e7a19d",
+  "timing": {
+    "call_id": "20cb47bea41a4500af29d7df92e7a19d",
+    "measured_at": "2026-10-15T12:02:01.725",
+    "process_observed_ms": 14179.524,
+    "stages_ms": {
+      "device_import": 349.674,
+      "device_connect": 1272.436,
+      "action": 243.391,
+      "settle_wait": 600.451,
+      "permission": 5415.496,
+      "screenshot": 406.726,
+      "png_save": 138.926,
+      "ui_dump": 71.656,
+      "rotation": 250.544,
+      "xml_save": 6.31,
+      "foreground": 5347.487
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

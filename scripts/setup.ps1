@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env pwsh
+#!/usr/bin/env pwsh
 # android-ai-test-skills 一键环境安装（Windows）
 #
 # 用法:
@@ -240,11 +240,16 @@ if ($SkipDeps) {
 
 # ------------------------------------------------------ 4. 运行目录自检
 Write-Step '4/4 检查运行目录...'
-foreach ($d in @('storage', 'storage\evidence', 'knowledge', 'knowledge\paths')) {
+# ★ 2026-10-27 重构：知识卡搬到 assets/knowledge/ 了。
+#   原来这里建的是 knowledge\ 和 knowledge\paths\（旧位置）——
+#   在新环境上会凭空造出两个空旧目录，AI 看到"目录存在"就进去找卡，找不到。
+foreach ($d in @('assets', 'assets\cases', 'assets\knowledge',
+                 'assets\knowledge\paths',
+                 'storage', 'storage\record', 'storage\tmp')) {
     $p = Join-Path $Root $d
     if (-not (Test-Path -LiteralPath $p)) { New-Item -ItemType Directory -Path $p -Force | Out-Null }
 }
-Write-Ok 'storage/ 与 knowledge/ 就绪'
+Write-Ok 'assets/ 与 storage/ 就绪'
 
 # ------------------------------------------------------------------ 自检
 Write-Host ''

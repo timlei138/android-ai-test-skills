@@ -1,0 +1,27 @@
+{
+  "call_id": "7ffe71a83ea6430581cf87b988e9daf3",
+  "session_id": 339,
+  "tool": "session",
+  "started_at": "2026-10-09T14:06:03.277",
+  "status": "ended",
+  "expects_event": false,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T14:06:06.975",
+  "wall_ms": 3689.368,
+  "result": {
+    "ok": true,
+    "session_id": 339,
+    "related": [],
+    "note": "后续 observe/act/read 自动记入本会话；logcat 缓冲区已扩到 5M；crash 缓冲区已清空",
+    "case_hint": "新用例（未关联用例库）。跑完后 `case save --session 339` 入库 —— **PASS / FAIL / BLOCKED 都该入库**（失败与阻断也是测试结果）。"
+  },
+  "response_bytes": 345,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": []
+  }
+}

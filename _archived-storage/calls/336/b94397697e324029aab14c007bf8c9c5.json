@@ -1,0 +1,164 @@
+{
+  "call_id": "b94397697e324029aab14c007bf8c9c5",
+  "session_id": 336,
+  "tool": "act",
+  "started_at": "2026-10-09T13:38:38.632",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T13:38:48.115",
+  "wall_ms": 9477.51,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 2781,
+      "y": 203,
+      "via": "rid=action_curriculum_table_import",
+      "why": "进入导入方式弹层"
+    },
+    "ts": "2026-10-09T13:38:47",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.display.TimetableActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "watch": {
+      "clicked": [],
+      "missed_stage": 0,
+      "missed_specs": [
+        "text=知道了"
+      ],
+      "waited_ms": 2596
+    },
+    "call_id": "b94397697e324029aab14c007bf8c9c5",
+    "timing": {
+      "call_id": "b94397697e324029aab14c007bf8c9c5",
+      "measured_at": "2026-10-09T13:38:47.887",
+      "process_observed_ms": 7202.619,
+      "stages_ms": {
+        "device_import": 315.264,
+        "device_connect": 1173.682,
+        "action": 196.79,
+        "settle_wait": 600.509,
+        "watch": 2590.086,
+        "permission": 923.745,
+        "screenshot": 367.293,
+        "png_save": 191.782,
+        "ui_dump": 60.435,
+        "rotation": 268.935,
+        "xml_save": 4.254,
+        "foreground": 417.014
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=tv_import_from_camera",
+      "text=拍照导入课程表",
+      "rid=tv_import_from_gallery",
+      "text=图库导入课程表"
+    ],
+    "checkpoint": {
+      "checked": true,
+      "ok": false,
+      "matched": [],
+      "missed": [
+        "desc=拍照|text=图库|text=从图库导入课程表"
+      ]
+    },
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\336\\step0150\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\336\\step0150\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\336\\step0150\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          2633,
+          356
+        ],
+        "t": "拍照导入课程表",
+        "r": "tv_import_from_camera"
+      },
+      {
+        "c": [
+          2633,
+          486
+        ],
+        "t": "图库导入课程表",
+        "r": "tv_import_from_gallery"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          2633,
+          356
+        ],
+        "t": "拍照导入课程表",
+        "r": "tv_import_from_camera"
+      },
+      {
+        "i": 1,
+        "c": [
+          2633,
+          486
+        ],
+        "t": "图库导入课程表",
+        "r": "tv_import_from_gallery"
+      }
+    ],
+    "nodes_count": 2,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "checkpoint_hint": "⚠️ 落点与预期不符：未命中 desc=拍照|text=图库|text=从图库导入课程表。先判断是「多余的临时弹窗」（不影响主流程 → 关掉继续）还是「用例要的东西不存在了」（主流程被改 → 停止并如实记录）。",
+    "event_ids": [
+      1169
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "b94397697e324029aab14c007bf8c9c5",
+    "measured_at": "2026-10-09T13:38:48.015",
+    "process_observed_ms": 7335.324,
+    "stages_ms": {
+      "device_import": 315.264,
+      "device_connect": 1173.682,
+      "action": 196.79,
+      "settle_wait": 600.509,
+      "watch": 2590.086,
+      "permission": 923.745,
+      "screenshot": 367.293,
+      "png_save": 191.782,
+      "ui_dump": 60.435,
+      "rotation": 268.935,
+      "xml_save": 4.254,
+      "foreground": 417.014,
+      "meta_save": 3.018,
+      "crash_detection": 90.338,
+      "screen_signature": 30.335,
+      "event_write": 1.912,
+      "node_summary": 0.346,
+      "node_labels": 0.259,
+      "next_targets": 0.013,
+      "serialization": 0.113
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 3134
+  },
+  "response_bytes": 3134,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1169
+    ]
+  }
+}

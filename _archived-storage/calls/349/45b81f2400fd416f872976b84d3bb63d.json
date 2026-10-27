@@ -1,0 +1,185 @@
+{
+  "call_id": "45b81f2400fd416f872976b84d3bb63d",
+  "session_id": 349,
+  "tool": "act",
+  "started_at": "2026-10-09T15:40:47.868",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T15:40:54.249",
+  "wall_ms": 6374.722,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 2355,
+      "y": 1729,
+      "via": "title=测试日程A",
+      "why": "打开事件详情"
+    },
+    "ts": "2026-10-09T15:40:54",
+    "package": "com.zui.calendar",
+    "activity": ".reminder.ReminderInfoActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "45b81f2400fd416f872976b84d3bb63d",
+    "timing": {
+      "call_id": "45b81f2400fd416f872976b84d3bb63d",
+      "measured_at": "2026-10-09T15:40:54.004",
+      "process_observed_ms": 4320.197,
+      "stages_ms": {
+        "device_import": 317.561,
+        "device_connect": 1053.752,
+        "action": 187.793,
+        "settle_wait": 600.351,
+        "permission": 937.78,
+        "screenshot": 336.777,
+        "png_save": 154.917,
+        "ui_dump": 38.846,
+        "rotation": 183.045,
+        "xml_save": 5.301,
+        "foreground": 417.321
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "rid=toolbar_title",
+      "text=提醒详情",
+      "rid=main_frame",
+      "rid=reminderData",
+      "rid=event_info_scroll_view",
+      "rid=icon_type",
+      "rid=reminderInfoTvTitle",
+      "text=测试日程A",
+      "rid=reminderInfoTvDate",
+      "text=2026年10月9日 周五 15:35",
+      "rid=divider_line_view",
+      "rid=reminderInfoLlHead",
+      "text=提醒:",
+      "rid=reminderInfoTvReminderLabel",
+      "text=任务发生时",
+      "rid=reminderInfoTvOtherDate",
+      "text=不重复",
+      "rid=button_layout",
+      "rid=bottom_bar"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\349\\step0349\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\349\\step0349\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\349\\step0349\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1520,
+          562
+        ],
+        "t": "任务发生时",
+        "r": "reminderInfoLlHead"
+      },
+      {
+        "c": [
+          107,
+          203
+        ],
+        "t": "提醒详情"
+      },
+      {
+        "c": [
+          897,
+          1805
+        ]
+      },
+      {
+        "c": [
+          2142,
+          1805
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          107,
+          203
+        ]
+      },
+      {
+        "i": 1,
+        "c": [
+          1520,
+          562
+        ],
+        "r": "reminderInfoLlHead"
+      },
+      {
+        "i": 2,
+        "c": [
+          897,
+          1805
+        ]
+      },
+      {
+        "i": 3,
+        "c": [
+          2142,
+          1805
+        ]
+      }
+    ],
+    "nodes_count": 4,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      1370
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "45b81f2400fd416f872976b84d3bb63d",
+    "measured_at": "2026-10-09T15:40:54.154",
+    "process_observed_ms": 4483.44,
+    "stages_ms": {
+      "device_import": 317.561,
+      "device_connect": 1053.752,
+      "action": 187.793,
+      "settle_wait": 600.351,
+      "permission": 937.78,
+      "screenshot": 336.777,
+      "png_save": 154.917,
+      "ui_dump": 38.846,
+      "rotation": 183.045,
+      "xml_save": 5.301,
+      "foreground": 417.321,
+      "meta_save": 7.154,
+      "crash_detection": 112.371,
+      "screen_signature": 33.016,
+      "event_write": 1.281,
+      "node_summary": 1.472,
+      "node_labels": 1.003,
+      "next_targets": 0.046,
+      "serialization": 0.293
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 3052
+  },
+  "response_bytes": 3052,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1370
+    ]
+  }
+}

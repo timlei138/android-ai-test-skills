@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T19:51:53",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.EditTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 990,
+    "via": "rid=layout_total_weeks",
+    "why": "步骤4: 点击学期总周数"
+  }
+}

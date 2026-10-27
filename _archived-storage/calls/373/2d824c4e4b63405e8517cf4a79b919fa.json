@@ -1,0 +1,214 @@
+{
+  "call_id": "2d824c4e4b63405e8517cf4a79b919fa",
+  "session_id": 373,
+  "tool": "act",
+  "started_at": "2026-10-09T19:21:54.023",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T19:22:01.401",
+  "wall_ms": 7369.588,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "input",
+      "x": 1456,
+      "y": 203,
+      "text": "对照",
+      "mode": "overwrite",
+      "via": "searchEditText",
+      "why": "type-again"
+    },
+    "ts": "2026-10-09T19:22:01",
+    "package": "com.zui.calendar",
+    "activity": ".agenda.NewBuildList",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "2d824c4e4b63405e8517cf4a79b919fa",
+    "timing": {
+      "call_id": "2d824c4e4b63405e8517cf4a79b919fa",
+      "measured_at": "2026-10-09T19:22:01.221",
+      "process_observed_ms": 5431.024,
+      "stages_ms": {
+        "device_import": 341.861,
+        "device_connect": 1120.005,
+        "action": 941.119,
+        "input_focus_wait": 300.352,
+        "settle_wait": 600.52,
+        "permission": 944.854,
+        "screenshot": 355.065,
+        "png_save": 102.279,
+        "ui_dump": 72.903,
+        "rotation": 202.117,
+        "xml_save": 5.028,
+        "foreground": 349.178
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=build_list_content",
+      "rid=contentx",
+      "rid=search_view",
+      "rid=click_layout",
+      "rid=time1",
+      "text=2026年10月9日 16:11",
+      "rid=line",
+      "rid=title",
+      "text=对照提醒事件X",
+      "text=2026年10月9日 16:12",
+      "rid=time2",
+      "text=2026年10月9日 17:12",
+      "text=对照日程事件Y",
+      "rid=searchEditText",
+      "text=对照",
+      "rid=icon_search",
+      "rid=imageButtonClear",
+      "rid=cancel",
+      "text=取消"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\373\\step0915\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\373\\step0915\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\373\\step0915\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          806,
+          441
+        ],
+        "t": "对照提醒事件X",
+        "r": "click_layout"
+      },
+      {
+        "c": [
+          2233,
+          441
+        ],
+        "t": "对照日程事件Y",
+        "r": "click_layout"
+      },
+      {
+        "c": [
+          1456,
+          203
+        ],
+        "t": "对照",
+        "r": "searchEditText"
+      },
+      {
+        "c": [
+          2739,
+          203
+        ],
+        "t": "取消",
+        "r": "imageButtonClear"
+      },
+      {
+        "c": [
+          2916,
+          203
+        ],
+        "t": "取消",
+        "r": "cancel"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          806,
+          441
+        ],
+        "r": "click_layout"
+      },
+      {
+        "i": 1,
+        "c": [
+          2233,
+          441
+        ],
+        "r": "click_layout"
+      },
+      {
+        "i": 2,
+        "c": [
+          1456,
+          203
+        ],
+        "t": "对照",
+        "r": "searchEditText"
+      },
+      {
+        "i": 3,
+        "c": [
+          2739,
+          203
+        ],
+        "r": "imageButtonClear"
+      },
+      {
+        "i": 4,
+        "c": [
+          2916,
+          203
+        ],
+        "t": "取消",
+        "r": "cancel"
+      }
+    ],
+    "nodes_count": 5,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      1937
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "2d824c4e4b63405e8517cf4a79b919fa",
+    "measured_at": "2026-10-09T19:22:01.323",
+    "process_observed_ms": 5533.041,
+    "stages_ms": {
+      "device_import": 341.861,
+      "device_connect": 1120.005,
+      "action": 941.119,
+      "input_focus_wait": 300.352,
+      "settle_wait": 600.52,
+      "permission": 944.854,
+      "screenshot": 355.065,
+      "png_save": 102.279,
+      "ui_dump": 72.903,
+      "rotation": 202.117,
+      "xml_save": 5.028,
+      "foreground": 349.178,
+      "meta_save": 3.389,
+      "crash_detection": 63.023,
+      "screen_signature": 25.98,
+      "event_write": 1.656,
+      "node_summary": 0.835,
+      "node_labels": 0.732,
+      "next_targets": 0.04,
+      "serialization": 0.225
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 3481
+  },
+  "response_bytes": 3481,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1937
+    ]
+  }
+}

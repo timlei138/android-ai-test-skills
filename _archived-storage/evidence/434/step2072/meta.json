@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T10:05:32",
+  "package": "com.zui.calendar",
+  "activity": ".curriculum.EditCurriculumActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1867,
+    "via": "currCardAddEvents 添加课程",
+    "why": "用例步骤1：点卡片内可点项触发权限弹窗"
+  },
+  "call_id": "48fb27b45ddf40f5b7614040b6c128d6",
+  "timing": {
+    "call_id": "48fb27b45ddf40f5b7614040b6c128d6",
+    "measured_at": "2026-10-15T10:05:32.133",
+    "process_observed_ms": 14036.109,
+    "stages_ms": {
+      "device_import": 423.989,
+      "device_connect": 1134.258,
+      "action": 193.386,
+      "settle_wait": 600.108,
+      "permission": 5356.416,
+      "screenshot": 409.953,
+      "png_save": 119.1,
+      "ui_dump": 84.909,
+      "rotation": 244.23,
+      "xml_save": 6.897,
+      "foreground": 5336.627
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

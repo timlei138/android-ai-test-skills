@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T10:53:49",
+  "package": "com.zui.camera",
+  "activity": ".CaptureActivity",
+  "rotation": 1,
+  "size": [
+    3840,
+    2560
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1920,
+    "y": 1564,
+    "via": "rid=button1",
+    "why": "关提示框触发权限"
+  }
+}

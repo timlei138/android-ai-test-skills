@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T20:03:15",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimeSlotSettingsActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1694,
+    "via": "rid=layout_time_settings",
+    "why": "回时间设置页验证节数"
+  }
+}

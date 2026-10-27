@@ -1,0 +1,9 @@
+{
+  "call_id": "3bde73188be340298bb01bbddd7f6077",
+  "session_id": 473,
+  "tool": "session",
+  "started_at": "2026-10-15T19:00:14.117",
+  "status": "started",
+  "expects_event": false,
+  "structured_result_required": true
+}

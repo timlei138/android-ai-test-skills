@@ -1,0 +1,40 @@
+{
+  "call_id": "12da5f65365241e1837ed7762ca76374",
+  "session_id": 382,
+  "tool": "session",
+  "started_at": "2026-10-09T20:38:04.878",
+  "status": "ended",
+  "expects_event": false,
+  "structured_result_required": true,
+  "returncode": 1,
+  "ended_at": "2026-10-09T20:38:06.756",
+  "wall_ms": 1877.294,
+  "result": {
+    "ok": false,
+    "error": "Event 2210 must contain evidence from session 382",
+    "stage": "session",
+    "rejected": true,
+    "hint": "Correct the input or storage issue; rejected finish does not commit.",
+    "call_id": "12da5f65365241e1837ed7762ca76374",
+    "event_ids": [],
+    "execution_state": "unknown"
+  },
+  "timing": {
+    "call_id": "12da5f65365241e1837ed7762ca76374",
+    "measured_at": "2026-10-09T20:38:06.743",
+    "process_observed_ms": 33.727,
+    "stages_ms": {
+      "serialization": 0.032
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 306
+  },
+  "response_bytes": 306,
+  "audit": {
+    "complete": true,
+    "outcome": "refused",
+    "issues": [],
+    "executed": true,
+    "event_ids": []
+  }
+}

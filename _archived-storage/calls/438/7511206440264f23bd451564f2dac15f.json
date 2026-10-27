@@ -1,0 +1,202 @@
+{
+  "call_id": "7511206440264f23bd451564f2dac15f",
+  "session_id": 438,
+  "tool": "act",
+  "started_at": "2026-10-15T11:30:58.932",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-15T11:31:13.529",
+  "wall_ms": 14587.622,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 2697,
+      "y": 371
+    },
+    "ts": "2026-10-15T11:31:13",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.display.TimetableActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "7511206440264f23bd451564f2dac15f",
+    "timing": {
+      "call_id": "7511206440264f23bd451564f2dac15f",
+      "measured_at": "2026-10-15T11:31:13.293",
+      "process_observed_ms": 14023.868,
+      "stages_ms": {
+        "device_import": 416.183,
+        "device_connect": 1231.457,
+        "action": 204.954,
+        "settle_wait": 600.206,
+        "permission": 5302.166,
+        "screenshot": 331.007,
+        "png_save": 114.282,
+        "ui_dump": 89.389,
+        "rotation": 269.739,
+        "xml_save": 5.39,
+        "foreground": 5366.061
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "desc=转到上一层级",
+      "rid=toolbar_title",
+      "text=课程表",
+      "rid=emptyView",
+      "text=还未添加课程表",
+      "rid=btnImportFromPhoto",
+      "text=拍照导入课程表",
+      "rid=btnImportFromGallery",
+      "text=从图库导入课程表",
+      "rid=btnCreateManually",
+      "text=手动创建课程表"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\438\\step2088\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\438\\step2088\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\438\\step2088\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          302,
+          203
+        ],
+        "t": "课程表",
+        "r": "toolbar_title"
+      },
+      {
+        "c": [
+          1520,
+          1365
+        ],
+        "t": "拍照导入课程表",
+        "r": "btnImportFromPhoto"
+      },
+      {
+        "c": [
+          1520,
+          1541
+        ],
+        "t": "从图库导入课程表",
+        "r": "btnImportFromGallery"
+      },
+      {
+        "c": [
+          1520,
+          1717
+        ],
+        "t": "手动创建课程表",
+        "r": "btnCreateManually"
+      },
+      {
+        "c": [
+          123,
+          203
+        ],
+        "t": "转到上一层级"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          123,
+          203
+        ],
+        "t": "转到上一层级"
+      },
+      {
+        "i": 1,
+        "c": [
+          302,
+          203
+        ],
+        "t": "课程表",
+        "r": "toolbar_title"
+      },
+      {
+        "i": 2,
+        "c": [
+          1520,
+          1365
+        ],
+        "t": "拍照导入课程表",
+        "r": "btnImportFromPhoto"
+      },
+      {
+        "i": 3,
+        "c": [
+          1520,
+          1541
+        ],
+        "t": "从图库导入课程表",
+        "r": "btnImportFromGallery"
+      },
+      {
+        "i": 4,
+        "c": [
+          1520,
+          1717
+        ],
+        "t": "手动创建课程表",
+        "r": "btnCreateManually"
+      }
+    ],
+    "nodes_count": 5,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      3160
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "7511206440264f23bd451564f2dac15f",
+    "measured_at": "2026-10-15T11:31:13.446",
+    "process_observed_ms": 14182.986,
+    "stages_ms": {
+      "device_import": 416.183,
+      "device_connect": 1231.457,
+      "action": 204.954,
+      "settle_wait": 600.206,
+      "permission": 5302.166,
+      "screenshot": 331.007,
+      "png_save": 114.282,
+      "ui_dump": 89.389,
+      "rotation": 269.739,
+      "xml_save": 5.39,
+      "foreground": 5366.061,
+      "meta_save": 5.847,
+      "crash_detection": 108.911,
+      "screen_signature": 35.455,
+      "event_write": 3.062,
+      "node_summary": 0.317,
+      "node_labels": 0.288,
+      "next_targets": 0.017,
+      "serialization": 0.113
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 3397
+  },
+  "response_bytes": 3397,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3160
+    ]
+  }
+}

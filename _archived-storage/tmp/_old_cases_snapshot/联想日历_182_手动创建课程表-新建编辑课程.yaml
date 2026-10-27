@@ -1,0 +1,479 @@
+# 用例程序化描述（Programmatic Case Spec）
+#
+# 用途：把「已验证成功的路径」沉淀成**可直接回放**的结构化文件。
+#       执行时不再由 AI 临场判断，只按本文件走。
+#
+# 与用例库的关系：一个 case 对应一个 yaml，文件名 = 用例标题。
+#   用例原文（步骤/预期）→ storage/sessions.db 的 cases.input
+#   本文件              → 用例的**可执行形态**
+#
+# ⚠️ 三条硬规矩（写本文件时务必遵守）：
+#   1. **定位一律用 rid/文案，坐标只作兜底**——换设备/换分辨率后坐标必失效。
+#   2. **on_fail 必须显式**——失败就是失败，**不允许**「换个入口再试试」。
+#   3. **判据必须是机器可判的**（rid/activity/文案），不接受「显示正常」这类主观描述。
+#
+# ⚠️ 第 4 条硬规矩（**活的 next vs 死的 YAML**，会话454 回放实测后加）：
+#   `next` 是**活的**：它只报告"当前这一屏实际能点什么"；YAML 是**死的**：
+#   它写死了"应该点哪个 rid"。两者对不上时**不会报错**，只会静默跑偏。
+#   三种失败形态（实测）：
+#     ① 目标 rid 当前屏不存在 -> 点击落在空处，activity 不变，**无任何报错**
+#        （会话454：设备停在时间设置页时点 iv_more，sig 里 iv_more=False，点空）
+#     ② 目标 rid 存在但位置不同 -> 若信任 YAML 里的坐标会**点到旁边的东西**，
+#        可能执行错误动作并改坏状态  ← 最危险
+#     ③ 目标 rid 存在但语义变了 -> 同一个 button1 在不同弹框里可能是"删除"/"确定"
+#   ⇒ **回放规则（必须遵守）**：
+#     a. 每个 step 执行前，先从**当前屏**的 next/nodes 里**按 rid（或 text/desc）查**该目标；
+#     b. 找到 -> 用**本次查到的位置**执行，**不要**抄本文件里的坐标；
+#     c. **找不到 -> 立即停，按该 step 的 on_fail 处理**（通常是 BLOCKED），
+#        **绝不**改用坐标硬点、也绝不"换个入口再试试"；
+#     d. 坐标**只在元素无 rid 且无 text/desc（自绘控件）时**才用，且必须以
+#        `know.coords_rule` 的**规则**现算，不是抄死值。
+#   一句话：**rid 是判据，坐标是注释。**
+#
+# ⚠️ 已废除 `coords_hint`（2026-10-15）：它写的是"当时的实测值"，既会变、又容易被当成权威直接抄。
+#    真实事故：会话465 抄了本文件 llCourseTime 的坐标点，实际点到 llCourseWeeks，开错弹框白扔 2 次调用。
+#    ⇒ 有 rid/text 的一律按组合定位；只有自绘控件保留 `coords_rule`（规则，非死值）。
+#
+# ⚠️ 编码：本文件必须为 UTF-8（无 BOM）。经 GBK 管道写入会产生大量 '?'
+#    且 YAML **仍能解析**——即「合法但内容已毁」。保存后务必肉眼确认中文正常。
+#
+# ⚠️ 引号约定：**字符串定界符一律用半角双引号**（YAML 语法）；
+#    正文中需要强调/引用时用中文引号「」『』。**切勿混用** ——
+#    中文引号在 YAML 里不是定界符，会把引号本身变成值的一部分。
+#
+# ⚠️ 本用例会话（#448）以 **BLOCKED** 结束，末段有一次工具层崩溃（见 pitfalls）。
+#    本文件沉淀的是**已跑通的部分**，最后两个预期未取到证据，已显式标注。
+
+meta:
+  case_id: 17
+  title: "联想日历_182_手动创建课程表-新建编辑课程"
+  package: "com.zui.calendar"
+  derived_from:
+    session: 448
+    status: "BLOCKED"
+    device: "TB323FU (51e8bf1c)"
+    resolution: [3040, 1904]
+    date: "2026-10-15"
+  # 会话463 复跑（首次用 case_spec 机制驱动），对首轮沉淀做了 4 处修正：
+  #   ① 补上漏写的前置「已存在一个课程表」（原 YAML 缺 → 复跑会卡在空态页）
+  #   ② 推翻「只有一个空白格」（本次实测 5 个）
+  #   ③ 修正 selected 的读法（必须读 dump.xml，工具的 sig/--full 都不回传）
+  #   ④ 新增「全选首次点击被吸收」的坑
+  # 复跑结果：s1~s4 全部跑通、checkpoint 全 ok；预期 1/2/4/5 PASS。
+  replay:
+    session: 463
+    status: "BLOCKED"
+    date: "2026-10-15"
+    note: "首次由 case_spec 驱动复跑。s1~s4 全部按 YAML 跑通、4 次 checkpoint 全 ok。末段因违规用 PowerShell 循环包 run.py 触发 incomplete recording，会话锁定，按规约未重放。"
+
+# ── 执行须知（渲染到 MD 顶部，回放前必读）────────────────
+# 为什么写在这里而不是 SKILL.md：这些是**跟着这条用例走**的操作约束，
+# 不是通用规约。放 SKILL 里会被当背景噪音跳过，放这里才会在回放前被读到。
+playbook:
+  - title: "坑挂在步骤上，不放在文件级"
+    body: |
+      本文件的坑一律写在**它真正会出现的那一步**的 `pitfalls:` 下。
+      回放是**按步走**的 —— 跑到第 2 步时第 1 步的坑还在眼前，**信息被稀释**，
+      真正相关的那条反而看不见。**走到哪一步，就只看那一步的 `pitfalls`。**
+
+  - title: "工具层的坑（与 App 无关，知识卡里不一定有）"
+    body: |
+      这类坑不属于任何页面，是**工具或操作方式本身**的问题：
+      · ❌ `act input` 清空输入框会触发工具层崩溃
+        （`ADB_KEYBOARD_CLEAR_TEXT` → `ExtractedText.text on a null object reference`），
+        且崩溃后会话状态不明（`execution_state=may_have_executed`）
+        —— 按规约**禁止重放**，会话只能以 BLOCKED 收尾。
+      · ❌ 用 `swipe` 拨滚轮/滑列表：**有惯性会过冲**，来回震荡无法收敛。
+        重复手势一律用 `act tap --repeat N --gap MS`。
+      · ❌ 用 PowerShell 的 `for`/`foreach` 包 `run.py`：**中断即锁死会话**。
+      ⚠️ 实测教训：某次**连拨滚轮 37 次**才想起查卡，而知识卡那节标题叫
+      「弹框滚轮-上课时长循环」—— 从"我在拨滚轮"这个**现象根本检索不到它**。
+      ⇒ 检索知识卡时，用你脑子里的**现象词**（拨不准/过冲/没反应）换几个说法多 grep 几次。
+
+# ── 前置条件 ──────────────────────────────────────────
+# 分三类（2026-10-15 定）——**因为"能不能动手改"是三种不同的事**：
+#   goto    🧭 导航：把 App 开到某界面。起点由 session start 的冷启动钉死在首页，故必写。
+#   prepare 🔧 准备：要动手改设备状态。**已有则跳过**（skip_if）。做法写死在 do 里。
+#   assert  🔒 断言：只能检查、改不了（如联网）。不满足即 BLOCKED。
+# ⚠️ 为什么必须分：原先笼统一个列表，AI 分不清该"动手做"还是"直接停"——
+#    同一份 YAML 里，「存在课表」动手建了，「周视图有空白格」却不敢动而卡住。
+# ⚠️ 清理类（pm clear / pm revoke）**只在用例明确要求时**才用（如「首次使用」）；
+#    本用例前提是「创建空课程表」——是**建**，不是**清**。会话开始只 force-stop，不清数据。
+preconditions:
+  # 🧭 起点：会话开始时已冷启动复位，App 必在首页。故从首页写到起点。
+  - desc: "从日历首页进到课程表页-周视图"
+    type: goto
+    target: "课程表页-周视图（.timetable.display.TimetableActivity）"
+    path: >
+      日历首页（冷启动后必在此）→ 点右上角「更多」`iv_more`（c=[2835,203]）
+      → 弹出菜单后点「课程表」(`item_title` + text=课程表，c=[2697,371])。
+      ⚠️ 菜单四项**共用 rid `item_title`**，必须按 text 区分。
+      两次调用即可到位（会话463 ev#3577 ev#3578 实测）。
+    skip_if: {activity: ".timetable.display.TimetableActivity"}
+    on_fail: "BLOCKED"
+    note: >
+      ⚠️ 会话448 开跑时曾在课程表各页间反复 back 找路（6 次调用才落位），
+      **别再重演那段迷路** —— 按上面的 path 走。
+    verified_by: "会话463 ev#3577 ev#3578 实测两次调用到位"
+
+  # 🔧 准备：用例原文前提是「创建**空**课程表」。
+  #    会话463 复跑时原 YAML 漏了这条 → 卡在『还未添加课程表』空态页无路可走。
+  - desc: "存在一个课程表（用例原文前提「创建**空**课程表」）"
+    type: prepare
+    skip_if: {not_on_page: "还未添加课程表"}
+    do: >
+      ① 点 `btnCreateManually`（c=[1520,1717]）进 `EditTimetableActivity`；
+      ② 点 `et_schedule_name`（c=[1520,375]）聚焦，再用
+         `act input --x 1520 --y 375 --text="<名称>"` **一次调用内**写入
+         （⚠️ **不要**拆成「先清空、再写入」两步 —— 见 s2 坑：`ADB_KEYBOARD_CLEAR_TEXT` 会崩）；
+      ③ 点 `save_view`（c=[2913,202]）保存 → 自动回到周视图；
+      ④ **不要动「周末有课」开关**，保持默认关闭（用例前提要求「关闭周末有课开关」）。
+    on_fail: "BLOCKED"
+    verified_by: "会话463 ev#3580~#3583 实测走通：建『测试课表182』后回周视图，cv_empty_content 出现"
+
+  # 🔧 准备：周视图要有可点的空白格。这是 s1 能执行的前提。
+  - desc: "周视图上至少有一个**空白小节**可点"
+    type: prepare
+    skip_if: {has_node: "cv_empty_content"}
+    do: >
+      本身就依赖课表是空的。若课表已排满，需先腾出空位 ——
+      但**删课程属状态变更**，动手前须声明理由。
+      （正常情况下按上一条 prepare 新建的空课表必然是空的，无需额外动作。）
+    on_fail: "BLOCKED"
+    note: >
+      ⚠️ **不要记死「只有一个空位」**（会话448 的记载已被推翻）：
+      会话463 复跑时同一页有 **5 个**空白格，
+      c=[552,648] / [1104,648] / [1656,648] / [2208,648] / [2760,648]（周一~周五各一）。
+      空位数随课表内容变化，**按当前屏实数判断**（从 `next` 里读无文字的格子）。
+    verified_by: "会话448（1个）与 会话463（5个）两次实测数值不同 ⇒ 不可写死"
+
+# ── 步骤 ──────────────────────────────────────────────
+steps:
+  - id: s1
+    desc: "点周视图的空白小节，进入新建课程页"
+    case_step: "1. 在课程表界面点击空白小节"
+    do:
+      # ⚠️ repeat=2 是**一次调用内连点两下**，必须保留：
+      #    本机实测第一次点按被网格吸收、第二次才进入新建课程页。
+      #    拆成两次独立调用会因落点变化而跑偏。
+      - tap: {rid: cv_empty_content, repeat: 2, gap_ms: 400}
+    know:
+      where: "课程表页-周视图 (.timetable.display.TimetableActivity) → 新建课程页 (.timetable.course.EditCourseActivity)"
+      why_this: |
+        ⚠️ **第一次点按会被吸收，第二次才生效** —— 这是本机的真实行为，
+        所以必须用 `--repeat 2`。直接点一次会「看起来没反应」。
+        进入后页面 title=『新建课程』（编辑已有课程时是『编辑课程』）。
+      locate: "rid=cv_empty_content"
+    expect:
+      activity: ".timetable.course.EditCourseActivity"
+      # ⚠️ 会话464 修正：原判据写的是 `node_text: {rid: toolbar_title, equals: 新建课程}`，
+      #    但**编辑课程页根本没有 `toolbar_title` 这个节点**（实测该页节点全集里没有它），
+      #    导致该判据**恒为 false** —— 首轮执行时只要 activity 对就继续了，没人发现它失效。
+      #    「新建课程」实际是个**无 rid 的普通 TextView**（b=[783,305][1047,437]）→ 按 text 判。
+      text_present: "新建课程"
+      note: >
+        回读确认：activity 进 EditCourseActivity，且屏上出现「新建课程」字样
+        （无 rid，只能按 text 匹配）。**这是区分 s1 与 183 s1「编辑课程」的关键** ——
+        两者 activity 相同，只有这个标题文本不同。
+    on_fail: "BLOCKED"
+    pitfalls:
+      - "⚠️⚠️ **周视图空白格要点两下**（`--repeat 2`）。第一次点按被网格吸收，第二次才进新建课程页 —— 点一次会『看起来没反应』。这是实测结论，不是笔误。"
+      - "编辑页**没有『取消』，只有『关闭』**（本机 c=[739,314]）—— 别去找取消。"
+    evidence: "会话448 ev#3433"
+
+  - id: s2
+    desc: "设置课程时间：点「课程时间」打开双滚轮弹框，取消关闭"
+    case_step: "2. 设置课程信息（课程时间）"
+    do:
+      - tap: {rid: llCourseTime}
+      - tap: {rid: button2, text: "取消"}
+    know:
+      where: "新建课程页 (.timetable.course.EditCourseActivity)"
+      why_this: |
+        点 llCourseTime（『课程时间』行，本机 c=[1520,965]）弹出双滚轮弹框，
+        npTitle=『1到1节』，两个滚轮的上界为 **12**，
+        含 button2=取消 / button1=确定（本机 c=[1244,1367] / [1795,1367]）。
+      locate: "rid=llCourseTime → tvCourseTime 显示当前值"
+    expect:
+      dialog_present: {rid: button2, text: "取消"}
+    on_fail: "BLOCKED"
+    pitfalls:
+      - "⚠️ 滚轮为 Canvas 自绘，dump 读不到值，读值要用 `read.py` OCR（见知识卡「弹框滚轮」一节）。"
+      - "⚠️⚠️ **『课程时间』弹框的几何知识卡里没有（会话463 实测）**：本弹框**没有** `datePicker`/`parent`/`selector_top_divider` 这三个 rid，知识卡《滚轮要点准，先量可点带》记的是**新建事件页日期弹框**的几何，**不能照搬**。本弹框只有：`custom` b=[970,530][2070,1285]（滚轮区）、`npTitle` b=[1039,618][2001,746]（唯一读数位，显示『1到1节』）、`divider` b=[970,1285][2070,1287]。dump 中**无任何 NumberPicker 节点**。"
+      - "⚠️ **读数只能靠 `npTitle`**（`read --region 1039,618,2001,746` 或直接解析 dump 的 npTitle.text）。会话463 试 x=1250 配 y=1000 / y=850 两次点击，npTitle 均仍为『1到1节』，**未找到有效可点带** —— 下次复跑若要验『1~12 节』范围，需**先花少量调用量出可点带**（候选 y 收敛到 3~5 个，每点一下用一次 `read` 回读，**别用 `swipe`**）。"
+      - "『课程时间』弹框两个滚轮**上界都是 12**（会话448 记载，会话463 未能复核 —— 未取到证据）。"
+      - "❌ **不要用 `act input` 清空输入框**：会话448 末尾用 `act.py input` 时触发了工具层崩溃 ——
+        `broadcast ADB_KEYBOARD_CLEAR_TEXT failed: ... ExtractedText.text on a null object reference`，
+        导致当前调用状态不明（audit: execution_state=may_have_executed）。
+        按 skill 规约「可能已执行 → 禁止重放」，会话只能以 BLOCKED 收尾。
+        清空输入请用 `input --text=`（一次调用内清空并写入），**不要**先清后写分两步。
+        ✅ 会话463 对照验证：建课表时用 `act input --text=` 写 `et_schedule_name`，
+        **一次调用成功、无崩溃**（`mode: overwrite`）—— 反证上面那条坑的边界是「分两步」，不是「用 input」。"
+    evidence: "会话448 ev#3434 ev#3435 ev#3436；会话463 ev#3582 ev#3588 ev#3602 ev#3603"
+
+  - id: s3
+    desc: "设置上课周数：打开上课周数弹框，用快捷项「全选」选满；再验『一个周都不选点完成应被拦截』"
+    case_step: "3. 设置课程信息（上课周数）"
+    do:
+      - tap: {rid: llCourseWeeks}
+      - tap: {text: "全选"}
+      - tap: {rid: button1, text: "完成"}
+      # ★ 负向边界（会话473 补）：取消全选后点完成，应被 toast 拦截
+      - tap: {rid: llCourseWeeks}
+      - tap: {text: "全选"}          # toggle：再点一次即取消全部
+      - tap: {rid: button1, text: "完成"}
+      - assert_toast: "请选择上课周数"
+    know:
+      where: "新建课程页 → 上课周数弹框"
+      why_this: |
+        点 llCourseWeeks（本机 c=[1520,1149]）弹出上课周数弹框：
+        dialog_title=『上课周数』
+        quick_select_chip_group = 全选 / 单周 / 双周
+        weeks_chip_group = 第1~20周（**周数随『学期总周数』联动**）
+        按钮 button2=取消 / button1=完成。
+      locate: "rid=llCourseWeeks；快捷项按 text 定位；rid=button1"
+    expect:
+      activity: ".timetable.course.EditCourseActivity"
+      # ★ 位置判据：s1/s3/s4 都停在**同一个** EditCourseActivity，
+      #   光看 activity 认不出"走到哪一步"。用**本步改变了什么**区分：
+      #   s3 做完 = 周数已选（weeks_chip_group 里有 selected=true 的 chip）
+      week_chips_selected: true
+      note: "回读 weeks_chip_group，**应至少有一个 chip 的 selected=true**。若全为 false，说明 s3 尚未跑。"
+    on_fail: "BLOCKED"
+    pitfalls:
+      - "⚠️⚠️ **周数 chip 用的是 `selected`，不是 `checked`** —— `checked` 恒为 false，只读 checked 会得出错误的 FAIL。"
+      - "⚠️⚠️ **`selected` 读法（会话463 修正）**：工具返回的 `sig`/`next`。**不回传** `selected`；`--full` 也不回传（实测 `selected` 出现 0 次）。判据必须**直接读本步 evidence 的 `dump.xml`**（原始 XML 里 `selected=` 有 80 处），解析 `weeks_chip_group` 子节点的 `selected` 属性。"
+      - "⚠️⚠️ **『全选』快捷项首次点击会被吸收（会话463 实测）**：第 1 次点 (1128,589) 后回读 dump，20 个周 chip 与『全选』自身 `selected` **全为 false**；**同坐标再点一次**才全部变 true。坐标经 OCR 核对无误（OCR 读得『全选』center=[1129,590]），**不是点空**。⇒ **点完『全选』必须回读 dump 确认 `selected=true`，全 false 就再点一次**（与 s1『空白格点两次』同类现象）。"
+      - "选一个既非全选、也非单周/双周的自定义集合时，**三个快捷项会全部取消选中**（正常行为）。"
+      - "⚠️ **用例原文写『全部/单选/双选』，实际 UI 文案是『全选/单周/双周』** —— 按 text 定位时用实际文案。"
+      - text: >-
+          ★★ **周数弹框默认就是「全选 20 周」**（会话473 实测：`全选` selected=true、20/20 已选）。
+          ⇒ 想构造「一个周都不选」，点『全选』**一次**即可全部取消（已选 0 / 未选 20）。
+          ⚠️⚠️ **『全选』是 toggle 语义** —— **点 2 次会来回抵消**、等于没点。
+          配合「首次点击被吸收」的老坑，正确姿势是：**点 1 次 → 回读 dump 确认已选数变 0**，
+          没变再点 1 次；**不要**图省事 `--repeat 2`。
+        evidence: "会话473 ev#3772（repeat 2 无效）ev#3773（repeat 1 生效）实测"
+      - text: >-
+          ★★ **一个周都不选时点「完成」→ toast「请选择上课周数」**（会话473 实测，用例要求的行为）
+          —— 这是本步的**负向校验**，原 YAML 只做了正向路径，属漏测。
+          ⚠️ toast **不在 UI 树里**，`observe`/`dump` **永远读不到**，只能用 logcat 抓：
+          ① `adb -s <serial> logcat -c` 清空 → ② 点完成 → ③ **等约 2s**（别中间插 observe，
+          截图会挤掉窗口）→ ④ `adb logcat -d | Select-String uidumper`，
+          找 **`I/uidumper: detect toast:[请选择上课周数]`** 这一行（`ToastUI: showToast` 是同一次的另一条）。
+          ⚠️ 另外两个观察：**toast 后弹框会关闭**（属拦截后退出，不是停留在弹框里）；
+          且**原有周数不会被清空** —— 返回课程页读 `tvCourseWeeks` 仍是『第1-20周』，
+          说明空值被拒后**保留原选择**。
+        evidence: "会话473 ev#3773 ev#3774 ev#3775 实测；toast 文本『请选择上课周数』"
+    evidence: "会话448 ev#3437 ev#3439 ev#3440；会话463 ev#3591 ev#3592 ev#3595 ev#3596 ev#3597；会话473 ev#3771~ev#3775"
+
+  - id: s4
+    desc: "设置课程背景色：打开颜色弹框并选一个颜色"
+    case_step: "4. 设置课程信息（课程背景色）"
+    do:
+      - tap: {rid: llCourseColor}
+      # ⚠️ 唯一的例外：颜色块是**自绘控件**，既无 rid 也无 text/desc，
+      #    无法用组合定位，只能按坐标。故这里保留坐标，但**必须每次现查**（见 know.coords_rule）。
+      - tap: {x: 1520, y: 873}
+      - tap: {rid: button1, text: "完成"}
+    know:
+      where: "新建课程页 → 课程背景色弹框"
+      why_this: |
+        点 `llCourseColor` 弹出颜色选择弹框：
+        **10 个颜色，5 列 × 2 行**。
+        按钮 `button2`=取消 / `button1`=完成。
+      locate: "rid=llCourseColor（弹框本身）；颜色块**无 rid 无 text**，只能按坐标"
+      coords_rule: |
+        ⚠️ **这是全用例唯一必须用坐标的地方**（自绘控件，无任何可组合定位的特征）。
+        规则（不是死值）：弹框内 **5 列 × 2 行**：
+          x = 1102 + 209 × i   (i = 0..4)  → {1102, 1311, 1520, 1729, 1938}
+          第 1 行 y = 873；第 2 行 y = 1081
+        **执行时每次现查**：从当前 `dump.xml` 里取 `viewColorIndicator` 同级自绘节点的
+        `bounds` 现算网格中心，**不要**直接抄上面这行数值。
+        （实测三轮该弹框坐标一致，但这只是因为布局稳定 —— 换分辨率/弹框高度变化即失效。）
+
+    expect:
+      activity: ".timetable.course.EditCourseActivity"
+      # ★ 位置判据：与 s3 同为 EditCourseActivity，靠"颜色弹框已关闭"区分。
+      #   s4 做完 = 颜色已选、弹框已关（llCourseColor 可见、button1/button2 不可见）。
+      dialog_closed: true
+      node_present: {rid: llCourseColor}
+      note: "做完 s4 应**回到编辑页且弹框已关**（`llCourseColor` 可见、`button1/button2` 不可见）。若弹框仍开着，说明 s4 尚未跑完。"
+    on_fail: "BLOCKED"
+    pitfalls:
+      - "⚠️ 颜色块**自绘、无 rid、颜色值读不出来**，只能用坐标点、靠截图/OCR 判断。这是本用例的定位难点。"
+      - "颜色块**无 rid，只能按坐标点选**（10 个颜色 5 列 × 2 行，x ∈ {1102, 1311, 1520, 1729, 1938}、y ∈ {873, 1081}）；**颜色值不可机器读取**，判据只能用截图 + 坐标点选。"
+    evidence: "会话448 ev#3457 ev#3458 ev#3459"
+
+# ── 断言（对应用例的预期，**逐字照抄用例原文**）─────────────
+# ⚠️⚠️ case_expect 必须是**用例原文**，不许改写/合并/泛化 ——
+#   这是"哪条预期挂了"的唯一锚点。用例有 6 条预期 → 这里就必须是 6 条。
+assertions:
+  - id: a1
+    case_expect: "1.弹出新建课程编辑弹窗"
+    desc: "新建课程页已弹出（EditCourseActivity）"
+    check:
+      activity: ".timetable.course.EditCourseActivity"
+      # ⚠️ 会话464 修正：同 s1，`toolbar_title=新建课程` 是 DEAD（该页无 toolbar_title 节点）→ 改按 text 判。
+      text_present: "新建课程"
+    status_last_run: "PASS"
+    evidence: "会话448 finding#326；会话471 finding#387 ev#3700 前后"
+    note: "进入方式：周视图点 cv_empty_content **连点两下**（--repeat 2）。"
+
+  - id: a2
+    case_expect: "2.课程名称显示（必填），教室，备注（如老师）显示（非必填）；还有上课时间、周数、课程背景色可编辑"
+    desc: "字段齐备 + 必填/非必填标注正确 + 三类可编辑入口存在"
+    check:
+      nodes_present:
+        - {rid: etCourseName, text: "课程名"}
+        - {rid: etClassroom, text: "教室"}
+        - {rid: etTeacher, text: "备注（如老师）"}
+        - {rid: llCourseTime}
+        - {rid: tvCourseTime}
+        - {rid: llCourseWeeks}
+        - {rid: tvCourseWeeks}
+        - {rid: llCourseColor}
+        - {rid: viewColorIndicator}
+      required_hint: "课程名标『必填』、教室/备注标『非必填』"
+    status_last_run: "PARTIAL"
+    evidence: "会话448 finding#326；会话471 finding#387"
+    actual: >
+      **字段存在性 PASS；必填性未验证。**
+      9 个字段节点均实测存在（etCourseName/etClassroom/etTeacher 三个输入框 +
+      llCourseTime/tvCourseTime、llCourseWeeks/tvCourseWeeks、
+      llCourseColor/viewColorIndicator 三组可编辑入口）✅
+      输入框 hint 实测为『必填』『非必填』『非必填』，与用例的必填/非必填描述吻合 ✅
+      ❌ **未验证**：『课程名为必填』的**行为**（留空时能否保存/是否被拦截）没测过。
+    note: >
+      ⚠️ 本条的 case_expect 是**用例原文**。旧版把它压缩成
+      「弹出新建课程界面，有课程名、教室、备注、课程时间、上课周数、课程背景色等字段」，
+      丢了『必填/非必填』这半句 —— 已按原文恢复。
+    todo: "**课程名留空能否保存** 未验证 —— 补跑时必测（这是『必填』二字的实际含义）。"
+
+  - id: a3
+    case_expect: "3.x到х节（1～12到1～12节自由选择）"
+    desc: "课程时间弹框：节次上下界 1~12、双向可自由选择"
+    check:
+      dialog_on_tap: {npTitle: "1到1节"}
+      dialog_buttons: {button2: "取消", button1: "确定"}
+      wheels: "始终 = 2 个（起始节 / 结束节）"
+      wheel_upper_bound: 12
+      wheel_lower_bound: 1
+    status_last_run: "PASS"
+    evidence: "会话448 finding#327；会话471 finding#388 ev#3706"
+    actual: >
+      **通过。** 点 llCourseTime 开出双滚轮弹框，`npTitle` 实测『1到1节』——
+      与用例『x到x节』的「x到x」形式一致（默认 1到1节）。
+      上下界实测为 **1 和 12**（滚轮 OCR 可见档位 1~12），与用例『1～12到1～12』吻合。
+      按钮 button2=取消[1244,1367] / button1=确定[1795,1367]，点取消可关闭 ✅
+      ★两个滚轮**各自独立**，可自由组合（用例要的"自由选择"）。
+    note: >
+      ⚠️ 本条 case_expect 是**用例原文**（旧版泛化成「弹出时间设置弹框，可设置课程时间」，
+      把『1~12 自由选择』这个**值域判据**整条丢了 —— 那正是本条要测的东西）。
+      ⚠️ 定位要点：本弹框按钮 y=**1367**，周数弹框按钮 y=**1573**，差 206px；
+      必须按 rid 定位，抄坐标会点错弹框（会话465 真实事故）。
+
+  - id: a4
+    case_expect: >-
+      4.弹出多选弹框，默认选中设定的全部周数；顶部有3个单选-全部、单选、双选；下面为1～24周多选，根据课程表周数，可自由勾选，如果选中的既不符合全部、单选，也不是双选，则自动不选中任何顶部单选项；如果一个周都不选时，点击确定，则toast提示：请选择上课周数选择“确定”按钮则展示已选周数的课程表在列表中；选择“取消：按钮直接关闭弹框；
+    desc: "周数多选框的 6 个子要求（逐项核）"
+    check:
+      dialog_title: "上课周数"
+      default_selected_all: "默认选中设定的全部周数"
+      quick_chips: ["全选", "单周", "双周"]
+      week_chips_range: "第1周 ~ 第24周（随课程表周数联动）"
+      selection_attr: "selected（**不是 checked**）"
+      empty_selection_toast: "请选择上课周数"
+      confirm_shows_in_list: "点确定后已选周数展示在课程表中"
+      cancel_closes: "点取消直接关闭弹框、不改设置"
+    status_last_run: "PARTIAL"
+    evidence: >
+      会话448 finding#328；**会话473 finding#395 ev#3771~ev#3775 补测空选择边界**；
+      会话471 finding#389 ev#3709
+    actual: >
+      **6 个子要求已验 4 项，2 项未验。**
+      ✅ 默认选中全部周数：弹框打开即 20/20 全选（`全选` selected=true），会话473 实测。
+      ✅ 顶部 3 个单选：实测文案为『全选 / 单周 / 双周』✅（⚠️ 用例写"全部/单选/双选"，
+         实际 UI 是这三个词，按实际文案定位）。
+      ✅ 周数多选：chip 实测 20 个，随课程表周数**联动**（用例写 1~24，本课表实际 20 周
+         → 只到第20周，属正常联动）。
+      ✅ 一个周都不选点确定 → toast『请选择上课周数』：**会话473 抓到**
+         `I/uidumper: detect toast:[请选择上课周数]`，与用例要求一字不差。
+      ⚠️ **未验证**：『既不符合全部、单周、双周时自动取消所有顶部单选』——
+         只验了全选态，没构造过自定义集合。
+      ❌ **未验证**：『点确定则展示已选周数的课程表在列表中』——
+         只点了确定关弹框，**没回课程表看周数是否真的落进列表**。
+      ⚠️ 半验：『点取消直接关闭弹框』——会话471 点取消观察了弹框关闭，
+         但**没验证"不修改设置"**（对比值与取消前是否一致）。
+    note: >
+      ⚠️⚠️ 本条 case_expect 是**用例原文（一整段，含 4 个分号分隔的子要求）**。
+      旧版把它压缩成「弹出周数设置弹框，可设置上课周数」——**丢了 5 个子要求**，
+      是 182 最大的记录失真。已按原文恢复，并逐条标注验证状态。
+      ⚠️ 读 chip 选中态必须用 `selected`；`checked` 恒为 false，且 `sig`/`next`/`--full`
+      **都不返回** `selected`，只能解析 raw `dump.xml`。
+      ⚠️ 『全选』是 toggle：点 2 次会来回抵消；且首次点击会被吸收 ——
+      用 `--repeat 2` 一次调用内点两次（YAML 已记载），或点 1 次后回读确认。
+
+  - id: a5
+    case_expect: "5.点击课程颜色，在10个颜色中任选切换，具体默认颜色、顺序由UI定义；"
+    desc: "颜色弹框：10 个色块、可任选切换（默认色与顺序不作判据）"
+    check:
+      dialog_color_grid: {count: 10, layout: "5x2"}
+      dialog_buttons: {button2: "取消", button1: "完成"}
+      swatch_coords_rule: "x = 1102 + 209*i (i=0..4)；y ∈ {873, 1081}"
+    status_last_run: "PASS"
+    evidence: "会话448 finding#329；会话471 finding#390 ev#3712"
+    actual: >
+      **通过。** 点 llCourseColor[1520,1333] 开出颜色弹框（按钮 y=1382），
+      **10 个色块 5列×2行**，与用例『10个颜色』一致 ✅。
+      ★实测与 YAML coords_rule 公式完全吻合：x=1102+209*i (i=0..4) →
+      1102/1311/1520/1729/1938；第1行 y=873、第2行 y=1081。
+      点第3个色块[1520,873]（按公式现场算出、非死值）选中后点完成关闭 ✅ 可任选切换。
+      用例明确『具体默认颜色、顺序由UI定义』→ 故**默认色值与排列顺序不作判据**。
+    note: >
+      ⚠️ 本条 case_expect 是**用例原文**（旧版泛化成「弹出颜色设置弹框，可设置课程背景色」，
+      丢了『10个』这个**数量判据**和『默认/顺序不判』这个**免判声明**）。
+      ⚠️ 颜色块**自绘、无 rid、无 text、颜色值不可机器读取** ——
+      这是全文唯一必须用坐标的控件，故保留 `coords_rule` 公式并**每次从 dump bounds 现算**。
+
+  - id: a6
+    case_expect: "6.新创建的课程周数不可选1，3，5周，可根据设定的上课周数进行选择其他周数"
+    desc: "未验证（需先创建带指定周数的课程再回看）"
+    check:
+      newly_created_weeks_exclude: "1、3、5 周不可选"
+      depends_on: "先按 s6 建课程并选 1/3/5 周，再开周数弹框看这三周是否被禁用"
+    status_last_run: "BLOCKED"
+    evidence: "会话448 finding#330"
+    actual: >
+      **未验证到。** 用例第 6 步要求"创建一个第一节的课程，选择 1、3、5 周，
+      再次创建一个第一节的课程，点击上课周数"——这是**两步联动**的验证：
+      先建一个占用 1/3/5 周的课程，再建第二个时看这三周是否已不可选。
+      本轮**只走到"打开周数弹框"**，没完成"建课程并选 1/3/5 周 → 再建第二个"的构造，
+      故『1、3、5 周不可选』**没有取到证据**。
+    note: >
+      ⚠️ 本条 case_expect 是**用例原文**（旧版写成
+      「返回课程表页面，新建的课程显示在课程表中」/「新建的课程信息显示正确」，
+      **那两句根本不是本用例的预期** —— 属于凭空生成，已按原文纠正）。
+    todo: "补跑：按 s6 建课程占 1/3/5 周 → 再开周数弹框，读这三个 chip 的 `enabled`/`selected`。"
+
+# ── 坑 ────────────────────────────────────────────────
+# ⚠️ **坑一律挂在具体步骤上**（每步的 `pitfalls:`），本文件**不再设文件级 pitfalls**。
+#    原因（2026-10-15 定）：文件级是"全用例的坑混在一起"，
+#    跑到第 2 步时第 1 步的坑还在眼前，**信息被稀释**；
+#    而回放时是按步走的，坑必须跟着步走才用得上。
+
+# ── 元信息 ────────────────────────────────────────────
+confidence:
+  level: "verified"
+  reason: >
+    本用例已在会话 #246/#448/#463/#471/#473 多轮执行。
+    #471 全 4 步 PASS；#473 补测了『一个周都不选 → toast』边界。
+    ⚠️ 按用例原文的 6 条预期核算：**a1 PASS、a3 PASS、a5 PASS、
+    a2/a4 PARTIAL（字段必填性、自定义集合、确定后落列表 未验）、a6 BLOCKED**。
+    未验证部分均已在各条 actual 中写明，不得据此判整条 PASS。
+  todo:
+    - "❗**a6 补跑**：按 s6 建课程占 1/3/5 周 → 再开周数弹框，看这三周是否不可选。"
+    - "❗**a2 补跑**：课程名留空能否保存（验证『必填』的实际行为）。"
+    - "❗**a4 补跑**：①构造自定义周集合，看顶部三个单选是否全部取消；
+       ②点确定后回周视图，确认已选周数真的展示在列表中；
+       ③点取消时对比前后值，确认『不修改设置』。"
+    - "⚠️ `act input` 的工具层崩溃是否应写进知识卡（ADB_KEYBOARD_CLEAR_TEXT / ExtractedText null），待定 —— 本文件已先在 pitfalls 中记录。"

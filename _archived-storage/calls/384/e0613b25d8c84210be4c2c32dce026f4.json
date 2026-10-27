@@ -1,0 +1,235 @@
+{
+  "call_id": "e0613b25d8c84210be4c2c32dce026f4",
+  "session_id": 384,
+  "tool": "act",
+  "started_at": "2026-10-10T09:52:09.506",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T09:52:16.408",
+  "wall_ms": 6897.835,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 1520,
+      "y": 715,
+      "via": "voteRlFestival=显示节假日及春运抢票",
+      "why": "select-festival"
+    },
+    "ts": "2026-10-10T09:52:16",
+    "package": "com.zui.calendar",
+    "activity": ".settings.GrabVoteSettingsActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "e0613b25d8c84210be4c2c32dce026f4",
+    "timing": {
+      "call_id": "e0613b25d8c84210be4c2c32dce026f4",
+      "measured_at": "2026-10-10T09:52:16.165",
+      "process_observed_ms": 4827.235,
+      "stages_ms": {
+        "device_import": 343.649,
+        "device_connect": 1132.371,
+        "action": 256.448,
+        "settle_wait": 600.775,
+        "permission": 1123.956,
+        "screenshot": 358.209,
+        "png_save": 207.017,
+        "ui_dump": 88.656,
+        "rotation": 192.123,
+        "xml_save": 5.564,
+        "foreground": 424.36
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=toolbar",
+      "desc=关闭",
+      "text=抢火车票提醒",
+      "rid=contentPanel",
+      "rid=main_layout",
+      "rid=voteRlSetDate",
+      "rid=setdate_checkbox",
+      "rid=setdate_title",
+      "text=按往返日期显示抢票",
+      "rid=setdate_summary",
+      "text=月视图上按照您设定的往返日期显示买票提示。",
+      "rid=voteRlFestival",
+      "rid=festival_checkbox",
+      "rid=festival_title",
+      "text=显示节假日及春运抢票",
+      "rid=festival_summary",
+      "text=只在主界面中显示国家法定节假日和春运期间的抢票提示。",
+      "rid=voteRlNoShow",
+      "rid=notshow_checkbox",
+      "rid=notshow_title",
+      "text=暂不显示",
+      "rid=grabvote_time_selected_layout",
+      "rid=voteTimePickerGo",
+      "rid=title",
+      "text=启程时间",
+      "rid=summary",
+      "text=2026年9月14日(2026年八月初四)",
+      "rid=widget_frame",
+      "rid=voteTimePickerBack",
+      "text=返程时间",
+      "text=2026年10月9日(2026年八月廿九)"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\384\\step1337\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\384\\step1337\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\384\\step1337\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1520,
+          550
+        ],
+        "t": "月视图上按照您设定的往返日期显示买票提示。",
+        "r": "voteRlSetDate"
+      },
+      {
+        "c": [
+          1520,
+          715
+        ],
+        "t": "只在主界面中显示国家法定节假日和春运期间的抢票提示。",
+        "r": "voteRlFestival"
+      },
+      {
+        "c": [
+          1520,
+          1102
+        ],
+        "t": "2026年9月14日(2026年八月初四)",
+        "r": "voteTimePickerGo"
+      },
+      {
+        "c": [
+          1520,
+          1325
+        ],
+        "t": "2026年10月9日(2026年八月廿九)",
+        "r": "voteTimePickerBack"
+      },
+      {
+        "c": [
+          774,
+          371
+        ],
+        "t": "关闭"
+      },
+      {
+        "c": [
+          1520,
+          867
+        ],
+        "r": "voteRlNoShow"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          774,
+          371
+        ],
+        "t": "关闭"
+      },
+      {
+        "i": 1,
+        "c": [
+          1520,
+          550
+        ],
+        "r": "voteRlSetDate"
+      },
+      {
+        "i": 2,
+        "c": [
+          1520,
+          715
+        ],
+        "r": "voteRlFestival"
+      },
+      {
+        "i": 3,
+        "c": [
+          1520,
+          867
+        ],
+        "r": "voteRlNoShow"
+      },
+      {
+        "i": 4,
+        "c": [
+          1520,
+          1102
+        ],
+        "r": "voteTimePickerGo",
+        "off": true
+      },
+      {
+        "i": 5,
+        "c": [
+          1520,
+          1325
+        ],
+        "r": "voteTimePickerBack",
+        "off": true
+      }
+    ],
+    "nodes_count": 6,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2359
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "e0613b25d8c84210be4c2c32dce026f4",
+    "measured_at": "2026-10-10T09:52:16.330",
+    "process_observed_ms": 4993.229,
+    "stages_ms": {
+      "device_import": 343.649,
+      "device_connect": 1132.371,
+      "action": 256.448,
+      "settle_wait": 600.775,
+      "permission": 1123.956,
+      "screenshot": 358.209,
+      "png_save": 207.017,
+      "ui_dump": 88.656,
+      "rotation": 192.123,
+      "xml_save": 5.564,
+      "foreground": 424.36,
+      "meta_save": 6.09,
+      "crash_detection": 115.685,
+      "screen_signature": 34.846,
+      "event_write": 1.819,
+      "node_summary": 0.794,
+      "node_labels": 0.747,
+      "next_targets": 0.042,
+      "serialization": 0.214
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 4292
+  },
+  "response_bytes": 4292,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2359
+    ]
+  }
+}

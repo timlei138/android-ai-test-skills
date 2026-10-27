@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-27T09:43:36",
+  "package": "com.zui.calendar",
+  "activity": ".AllInOneActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2835,
+    "y": 203,
+    "via": "rid=iv_more",
+    "why": "步骤1 点击日历页面右上角更多按钮"
+  },
+  "call_id": "9766db7d59a14cdfb4581e1075955f70",
+  "timing": {
+    "call_id": "9766db7d59a14cdfb4581e1075955f70",
+    "measured_at": "2026-10-27T09:43:36.303",
+    "process_observed_ms": 4525.011,
+    "stages_ms": {
+      "device_import": 443.825,
+      "device_connect": 1158.618,
+      "action": 181.02,
+      "settle_wait": 600.53,
+      "permission": 968.338,
+      "screenshot": 337.331,
+      "png_save": 158.175,
+      "ui_dump": 82.497,
+      "rotation": 168.055,
+      "xml_save": 3.609,
+      "foreground": 338.037
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

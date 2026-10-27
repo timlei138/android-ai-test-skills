@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-27T09:44:31",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimetableListActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2754,
+    "y": 203,
+    "via": "rid=action_schedule text=编辑",
+    "why": "进入多选态准备删除已有课表"
+  },
+  "call_id": "b31f5e026d7f4b90acfcfdbfa485010f",
+  "timing": {
+    "call_id": "b31f5e026d7f4b90acfcfdbfa485010f",
+    "measured_at": "2026-10-27T09:44:31.649",
+    "process_observed_ms": 4536.755,
+    "stages_ms": {
+      "device_import": 425.352,
+      "device_connect": 1190.235,
+      "action": 205.12,
+      "settle_wait": 600.266,
+      "permission": 871.566,
+      "screenshot": 363.592,
+      "png_save": 125.97,
+      "ui_dump": 80.244,
+      "rotation": 263.056,
+      "xml_save": 3.782,
+      "foreground": 323.427
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

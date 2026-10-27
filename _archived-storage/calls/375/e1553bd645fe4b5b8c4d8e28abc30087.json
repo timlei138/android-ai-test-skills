@@ -1,0 +1,408 @@
+{
+  "call_id": "e1553bd645fe4b5b8c4d8e28abc30087",
+  "session_id": 375,
+  "tool": "observe",
+  "started_at": "2026-10-09T19:44:37.241",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T19:44:43.086",
+  "wall_ms": 5836.165,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-09T19:44:42",
+    "package": "com.zui.calendar",
+    "activity": ".agenda.NewBuildList",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "e1553bd645fe4b5b8c4d8e28abc30087",
+    "timing": {
+      "call_id": "e1553bd645fe4b5b8c4d8e28abc30087",
+      "measured_at": "2026-10-09T19:44:42.833",
+      "process_observed_ms": 3837.527,
+      "stages_ms": {
+        "device_import": 312.776,
+        "device_connect": 1111.052,
+        "permission": 1037.04,
+        "screenshot": 412.454,
+        "png_save": 259.475,
+        "ui_dump": 101.24,
+        "rotation": 200.603,
+        "xml_save": 5.308,
+        "foreground": 325.184
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=dashLine",
+      "rid=build_list_content",
+      "rid=toolbar",
+      "rid=backtext",
+      "rid=toolbar_title",
+      "text=纵览",
+      "rid=action_menu_view",
+      "rid=new_build_action_today",
+      "desc=更多选项",
+      "rid=sixpage",
+      "rid=landTabs",
+      "rid=all_layoutx",
+      "rid=allx",
+      "rid=all_tvx",
+      "text=全部",
+      "rid=reminder_layoutx",
+      "rid=reminderx",
+      "rid=reminder_tvx",
+      "text=提醒",
+      "rid=event_layoutx",
+      "rid=eventx",
+      "rid=event_tvx",
+      "text=日程",
+      "rid=curriculum_layoutx",
+      "rid=curriculumx",
+      "rid=curriculum_tvx",
+      "text=课程",
+      "rid=countdown_layoutx",
+      "rid=countdownx",
+      "rid=countdown_tvx",
+      "text=倒数日",
+      "rid=birthday_layoutx",
+      "rid=birthdayx",
+      "rid=birthday_tvx",
+      "text=生日",
+      "rid=creditcard_layoutx",
+      "rid=creditcardx",
+      "rid=creditcard_tvx",
+      "text=纪念日",
+      "rid=trip_layoutx",
+      "rid=tripx",
+      "rid=trip_tvx",
+      "text=出行",
+      "rid=pager",
+      "rid=agendaRefreshView",
+      "rid=agendaRv",
+      "rid=head_layout",
+      "rid=date_left",
+      "text=2026年 10月9日（八月廿九）周五",
+      "rid=click_layout",
+      "rid=time1",
+      "text=全天",
+      "rid=line",
+      "rid=title",
+      "text=张三",
+      "text=纵览生日A",
+      "text=测试生日A",
+      "text=2026年 11月17日（十月初九）周二",
+      "rid=bottom_layout",
+      "rid=bottom_tv",
+      "text=加载2027年事件"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\375\\step0988\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\375\\step0988\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\375\\step0988\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          162,
+          203
+        ],
+        "t": "纵览",
+        "r": "backtext"
+      },
+      {
+        "c": [
+          608,
+          388
+        ],
+        "t": "全部",
+        "r": "all_layoutx"
+      },
+      {
+        "c": [
+          608,
+          565
+        ],
+        "t": "提醒",
+        "r": "reminder_layoutx"
+      },
+      {
+        "c": [
+          608,
+          742
+        ],
+        "t": "日程",
+        "r": "event_layoutx"
+      },
+      {
+        "c": [
+          608,
+          919
+        ],
+        "t": "课程",
+        "r": "curriculum_layoutx"
+      },
+      {
+        "c": [
+          608,
+          1096
+        ],
+        "t": "倒数日",
+        "r": "countdown_layoutx"
+      },
+      {
+        "c": [
+          608,
+          1273
+        ],
+        "t": "生日",
+        "r": "birthday_layoutx"
+      },
+      {
+        "c": [
+          608,
+          1450
+        ],
+        "t": "纪念日",
+        "r": "creditcard_layoutx"
+      },
+      {
+        "c": [
+          608,
+          1627
+        ],
+        "t": "出行",
+        "r": "trip_layoutx"
+      },
+      {
+        "c": [
+          2111,
+          1733
+        ],
+        "t": "加载2027年事件",
+        "r": "bottom_layout"
+      },
+      {
+        "c": [
+          2853,
+          203
+        ],
+        "t": "更多选项"
+      },
+      {
+        "c": [
+          2740,
+          203
+        ],
+        "r": "new_build_action_today"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          162,
+          203
+        ],
+        "r": "backtext"
+      },
+      {
+        "i": 1,
+        "c": [
+          2740,
+          203
+        ],
+        "r": "new_build_action_today"
+      },
+      {
+        "i": 2,
+        "c": [
+          2853,
+          203
+        ],
+        "t": "更多选项"
+      },
+      {
+        "i": 3,
+        "c": [
+          608,
+          388
+        ],
+        "r": "all_layoutx"
+      },
+      {
+        "i": 4,
+        "c": [
+          608,
+          565
+        ],
+        "r": "reminder_layoutx"
+      },
+      {
+        "i": 5,
+        "c": [
+          608,
+          742
+        ],
+        "r": "event_layoutx"
+      },
+      {
+        "i": 6,
+        "c": [
+          608,
+          919
+        ],
+        "r": "curriculum_layoutx"
+      },
+      {
+        "i": 7,
+        "c": [
+          608,
+          1096
+        ],
+        "r": "countdown_layoutx"
+      },
+      {
+        "i": 8,
+        "c": [
+          608,
+          1273
+        ],
+        "r": "birthday_layoutx",
+        "selected": true
+      },
+      {
+        "i": 9,
+        "c": [
+          608,
+          1450
+        ],
+        "r": "creditcard_layoutx"
+      },
+      {
+        "i": 10,
+        "c": [
+          608,
+          1627
+        ],
+        "r": "trip_layoutx"
+      },
+      {
+        "i": 11,
+        "c": [
+          2128,
+          1102
+        ],
+        "r": "pager",
+        "s": true
+      },
+      {
+        "i": 12,
+        "c": [
+          2128,
+          1102
+        ],
+        "r": "agendaRefreshView"
+      },
+      {
+        "i": 13,
+        "c": [
+          2128,
+          1102
+        ],
+        "r": "agendaRv",
+        "s": true
+      },
+      {
+        "i": 14,
+        "c": [
+          2111,
+          473
+        ],
+        "r": "click_layout"
+      },
+      {
+        "i": 15,
+        "c": [
+          2111,
+          756
+        ],
+        "r": "click_layout"
+      },
+      {
+        "i": 16,
+        "c": [
+          2111,
+          1039
+        ],
+        "r": "click_layout"
+      },
+      {
+        "i": 17,
+        "c": [
+          2111,
+          1495
+        ],
+        "r": "click_layout"
+      },
+      {
+        "i": 18,
+        "c": [
+          2111,
+          1733
+        ],
+        "r": "bottom_layout"
+      }
+    ],
+    "nodes_count": 19,
+    "nodes_mode": "nav",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      2010
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "e1553bd645fe4b5b8c4d8e28abc30087",
+    "measured_at": "2026-10-09T19:44:42.987",
+    "process_observed_ms": 3991.927,
+    "stages_ms": {
+      "device_import": 312.776,
+      "device_connect": 1111.052,
+      "permission": 1037.04,
+      "screenshot": 412.454,
+      "png_save": 259.475,
+      "ui_dump": 101.24,
+      "rotation": 200.603,
+      "xml_save": 5.308,
+      "foreground": 325.184,
+      "meta_save": 3.066,
+      "screen_signature": 41.977,
+      "crash_detection": 99.702,
+      "event_write": 1.234,
+      "node_summary": 0.768,
+      "node_labels": 0.698,
+      "next_targets": 0.061,
+      "serialization": 0.194
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 6380
+  },
+  "response_bytes": 6380,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2010
+    ]
+  }
+}

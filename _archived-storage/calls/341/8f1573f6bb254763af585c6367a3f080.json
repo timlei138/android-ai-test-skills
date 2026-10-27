@@ -1,0 +1,353 @@
+{
+  "call_id": "8f1573f6bb254763af585c6367a3f080",
+  "session_id": 341,
+  "tool": "act",
+  "started_at": "2026-10-09T14:51:27.691",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T14:51:34.306",
+  "wall_ms": 6612.926,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "key",
+      "code": 3,
+      "why": "按Home键"
+    },
+    "ts": "2026-10-09T14:51:34",
+    "package": "com.zui.launcher",
+    "activity": ".drawer.NormalLauncher",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "8f1573f6bb254763af585c6367a3f080",
+    "timing": {
+      "call_id": "8f1573f6bb254763af585c6367a3f080",
+      "measured_at": "2026-10-09T14:51:34.082",
+      "process_observed_ms": 4563.448,
+      "stages_ms": {
+        "device_import": 311.517,
+        "device_connect": 1132.51,
+        "action": 157.305,
+        "settle_wait": 600.406,
+        "permission": 891.446,
+        "screenshot": 362.975,
+        "png_save": 377.735,
+        "ui_dump": 81.138,
+        "rotation": 175.283,
+        "xml_save": 6.798,
+        "foreground": 363.611
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=taskbar_container",
+      "rid=taskbar_scrim",
+      "rid=taskbar_bubbles_container",
+      "rid=stashed_handle",
+      "rid=navbuttons_view",
+      "rid=start_contextual_buttons",
+      "rid=content",
+      "rid=launcher",
+      "rid=static_blur_view_container",
+      "rid=static_blur_view",
+      "rid=drag_layer",
+      "rid=scrim_view",
+      "rid=workspace",
+      "rid=search_bar_bg",
+      "rid=search_widget_img",
+      "rid=search_widget_text",
+      "text=全世界都忍不住要笑了",
+      "text=超级文件",
+      "desc=超级文件",
+      "desc=健康使用设备 2x2",
+      "desc=精选小游戏",
+      "desc=文件夹: 未命名文件夹, 4 or more items",
+      "rid=folder_icon_name",
+      "text=文件夹",
+      "text=应用商店",
+      "desc=“应用商店”有 8 条通知",
+      "desc=安全中心",
+      "rid=active_icon_container",
+      "rid=app_name",
+      "text=安全中心",
+      "text=设置",
+      "desc=设置",
+      "text=天禧智能体",
+      "desc=天禧智能体",
+      "desc=时钟",
+      "text=时钟",
+      "rid=accessibility_action_view",
+      "desc=主屏幕",
+      "rid=hotseat",
+      "text=浏览器",
+      "desc=浏览器",
+      "text=录音机",
+      "desc=录音机",
+      "text=图库",
+      "desc=图库",
+      "text=相机",
+      "desc=相机",
+      "desc=所有应用",
+      "rid=page_indicator",
+      "rid=overview_actions_view"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\341\\step0240\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\341\\step0240\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\341\\step0240\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1520,
+          301
+        ],
+        "t": "全世界都忍不住要笑了",
+        "r": "search_bar_bg"
+      },
+      {
+        "c": [
+          2582,
+          301
+        ],
+        "t": "超级文件 超级文件"
+      },
+      {
+        "c": [
+          2370,
+          819
+        ],
+        "t": "文件夹: 未命名文件夹, 4 or more items"
+      },
+      {
+        "c": [
+          457,
+          1336
+        ],
+        "t": "应用商店 “应用商店”有 8 条通知"
+      },
+      {
+        "c": [
+          882,
+          1336
+        ],
+        "t": "安全中心"
+      },
+      {
+        "c": [
+          1307,
+          1336
+        ],
+        "t": "设置 设置"
+      },
+      {
+        "c": [
+          1732,
+          1336
+        ],
+        "t": "天禧智能体 天禧智能体"
+      },
+      {
+        "c": [
+          2582,
+          1336
+        ],
+        "t": "时钟"
+      },
+      {
+        "c": [
+          1341,
+          1740
+        ],
+        "t": "浏览器 浏览器"
+      },
+      {
+        "c": [
+          1521,
+          1740
+        ],
+        "t": "录音机 录音机"
+      },
+      {
+        "c": [
+          1701,
+          1740
+        ],
+        "t": "图库 图库"
+      },
+      {
+        "c": [
+          1880,
+          1740
+        ],
+        "t": "相机 相机"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          1520,
+          952
+        ],
+        "r": "workspace",
+        "s": true
+      },
+      {
+        "i": 1,
+        "c": [
+          1520,
+          301
+        ],
+        "r": "search_bar_bg"
+      },
+      {
+        "i": 2,
+        "c": [
+          2582,
+          301
+        ],
+        "t": "超级文件 超级文件"
+      },
+      {
+        "i": 3,
+        "c": [
+          2370,
+          819
+        ],
+        "t": "文件夹: 未命名文件夹, 4 or more items"
+      },
+      {
+        "i": 4,
+        "c": [
+          457,
+          1336
+        ],
+        "t": "应用商店 “应用商店”有 8 条通知"
+      },
+      {
+        "i": 5,
+        "c": [
+          882,
+          1336
+        ],
+        "t": "安全中心"
+      },
+      {
+        "i": 6,
+        "c": [
+          1307,
+          1336
+        ],
+        "t": "设置 设置"
+      },
+      {
+        "i": 7,
+        "c": [
+          1732,
+          1336
+        ],
+        "t": "天禧智能体 天禧智能体"
+      },
+      {
+        "i": 8,
+        "c": [
+          2582,
+          1336
+        ],
+        "t": "时钟"
+      },
+      {
+        "i": 9,
+        "c": [
+          1341,
+          1740
+        ],
+        "t": "浏览器 浏览器"
+      },
+      {
+        "i": 10,
+        "c": [
+          1521,
+          1740
+        ],
+        "t": "录音机 录音机"
+      },
+      {
+        "i": 11,
+        "c": [
+          1701,
+          1740
+        ],
+        "t": "图库 图库"
+      },
+      {
+        "i": 12,
+        "c": [
+          1880,
+          1740
+        ],
+        "t": "相机 相机"
+      },
+      {
+        "i": 13,
+        "c": [
+          1160,
+          1740
+        ],
+        "t": "所有应用"
+      }
+    ],
+    "nodes_count": 14,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      1259
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "8f1573f6bb254763af585c6367a3f080",
+    "measured_at": "2026-10-09T14:51:34.219",
+    "process_observed_ms": 4701.842,
+    "stages_ms": {
+      "device_import": 311.517,
+      "device_connect": 1132.51,
+      "action": 157.305,
+      "settle_wait": 600.406,
+      "permission": 891.446,
+      "screenshot": 362.975,
+      "png_save": 377.735,
+      "ui_dump": 81.138,
+      "rotation": 175.283,
+      "xml_save": 6.798,
+      "foreground": 363.611,
+      "meta_save": 2.844,
+      "crash_detection": 90.525,
+      "screen_signature": 33.077,
+      "event_write": 3.313,
+      "node_summary": 1.807,
+      "node_labels": 1.396,
+      "next_targets": 0.041,
+      "serialization": 0.256
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 5825
+  },
+  "response_bytes": 5825,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1259
+    ]
+  }
+}

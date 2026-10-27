@@ -1,0 +1,235 @@
+{
+  "call_id": "244c00f41c0b421599d51f554b8a1f56",
+  "session_id": 475,
+  "tool": "act",
+  "started_at": "2026-10-26T21:01:36.422",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-26T21:01:41.640",
+  "wall_ms": 5213.284,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 176,
+      "y": 391,
+      "via": "rid=checkbox_select[bounds 143,358][209,424]",
+      "why": "前提准备：勾选学生课程表"
+    },
+    "ts": "2026-10-26T21:01:41",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.management.TimetableListActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "244c00f41c0b421599d51f554b8a1f56",
+    "timing": {
+      "call_id": "244c00f41c0b421599d51f554b8a1f56",
+      "measured_at": "2026-10-26T21:01:41.362",
+      "process_observed_ms": 4554.899,
+      "stages_ms": {
+        "device_import": 403.929,
+        "device_connect": 1064.307,
+        "action": 213.159,
+        "settle_wait": 600.17,
+        "permission": 916.654,
+        "screenshot": 416.93,
+        "png_save": 135.281,
+        "ui_dump": 71.668,
+        "rotation": 272.61,
+        "xml_save": 3.478,
+        "foreground": 380.859
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "desc=转到上一层级",
+      "rid=toolbar_title",
+      "text=编辑",
+      "rid=action_schedule",
+      "desc=取消",
+      "rid=action_add_schedule",
+      "desc=添加课程表",
+      "rid=recyclerView",
+      "rid=checkbox_select",
+      "rid=tv_schedule_name",
+      "text=学生课程表",
+      "rid=tv_default_badge",
+      "text=当前",
+      "rid=tv_schedule_info",
+      "text=设置",
+      "rid=bottom_bar",
+      "rid=btn_set_default",
+      "text=设为当前课程表",
+      "rid=btn_delete",
+      "text=删除课程表"
+    ],
+    "checkpoint": {
+      "checked": true,
+      "ok": true,
+      "matched": [
+        "text=学生课程表"
+      ],
+      "missed": []
+    },
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "D:\\Project\\deepseek\\android-ai-test-skills\\storage\\evidence\\475\\step2658\\shot.png",
+      "xml": "D:\\Project\\deepseek\\android-ai-test-skills\\storage\\evidence\\475\\step2658\\dump.xml",
+      "meta": "D:\\Project\\deepseek\\android-ai-test-skills\\storage\\evidence\\475\\step2658\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          2754,
+          203
+        ],
+        "t": "取消",
+        "r": "action_schedule"
+      },
+      {
+        "c": [
+          2891,
+          203
+        ],
+        "t": "添加课程表",
+        "r": "action_add_schedule"
+      },
+      {
+        "c": [
+          1520,
+          1585
+        ],
+        "t": "设为当前课程表",
+        "r": "btn_set_default"
+      },
+      {
+        "c": [
+          1520,
+          1761
+        ],
+        "t": "删除课程表",
+        "r": "btn_delete"
+      },
+      {
+        "c": [
+          123,
+          203
+        ],
+        "t": "转到上一层级"
+      },
+      {
+        "c": [
+          1520,
+          391
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          123,
+          203
+        ],
+        "t": "转到上一层级"
+      },
+      {
+        "i": 1,
+        "c": [
+          2754,
+          203
+        ],
+        "t": "取消",
+        "r": "action_schedule"
+      },
+      {
+        "i": 2,
+        "c": [
+          2891,
+          203
+        ],
+        "t": "添加课程表",
+        "r": "action_add_schedule"
+      },
+      {
+        "i": 3,
+        "c": [
+          1520,
+          391
+        ]
+      },
+      {
+        "i": 4,
+        "c": [
+          1520,
+          1585
+        ],
+        "t": "设为当前课程表",
+        "r": "btn_set_default",
+        "off": true
+      },
+      {
+        "i": 5,
+        "c": [
+          1520,
+          1761
+        ],
+        "t": "删除课程表",
+        "r": "btn_delete"
+      }
+    ],
+    "nodes_count": 6,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      3803
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "244c00f41c0b421599d51f554b8a1f56",
+    "measured_at": "2026-10-26T21:01:41.540",
+    "process_observed_ms": 4730.993,
+    "stages_ms": {
+      "device_import": 403.929,
+      "device_connect": 1064.307,
+      "action": 213.159,
+      "settle_wait": 600.17,
+      "permission": 916.654,
+      "screenshot": 416.93,
+      "png_save": 135.281,
+      "ui_dump": 71.668,
+      "rotation": 272.61,
+      "xml_save": 3.478,
+      "foreground": 380.859,
+      "meta_save": 5.889,
+      "crash_detection": 105.356,
+      "screen_signature": 49.885,
+      "event_write": 4.307,
+      "node_summary": 1.149,
+      "node_labels": 0.813,
+      "next_targets": 0.043,
+      "serialization": 0.281
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 3877
+  },
+  "response_bytes": 3877,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3803
+    ]
+  }
+}

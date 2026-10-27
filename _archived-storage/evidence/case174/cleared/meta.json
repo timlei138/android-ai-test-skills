@@ -1,0 +1,28 @@
+{
+  "ts": "2026-10-15T13:29:48",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.temp.TempConfirmTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "call_id": "42522bc3a34d4e71bbeeb875b592db18",
+  "timing": {
+    "call_id": "42522bc3a34d4e71bbeeb875b592db18",
+    "measured_at": "2026-10-15T13:29:48.602",
+    "process_observed_ms": 13240.118,
+    "stages_ms": {
+      "device_import": 406.629,
+      "device_connect": 1150.336,
+      "permission": 5421.13,
+      "screenshot": 337.443,
+      "png_save": 162.895,
+      "ui_dump": 44.519,
+      "rotation": 295.296,
+      "xml_save": 5.985,
+      "foreground": 5367.403
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

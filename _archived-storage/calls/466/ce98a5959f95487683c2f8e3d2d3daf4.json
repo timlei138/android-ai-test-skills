@@ -1,0 +1,480 @@
+{
+  "call_id": "ce98a5959f95487683c2f8e3d2d3daf4",
+  "session_id": 466,
+  "tool": "act",
+  "started_at": "2026-10-15T17:33:32.062",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-15T17:33:47.868",
+  "wall_ms": 15790.596,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 2697,
+      "y": 371,
+      "via": "text=课程表",
+      "why": "YAML s1：菜单选课程表"
+    },
+    "ts": "2026-10-15T17:33:47",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.display.TimetableActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "ce98a5959f95487683c2f8e3d2d3daf4",
+    "timing": {
+      "call_id": "ce98a5959f95487683c2f8e3d2d3daf4",
+      "measured_at": "2026-10-15T17:33:47.517",
+      "process_observed_ms": 14797.389,
+      "stages_ms": {
+        "device_import": 648.915,
+        "device_connect": 1278.911,
+        "action": 207.615,
+        "settle_wait": 601.063,
+        "permission": 5422.118,
+        "screenshot": 369.38,
+        "png_save": 286.462,
+        "ui_dump": 147.995,
+        "rotation": 238.333,
+        "xml_save": 8.489,
+        "foreground": 5431.889
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "desc=转到上一层级",
+      "rid=toolbar_title",
+      "text=测试课表182",
+      "rid=tv_date_range",
+      "text=第7周",
+      "rid=action_curriculum_table_import",
+      "desc=导入课程表",
+      "rid=action_curriculum_table_settings",
+      "desc=课程表设置",
+      "rid=viewPager",
+      "rid=tv_monday",
+      "text=周一",
+      "rid=tv_tuesday",
+      "text=周二",
+      "rid=tv_wednesday",
+      "text=周三",
+      "rid=tv_friday",
+      "text=周五",
+      "rid=tv_monday_date",
+      "text=10/12",
+      "rid=tv_tuesday_date",
+      "text=10/13",
+      "rid=tv_wednesday_date",
+      "text=10/14",
+      "rid=tv_thursday",
+      "text=周四",
+      "rid=tv_thursday_date",
+      "text=10/15",
+      "rid=tv_friday_date",
+      "text=10/16",
+      "rid=recyclerView",
+      "rid=tv_section",
+      "text=1",
+      "rid=tv_time",
+      "text=08:00\n08:50",
+      "rid=cv_empty_content",
+      "text=2",
+      "text=09:00\n09:50",
+      "text=3",
+      "text=10:00\n10:50",
+      "text=4",
+      "text=11:00\n11:50"
+    ],
+    "checkpoint": {
+      "checked": true,
+      "ok": true,
+      "matched": [
+        "activity=.timetable.display.TimetableActivity"
+      ],
+      "missed": []
+    },
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\466\\step2496\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\466\\step2496\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\466\\step2496\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          383,
+          203
+        ],
+        "t": "测试课表182",
+        "r": "toolbar_title"
+      },
+      {
+        "c": [
+          669,
+          203
+        ],
+        "t": "第7周",
+        "r": "tv_date_range"
+      },
+      {
+        "c": [
+          2781,
+          203
+        ],
+        "t": "导入课程表",
+        "r": "action_curriculum_table_import"
+      },
+      {
+        "c": [
+          2919,
+          203
+        ],
+        "t": "课程表设置",
+        "r": "action_curriculum_table_settings"
+      },
+      {
+        "c": [
+          123,
+          203
+        ],
+        "t": "转到上一层级"
+      },
+      {
+        "c": [
+          1520,
+          1085
+        ],
+        "r": "viewPager",
+        "s": true
+      },
+      {
+        "c": [
+          1520,
+          1085
+        ],
+        "s": true
+      },
+      {
+        "c": [
+          552,
+          648
+        ]
+      },
+      {
+        "c": [
+          1104,
+          648
+        ]
+      },
+      {
+        "c": [
+          1656,
+          648
+        ]
+      },
+      {
+        "c": [
+          2208,
+          648
+        ]
+      },
+      {
+        "c": [
+          2760,
+          648
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          123,
+          203
+        ],
+        "t": "转到上一层级"
+      },
+      {
+        "i": 1,
+        "c": [
+          383,
+          203
+        ],
+        "t": "测试课表182",
+        "r": "toolbar_title"
+      },
+      {
+        "i": 2,
+        "c": [
+          669,
+          203
+        ],
+        "t": "第7周",
+        "r": "tv_date_range"
+      },
+      {
+        "i": 3,
+        "c": [
+          2781,
+          203
+        ],
+        "t": "导入课程表",
+        "r": "action_curriculum_table_import"
+      },
+      {
+        "i": 4,
+        "c": [
+          2919,
+          203
+        ],
+        "t": "课程表设置",
+        "r": "action_curriculum_table_settings"
+      },
+      {
+        "i": 5,
+        "c": [
+          1520,
+          1085
+        ],
+        "r": "viewPager",
+        "s": true
+      },
+      {
+        "i": 6,
+        "c": [
+          1520,
+          1085
+        ],
+        "s": true
+      },
+      {
+        "i": 7,
+        "c": [
+          552,
+          648
+        ]
+      },
+      {
+        "i": 8,
+        "c": [
+          1104,
+          648
+        ]
+      },
+      {
+        "i": 9,
+        "c": [
+          1656,
+          648
+        ]
+      },
+      {
+        "i": 10,
+        "c": [
+          2208,
+          648
+        ]
+      },
+      {
+        "i": 11,
+        "c": [
+          2760,
+          648
+        ]
+      },
+      {
+        "i": 12,
+        "c": [
+          552,
+          978
+        ]
+      },
+      {
+        "i": 13,
+        "c": [
+          1104,
+          978
+        ]
+      },
+      {
+        "i": 14,
+        "c": [
+          1656,
+          978
+        ]
+      },
+      {
+        "i": 15,
+        "c": [
+          2208,
+          978
+        ]
+      },
+      {
+        "i": 16,
+        "c": [
+          2760,
+          978
+        ]
+      },
+      {
+        "i": 17,
+        "c": [
+          552,
+          1308
+        ]
+      },
+      {
+        "i": 18,
+        "c": [
+          1104,
+          1308
+        ]
+      },
+      {
+        "i": 19,
+        "c": [
+          1656,
+          1308
+        ]
+      },
+      {
+        "i": 20,
+        "c": [
+          2208,
+          1308
+        ]
+      },
+      {
+        "i": 21,
+        "c": [
+          2760,
+          1308
+        ]
+      },
+      {
+        "i": 22,
+        "c": [
+          552,
+          1638
+        ]
+      },
+      {
+        "i": 23,
+        "c": [
+          1104,
+          1638
+        ]
+      },
+      {
+        "i": 24,
+        "c": [
+          1656,
+          1638
+        ]
+      },
+      {
+        "i": 25,
+        "c": [
+          2208,
+          1638
+        ]
+      },
+      {
+        "i": 26,
+        "c": [
+          2760,
+          1638
+        ]
+      },
+      {
+        "i": 27,
+        "c": [
+          552,
+          1837
+        ]
+      },
+      {
+        "i": 28,
+        "c": [
+          1104,
+          1837
+        ]
+      },
+      {
+        "i": 29,
+        "c": [
+          1656,
+          1837
+        ]
+      },
+      {
+        "i": 30,
+        "c": [
+          2208,
+          1837
+        ]
+      },
+      {
+        "i": 31,
+        "c": [
+          2760,
+          1837
+        ]
+      }
+    ],
+    "nodes_count": 32,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      3636
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "ce98a5959f95487683c2f8e3d2d3daf4",
+    "measured_at": "2026-10-15T17:33:47.734",
+    "process_observed_ms": 15021.818,
+    "stages_ms": {
+      "device_import": 648.915,
+      "device_connect": 1278.911,
+      "action": 207.615,
+      "settle_wait": 601.063,
+      "permission": 5422.118,
+      "screenshot": 369.38,
+      "png_save": 286.462,
+      "ui_dump": 147.995,
+      "rotation": 238.333,
+      "xml_save": 8.489,
+      "foreground": 5431.889,
+      "meta_save": 29.357,
+      "crash_detection": 114.029,
+      "screen_signature": 63.314,
+      "event_write": 2.988,
+      "node_summary": 1.872,
+      "node_labels": 1.435,
+      "next_targets": 0.151,
+      "serialization": 0.456
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 6825
+  },
+  "response_bytes": 6825,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3636
+    ]
+  }
+}

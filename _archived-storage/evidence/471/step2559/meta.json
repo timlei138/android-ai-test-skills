@@ -1,0 +1,39 @@
+{
+  "ts": "2026-10-15T18:15:00",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.course.EditCourseActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1128,
+    "y": 589,
+    "repeat": 2,
+    "gap_ms": 500,
+    "via": "text=全选",
+    "why": "YAML s3：全选 20 周（首次点击被吸收，故 repeat 2）"
+  },
+  "call_id": "f44e804b23974504a10728e43237c92a",
+  "timing": {
+    "call_id": "f44e804b23974504a10728e43237c92a",
+    "measured_at": "2026-10-15T18:15:00.889",
+    "process_observed_ms": 15082.504,
+    "stages_ms": {
+      "device_import": 394.804,
+      "device_connect": 1228.807,
+      "action": 431.445,
+      "settle_wait": 600.519,
+      "permission": 5423.121,
+      "screenshot": 417.544,
+      "png_save": 292.267,
+      "ui_dump": 84.742,
+      "rotation": 247.189,
+      "xml_save": 7.1,
+      "foreground": 5350.784
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

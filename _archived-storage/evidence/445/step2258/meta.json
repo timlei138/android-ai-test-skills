@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T13:14:41",
+  "package": "com.android.providers.media.module",
+  "activity": "com.android.providers.media.photopicker.PhotoPickerGetContentActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1268,
+    "via": "button1(知道了)",
+    "why": "关提示框"
+  },
+  "call_id": "f07cc20640c9485686b380d6f252194a",
+  "timing": {
+    "call_id": "f07cc20640c9485686b380d6f252194a",
+    "measured_at": "2026-10-15T13:14:41.033",
+    "process_observed_ms": 13959.984,
+    "stages_ms": {
+      "device_import": 383.474,
+      "device_connect": 1113.898,
+      "action": 205.1,
+      "settle_wait": 600.574,
+      "permission": 5357.526,
+      "screenshot": 402.423,
+      "png_save": 98.805,
+      "ui_dump": 108.921,
+      "rotation": 182.857,
+      "xml_save": 5.666,
+      "foreground": 5391.746
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

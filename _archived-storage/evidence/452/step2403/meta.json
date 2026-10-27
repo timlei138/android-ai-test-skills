@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T14:43:01",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.EditTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 990,
+    "via": "layout_total_weeks",
+    "why": "用例177预期4：学期总周数"
+  },
+  "call_id": "0434f12c8ffc4373b86f1ad396911382",
+  "timing": {
+    "call_id": "0434f12c8ffc4373b86f1ad396911382",
+    "measured_at": "2026-10-15T14:43:01.752",
+    "process_observed_ms": 14135.815,
+    "stages_ms": {
+      "device_import": 397.165,
+      "device_connect": 1111.895,
+      "action": 244.105,
+      "settle_wait": 600.683,
+      "permission": 5347.948,
+      "screenshot": 422.278,
+      "png_save": 195.871,
+      "ui_dump": 101.536,
+      "rotation": 245.177,
+      "xml_save": 4.428,
+      "foreground": 5355.966
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T19:13:19",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.crop.CropImageActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 176,
+    "y": 698,
+    "via": "照片选择器 学生课程表",
+    "why": "前提: 选图"
+  }
+}

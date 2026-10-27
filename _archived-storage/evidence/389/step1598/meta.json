@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-10T11:55:04",
+  "package": "com.zui.launcher",
+  "activity": ".drawer.NormalLauncher",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 209,
+    "via": "T83G notif",
+    "why": "open-notif"
+  },
+  "call_id": "380848e93085437da5df86b224104f63",
+  "timing": {
+    "call_id": "380848e93085437da5df86b224104f63",
+    "measured_at": "2026-10-10T11:55:04.545",
+    "process_observed_ms": 4927.502,
+    "stages_ms": {
+      "device_import": 294.698,
+      "device_connect": 1087.093,
+      "action": 214.652,
+      "settle_wait": 600.533,
+      "permission": 1056.053,
+      "screenshot": 411.011,
+      "png_save": 317.406,
+      "ui_dump": 132.086,
+      "rotation": 274.773,
+      "xml_save": 6.55,
+      "foreground": 453.906
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

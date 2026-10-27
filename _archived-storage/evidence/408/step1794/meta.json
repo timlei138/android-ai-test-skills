@@ -1,0 +1,39 @@
+{
+  "ts": "2026-10-10T14:32:29",
+  "package": "com.zui.calendar",
+  "activity": ".newbuild.NewBuildActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "input",
+    "x": 2128,
+    "y": 469,
+    "text": "W146大文本",
+    "mode": "overwrite",
+    "why": "title"
+  },
+  "call_id": "3ed815d64beb497ab100691917e7c45b",
+  "timing": {
+    "call_id": "3ed815d64beb497ab100691917e7c45b",
+    "measured_at": "2026-10-10T14:32:29.290",
+    "process_observed_ms": 5683.919,
+    "stages_ms": {
+      "device_import": 353.658,
+      "device_connect": 1115.562,
+      "action": 1048.915,
+      "input_focus_wait": 300.553,
+      "settle_wait": 600.55,
+      "permission": 912.536,
+      "screenshot": 379.736,
+      "png_save": 169.327,
+      "ui_dump": 54.427,
+      "rotation": 246.908,
+      "xml_save": 5.059,
+      "foreground": 375.35
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

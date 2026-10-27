@@ -1,0 +1,895 @@
+{
+  "call_id": "63c357dbe9f24d4f935f70b86bd43e0d",
+  "session_id": 429,
+  "tool": "observe",
+  "started_at": "2026-10-14T14:31:40.985",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-14T14:31:45.985",
+  "wall_ms": 4992.186,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-14T14:31:45",
+    "package": "com.zui.launcher",
+    "activity": ".drawer.NormalLauncher",
+    "rotation": 1,
+    "size": [
+      3840,
+      2560
+    ],
+    "call_id": "63c357dbe9f24d4f935f70b86bd43e0d",
+    "timing": {
+      "call_id": "63c357dbe9f24d4f935f70b86bd43e0d",
+      "measured_at": "2026-10-14T14:31:45.730",
+      "process_observed_ms": 4303.257,
+      "stages_ms": {
+        "device_import": 418.745,
+        "device_connect": 1110.699,
+        "permission": 1247.038,
+        "screenshot": 416.665,
+        "png_save": 526.146,
+        "ui_dump": 87.232,
+        "rotation": 167.332,
+        "xml_save": 5.85,
+        "foreground": 260.462
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=taskbar_container",
+      "rid=taskbar_scrim",
+      "rid=taskbar_bubbles_container",
+      "rid=stashed_handle",
+      "rid=navbuttons_view",
+      "rid=content",
+      "rid=launcher",
+      "rid=static_blur_view_container",
+      "rid=static_blur_view",
+      "rid=drag_layer",
+      "rid=scrim_view",
+      "rid=edit_panel",
+      "rid=topBar",
+      "rid=txv_tips",
+      "text=批量选择图标，长按后拖动即可跨屏移动。",
+      "rid=complete_button",
+      "text=完成",
+      "desc=完成",
+      "rid=bottom_panel",
+      "rid=btn_wallpaper",
+      "text=壁纸和主题风格",
+      "rid=btn_widgets",
+      "text=添加小部件",
+      "rid=drop_combine_folder_container",
+      "rid=btn_settings",
+      "text=桌面设置",
+      "rid=drop_remove_icon_container",
+      "rid=workspace",
+      "desc=快捷功能",
+      "rid=background",
+      "rid=work_widget_app_icon",
+      "desc=时间天气 2x2",
+      "desc=倒数日 2x1",
+      "rid=search_bar_bg",
+      "rid=search_widget_img",
+      "rid=search_widget_text",
+      "text=石升吉夺男子半程马拉松竞走金牌",
+      "desc=天气 2x2",
+      "desc=便签 2x2",
+      "desc=文件夹：工具，4 个或更多项目",
+      "rid=folder_icon_name",
+      "text=工具",
+      "text=应用商店",
+      "desc=“应用商店”有 19 条通知",
+      "text=录音机",
+      "desc=录音机",
+      "text=便签",
+      "desc=便签",
+      "text=天禧智能体",
+      "desc=天禧智能体",
+      "text=智慧文档",
+      "desc=智慧文档",
+      "text=相机",
+      "desc=相机",
+      "text=Legion Zone",
+      "desc=Legion Zone",
+      "rid=accessibility_action_view",
+      "desc=主屏幕",
+      "rid=page_indicator",
+      "rid=overview_actions_view"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\s07\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\s07\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\s07\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          3537,
+          166
+        ],
+        "t": "完成",
+        "d": "完成",
+        "r": "complete_button"
+      },
+      {
+        "c": [
+          721,
+          1840
+        ],
+        "t": "应用商店",
+        "d": "“应用商店”有 19 条通知"
+      },
+      {
+        "c": [
+          1063,
+          1840
+        ],
+        "t": "录音机",
+        "d": "录音机"
+      },
+      {
+        "c": [
+          1406,
+          1840
+        ],
+        "t": "便签",
+        "d": "便签"
+      },
+      {
+        "c": [
+          1748,
+          1840
+        ],
+        "t": "天禧智能体",
+        "d": "天禧智能体"
+      },
+      {
+        "c": [
+          2434,
+          1840
+        ],
+        "t": "智慧文档",
+        "d": "智慧文档"
+      },
+      {
+        "c": [
+          2776,
+          1840
+        ],
+        "t": "相机",
+        "d": "相机"
+      },
+      {
+        "c": [
+          3119,
+          1840
+        ],
+        "t": "Legion Zone",
+        "d": "Legion Zone"
+      },
+      {
+        "c": [
+          1920,
+          165
+        ],
+        "t": "批量选择图标，长按后拖动即可跨屏移动。",
+        "r": "topBar"
+      },
+      {
+        "c": [
+          1920,
+          166
+        ],
+        "t": "批量选择图标，长按后拖动即可跨屏移动。",
+        "r": "txv_tips"
+      },
+      {
+        "c": [
+          1920,
+          2288
+        ],
+        "t": "添加小部件",
+        "r": "bottom_panel"
+      },
+      {
+        "c": [
+          1370,
+          2288
+        ],
+        "t": "壁纸和主题风格",
+        "r": "btn_wallpaper"
+      }
+    ],
+    "nodes": [
+      {
+        "bounds": [
+          125,
+          2522,
+          3715,
+          2560
+        ],
+        "center": [
+          1920,
+          2541
+        ],
+        "rid": "com.zui.launcher:id/taskbar_container"
+      },
+      {
+        "bounds": [
+          125,
+          2522,
+          3715,
+          2560
+        ],
+        "center": [
+          1920,
+          2541
+        ],
+        "rid": "com.zui.launcher:id/taskbar_scrim"
+      },
+      {
+        "bounds": [
+          125,
+          2522,
+          3715,
+          2560
+        ],
+        "center": [
+          1920,
+          2541
+        ],
+        "rid": "com.zui.launcher:id/taskbar_bubbles_container"
+      },
+      {
+        "bounds": [
+          125,
+          2522,
+          3715,
+          2560
+        ],
+        "center": [
+          1920,
+          2541
+        ],
+        "rid": "com.zui.launcher:id/stashed_handle"
+      },
+      {
+        "bounds": [
+          125,
+          2522,
+          3715,
+          2560
+        ],
+        "center": [
+          1920,
+          2541
+        ],
+        "rid": "com.zui.launcher:id/navbuttons_view"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3840,
+          2560
+        ],
+        "center": [
+          1920,
+          1280
+        ],
+        "rid": "android:id/content"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3840,
+          2560
+        ],
+        "center": [
+          1920,
+          1280
+        ],
+        "rid": "com.zui.launcher:id/launcher"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3840,
+          2560
+        ],
+        "center": [
+          1920,
+          1280
+        ],
+        "rid": "com.zui.launcher:id/static_blur_view_container"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3840,
+          2560
+        ],
+        "center": [
+          1920,
+          1280
+        ],
+        "rid": "com.zui.launcher:id/static_blur_view"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3840,
+          2560
+        ],
+        "center": [
+          1920,
+          1280
+        ],
+        "rid": "com.zui.launcher:id/drag_layer"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3840,
+          2560
+        ],
+        "center": [
+          1920,
+          1280
+        ],
+        "rid": "com.zui.launcher:id/scrim_view"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3840,
+          2560
+        ],
+        "center": [
+          1920,
+          1280
+        ],
+        "rid": "com.zui.launcher:id/edit_panel"
+      },
+      {
+        "bounds": [
+          0,
+          98,
+          3840,
+          233
+        ],
+        "center": [
+          1920,
+          165
+        ],
+        "rid": "com.zui.launcher:id/topBar"
+      },
+      {
+        "bounds": [
+          481,
+          137,
+          3359,
+          195
+        ],
+        "center": [
+          1920,
+          166
+        ],
+        "rid": "com.zui.launcher:id/txv_tips",
+        "text": "批量选择图标，长按后拖动即可跨屏移动。"
+      },
+      {
+        "bounds": [
+          3434,
+          126,
+          3640,
+          206
+        ],
+        "center": [
+          3537,
+          166
+        ],
+        "rid": "com.zui.launcher:id/complete_button",
+        "text": "完成",
+        "desc": "完成",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          0,
+          2055,
+          3840,
+          2522
+        ],
+        "center": [
+          1920,
+          2288
+        ],
+        "rid": "com.zui.launcher:id/bottom_panel"
+      },
+      {
+        "bounds": [
+          1123,
+          2173,
+          1618,
+          2404
+        ],
+        "center": [
+          1370,
+          2288
+        ],
+        "rid": "com.zui.launcher:id/btn_wallpaper",
+        "text": "壁纸和主题风格",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1673,
+          2173,
+          2168,
+          2404
+        ],
+        "center": [
+          1920,
+          2288
+        ],
+        "rid": "com.zui.launcher:id/btn_widgets",
+        "text": "添加小部件",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1673,
+          2173,
+          2168,
+          2404
+        ],
+        "center": [
+          1920,
+          2288
+        ],
+        "rid": "com.zui.launcher:id/drop_combine_folder_container"
+      },
+      {
+        "bounds": [
+          2223,
+          2173,
+          2718,
+          2404
+        ],
+        "center": [
+          2470,
+          2288
+        ],
+        "rid": "com.zui.launcher:id/btn_settings",
+        "text": "桌面设置",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          2784,
+          2173,
+          3279,
+          2404
+        ],
+        "center": [
+          3031,
+          2288
+        ],
+        "rid": "com.zui.launcher:id/drop_remove_icon_container"
+      },
+      {
+        "bounds": [
+          288,
+          168,
+          3552,
+          2344
+        ],
+        "center": [
+          1920,
+          1256
+        ],
+        "rid": "com.zui.launcher:id/workspace",
+        "scrollable": true
+      },
+      {
+        "bounds": [
+          584,
+          285,
+          1201,
+          795
+        ],
+        "center": [
+          892,
+          540
+        ],
+        "desc": "快捷功能"
+      },
+      {
+        "bounds": [
+          584,
+          285,
+          1201,
+          795
+        ],
+        "center": [
+          892,
+          540
+        ],
+        "rid": "android:id/background",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          841,
+          489,
+          943,
+          591
+        ],
+        "center": [
+          892,
+          540
+        ],
+        "rid": "android:id/work_widget_app_icon"
+      },
+      {
+        "bounds": [
+          1611,
+          285,
+          2229,
+          795
+        ],
+        "center": [
+          1920,
+          540
+        ],
+        "desc": "时间天气 2x2"
+      },
+      {
+        "bounds": [
+          2297,
+          574,
+          2914,
+          795
+        ],
+        "center": [
+          2605,
+          684
+        ],
+        "desc": "倒数日 2x1"
+      },
+      {
+        "bounds": [
+          996,
+          927,
+          2844,
+          1020
+        ],
+        "center": [
+          1920,
+          973
+        ],
+        "rid": "com.zui.launcher:id/search_bar_bg",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1022,
+          948,
+          1073,
+          999
+        ],
+        "center": [
+          1047,
+          973
+        ],
+        "rid": "com.zui.launcher:id/search_widget_img"
+      },
+      {
+        "bounds": [
+          1084,
+          927,
+          2818,
+          1020
+        ],
+        "center": [
+          1951,
+          973
+        ],
+        "rid": "com.zui.launcher:id/search_widget_text"
+      },
+      {
+        "bounds": [
+          1084,
+          927,
+          2818,
+          1020
+        ],
+        "center": [
+          1951,
+          973
+        ],
+        "text": "石升吉夺男子半程马拉松竞走金牌"
+      },
+      {
+        "bounds": [
+          1269,
+          1152,
+          1886,
+          1662
+        ],
+        "center": [
+          1577,
+          1407
+        ],
+        "desc": "天气 2x2"
+      },
+      {
+        "bounds": [
+          1954,
+          1152,
+          2571,
+          1662
+        ],
+        "center": [
+          2262,
+          1407
+        ],
+        "desc": "便签 2x2"
+      },
+      {
+        "bounds": [
+          1954,
+          1152,
+          2571,
+          1662
+        ],
+        "center": [
+          2262,
+          1407
+        ],
+        "rid": "android:id/background",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          2212,
+          1356,
+          2314,
+          1458
+        ],
+        "center": [
+          2263,
+          1407
+        ],
+        "rid": "android:id/work_widget_app_icon"
+      },
+      {
+        "bounds": [
+          2605,
+          1118,
+          3290,
+          1696
+        ],
+        "center": [
+          2947,
+          1407
+        ],
+        "desc": "文件夹：工具，4 个或更多项目",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          2682,
+          1178,
+          3213,
+          1227
+        ],
+        "center": [
+          2947,
+          1202
+        ],
+        "rid": "com.zui.launcher:id/folder_icon_name",
+        "text": "工具"
+      },
+      {
+        "bounds": [
+          550,
+          1696,
+          892,
+          1985
+        ],
+        "center": [
+          721,
+          1840
+        ],
+        "text": "应用商店",
+        "desc": "“应用商店”有 19 条通知",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          892,
+          1696,
+          1235,
+          1985
+        ],
+        "center": [
+          1063,
+          1840
+        ],
+        "text": "录音机",
+        "desc": "录音机",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1235,
+          1696,
+          1577,
+          1985
+        ],
+        "center": [
+          1406,
+          1840
+        ],
+        "text": "便签",
+        "desc": "便签",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1577,
+          1696,
+          1920,
+          1985
+        ],
+        "center": [
+          1748,
+          1840
+        ],
+        "text": "天禧智能体",
+        "desc": "天禧智能体",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          2263,
+          1696,
+          2605,
+          1985
+        ],
+        "center": [
+          2434,
+          1840
+        ],
+        "text": "智慧文档",
+        "desc": "智慧文档",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          2605,
+          1696,
+          2948,
+          1985
+        ],
+        "center": [
+          2776,
+          1840
+        ],
+        "text": "相机",
+        "desc": "相机",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          2948,
+          1696,
+          3290,
+          1985
+        ],
+        "center": [
+          3119,
+          1840
+        ],
+        "text": "Legion Zone",
+        "desc": "Legion Zone",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          0,
+          98,
+          3840,
+          2560
+        ],
+        "center": [
+          1920,
+          1329
+        ],
+        "rid": "com.zui.launcher:id/accessibility_action_view",
+        "desc": "主屏幕"
+      },
+      {
+        "bounds": [
+          0,
+          1987,
+          3840,
+          2067
+        ],
+        "center": [
+          1920,
+          2027
+        ],
+        "rid": "com.zui.launcher:id/page_indicator"
+      },
+      {
+        "bounds": [
+          0,
+          2352,
+          3840,
+          2560
+        ],
+        "center": [
+          1920,
+          2456
+        ],
+        "rid": "com.zui.launcher:id/overview_actions_view"
+      }
+    ],
+    "nodes_count": 47,
+    "nodes_mode": "full",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      3072
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "63c357dbe9f24d4f935f70b86bd43e0d",
+    "measured_at": "2026-10-14T14:31:45.887",
+    "process_observed_ms": 4465.322,
+    "stages_ms": {
+      "device_import": 418.745,
+      "device_connect": 1110.699,
+      "permission": 1247.038,
+      "screenshot": 416.665,
+      "png_save": 526.146,
+      "ui_dump": 87.232,
+      "rotation": 167.332,
+      "xml_save": 5.85,
+      "foreground": 260.462,
+      "meta_save": 4.855,
+      "screen_signature": 52.44,
+      "crash_detection": 90.527,
+      "event_write": 1.648,
+      "node_summary": 0.896,
+      "node_labels": 0.791,
+      "next_targets": 0.082,
+      "serialization": 0.373
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 14574
+  },
+  "response_bytes": 14574,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3072
+    ]
+  }
+}

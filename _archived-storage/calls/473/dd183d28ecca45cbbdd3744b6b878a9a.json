@@ -1,0 +1,159 @@
+{
+  "call_id": "dd183d28ecca45cbbdd3744b6b878a9a",
+  "session_id": 473,
+  "tool": "act",
+  "started_at": "2026-10-15T18:57:12.024",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-15T18:57:28.858",
+  "wall_ms": 16826.001,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 1520,
+      "y": 862,
+      "repeat": 3,
+      "gap_ms": 800,
+      "via": "滚轮上一格 ×3（35→50）",
+      "why": "恢复上课时长默认为50分钟"
+    },
+    "ts": "2026-10-15T18:57:28",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.management.TimeSlotSettingsActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "dd183d28ecca45cbbdd3744b6b878a9a",
+    "timing": {
+      "call_id": "dd183d28ecca45cbbdd3744b6b878a9a",
+      "measured_at": "2026-10-15T18:57:28.591",
+      "process_observed_ms": 16116.356,
+      "stages_ms": {
+        "device_import": 373.993,
+        "device_connect": 1091.952,
+        "action": 653.806,
+        "settle_wait": 600.396,
+        "permission": 5464.951,
+        "screenshot": 362.59,
+        "png_save": 193.231,
+        "ui_dump": 90.984,
+        "rotation": 149.875,
+        "xml_save": 7.576,
+        "foreground": 5402.975
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=parentPanel",
+      "rid=topPanel",
+      "rid=title_template",
+      "rid=alertTitle",
+      "text=每节课上课时长（分钟）",
+      "rid=empty",
+      "rid=customPanel",
+      "rid=custom",
+      "rid=divider",
+      "rid=buttonPanel",
+      "rid=button2",
+      "text=取消",
+      "rid=button_divider",
+      "rid=button1",
+      "text=确定"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\473\\step2649\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\473\\step2649\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\473\\step2649\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1244,
+          1359
+        ],
+        "t": "取消",
+        "r": "button2"
+      },
+      {
+        "c": [
+          1795,
+          1359
+        ],
+        "t": "确定",
+        "r": "button1"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          1244,
+          1359
+        ],
+        "t": "取消",
+        "r": "button2"
+      },
+      {
+        "i": 1,
+        "c": [
+          1795,
+          1359
+        ],
+        "t": "确定",
+        "r": "button1"
+      }
+    ],
+    "nodes_count": 2,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      3793
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "dd183d28ecca45cbbdd3744b6b878a9a",
+    "measured_at": "2026-10-15T18:57:28.763",
+    "process_observed_ms": 16288.78,
+    "stages_ms": {
+      "device_import": 373.993,
+      "device_connect": 1091.952,
+      "action": 653.806,
+      "settle_wait": 600.396,
+      "permission": 5464.951,
+      "screenshot": 362.59,
+      "png_save": 193.231,
+      "ui_dump": 90.984,
+      "rotation": 149.875,
+      "xml_save": 7.576,
+      "foreground": 5402.975,
+      "meta_save": 8.176,
+      "crash_detection": 100.289,
+      "screen_signature": 50.223,
+      "event_write": 3.408,
+      "node_summary": 0.946,
+      "node_labels": 0.851,
+      "next_targets": 0.029,
+      "serialization": 0.231
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 2684
+  },
+  "response_bytes": 2684,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3793
+    ]
+  }
+}

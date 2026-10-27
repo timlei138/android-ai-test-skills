@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T13:47:30",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimetableListActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2919,
+    "y": 203,
+    "via": "action_curriculum_table_settings",
+    "why": "进课程表列表页"
+  },
+  "call_id": "f683f707192347f198d6143917c2dc24",
+  "timing": {
+    "call_id": "f683f707192347f198d6143917c2dc24",
+    "measured_at": "2026-10-15T13:47:30.421",
+    "process_observed_ms": 14148.83,
+    "stages_ms": {
+      "device_import": 408.165,
+      "device_connect": 1104.74,
+      "action": 197.937,
+      "settle_wait": 600.174,
+      "permission": 5461.865,
+      "screenshot": 388.96,
+      "png_save": 131.987,
+      "ui_dump": 111.713,
+      "rotation": 240.605,
+      "xml_save": 4.195,
+      "foreground": 5389.54
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

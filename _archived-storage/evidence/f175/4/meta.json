@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T19:26:33",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimeSlotSettingsActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 534,
+    "via": "rid=layout_break_duration",
+    "why": "步骤2.2: 打开课间休息时长弹框"
+  }
+}

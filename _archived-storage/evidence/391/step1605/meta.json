@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-10T12:05:42",
+  "package": "com.zui.filemanager",
+  "activity": ".MainActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2566,
+    "y": 203,
+    "via": "add",
+    "why": "new"
+  },
+  "call_id": "3634eeca9f2248f8beafa9e4fb22780f",
+  "timing": {
+    "call_id": "3634eeca9f2248f8beafa9e4fb22780f",
+    "measured_at": "2026-10-10T12:05:42.362",
+    "process_observed_ms": 5341.888,
+    "stages_ms": {
+      "device_import": 320.845,
+      "device_connect": 1086.689,
+      "action": 801.644,
+      "settle_wait": 600.409,
+      "permission": 1037.62,
+      "screenshot": 394.896,
+      "png_save": 177.997,
+      "ui_dump": 125.03,
+      "rotation": 306.402,
+      "xml_save": 4.671,
+      "foreground": 386.625
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

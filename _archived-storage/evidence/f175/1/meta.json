@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T19:24:26",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimeSlotSettingsActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1694,
+    "via": "rid=layout_time_settings",
+    "why": "步骤1: 点击课程时间设置"
+  }
+}

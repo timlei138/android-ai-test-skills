@@ -1,0 +1,434 @@
+{
+  "call_id": "d5a4f549cd8c46bda4a6ab56da9366e4",
+  "session_id": 463,
+  "tool": "act",
+  "started_at": "2026-10-15T16:13:57.133",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-15T16:14:13.220",
+  "wall_ms": 16066.51,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 1128,
+      "y": 787,
+      "via": "text=1 (第1周chip)",
+      "why": "单点第1周，验证 selected 属性是否会变化"
+    },
+    "ts": "2026-10-15T16:14:12",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.course.EditCourseActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "d5a4f549cd8c46bda4a6ab56da9366e4",
+    "timing": {
+      "call_id": "d5a4f549cd8c46bda4a6ab56da9366e4",
+      "measured_at": "2026-10-15T16:14:12.855",
+      "process_observed_ms": 15003.258,
+      "stages_ms": {
+        "device_import": 762.367,
+        "device_connect": 1343.869,
+        "action": 200.044,
+        "settle_wait": 600.12,
+        "permission": 5381.98,
+        "screenshot": 433.023,
+        "png_save": 366.523,
+        "ui_dump": 83.472,
+        "rotation": 254.831,
+        "xml_save": 8.846,
+        "foreground": 5359.765
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=parentPanel",
+      "rid=customPanel",
+      "rid=custom",
+      "rid=dialog_title",
+      "text=上课周数",
+      "rid=quick_select_chip_group",
+      "text=全选",
+      "text=单周",
+      "text=双周",
+      "rid=weeks_chip_group",
+      "text=1",
+      "text=2",
+      "text=3",
+      "text=4",
+      "text=5",
+      "text=6",
+      "text=7",
+      "text=8",
+      "text=9",
+      "text=10",
+      "text=11",
+      "text=12",
+      "text=13",
+      "text=14",
+      "text=15",
+      "text=16",
+      "text=17",
+      "text=18",
+      "text=19",
+      "text=20",
+      "rid=divider",
+      "rid=buttonPanel",
+      "rid=button2",
+      "text=取消",
+      "rid=button_divider",
+      "rid=button1",
+      "text=完成"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\463\\step2455\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\463\\step2455\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\463\\step2455\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1244,
+          1573
+        ],
+        "t": "取消",
+        "r": "button2"
+      },
+      {
+        "c": [
+          1795,
+          1573
+        ],
+        "t": "完成",
+        "r": "button1"
+      },
+      {
+        "c": [
+          1128,
+          589
+        ],
+        "t": "全选"
+      },
+      {
+        "c": [
+          1389,
+          589
+        ],
+        "t": "单周"
+      },
+      {
+        "c": [
+          1650,
+          589
+        ],
+        "t": "双周"
+      },
+      {
+        "c": [
+          1128,
+          787
+        ],
+        "t": "1"
+      },
+      {
+        "c": [
+          1389,
+          787
+        ],
+        "t": "2"
+      },
+      {
+        "c": [
+          1650,
+          787
+        ],
+        "t": "3"
+      },
+      {
+        "c": [
+          1911,
+          787
+        ],
+        "t": "4"
+      },
+      {
+        "c": [
+          1128,
+          930
+        ],
+        "t": "5"
+      },
+      {
+        "c": [
+          1389,
+          930
+        ],
+        "t": "6"
+      },
+      {
+        "c": [
+          1650,
+          930
+        ],
+        "t": "7"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          1128,
+          589
+        ],
+        "t": "全选"
+      },
+      {
+        "i": 1,
+        "c": [
+          1389,
+          589
+        ],
+        "t": "单周"
+      },
+      {
+        "i": 2,
+        "c": [
+          1650,
+          589
+        ],
+        "t": "双周"
+      },
+      {
+        "i": 3,
+        "c": [
+          1128,
+          787
+        ],
+        "t": "1",
+        "selected": true
+      },
+      {
+        "i": 4,
+        "c": [
+          1389,
+          787
+        ],
+        "t": "2"
+      },
+      {
+        "i": 5,
+        "c": [
+          1650,
+          787
+        ],
+        "t": "3"
+      },
+      {
+        "i": 6,
+        "c": [
+          1911,
+          787
+        ],
+        "t": "4"
+      },
+      {
+        "i": 7,
+        "c": [
+          1128,
+          930
+        ],
+        "t": "5"
+      },
+      {
+        "i": 8,
+        "c": [
+          1389,
+          930
+        ],
+        "t": "6"
+      },
+      {
+        "i": 9,
+        "c": [
+          1650,
+          930
+        ],
+        "t": "7"
+      },
+      {
+        "i": 10,
+        "c": [
+          1911,
+          930
+        ],
+        "t": "8"
+      },
+      {
+        "i": 11,
+        "c": [
+          1128,
+          1073
+        ],
+        "t": "9"
+      },
+      {
+        "i": 12,
+        "c": [
+          1389,
+          1073
+        ],
+        "t": "10"
+      },
+      {
+        "i": 13,
+        "c": [
+          1650,
+          1073
+        ],
+        "t": "11"
+      },
+      {
+        "i": 14,
+        "c": [
+          1911,
+          1073
+        ],
+        "t": "12"
+      },
+      {
+        "i": 15,
+        "c": [
+          1128,
+          1216
+        ],
+        "t": "13"
+      },
+      {
+        "i": 16,
+        "c": [
+          1389,
+          1216
+        ],
+        "t": "14"
+      },
+      {
+        "i": 17,
+        "c": [
+          1650,
+          1216
+        ],
+        "t": "15"
+      },
+      {
+        "i": 18,
+        "c": [
+          1911,
+          1216
+        ],
+        "t": "16"
+      },
+      {
+        "i": 19,
+        "c": [
+          1128,
+          1359
+        ],
+        "t": "17"
+      },
+      {
+        "i": 20,
+        "c": [
+          1389,
+          1359
+        ],
+        "t": "18"
+      },
+      {
+        "i": 21,
+        "c": [
+          1650,
+          1359
+        ],
+        "t": "19"
+      },
+      {
+        "i": 22,
+        "c": [
+          1911,
+          1359
+        ],
+        "t": "20"
+      },
+      {
+        "i": 23,
+        "c": [
+          1244,
+          1573
+        ],
+        "t": "取消",
+        "r": "button2"
+      },
+      {
+        "i": 24,
+        "c": [
+          1795,
+          1573
+        ],
+        "t": "完成",
+        "r": "button1"
+      }
+    ],
+    "nodes_count": 25,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      3595
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "d5a4f549cd8c46bda4a6ab56da9366e4",
+    "measured_at": "2026-10-15T16:14:13.080",
+    "process_observed_ms": 15228.688,
+    "stages_ms": {
+      "device_import": 762.367,
+      "device_connect": 1343.869,
+      "action": 200.044,
+      "settle_wait": 600.12,
+      "permission": 5381.98,
+      "screenshot": 433.023,
+      "png_save": 366.523,
+      "ui_dump": 83.472,
+      "rotation": 254.831,
+      "xml_save": 8.846,
+      "foreground": 5359.765,
+      "meta_save": 8.893,
+      "crash_detection": 101.188,
+      "screen_signature": 74.093,
+      "event_write": 24.884,
+      "node_summary": 1.946,
+      "node_labels": 1.843,
+      "next_targets": 0.096,
+      "serialization": 0.786
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 5895
+  },
+  "response_bytes": 5895,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3595
+    ]
+  }
+}

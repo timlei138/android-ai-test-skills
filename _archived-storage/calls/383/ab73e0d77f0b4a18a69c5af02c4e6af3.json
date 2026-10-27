@@ -1,0 +1,296 @@
+{
+  "call_id": "ab73e0d77f0b4a18a69c5af02c4e6af3",
+  "session_id": 383,
+  "tool": "act",
+  "started_at": "2026-10-10T09:46:22.190",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T09:46:28.737",
+  "wall_ms": 6539.684,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "back",
+      "why": "b1"
+    },
+    "ts": "2026-10-10T09:46:28",
+    "package": "com.zui.calendar",
+    "activity": ".settings.GeneralSettingsActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "ab73e0d77f0b4a18a69c5af02c4e6af3",
+    "timing": {
+      "call_id": "ab73e0d77f0b4a18a69c5af02c4e6af3",
+      "measured_at": "2026-10-10T09:46:28.478",
+      "process_observed_ms": 5003.431,
+      "stages_ms": {
+        "device_import": 323.689,
+        "device_connect": 1024.309,
+        "action": 375.259,
+        "settle_wait": 600.212,
+        "permission": 981.581,
+        "screenshot": 527.36,
+        "png_save": 342.64,
+        "ui_dump": 68.364,
+        "rotation": 231.048,
+        "xml_save": 5.455,
+        "foreground": 446.3
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=toolbar",
+      "desc=关闭",
+      "text=设置",
+      "rid=contentPanel",
+      "rid=main_frame",
+      "rid=list_container",
+      "rid=recycler_view",
+      "rid=icon_frame",
+      "rid=icon",
+      "rid=title",
+      "text=联想账号",
+      "rid=summary",
+      "text=点击登录",
+      "text=显示",
+      "text=显示账户",
+      "rid=widget_frame",
+      "rid=forward",
+      "text=日历内容显示",
+      "text=每周起始日",
+      "text=星期一",
+      "text=抢火车票设置",
+      "text=显示节假日及春运抢票",
+      "text=提醒",
+      "text=生日提醒 节日提醒 班假提醒  联系人生日"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\383\\step1324\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\383\\step1324\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\383\\step1324\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1520,
+          1085
+        ],
+        "t": "日历内容显示",
+        "r": "recycler_view",
+        "s": true
+      },
+      {
+        "c": [
+          766,
+          371
+        ],
+        "t": "关闭"
+      },
+      {
+        "c": [
+          1520,
+          913
+        ],
+        "t": "显示账户"
+      },
+      {
+        "c": [
+          1520,
+          1077
+        ],
+        "t": "日历内容显示"
+      },
+      {
+        "c": [
+          1520,
+          1241
+        ],
+        "t": "每周起始日"
+      },
+      {
+        "c": [
+          1520,
+          1405
+        ],
+        "t": "抢火车票设置"
+      },
+      {
+        "c": [
+          1520,
+          560
+        ]
+      },
+      {
+        "c": [
+          1520,
+          662
+        ]
+      },
+      {
+        "c": [
+          1520,
+          995
+        ]
+      },
+      {
+        "c": [
+          1520,
+          1159
+        ]
+      },
+      {
+        "c": [
+          1520,
+          1323
+        ]
+      },
+      {
+        "c": [
+          1520,
+          1675
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          766,
+          371
+        ],
+        "t": "关闭"
+      },
+      {
+        "i": 1,
+        "c": [
+          1520,
+          1085
+        ],
+        "r": "recycler_view",
+        "s": true
+      },
+      {
+        "i": 2,
+        "c": [
+          1520,
+          560
+        ]
+      },
+      {
+        "i": 3,
+        "c": [
+          1520,
+          662
+        ]
+      },
+      {
+        "i": 4,
+        "c": [
+          1520,
+          913
+        ]
+      },
+      {
+        "i": 5,
+        "c": [
+          1520,
+          995
+        ]
+      },
+      {
+        "i": 6,
+        "c": [
+          1520,
+          1077
+        ]
+      },
+      {
+        "i": 7,
+        "c": [
+          1520,
+          1159
+        ]
+      },
+      {
+        "i": 8,
+        "c": [
+          1520,
+          1241
+        ]
+      },
+      {
+        "i": 9,
+        "c": [
+          1520,
+          1323
+        ]
+      },
+      {
+        "i": 10,
+        "c": [
+          1520,
+          1405
+        ]
+      },
+      {
+        "i": 11,
+        "c": [
+          1520,
+          1675
+        ]
+      }
+    ],
+    "nodes_count": 12,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2346
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "ab73e0d77f0b4a18a69c5af02c4e6af3",
+    "measured_at": "2026-10-10T09:46:28.592",
+    "process_observed_ms": 5116.845,
+    "stages_ms": {
+      "device_import": 323.689,
+      "device_connect": 1024.309,
+      "action": 375.259,
+      "settle_wait": 600.212,
+      "permission": 981.581,
+      "screenshot": 527.36,
+      "png_save": 342.64,
+      "ui_dump": 68.364,
+      "rotation": 231.048,
+      "xml_save": 5.455,
+      "foreground": 446.3,
+      "meta_save": 6.88,
+      "crash_detection": 59.092,
+      "screen_signature": 33.674,
+      "event_write": 1.519,
+      "node_summary": 1.327,
+      "node_labels": 1.153,
+      "next_targets": 0.076,
+      "serialization": 0.358
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 4256
+  },
+  "response_bytes": 4256,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2346
+    ]
+  }
+}

@@ -1,0 +1,501 @@
+{
+  "call_id": "d22c4466a3f64f66a24d72fa9a56e28c",
+  "session_id": 365,
+  "tool": "observe",
+  "started_at": "2026-10-09T17:58:36.350",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T17:58:41.673",
+  "wall_ms": 5314.571,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-09T17:58:41",
+    "package": "com.zui.calendar",
+    "activity": ".reminder.ReminderInfoActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "d22c4466a3f64f66a24d72fa9a56e28c",
+    "timing": {
+      "call_id": "d22c4466a3f64f66a24d72fa9a56e28c",
+      "measured_at": "2026-10-09T17:58:41.419",
+      "process_observed_ms": 3406.186,
+      "stages_ms": {
+        "device_import": 301.778,
+        "device_connect": 1078.938,
+        "permission": 900.547,
+        "screenshot": 294.446,
+        "png_save": 56.215,
+        "ui_dump": 90.223,
+        "rotation": 215.099,
+        "xml_save": 6.766,
+        "foreground": 393.548
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "rid=toolbar_title",
+      "text=提醒详情",
+      "rid=main_frame",
+      "rid=reminderData",
+      "rid=event_info_scroll_view",
+      "rid=icon_type",
+      "rid=reminderInfoTvTitle",
+      "text=PROBE2",
+      "rid=reminderInfoTvDate",
+      "text=2026年10月9日 周五 16:03",
+      "rid=divider_line_view",
+      "rid=reminderInfoLlHead",
+      "text=提醒:",
+      "rid=reminderInfoTvReminderLabel",
+      "text=任务发生时",
+      "rid=reminderInfoTvOtherDate",
+      "text=不重复",
+      "rid=button_layout",
+      "rid=bottom_bar"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\365\\step0737\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\365\\step0737\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\365\\step0737\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          319,
+          203
+        ],
+        "t": "提醒详情",
+        "r": "toolbar_title"
+      },
+      {
+        "c": [
+          165,
+          386
+        ],
+        "t": "2026年10月9日 周五 16:03",
+        "r": "icon_type"
+      },
+      {
+        "c": [
+          332,
+          358
+        ],
+        "t": "PROBE2",
+        "r": "reminderInfoTvTitle"
+      },
+      {
+        "c": [
+          473,
+          420
+        ],
+        "t": "2026年10月9日 周五 16:03",
+        "r": "reminderInfoTvDate"
+      },
+      {
+        "c": [
+          1520,
+          562
+        ],
+        "t": "任务发生时",
+        "r": "reminderInfoLlHead"
+      },
+      {
+        "c": [
+          1644,
+          562
+        ],
+        "t": "任务发生时",
+        "r": "reminderInfoTvReminderLabel"
+      },
+      {
+        "c": [
+          317,
+          738
+        ],
+        "t": "不重复",
+        "r": "reminderInfoTvOtherDate"
+      },
+      {
+        "c": [
+          107,
+          203
+        ],
+        "t": "提醒详情"
+      },
+      {
+        "c": [
+          305,
+          562
+        ],
+        "t": "提醒: "
+      },
+      {
+        "c": [
+          1520,
+          952
+        ],
+        "r": "action_bar_root"
+      },
+      {
+        "c": [
+          1520,
+          952
+        ],
+        "r": "content"
+      },
+      {
+        "c": [
+          1520,
+          203
+        ],
+        "r": "toolbar"
+      }
+    ],
+    "nodes": [
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "com.zui.calendar:id/action_bar_root"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "android:id/content"
+      },
+      {
+        "bounds": [
+          0,
+          107,
+          3040,
+          300
+        ],
+        "center": [
+          1520,
+          203
+        ],
+        "rid": "com.zui.calendar:id/toolbar"
+      },
+      {
+        "bounds": [
+          28,
+          115,
+          187,
+          291
+        ],
+        "center": [
+          107,
+          203
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          187,
+          156,
+          451,
+          251
+        ],
+        "center": [
+          319,
+          203
+        ],
+        "rid": "com.zui.calendar:id/toolbar_title",
+        "text": "提醒详情"
+      },
+      {
+        "bounds": [
+          0,
+          300,
+          3040,
+          1871
+        ],
+        "center": [
+          1520,
+          1085
+        ],
+        "rid": "com.zui.calendar:id/main_frame"
+      },
+      {
+        "bounds": [
+          0,
+          300,
+          3040,
+          1871
+        ],
+        "center": [
+          1520,
+          1085
+        ],
+        "rid": "com.zui.calendar:id/reminderData"
+      },
+      {
+        "bounds": [
+          0,
+          300,
+          3040,
+          1736
+        ],
+        "center": [
+          1520,
+          1018
+        ],
+        "rid": "com.zui.calendar:id/event_info_scroll_view"
+      },
+      {
+        "bounds": [
+          121,
+          342,
+          209,
+          430
+        ],
+        "center": [
+          165,
+          386
+        ],
+        "rid": "com.zui.calendar:id/icon_type"
+      },
+      {
+        "bounds": [
+          242,
+          325,
+          423,
+          392
+        ],
+        "center": [
+          332,
+          358
+        ],
+        "rid": "com.zui.calendar:id/reminderInfoTvTitle",
+        "text": "PROBE2"
+      },
+      {
+        "bounds": [
+          242,
+          392,
+          704,
+          448
+        ],
+        "center": [
+          473,
+          420
+        ],
+        "rid": "com.zui.calendar:id/reminderInfoTvDate",
+        "text": "2026年10月9日 周五 16:03"
+      },
+      {
+        "bounds": [
+          121,
+          473,
+          2919,
+          476
+        ],
+        "center": [
+          1520,
+          474
+        ],
+        "rid": "com.zui.calendar:id/divider_line_view"
+      },
+      {
+        "bounds": [
+          0,
+          476,
+          3040,
+          649
+        ],
+        "center": [
+          1520,
+          562
+        ],
+        "rid": "com.zui.calendar:id/reminderInfoLlHead",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          242,
+          526,
+          369,
+          599
+        ],
+        "center": [
+          305,
+          562
+        ],
+        "text": "提醒: "
+      },
+      {
+        "bounds": [
+          369,
+          526,
+          2919,
+          599
+        ],
+        "center": [
+          1644,
+          562
+        ],
+        "rid": "com.zui.calendar:id/reminderInfoTvReminderLabel",
+        "text": "任务发生时"
+      },
+      {
+        "bounds": [
+          121,
+          649,
+          2919,
+          652
+        ],
+        "center": [
+          1520,
+          650
+        ],
+        "rid": "com.zui.calendar:id/divider_line_view"
+      },
+      {
+        "bounds": [
+          242,
+          702,
+          392,
+          775
+        ],
+        "center": [
+          317,
+          738
+        ],
+        "rid": "com.zui.calendar:id/reminderInfoTvOtherDate",
+        "text": "不重复"
+      },
+      {
+        "bounds": [
+          121,
+          825,
+          2919,
+          828
+        ],
+        "center": [
+          1520,
+          826
+        ],
+        "rid": "com.zui.calendar:id/divider_line_view"
+      },
+      {
+        "bounds": [
+          0,
+          1736,
+          3040,
+          1871
+        ],
+        "center": [
+          1520,
+          1803
+        ],
+        "rid": "com.zui.calendar:id/button_layout"
+      },
+      {
+        "bounds": [
+          275,
+          1739,
+          2765,
+          1871
+        ],
+        "center": [
+          1520,
+          1805
+        ],
+        "rid": "com.zui.calendar:id/bottom_bar"
+      },
+      {
+        "bounds": [
+          275,
+          1739,
+          1520,
+          1871
+        ],
+        "center": [
+          897,
+          1805
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1520,
+          1739,
+          2765,
+          1871
+        ],
+        "center": [
+          2142,
+          1805
+        ],
+        "clickable": true
+      }
+    ],
+    "nodes_count": 22,
+    "nodes_mode": "full",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      1759
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "d22c4466a3f64f66a24d72fa9a56e28c",
+    "measured_at": "2026-10-09T17:58:41.599",
+    "process_observed_ms": 3585.417,
+    "stages_ms": {
+      "device_import": 301.778,
+      "device_connect": 1078.938,
+      "permission": 900.547,
+      "screenshot": 294.446,
+      "png_save": 56.215,
+      "ui_dump": 90.223,
+      "rotation": 215.099,
+      "xml_save": 6.766,
+      "foreground": 393.548,
+      "meta_save": 6.995,
+      "screen_signature": 28.53,
+      "crash_detection": 133.796,
+      "event_write": 1.12,
+      "node_summary": 0.993,
+      "node_labels": 1.043,
+      "next_targets": 0.078,
+      "serialization": 0.39
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 7837
+  },
+  "response_bytes": 7837,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1759
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T17:58:59",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.EditTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1717,
+    "via": "rid=btnCreateManually,text=手动创建课程表",
+    "why": "YAML s1：进基本信息编辑页"
+  },
+  "call_id": "63cf2488085a46c7bc44a6eb7e8fe77c",
+  "timing": {
+    "call_id": "63cf2488085a46c7bc44a6eb7e8fe77c",
+    "measured_at": "2026-10-15T17:58:59.890",
+    "process_observed_ms": 14671.11,
+    "stages_ms": {
+      "device_import": 675.917,
+      "device_connect": 1318.481,
+      "action": 210.088,
+      "settle_wait": 600.542,
+      "permission": 5374.94,
+      "screenshot": 329.288,
+      "png_save": 325.543,
+      "ui_dump": 59.515,
+      "rotation": 218.154,
+      "xml_save": 8.718,
+      "foreground": 5381.214
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

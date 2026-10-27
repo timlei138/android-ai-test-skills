@@ -1,0 +1,172 @@
+{
+  "call_id": "a96519e66727450ba88a5d053b3bde1b",
+  "session_id": 363,
+  "tool": "act",
+  "started_at": "2026-10-09T17:42:55.028",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T17:43:02.359",
+  "wall_ms": 7323.513,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "input",
+      "x": 1454,
+      "y": 709,
+      "text": "不存在的人名XYZ",
+      "mode": "overwrite",
+      "via": "搜索框",
+      "why": "输入错误人名"
+    },
+    "ts": "2026-10-09T17:43:02",
+    "package": "com.android.contactspicker",
+    "activity": ".ContactsPickerActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "a96519e66727450ba88a5d053b3bde1b",
+    "timing": {
+      "call_id": "a96519e66727450ba88a5d053b3bde1b",
+      "measured_at": "2026-10-09T17:43:02.121",
+      "process_observed_ms": 5449.468,
+      "stages_ms": {
+        "device_import": 317.435,
+        "device_connect": 1095.327,
+        "action": 978.439,
+        "input_focus_wait": 300.235,
+        "settle_wait": 600.279,
+        "permission": 896.368,
+        "screenshot": 370.19,
+        "png_save": 145.624,
+        "ui_dump": 90.047,
+        "rotation": 180.137,
+        "xml_save": 5.034,
+        "foreground": 367.367
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "desc=拖动手柄",
+      "text=不存在的人名XYZ",
+      "desc=关闭搜索框",
+      "desc=清除搜索文字",
+      "text=未找到任何结果",
+      "text=换个拼写试试"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\363\\step0682\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\363\\step0682\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\363\\step0682\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1520,
+          339
+        ],
+        "t": "不存在的人名XYZ"
+      },
+      {
+        "c": [
+          1520,
+          173
+        ]
+      },
+      {
+        "c": [
+          728,
+          339
+        ]
+      },
+      {
+        "c": [
+          2312,
+          339
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          1520,
+          173
+        ]
+      },
+      {
+        "i": 1,
+        "c": [
+          1520,
+          339
+        ],
+        "t": "不存在的人名XYZ"
+      },
+      {
+        "i": 2,
+        "c": [
+          728,
+          339
+        ]
+      },
+      {
+        "i": 3,
+        "c": [
+          2312,
+          339
+        ]
+      }
+    ],
+    "nodes_count": 4,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      1704
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "a96519e66727450ba88a5d053b3bde1b",
+    "measured_at": "2026-10-09T17:43:02.286",
+    "process_observed_ms": 5614.691,
+    "stages_ms": {
+      "device_import": 317.435,
+      "device_connect": 1095.327,
+      "action": 978.439,
+      "input_focus_wait": 300.235,
+      "settle_wait": 600.279,
+      "permission": 896.368,
+      "screenshot": 370.19,
+      "png_save": 145.624,
+      "ui_dump": 90.047,
+      "rotation": 180.137,
+      "xml_save": 5.034,
+      "foreground": 367.367,
+      "meta_save": 6.394,
+      "crash_detection": 110.62,
+      "screen_signature": 39.397,
+      "event_write": 1.454,
+      "node_summary": 0.746,
+      "node_labels": 0.738,
+      "next_targets": 0.033,
+      "serialization": 0.193
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 2697
+  },
+  "response_bytes": 2697,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1704
+    ]
+  }
+}

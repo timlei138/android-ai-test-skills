@@ -1,0 +1,295 @@
+{
+  "call_id": "b8ecdfa5ac4946a8a1e762e46463358a",
+  "session_id": 449,
+  "tool": "act",
+  "started_at": "2026-10-15T14:16:28.932",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-15T14:16:43.761",
+  "wall_ms": 14821.585,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 1244,
+      "y": 1109,
+      "via": "button2(取消)",
+      "why": "取消分支"
+    },
+    "ts": "2026-10-15T14:16:43",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.course.EditCourseActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "b8ecdfa5ac4946a8a1e762e46463358a",
+    "timing": {
+      "call_id": "b8ecdfa5ac4946a8a1e762e46463358a",
+      "measured_at": "2026-10-15T14:16:43.525",
+      "process_observed_ms": 14182.079,
+      "stages_ms": {
+        "device_import": 415.18,
+        "device_connect": 1123.958,
+        "action": 201.346,
+        "settle_wait": 600.462,
+        "permission": 5385.636,
+        "screenshot": 381.322,
+        "png_save": 235.663,
+        "ui_dump": 78.835,
+        "rotation": 235.952,
+        "xml_save": 6.634,
+        "foreground": 5410.583
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=toolbar",
+      "desc=关闭",
+      "text=编辑课程",
+      "text=完成",
+      "rid=contentPanel",
+      "rid=curriculum_scroll_view",
+      "text=课程名",
+      "rid=etCourseName",
+      "text=语文",
+      "text=教室",
+      "rid=etClassroom",
+      "text=非必填",
+      "text=备注（如老师）",
+      "rid=etTeacher",
+      "rid=llCourseTime",
+      "text=课程时间",
+      "rid=tvCourseTime",
+      "text=第1节",
+      "rid=llCourseWeeks",
+      "text=上课周数",
+      "rid=tvCourseWeeks",
+      "text=第1-20周",
+      "rid=llCourseColor",
+      "text=课程背景色",
+      "rid=viewColorIndicator",
+      "rid=btnDelete",
+      "text=删除课程"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\449\\step2357\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\449\\step2357\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\449\\step2357\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1586,
+          522
+        ],
+        "t": "语文",
+        "r": "etCourseName"
+      },
+      {
+        "c": [
+          1564,
+          682
+        ],
+        "t": "非必填",
+        "r": "etClassroom"
+      },
+      {
+        "c": [
+          1674,
+          842
+        ],
+        "t": "非必填",
+        "r": "etTeacher"
+      },
+      {
+        "c": [
+          1520,
+          1593
+        ],
+        "t": "删除课程",
+        "r": "btnDelete"
+      },
+      {
+        "c": [
+          739,
+          371
+        ],
+        "t": "关闭"
+      },
+      {
+        "c": [
+          2295,
+          370
+        ],
+        "t": "完成"
+      },
+      {
+        "c": [
+          1520,
+          1085
+        ],
+        "r": "curriculum_scroll_view",
+        "s": true
+      },
+      {
+        "c": [
+          1520,
+          1022
+        ],
+        "r": "llCourseTime"
+      },
+      {
+        "c": [
+          1520,
+          1206
+        ],
+        "r": "llCourseWeeks"
+      },
+      {
+        "c": [
+          1520,
+          1390
+        ],
+        "r": "llCourseColor"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          739,
+          371
+        ],
+        "t": "关闭"
+      },
+      {
+        "i": 1,
+        "c": [
+          2295,
+          370
+        ],
+        "t": "完成"
+      },
+      {
+        "i": 2,
+        "c": [
+          1520,
+          1085
+        ],
+        "r": "curriculum_scroll_view",
+        "s": true
+      },
+      {
+        "i": 3,
+        "c": [
+          1586,
+          522
+        ],
+        "t": "语文",
+        "r": "etCourseName"
+      },
+      {
+        "i": 4,
+        "c": [
+          1564,
+          682
+        ],
+        "t": "非必填",
+        "r": "etClassroom"
+      },
+      {
+        "i": 5,
+        "c": [
+          1674,
+          842
+        ],
+        "t": "非必填",
+        "r": "etTeacher"
+      },
+      {
+        "i": 6,
+        "c": [
+          1520,
+          1022
+        ],
+        "r": "llCourseTime"
+      },
+      {
+        "i": 7,
+        "c": [
+          1520,
+          1206
+        ],
+        "r": "llCourseWeeks"
+      },
+      {
+        "i": 8,
+        "c": [
+          1520,
+          1390
+        ],
+        "r": "llCourseColor"
+      },
+      {
+        "i": 9,
+        "c": [
+          1520,
+          1593
+        ],
+        "t": "删除课程",
+        "r": "btnDelete"
+      }
+    ],
+    "nodes_count": 10,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      3478
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "b8ecdfa5ac4946a8a1e762e46463358a",
+    "measured_at": "2026-10-15T14:16:43.678",
+    "process_observed_ms": 14340.459,
+    "stages_ms": {
+      "device_import": 415.18,
+      "device_connect": 1123.958,
+      "action": 201.346,
+      "settle_wait": 600.462,
+      "permission": 5385.636,
+      "screenshot": 381.322,
+      "png_save": 235.663,
+      "ui_dump": 78.835,
+      "rotation": 235.952,
+      "xml_save": 6.634,
+      "foreground": 5410.583,
+      "meta_save": 4.81,
+      "crash_detection": 97.475,
+      "screen_signature": 46.731,
+      "event_write": 3.041,
+      "node_summary": 0.442,
+      "node_labels": 0.393,
+      "next_targets": 0.031,
+      "serialization": 0.158
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 4561
+  },
+  "response_bytes": 4561,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3478
+    ]
+  }
+}

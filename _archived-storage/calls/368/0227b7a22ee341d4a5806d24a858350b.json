@@ -1,0 +1,800 @@
+{
+  "call_id": "0227b7a22ee341d4a5806d24a858350b",
+  "session_id": 368,
+  "tool": "observe",
+  "started_at": "2026-10-09T18:31:28.574",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T18:31:34.108",
+  "wall_ms": 5527.512,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-09T18:31:33",
+    "package": "com.zui.calendar",
+    "activity": ".event.options.EventAheadActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "0227b7a22ee341d4a5806d24a858350b",
+    "timing": {
+      "call_id": "0227b7a22ee341d4a5806d24a858350b",
+      "measured_at": "2026-10-09T18:31:33.885",
+      "process_observed_ms": 3475.304,
+      "stages_ms": {
+        "device_import": 313.237,
+        "device_connect": 1095.969,
+        "permission": 953.489,
+        "screenshot": 319.79,
+        "png_save": 65.203,
+        "ui_dump": 83.885,
+        "rotation": 212.304,
+        "xml_save": 7.264,
+        "foreground": 358.27
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "rid=toolbar_title",
+      "text=提醒",
+      "rid=aheadNoReminderLl",
+      "text=不提醒",
+      "rid=aheadNoReminderSwitch",
+      "rid=divider_line_view",
+      "rid=eventAheadListView",
+      "rid=select",
+      "rid=aheadName",
+      "text=任务发生时",
+      "text=5分钟前",
+      "text=15分钟前",
+      "text=30分钟前",
+      "text=1小时前",
+      "text=2小时前",
+      "text=3小时前",
+      "text=1天前",
+      "text=2天前"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\368\\step0791\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\368\\step0791\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\368\\step0791\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1520,
+          952
+        ],
+        "t": "15分钟前",
+        "r": "action_bar_root"
+      },
+      {
+        "c": [
+          1520,
+          952
+        ],
+        "t": "15分钟前",
+        "r": "content"
+      },
+      {
+        "c": [
+          253,
+          203
+        ],
+        "t": "提醒",
+        "r": "toolbar_title"
+      },
+      {
+        "c": [
+          1520,
+          1190
+        ],
+        "t": "1小时前",
+        "r": "eventAheadListView",
+        "s": true
+      },
+      {
+        "c": [
+          1572,
+          562
+        ],
+        "t": "任务发生时",
+        "r": "aheadName"
+      },
+      {
+        "c": [
+          1572,
+          738
+        ],
+        "t": "5分钟前",
+        "r": "aheadName"
+      },
+      {
+        "c": [
+          1572,
+          914
+        ],
+        "t": "15分钟前",
+        "r": "aheadName"
+      },
+      {
+        "c": [
+          1572,
+          1090
+        ],
+        "t": "30分钟前",
+        "r": "aheadName"
+      },
+      {
+        "c": [
+          1572,
+          1266
+        ],
+        "t": "1小时前",
+        "r": "aheadName"
+      },
+      {
+        "c": [
+          1572,
+          1442
+        ],
+        "t": "2小时前",
+        "r": "aheadName"
+      },
+      {
+        "c": [
+          1572,
+          1618
+        ],
+        "t": "3小时前",
+        "r": "aheadName"
+      },
+      {
+        "c": [
+          1572,
+          1794
+        ],
+        "t": "1天前",
+        "r": "aheadName"
+      }
+    ],
+    "nodes": [
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "com.zui.calendar:id/action_bar_root"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "android:id/content"
+      },
+      {
+        "bounds": [
+          0,
+          107,
+          3040,
+          300
+        ],
+        "center": [
+          1520,
+          203
+        ],
+        "rid": "com.zui.calendar:id/toolbar"
+      },
+      {
+        "bounds": [
+          28,
+          115,
+          187,
+          291
+        ],
+        "center": [
+          107,
+          203
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          187,
+          156,
+          319,
+          251
+        ],
+        "center": [
+          253,
+          203
+        ],
+        "rid": "com.zui.calendar:id/toolbar_title",
+        "text": "提醒"
+      },
+      {
+        "bounds": [
+          0,
+          300,
+          3040,
+          473
+        ],
+        "center": [
+          1520,
+          386
+        ],
+        "rid": "com.zui.calendar:id/aheadNoReminderLl"
+      },
+      {
+        "bounds": [
+          121,
+          350,
+          271,
+          423
+        ],
+        "center": [
+          196,
+          386
+        ],
+        "text": "不提醒"
+      },
+      {
+        "bounds": [
+          271,
+          320,
+          2919,
+          452
+        ],
+        "center": [
+          1595,
+          386
+        ],
+        "rid": "com.zui.calendar:id/aheadNoReminderSwitch",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          121,
+          473,
+          2919,
+          476
+        ],
+        "center": [
+          1520,
+          474
+        ],
+        "rid": "com.zui.calendar:id/divider_line_view"
+      },
+      {
+        "bounds": [
+          0,
+          476,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          1190
+        ],
+        "rid": "com.zui.calendar:id/eventAheadListView",
+        "scrollable": true
+      },
+      {
+        "bounds": [
+          0,
+          476,
+          3040,
+          652
+        ],
+        "center": [
+          1520,
+          564
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          121,
+          529,
+          193,
+          595
+        ],
+        "center": [
+          157,
+          562
+        ],
+        "rid": "com.zui.calendar:id/select"
+      },
+      {
+        "bounds": [
+          226,
+          476,
+          2919,
+          649
+        ],
+        "center": [
+          1572,
+          562
+        ],
+        "rid": "com.zui.calendar:id/aheadName",
+        "text": "任务发生时"
+      },
+      {
+        "bounds": [
+          121,
+          649,
+          2919,
+          652
+        ],
+        "center": [
+          1520,
+          650
+        ],
+        "rid": "com.zui.calendar:id/divider_line_view"
+      },
+      {
+        "bounds": [
+          0,
+          652,
+          3040,
+          828
+        ],
+        "center": [
+          1520,
+          740
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          121,
+          705,
+          193,
+          771
+        ],
+        "center": [
+          157,
+          738
+        ],
+        "rid": "com.zui.calendar:id/select",
+        "checked": true
+      },
+      {
+        "bounds": [
+          226,
+          652,
+          2919,
+          825
+        ],
+        "center": [
+          1572,
+          738
+        ],
+        "rid": "com.zui.calendar:id/aheadName",
+        "text": "5分钟前"
+      },
+      {
+        "bounds": [
+          121,
+          825,
+          2919,
+          828
+        ],
+        "center": [
+          1520,
+          826
+        ],
+        "rid": "com.zui.calendar:id/divider_line_view"
+      },
+      {
+        "bounds": [
+          0,
+          828,
+          3040,
+          1004
+        ],
+        "center": [
+          1520,
+          916
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          121,
+          881,
+          193,
+          947
+        ],
+        "center": [
+          157,
+          914
+        ],
+        "rid": "com.zui.calendar:id/select",
+        "checked": true
+      },
+      {
+        "bounds": [
+          226,
+          828,
+          2919,
+          1001
+        ],
+        "center": [
+          1572,
+          914
+        ],
+        "rid": "com.zui.calendar:id/aheadName",
+        "text": "15分钟前"
+      },
+      {
+        "bounds": [
+          121,
+          1001,
+          2919,
+          1004
+        ],
+        "center": [
+          1520,
+          1002
+        ],
+        "rid": "com.zui.calendar:id/divider_line_view"
+      },
+      {
+        "bounds": [
+          0,
+          1004,
+          3040,
+          1180
+        ],
+        "center": [
+          1520,
+          1092
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          121,
+          1057,
+          193,
+          1123
+        ],
+        "center": [
+          157,
+          1090
+        ],
+        "rid": "com.zui.calendar:id/select"
+      },
+      {
+        "bounds": [
+          226,
+          1004,
+          2919,
+          1177
+        ],
+        "center": [
+          1572,
+          1090
+        ],
+        "rid": "com.zui.calendar:id/aheadName",
+        "text": "30分钟前"
+      },
+      {
+        "bounds": [
+          121,
+          1177,
+          2919,
+          1180
+        ],
+        "center": [
+          1520,
+          1178
+        ],
+        "rid": "com.zui.calendar:id/divider_line_view"
+      },
+      {
+        "bounds": [
+          0,
+          1180,
+          3040,
+          1356
+        ],
+        "center": [
+          1520,
+          1268
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          121,
+          1233,
+          193,
+          1299
+        ],
+        "center": [
+          157,
+          1266
+        ],
+        "rid": "com.zui.calendar:id/select"
+      },
+      {
+        "bounds": [
+          226,
+          1180,
+          2919,
+          1353
+        ],
+        "center": [
+          1572,
+          1266
+        ],
+        "rid": "com.zui.calendar:id/aheadName",
+        "text": "1小时前"
+      },
+      {
+        "bounds": [
+          121,
+          1353,
+          2919,
+          1356
+        ],
+        "center": [
+          1520,
+          1354
+        ],
+        "rid": "com.zui.calendar:id/divider_line_view"
+      },
+      {
+        "bounds": [
+          0,
+          1356,
+          3040,
+          1532
+        ],
+        "center": [
+          1520,
+          1444
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          121,
+          1409,
+          193,
+          1475
+        ],
+        "center": [
+          157,
+          1442
+        ],
+        "rid": "com.zui.calendar:id/select"
+      },
+      {
+        "bounds": [
+          226,
+          1356,
+          2919,
+          1529
+        ],
+        "center": [
+          1572,
+          1442
+        ],
+        "rid": "com.zui.calendar:id/aheadName",
+        "text": "2小时前"
+      },
+      {
+        "bounds": [
+          121,
+          1529,
+          2919,
+          1532
+        ],
+        "center": [
+          1520,
+          1530
+        ],
+        "rid": "com.zui.calendar:id/divider_line_view"
+      },
+      {
+        "bounds": [
+          0,
+          1532,
+          3040,
+          1708
+        ],
+        "center": [
+          1520,
+          1620
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          121,
+          1585,
+          193,
+          1651
+        ],
+        "center": [
+          157,
+          1618
+        ],
+        "rid": "com.zui.calendar:id/select"
+      },
+      {
+        "bounds": [
+          226,
+          1532,
+          2919,
+          1705
+        ],
+        "center": [
+          1572,
+          1618
+        ],
+        "rid": "com.zui.calendar:id/aheadName",
+        "text": "3小时前"
+      },
+      {
+        "bounds": [
+          121,
+          1705,
+          2919,
+          1708
+        ],
+        "center": [
+          1520,
+          1706
+        ],
+        "rid": "com.zui.calendar:id/divider_line_view"
+      },
+      {
+        "bounds": [
+          0,
+          1708,
+          3040,
+          1884
+        ],
+        "center": [
+          1520,
+          1796
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          121,
+          1761,
+          193,
+          1827
+        ],
+        "center": [
+          157,
+          1794
+        ],
+        "rid": "com.zui.calendar:id/select"
+      },
+      {
+        "bounds": [
+          226,
+          1708,
+          2919,
+          1881
+        ],
+        "center": [
+          1572,
+          1794
+        ],
+        "rid": "com.zui.calendar:id/aheadName",
+        "text": "1天前"
+      },
+      {
+        "bounds": [
+          121,
+          1881,
+          2919,
+          1884
+        ],
+        "center": [
+          1520,
+          1882
+        ],
+        "rid": "com.zui.calendar:id/divider_line_view"
+      },
+      {
+        "bounds": [
+          0,
+          1884,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          1894
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          226,
+          1884,
+          2919,
+          1904
+        ],
+        "center": [
+          1572,
+          1894
+        ],
+        "rid": "com.zui.calendar:id/aheadName",
+        "text": "2天前"
+      }
+    ],
+    "nodes_count": 44,
+    "nodes_mode": "full",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      1813
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "0227b7a22ee341d4a5806d24a858350b",
+    "measured_at": "2026-10-09T18:31:34.041",
+    "process_observed_ms": 3630.474,
+    "stages_ms": {
+      "device_import": 313.237,
+      "device_connect": 1095.969,
+      "permission": 953.489,
+      "screenshot": 319.79,
+      "png_save": 65.203,
+      "ui_dump": 83.885,
+      "rotation": 212.304,
+      "xml_save": 7.264,
+      "foreground": 358.27,
+      "meta_save": 3.836,
+      "screen_signature": 41.621,
+      "crash_detection": 91.447,
+      "event_write": 1.96,
+      "node_summary": 2.537,
+      "node_labels": 1.746,
+      "next_targets": 0.169,
+      "serialization": 0.666
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 12037
+  },
+  "response_bytes": 12037,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1813
+    ]
+  }
+}

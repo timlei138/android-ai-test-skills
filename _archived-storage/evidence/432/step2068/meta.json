@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-14T15:15:53",
+  "package": "com.zui.calendar",
+  "activity": ".reminder.CountDownInfoActivity",
+  "rotation": 1,
+  "size": [
+    3840,
+    2560
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1185,
+    "y": 2462,
+    "via": "bottom_bar 左按钮",
+    "why": "测试详情页底部按钮（预期2b：删除需二次确认）"
+  },
+  "call_id": "7242cec3a1f14e8aa52816e70baa13f9",
+  "timing": {
+    "call_id": "7242cec3a1f14e8aa52816e70baa13f9",
+    "measured_at": "2026-10-14T15:15:53.340",
+    "process_observed_ms": 14084.45,
+    "stages_ms": {
+      "device_import": 388.612,
+      "device_connect": 1040.447,
+      "action": 170.639,
+      "settle_wait": 600.47,
+      "permission": 5352.758,
+      "screenshot": 396.487,
+      "png_save": 300.045,
+      "ui_dump": 122.876,
+      "rotation": 257.432,
+      "xml_save": 5.504,
+      "foreground": 5335.803
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

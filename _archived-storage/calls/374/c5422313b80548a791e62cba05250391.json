@@ -1,0 +1,42 @@
+{
+  "call_id": "c5422313b80548a791e62cba05250391",
+  "session_id": 374,
+  "tool": "session",
+  "started_at": "2026-10-09T19:34:53.338",
+  "status": "ended",
+  "expects_event": false,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T19:34:55.295",
+  "wall_ms": 1949.349,
+  "result": {
+    "ok": true,
+    "session_id": 374,
+    "crash_events": 0,
+    "findings": {},
+    "self_check": [],
+    "case_hint": null,
+    "hint": "无崩溃事件",
+    "call_id": "c5422313b80548a791e62cba05250391",
+    "event_ids": [],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "c5422313b80548a791e62cba05250391",
+    "measured_at": "2026-10-09T19:34:55.274",
+    "process_observed_ms": 39.889,
+    "stages_ms": {
+      "serialization": 0.041
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 248
+  },
+  "response_bytes": 248,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": []
+  }
+}

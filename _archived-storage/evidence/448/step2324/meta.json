@@ -1,0 +1,39 @@
+{
+  "ts": "2026-10-15T13:53:43",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.course.EditCourseActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 552,
+    "y": 648,
+    "repeat": 2,
+    "gap_ms": 400,
+    "via": "空白小节(周一第1节)",
+    "why": "用例182步骤1：第一次点击吸收，第二次进新建课程页"
+  },
+  "call_id": "84bc46ca7f414d719f1cace25a9670d8",
+  "timing": {
+    "call_id": "84bc46ca7f414d719f1cace25a9670d8",
+    "measured_at": "2026-10-15T13:53:43.653",
+    "process_observed_ms": 14803.338,
+    "stages_ms": {
+      "device_import": 398.033,
+      "device_connect": 1187.277,
+      "action": 424.1,
+      "settle_wait": 600.66,
+      "permission": 5373.784,
+      "screenshot": 385.588,
+      "png_save": 243.645,
+      "ui_dump": 88.047,
+      "rotation": 234.91,
+      "xml_save": 4.474,
+      "foreground": 5347.035
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

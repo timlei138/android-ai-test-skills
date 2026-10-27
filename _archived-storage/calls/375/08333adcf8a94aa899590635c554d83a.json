@@ -1,0 +1,326 @@
+{
+  "call_id": "08333adcf8a94aa899590635c554d83a",
+  "session_id": 375,
+  "tool": "act",
+  "started_at": "2026-10-09T19:52:37.554",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T19:52:44.660",
+  "wall_ms": 7099.598,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "longclick",
+      "x": 160,
+      "y": 738,
+      "via": "cb-1天前",
+      "why": "try-longclick"
+    },
+    "ts": "2026-10-09T19:52:44",
+    "package": "com.zui.calendar",
+    "activity": ".reminder.ReminderMultiSelectActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "08333adcf8a94aa899590635c554d83a",
+    "timing": {
+      "call_id": "08333adcf8a94aa899590635c554d83a",
+      "measured_at": "2026-10-09T19:52:44.430",
+      "process_observed_ms": 5026.117,
+      "stages_ms": {
+        "device_import": 305.54,
+        "device_connect": 1078.68,
+        "action": 613.65,
+        "settle_wait": 600.274,
+        "permission": 987.634,
+        "screenshot": 421.332,
+        "png_save": 155.311,
+        "ui_dump": 101.056,
+        "rotation": 282.833,
+        "xml_save": 5.869,
+        "foreground": 371.856
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "rid=toolbar_title",
+      "text=提醒",
+      "rid=no_reminder_layout",
+      "text=不提醒",
+      "rid=no_reminder_switch",
+      "rid=divider_line_view",
+      "rid=reminder_0_layout",
+      "rid=reminder_checkbox",
+      "rid=reminder_title",
+      "text=任务发生当天",
+      "rid=reminder_1_layout",
+      "text=1天前",
+      "rid=reminder_2_layout",
+      "text=2天前",
+      "rid=reminder_3_layout",
+      "text=3天前",
+      "rid=reminder_4_layout",
+      "text=1周前",
+      "rid=reminder_5_layout",
+      "text=15天前",
+      "rid=reminder_6_layout",
+      "text=1个月前",
+      "rid=reminder_time_layout",
+      "rid=reminder_time_text",
+      "text=时间",
+      "rid=reminder_time",
+      "text=09:00"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\375\\step1014\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\375\\step1014\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\375\\step1014\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          2819,
+          1794
+        ],
+        "t": "09:00",
+        "r": "reminder_time"
+      },
+      {
+        "c": [
+          107,
+          203
+        ],
+        "t": "提醒"
+      },
+      {
+        "c": [
+          1520,
+          386
+        ],
+        "r": "no_reminder_layout"
+      },
+      {
+        "c": [
+          2843,
+          386
+        ],
+        "r": "no_reminder_switch"
+      },
+      {
+        "c": [
+          1520,
+          562
+        ],
+        "r": "reminder_0_layout"
+      },
+      {
+        "c": [
+          1520,
+          738
+        ],
+        "r": "reminder_1_layout"
+      },
+      {
+        "c": [
+          1520,
+          914
+        ],
+        "r": "reminder_2_layout"
+      },
+      {
+        "c": [
+          1520,
+          1090
+        ],
+        "r": "reminder_3_layout"
+      },
+      {
+        "c": [
+          1520,
+          1266
+        ],
+        "r": "reminder_4_layout"
+      },
+      {
+        "c": [
+          1520,
+          1442
+        ],
+        "r": "reminder_5_layout"
+      },
+      {
+        "c": [
+          1520,
+          1618
+        ],
+        "r": "reminder_6_layout"
+      },
+      {
+        "c": [
+          1520,
+          1794
+        ],
+        "r": "reminder_time_layout"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          107,
+          203
+        ]
+      },
+      {
+        "i": 1,
+        "c": [
+          1520,
+          1102
+        ],
+        "s": true
+      },
+      {
+        "i": 2,
+        "c": [
+          1520,
+          386
+        ],
+        "r": "no_reminder_layout"
+      },
+      {
+        "i": 3,
+        "c": [
+          2843,
+          386
+        ],
+        "r": "no_reminder_switch"
+      },
+      {
+        "i": 4,
+        "c": [
+          1520,
+          562
+        ],
+        "r": "reminder_0_layout"
+      },
+      {
+        "i": 5,
+        "c": [
+          1520,
+          738
+        ],
+        "r": "reminder_1_layout"
+      },
+      {
+        "i": 6,
+        "c": [
+          1520,
+          914
+        ],
+        "r": "reminder_2_layout"
+      },
+      {
+        "i": 7,
+        "c": [
+          1520,
+          1090
+        ],
+        "r": "reminder_3_layout"
+      },
+      {
+        "i": 8,
+        "c": [
+          1520,
+          1266
+        ],
+        "r": "reminder_4_layout"
+      },
+      {
+        "i": 9,
+        "c": [
+          1520,
+          1442
+        ],
+        "r": "reminder_5_layout"
+      },
+      {
+        "i": 10,
+        "c": [
+          1520,
+          1618
+        ],
+        "r": "reminder_6_layout"
+      },
+      {
+        "i": 11,
+        "c": [
+          1520,
+          1794
+        ],
+        "r": "reminder_time_layout"
+      },
+      {
+        "i": 12,
+        "c": [
+          2819,
+          1794
+        ],
+        "t": "09:00",
+        "r": "reminder_time"
+      }
+    ],
+    "nodes_count": 13,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2036
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "08333adcf8a94aa899590635c554d83a",
+    "measured_at": "2026-10-09T19:52:44.584",
+    "process_observed_ms": 5180.583,
+    "stages_ms": {
+      "device_import": 305.54,
+      "device_connect": 1078.68,
+      "action": 613.65,
+      "settle_wait": 600.274,
+      "permission": 987.634,
+      "screenshot": 421.332,
+      "png_save": 155.311,
+      "ui_dump": 101.056,
+      "rotation": 282.833,
+      "xml_save": 5.869,
+      "foreground": 371.856,
+      "meta_save": 4.897,
+      "crash_detection": 110.537,
+      "screen_signature": 31.629,
+      "event_write": 1.375,
+      "node_summary": 0.956,
+      "node_labels": 1.025,
+      "next_targets": 0.056,
+      "serialization": 0.275
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 5032
+  },
+  "response_bytes": 5032,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2036
+    ]
+  }
+}

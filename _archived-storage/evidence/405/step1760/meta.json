@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-10T14:11:37",
+  "package": "com.zui.launcher",
+  "activity": ".drawer.NormalLauncher",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1514,
+    "y": 573,
+    "via": "移除",
+    "why": "remove-widget"
+  },
+  "call_id": "0983b397b1e54dd69cee4dd357f0ba6a",
+  "timing": {
+    "call_id": "0983b397b1e54dd69cee4dd357f0ba6a",
+    "measured_at": "2026-10-10T14:11:37.958",
+    "process_observed_ms": 4459.654,
+    "stages_ms": {
+      "device_import": 310.971,
+      "device_connect": 1144.955,
+      "action": 168.475,
+      "settle_wait": 600.111,
+      "permission": 943.635,
+      "screenshot": 364.676,
+      "png_save": 169.138,
+      "ui_dump": 53.19,
+      "rotation": 262.758,
+      "xml_save": 2.52,
+      "foreground": 358.508
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

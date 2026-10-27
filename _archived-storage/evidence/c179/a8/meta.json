@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T12:20:55",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimetableListActivity",
+  "rotation": 1,
+  "size": [
+    3840,
+    2560
+  ],
+  "action": {
+    "type": "tap",
+    "x": 3730,
+    "y": 185,
+    "via": "rid=action_curriculum_table_settings",
+    "why": "进课程表设置"
+  }
+}

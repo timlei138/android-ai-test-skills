@@ -1,0 +1,274 @@
+{
+  "call_id": "184777e69fdb4cc3b150b799b7c641a5",
+  "session_id": 409,
+  "tool": "act",
+  "started_at": "2026-10-10T14:51:02.351",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T14:51:10.582",
+  "wall_ms": 8222.055,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "longclick",
+      "x": 1161,
+      "y": 1740,
+      "via": "日历图标",
+      "why": "longpress"
+    },
+    "ts": "2026-10-10T14:51:09",
+    "package": "com.zui.launcher",
+    "activity": ".drawer.NormalLauncher",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "184777e69fdb4cc3b150b799b7c641a5",
+    "timing": {
+      "call_id": "184777e69fdb4cc3b150b799b7c641a5",
+      "measured_at": "2026-10-10T14:51:09.944",
+      "process_observed_ms": 5610.166,
+      "stages_ms": {
+        "device_import": 393.987,
+        "device_connect": 1149.861,
+        "action": 587.446,
+        "settle_wait": 600.406,
+        "permission": 912.182,
+        "screenshot": 400.335,
+        "png_save": 520.897,
+        "ui_dump": 114.919,
+        "rotation": 251.523,
+        "xml_save": 5.766,
+        "foreground": 560.795
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=launcher",
+      "rid=static_blur_view_container",
+      "rid=static_blur_view",
+      "rid=drag_layer",
+      "rid=popup_container",
+      "rid=system_shortcuts_container",
+      "desc=浮窗",
+      "desc=分屏",
+      "desc=小部件",
+      "desc=锁定",
+      "desc=隐藏",
+      "desc=应用信息",
+      "desc=卸载",
+      "rid=deep_shortcuts_container",
+      "rid=deep_shortcut_material",
+      "rid=bubble_text",
+      "text=创建提醒",
+      "desc=创建提醒",
+      "rid=icon",
+      "text=纵览",
+      "desc=纵览",
+      "rid=taskbar_container",
+      "rid=taskbar_scrim",
+      "rid=taskbar_bubbles_container",
+      "rid=stashed_handle",
+      "rid=navbuttons_view",
+      "rid=start_contextual_buttons"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\409\\step1829\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\409\\step1829\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\409\\step1829\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1430,
+          1404
+        ],
+        "t": "创建提醒 创建提醒",
+        "r": "bubble_text"
+      },
+      {
+        "c": [
+          1430,
+          1536
+        ],
+        "t": "纵览 纵览",
+        "r": "bubble_text"
+      },
+      {
+        "c": [
+          1183,
+          1095
+        ],
+        "t": "浮窗"
+      },
+      {
+        "c": [
+          1306,
+          1095
+        ],
+        "t": "分屏"
+      },
+      {
+        "c": [
+          1428,
+          1095
+        ],
+        "t": "小部件"
+      },
+      {
+        "c": [
+          1550,
+          1095
+        ],
+        "t": "锁定"
+      },
+      {
+        "c": [
+          1672,
+          1095
+        ],
+        "t": "隐藏"
+      },
+      {
+        "c": [
+          1183,
+          1205
+        ],
+        "t": "应用信息"
+      },
+      {
+        "c": [
+          1306,
+          1205
+        ],
+        "t": "卸载"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          1183,
+          1095
+        ],
+        "t": "浮窗"
+      },
+      {
+        "i": 1,
+        "c": [
+          1306,
+          1095
+        ],
+        "t": "分屏"
+      },
+      {
+        "i": 2,
+        "c": [
+          1428,
+          1095
+        ],
+        "t": "小部件"
+      },
+      {
+        "i": 3,
+        "c": [
+          1550,
+          1095
+        ],
+        "t": "锁定"
+      },
+      {
+        "i": 4,
+        "c": [
+          1672,
+          1095
+        ],
+        "t": "隐藏"
+      },
+      {
+        "i": 5,
+        "c": [
+          1183,
+          1205
+        ],
+        "t": "应用信息"
+      },
+      {
+        "i": 6,
+        "c": [
+          1306,
+          1205
+        ],
+        "t": "卸载"
+      },
+      {
+        "i": 7,
+        "c": [
+          1430,
+          1404
+        ],
+        "t": "创建提醒 创建提醒",
+        "r": "bubble_text"
+      },
+      {
+        "i": 8,
+        "c": [
+          1430,
+          1536
+        ],
+        "t": "纵览 纵览",
+        "r": "bubble_text"
+      }
+    ],
+    "nodes_count": 9,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2850
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "184777e69fdb4cc3b150b799b7c641a5",
+    "measured_at": "2026-10-10T14:51:10.214",
+    "process_observed_ms": 5879.751,
+    "stages_ms": {
+      "device_import": 393.987,
+      "device_connect": 1149.861,
+      "action": 587.446,
+      "settle_wait": 600.406,
+      "permission": 912.182,
+      "screenshot": 400.335,
+      "png_save": 520.897,
+      "ui_dump": 114.919,
+      "rotation": 251.523,
+      "xml_save": 5.766,
+      "foreground": 560.795,
+      "meta_save": 17.535,
+      "crash_detection": 112.956,
+      "screen_signature": 124.631,
+      "event_write": 3.02,
+      "node_summary": 0.847,
+      "node_labels": 0.701,
+      "next_targets": 0.047,
+      "serialization": 0.331
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 4269
+  },
+  "response_bytes": 4269,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2850
+    ]
+  }
+}

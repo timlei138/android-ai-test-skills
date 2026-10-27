@@ -1,0 +1,226 @@
+{
+  "call_id": "41920163ae4f473d9cab83c41b69efa3",
+  "session_id": 447,
+  "tool": "act",
+  "started_at": "2026-10-15T13:49:13.687",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-15T13:49:28.405",
+  "wall_ms": 14708.853,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 1520,
+      "y": 1859,
+      "via": "layout_default_reminder",
+      "why": "用例175步骤6：课程提醒时间设置入口"
+    },
+    "ts": "2026-10-15T13:49:28",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.management.EditTimetableActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "41920163ae4f473d9cab83c41b69efa3",
+    "timing": {
+      "call_id": "41920163ae4f473d9cab83c41b69efa3",
+      "measured_at": "2026-10-15T13:49:28.162",
+      "process_observed_ms": 14098.442,
+      "stages_ms": {
+        "device_import": 409.793,
+        "device_connect": 1118.944,
+        "action": 180.95,
+        "settle_wait": 600.34,
+        "permission": 5359.796,
+        "screenshot": 386.983,
+        "png_save": 259.55,
+        "ui_dump": 72.219,
+        "rotation": 256.405,
+        "xml_save": 4.309,
+        "foreground": 5347.643
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=parentPanel",
+      "rid=topPanel",
+      "text=课程提醒时间",
+      "rid=contentPanel",
+      "rid=ring",
+      "rid=text1",
+      "text=不提醒",
+      "text=任务发生时",
+      "text=5分钟前",
+      "text=15分钟前",
+      "text=30分钟前",
+      "rid=divider",
+      "rid=buttonPanel",
+      "rid=button2",
+      "text=取消"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\447\\step2317\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\447\\step2317\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\447\\step2317\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1520,
+          705
+        ],
+        "t": "不提醒",
+        "r": "text1"
+      },
+      {
+        "c": [
+          1520,
+          843
+        ],
+        "t": "任务发生时",
+        "r": "text1"
+      },
+      {
+        "c": [
+          1520,
+          981
+        ],
+        "t": "5分钟前",
+        "r": "text1"
+      },
+      {
+        "c": [
+          1520,
+          1119
+        ],
+        "t": "15分钟前",
+        "r": "text1"
+      },
+      {
+        "c": [
+          1520,
+          1257
+        ],
+        "t": "30分钟前",
+        "r": "text1"
+      },
+      {
+        "c": [
+          1520,
+          1497
+        ],
+        "t": "取消",
+        "r": "button2"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          1520,
+          705
+        ],
+        "t": "不提醒",
+        "r": "text1"
+      },
+      {
+        "i": 1,
+        "c": [
+          1520,
+          843
+        ],
+        "t": "任务发生时",
+        "r": "text1"
+      },
+      {
+        "i": 2,
+        "c": [
+          1520,
+          981
+        ],
+        "t": "5分钟前",
+        "r": "text1",
+        "checked": true
+      },
+      {
+        "i": 3,
+        "c": [
+          1520,
+          1119
+        ],
+        "t": "15分钟前",
+        "r": "text1"
+      },
+      {
+        "i": 4,
+        "c": [
+          1520,
+          1257
+        ],
+        "t": "30分钟前",
+        "r": "text1"
+      },
+      {
+        "i": 5,
+        "c": [
+          1520,
+          1497
+        ],
+        "t": "取消",
+        "r": "button2"
+      }
+    ],
+    "nodes_count": 6,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      3426
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "41920163ae4f473d9cab83c41b69efa3",
+    "measured_at": "2026-10-15T13:49:28.318",
+    "process_observed_ms": 14253.682,
+    "stages_ms": {
+      "device_import": 409.793,
+      "device_connect": 1118.944,
+      "action": 180.95,
+      "settle_wait": 600.34,
+      "permission": 5359.796,
+      "screenshot": 386.983,
+      "png_save": 259.55,
+      "ui_dump": 72.219,
+      "rotation": 256.405,
+      "xml_save": 4.309,
+      "foreground": 5347.643,
+      "meta_save": 5.187,
+      "crash_detection": 89.926,
+      "screen_signature": 50.839,
+      "event_write": 1.57,
+      "node_summary": 0.699,
+      "node_labels": 0.581,
+      "next_targets": 0.029,
+      "serialization": 0.228
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 3579
+  },
+  "response_bytes": 3579,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3426
+    ]
+  }
+}

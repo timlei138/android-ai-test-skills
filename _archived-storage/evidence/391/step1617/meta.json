@@ -1,0 +1,44 @@
+{
+  "ts": "2026-10-10T12:09:31",
+  "package": "com.android.settings",
+  "activity": ".Settings$AppNotificationSettingsActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "swipe",
+    "from": [
+      1520,
+      1600
+    ],
+    "to": [
+      1520,
+      700
+    ],
+    "dur_ms": 300,
+    "via": "scroll",
+    "why": "find-channel"
+  },
+  "call_id": "47329dfee4784992abea0e4f0455629c",
+  "timing": {
+    "call_id": "47329dfee4784992abea0e4f0455629c",
+    "measured_at": "2026-10-10T12:09:31.389",
+    "process_observed_ms": 6195.218,
+    "stages_ms": {
+      "device_import": 304.017,
+      "device_connect": 1071.854,
+      "action": 1474.016,
+      "settle_wait": 600.463,
+      "permission": 1130.808,
+      "screenshot": 404.55,
+      "png_save": 225.653,
+      "ui_dump": 172.773,
+      "rotation": 231.58,
+      "xml_save": 4.171,
+      "foreground": 463.327
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

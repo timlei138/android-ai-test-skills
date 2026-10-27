@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T18:03:56",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.EditTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1212,
+    "via": "rid=layout_weekend_classes",
+    "why": "恢复：把开关点回初始关态（本次验证造成的状态变更）"
+  },
+  "call_id": "a965011ea4464a2496ec2ee1a599aedd",
+  "timing": {
+    "call_id": "a965011ea4464a2496ec2ee1a599aedd",
+    "measured_at": "2026-10-15T18:03:56.378",
+    "process_observed_ms": 14788.702,
+    "stages_ms": {
+      "device_import": 723.342,
+      "device_connect": 1247.71,
+      "action": 186.465,
+      "settle_wait": 600.265,
+      "permission": 5432.976,
+      "screenshot": 393.233,
+      "png_save": 337.67,
+      "ui_dump": 95.815,
+      "rotation": 234.159,
+      "xml_save": 7.936,
+      "foreground": 5355.431
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

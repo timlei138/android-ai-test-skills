@@ -1,0 +1,38 @@
+{
+  "ts": "2026-10-15T16:07:26",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.EditTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "input",
+    "x": 1520,
+    "y": 375,
+    "text": "测试课表182",
+    "mode": "overwrite"
+  },
+  "call_id": "7466205f1c574f47a41b7974ca0777cb",
+  "timing": {
+    "call_id": "7466205f1c574f47a41b7974ca0777cb",
+    "measured_at": "2026-10-15T16:07:26.435",
+    "process_observed_ms": 16132.625,
+    "stages_ms": {
+      "device_import": 849.935,
+      "device_connect": 1399.147,
+      "action": 943.3,
+      "input_focus_wait": 300.657,
+      "settle_wait": 600.431,
+      "permission": 5400.145,
+      "screenshot": 428.71,
+      "png_save": 301.217,
+      "ui_dump": 93.995,
+      "rotation": 222.01,
+      "xml_save": 9.166,
+      "foreground": 5385.385
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T20:34:34",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.course.CourseListActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 552,
+    "y": 647,
+    "via": "curriculum_card_view(语文)",
+    "why": "步骤2: 点单个课程"
+  }
+}

@@ -23,28 +23,38 @@ ROOT = Path(__file__).resolve().parent.parent
 def _resolve_db_path() -> Path:
     """库放哪？
 
-    ## 新约定（2026-10-27）
+    ## 三个位置，看语境
 
-        storage/record/<uuid>/db.sqlite3     每次运行一个，互不干扰
+      ① 有 record 上下文（会话进行中）：
+             storage/record/<uuid>/db.sqlite3     该次的库，互不干扰
 
-    `ANDROID_TEST_RECORD` 由 `session.py start` 建目录后设好，
-    后续 observe/act/finding 都继承这个环境变量。
+      ② 没有 record 上下文（webui / 探针 / 统计）：
+             storage/record/webui.db              **聚合库**
+
+    ## 为什么要一个聚合库
+
+    用户要求：「record 里面包含 webui 相关的数据库。和每次的记录。」
+
+    webui 要显示"一共跑过多少次、通过率多少"，这必须跨所有运行统计。
+    如果只读某个 uuid 目录的库，那只能看到一次 —— 而每次运行的库是隔离的。
+
+    所以：**每次运行写自己的 db.sqlite3，同时留一个 webui.db 做聚合**。
+    现在先用"没有 record 时就打开 webui.db"这个简单做法 ——
+    跑完一条用例后由 `session.py finish` 把结论同步进去。
 
     ## 兜底
 
-    没有 record 目录（跑一次性探针、或老脚本）时退回
-    `storage/sessions.db` —— 那条路径还有历史数据，不能直接废掉。
-
-    ## 为什么不干脆全用 record/
-
-    探针脚本（`storage/tmp/*.py`）经常要读历史会话做对比，
-    它们不 start 会话，拿不到 ANDROID_TEST_RECORD。
-    退回老路径让它们继续能读。
+    老版本留下的 `storage/sessions.db` 只在它还存在时用（历史数据）。
+    新环境不会再有那个文件。
     """
     rec = current_record_dir()
     if rec is not None:
         return rec / "db.sqlite3"
-    return STORAGE_DIR / "sessions.db"
+    # 聚合库：webui 和统计脚本读这个
+    legacy = STORAGE_DIR / "sessions.db"
+    if legacy.is_file():
+        return legacy
+    return STORAGE_DIR / "record" / "webui.db"
 
 
 def _current_file() -> Path:

@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T20:03:57",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimeSlotSettingsActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2644,
+    "y": 747,
+    "via": "rid=btn_remove_morning_slot",
+    "why": "步骤4: 减少上午节数（第）"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-14T14:30:39",
+  "package": "com.zui.launcher",
+  "activity": ".drawer.NormalLauncher",
+  "rotation": 1,
+  "size": [
+    3840,
+    2560
+  ],
+  "action": {
+    "type": "longclick",
+    "x": 1920,
+    "y": 1300,
+    "via": "桌面空白处",
+    "why": "唤出编辑菜单以添加小部件"
+  },
+  "call_id": "40996b812667486c953b95a0ebda1faa",
+  "timing": {
+    "call_id": "40996b812667486c953b95a0ebda1faa",
+    "measured_at": "2026-10-14T14:30:39.366",
+    "process_observed_ms": 5606.814,
+    "stages_ms": {
+      "device_import": 485.624,
+      "device_connect": 1577.006,
+      "action": 630.018,
+      "settle_wait": 600.221,
+      "permission": 797.993,
+      "screenshot": 355.914,
+      "png_save": 462.759,
+      "ui_dump": 87.389,
+      "rotation": 188.473,
+      "xml_save": 5.435,
+      "foreground": 284.503
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

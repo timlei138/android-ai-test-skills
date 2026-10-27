@@ -1,0 +1,40 @@
+{
+  "ts": "2026-10-09T19:26:41",
+  "package": "com.zui.calendar",
+  "activity": ".newbuild.NewBuildActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "input",
+    "x": 2128,
+    "y": 469,
+    "text": "纵览课程A",
+    "mode": "overwrite",
+    "via": "mCurriculumTvTitle",
+    "why": "fill-course"
+  },
+  "call_id": "5243dbf6e08b4f2f9b28c194ba5d3f84",
+  "timing": {
+    "call_id": "5243dbf6e08b4f2f9b28c194ba5d3f84",
+    "measured_at": "2026-10-09T19:26:41.866",
+    "process_observed_ms": 5768.88,
+    "stages_ms": {
+      "device_import": 291.56,
+      "device_connect": 1114.804,
+      "action": 1168.838,
+      "input_focus_wait": 300.448,
+      "settle_wait": 600.526,
+      "permission": 931.511,
+      "screenshot": 390.957,
+      "png_save": 158.179,
+      "ui_dump": 100.905,
+      "rotation": 214.988,
+      "xml_save": 3.756,
+      "foreground": 389.094
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

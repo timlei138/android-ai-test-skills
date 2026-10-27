@@ -1,0 +1,1374 @@
+{
+  "call_id": "70a6d5c6c99d41a4879a29db8e80c2ab",
+  "session_id": 470,
+  "tool": "observe",
+  "started_at": "2026-10-15T18:07:07.392",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-15T18:07:21.253",
+  "wall_ms": 13852.815,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-15T18:07:20",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.management.TimeSlotSettingsActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "70a6d5c6c99d41a4879a29db8e80c2ab",
+    "timing": {
+      "call_id": "70a6d5c6c99d41a4879a29db8e80c2ab",
+      "measured_at": "2026-10-15T18:07:20.981",
+      "process_observed_ms": 13210.119,
+      "stages_ms": {
+        "device_import": 389.293,
+        "device_connect": 1150.288,
+        "permission": 5316.325,
+        "screenshot": 377.146,
+        "png_save": 172.852,
+        "ui_dump": 101.868,
+        "rotation": 220.429,
+        "xml_save": 5.228,
+        "foreground": 5397.085
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=status_bar_launch_animation_container",
+      "rid=container",
+      "rid=status_bar_container",
+      "rid=status_bar",
+      "rid=status_bar_contents",
+      "rid=status_bar_start_side_container",
+      "rid=status_bar_start_side_content",
+      "rid=status_bar_start_side_except_heads_up",
+      "rid=clock",
+      "text=18:07",
+      "desc=18:07",
+      "rid=start_side_notif_and_chip_container",
+      "rid=notification_icon_area",
+      "rid=notificationIcons",
+      "desc=Legion Zone通知：",
+      "desc=应用商店通知：",
+      "desc=Android 系统通知：",
+      "rid=status_bar_end_side_container",
+      "rid=status_bar_end_side_content",
+      "rid=system_icons",
+      "rid=statusIcons",
+      "rid=wifi_combo",
+      "rid=wifi_group",
+      "rid=inout_activity_container",
+      "rid=wifi_signal",
+      "desc=WLAN 信号满格。",
+      "rid=wifi_activity",
+      "rid=battery",
+      "desc=正在充电，已完成百分之 100。",
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "desc=转到上一层级",
+      "rid=toolbar_title",
+      "text=课程时间设置",
+      "rid=action_save",
+      "rid=save_view",
+      "text=完成",
+      "rid=layout_lesson_duration",
+      "text=每节课上课时长",
+      "rid=tv_lesson_duration",
+      "text=50分钟",
+      "desc=编辑",
+      "rid=layout_break_duration",
+      "text=课间休息时长",
+      "rid=tv_break_duration",
+      "text=10分钟",
+      "rid=layout_morning_header",
+      "text=上午课程",
+      "rid=btn_remove_morning_slot",
+      "desc=删除",
+      "rid=tv_morning_slot_count",
+      "text=4节",
+      "rid=btn_add_morning_slot",
+      "desc=新建",
+      "rid=ll_morning_slots",
+      "rid=item_container",
+      "rid=tv_slot_number",
+      "text=第1节",
+      "rid=tv_time_range",
+      "text=08:00-08:50",
+      "rid=iv_arrow",
+      "text=第2节",
+      "text=09:00-09:50",
+      "text=第3节",
+      "text=10:00-10:50",
+      "text=第4节",
+      "text=11:00-11:50",
+      "rid=layout_afternoon_header",
+      "text=下午课程",
+      "rid=btn_remove_afternoon_slot",
+      "rid=tv_afternoon_slot_count",
+      "rid=btn_add_afternoon_slot",
+      "rid=ll_afternoon_slots",
+      "text=第5节",
+      "text=14:00-14:50",
+      "rid=taskbar_container",
+      "rid=taskbar_scrim",
+      "rid=taskbar_bubbles_container",
+      "rid=stashed_handle"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\470\\step2541\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\470\\step2541\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\470\\step2541\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          132,
+          53
+        ],
+        "t": "18:07",
+        "d": "18:07",
+        "r": "clock"
+      },
+      {
+        "c": [
+          224,
+          53
+        ],
+        "t": "18:07",
+        "r": "status_bar_start_side_content"
+      },
+      {
+        "c": [
+          224,
+          53
+        ],
+        "t": "18:07",
+        "r": "status_bar_start_side_except_heads_up"
+      },
+      {
+        "c": [
+          290,
+          53
+        ],
+        "t": "18:07",
+        "r": "start_side_notif_and_chip_container"
+      },
+      {
+        "c": [
+          290,
+          53
+        ],
+        "t": "18:07",
+        "r": "notification_icon_area"
+      },
+      {
+        "c": [
+          290,
+          53
+        ],
+        "t": "18:07",
+        "r": "notificationIcons"
+      },
+      {
+        "c": [
+          401,
+          203
+        ],
+        "t": "课程时间设置",
+        "r": "toolbar_title"
+      },
+      {
+        "c": [
+          2913,
+          202
+        ],
+        "t": "完成",
+        "r": "action_save"
+      },
+      {
+        "c": [
+          2913,
+          202
+        ],
+        "t": "完成",
+        "r": "save_view"
+      },
+      {
+        "c": [
+          2739,
+          377
+        ],
+        "t": "50分钟",
+        "r": "tv_lesson_duration"
+      },
+      {
+        "c": [
+          2745,
+          534
+        ],
+        "t": "10分钟",
+        "r": "tv_break_duration"
+      },
+      {
+        "c": [
+          1520,
+          747
+        ],
+        "t": "上午课程",
+        "r": "layout_morning_header"
+      }
+    ],
+    "nodes": [
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          107
+        ],
+        "center": [
+          1520,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_launch_animation_container"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          107
+        ],
+        "center": [
+          1520,
+          53
+        ],
+        "rid": "com.android.systemui:id/container"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          107
+        ],
+        "center": [
+          1520,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_container"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          107
+        ],
+        "center": [
+          1520,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar"
+      },
+      {
+        "bounds": [
+          55,
+          0,
+          2985,
+          107
+        ],
+        "center": [
+          1520,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_contents"
+      },
+      {
+        "bounds": [
+          66,
+          0,
+          1525,
+          107
+        ],
+        "center": [
+          795,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_start_side_container"
+      },
+      {
+        "bounds": [
+          66,
+          0,
+          382,
+          107
+        ],
+        "center": [
+          224,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_start_side_content"
+      },
+      {
+        "bounds": [
+          66,
+          0,
+          382,
+          107
+        ],
+        "center": [
+          224,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_start_side_except_heads_up"
+      },
+      {
+        "bounds": [
+          66,
+          23,
+          199,
+          84
+        ],
+        "center": [
+          132,
+          53
+        ],
+        "rid": "com.android.systemui:id/clock",
+        "text": "18:07",
+        "desc": "18:07"
+      },
+      {
+        "bounds": [
+          199,
+          0,
+          382,
+          107
+        ],
+        "center": [
+          290,
+          53
+        ],
+        "rid": "com.android.systemui:id/start_side_notif_and_chip_container"
+      },
+      {
+        "bounds": [
+          199,
+          0,
+          382,
+          107
+        ],
+        "center": [
+          290,
+          53
+        ],
+        "rid": "com.android.systemui:id/notification_icon_area"
+      },
+      {
+        "bounds": [
+          199,
+          0,
+          382,
+          107
+        ],
+        "center": [
+          290,
+          53
+        ],
+        "rid": "com.android.systemui:id/notificationIcons"
+      },
+      {
+        "bounds": [
+          199,
+          0,
+          260,
+          107
+        ],
+        "center": [
+          229,
+          53
+        ],
+        "desc": "Legion Zone通知："
+      },
+      {
+        "bounds": [
+          260,
+          0,
+          321,
+          107
+        ],
+        "center": [
+          290,
+          53
+        ],
+        "desc": "应用商店通知："
+      },
+      {
+        "bounds": [
+          321,
+          0,
+          382,
+          107
+        ],
+        "center": [
+          351,
+          53
+        ],
+        "desc": "Android 系统通知："
+      },
+      {
+        "bounds": [
+          1525,
+          0,
+          2985,
+          107
+        ],
+        "center": [
+          2255,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_end_side_container"
+      },
+      {
+        "bounds": [
+          2812,
+          0,
+          2985,
+          107
+        ],
+        "center": [
+          2898,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_end_side_content"
+      },
+      {
+        "bounds": [
+          2812,
+          23,
+          2985,
+          84
+        ],
+        "center": [
+          2898,
+          53
+        ],
+        "rid": "com.android.systemui:id/system_icons"
+      },
+      {
+        "bounds": [
+          2820,
+          23,
+          2874,
+          84
+        ],
+        "center": [
+          2847,
+          53
+        ],
+        "rid": "com.android.systemui:id/statusIcons"
+      },
+      {
+        "bounds": [
+          2820,
+          23,
+          2874,
+          84
+        ],
+        "center": [
+          2847,
+          53
+        ],
+        "rid": "com.android.systemui:id/wifi_combo"
+      },
+      {
+        "bounds": [
+          2820,
+          23,
+          2874,
+          84
+        ],
+        "center": [
+          2847,
+          53
+        ],
+        "rid": "com.android.systemui:id/wifi_combo"
+      },
+      {
+        "bounds": [
+          2820,
+          23,
+          2874,
+          84
+        ],
+        "center": [
+          2847,
+          53
+        ],
+        "rid": "com.android.systemui:id/wifi_group"
+      },
+      {
+        "bounds": [
+          2820,
+          23,
+          2874,
+          84
+        ],
+        "center": [
+          2847,
+          53
+        ],
+        "rid": "com.android.systemui:id/inout_activity_container"
+      },
+      {
+        "bounds": [
+          2820,
+          23,
+          2869,
+          84
+        ],
+        "center": [
+          2844,
+          53
+        ],
+        "rid": "com.android.systemui:id/wifi_signal",
+        "desc": "WLAN 信号满格。"
+      },
+      {
+        "bounds": [
+          2823,
+          27,
+          2874,
+          84
+        ],
+        "center": [
+          2848,
+          55
+        ],
+        "rid": "com.android.systemui:id/wifi_activity"
+      },
+      {
+        "bounds": [
+          2873,
+          29,
+          2974,
+          78
+        ],
+        "center": [
+          2923,
+          53
+        ],
+        "rid": "com.android.systemui:id/battery",
+        "desc": "正在充电，已完成百分之 100。"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "com.zui.calendar:id/action_bar_root"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "android:id/content"
+      },
+      {
+        "bounds": [
+          0,
+          107,
+          2985,
+          300
+        ],
+        "center": [
+          1492,
+          203
+        ],
+        "rid": "com.zui.calendar:id/toolbar"
+      },
+      {
+        "bounds": [
+          44,
+          115,
+          203,
+          291
+        ],
+        "center": [
+          123,
+          203
+        ],
+        "desc": "转到上一层级",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          203,
+          156,
+          599,
+          251
+        ],
+        "center": [
+          401,
+          203
+        ],
+        "rid": "com.zui.calendar:id/toolbar_title",
+        "text": "课程时间设置"
+      },
+      {
+        "bounds": [
+          2863,
+          166,
+          2963,
+          239
+        ],
+        "center": [
+          2913,
+          202
+        ],
+        "rid": "com.zui.calendar:id/action_save"
+      },
+      {
+        "bounds": [
+          2863,
+          166,
+          2963,
+          239
+        ],
+        "center": [
+          2913,
+          202
+        ],
+        "rid": "com.zui.calendar:id/save_view",
+        "text": "完成",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          0,
+          300,
+          3040,
+          1871
+        ],
+        "center": [
+          1520,
+          1085
+        ],
+        "scrollable": true
+      },
+      {
+        "bounds": [
+          88,
+          300,
+          2952,
+          454
+        ],
+        "center": [
+          1520,
+          377
+        ],
+        "rid": "com.zui.calendar:id/layout_lesson_duration",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          154,
+          344,
+          504,
+          410
+        ],
+        "center": [
+          329,
+          377
+        ],
+        "text": "每节课上课时长"
+      },
+      {
+        "bounds": [
+          2676,
+          349,
+          2803,
+          405
+        ],
+        "center": [
+          2739,
+          377
+        ],
+        "rid": "com.zui.calendar:id/tv_lesson_duration",
+        "text": "50分钟"
+      },
+      {
+        "bounds": [
+          2820,
+          344,
+          2886,
+          410
+        ],
+        "center": [
+          2853,
+          377
+        ],
+        "desc": "编辑"
+      },
+      {
+        "bounds": [
+          88,
+          454,
+          2952,
+          615
+        ],
+        "center": [
+          1520,
+          534
+        ],
+        "rid": "com.zui.calendar:id/layout_break_duration",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          154,
+          498,
+          454,
+          571
+        ],
+        "center": [
+          304,
+          534
+        ],
+        "text": "课间休息时长"
+      },
+      {
+        "bounds": [
+          2687,
+          506,
+          2803,
+          562
+        ],
+        "center": [
+          2745,
+          534
+        ],
+        "rid": "com.zui.calendar:id/tv_break_duration",
+        "text": "10分钟"
+      },
+      {
+        "bounds": [
+          2820,
+          501,
+          2886,
+          567
+        ],
+        "center": [
+          2853,
+          534
+        ],
+        "desc": "编辑"
+      },
+      {
+        "bounds": [
+          88,
+          659,
+          2952,
+          835
+        ],
+        "center": [
+          1520,
+          747
+        ],
+        "rid": "com.zui.calendar:id/layout_morning_header"
+      },
+      {
+        "bounds": [
+          154,
+          710,
+          2600,
+          783
+        ],
+        "center": [
+          1377,
+          746
+        ],
+        "text": "上午课程"
+      },
+      {
+        "bounds": [
+          2600,
+          703,
+          2688,
+          791
+        ],
+        "center": [
+          2644,
+          747
+        ],
+        "rid": "com.zui.calendar:id/btn_remove_morning_slot",
+        "desc": "删除",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          2710,
+          719,
+          2776,
+          775
+        ],
+        "center": [
+          2743,
+          747
+        ],
+        "rid": "com.zui.calendar:id/tv_morning_slot_count",
+        "text": "4节"
+      },
+      {
+        "bounds": [
+          2798,
+          703,
+          2886,
+          791
+        ],
+        "center": [
+          2842,
+          747
+        ],
+        "rid": "com.zui.calendar:id/btn_add_morning_slot",
+        "desc": "新建",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          88,
+          835,
+          2952,
+          1479
+        ],
+        "center": [
+          1520,
+          1157
+        ],
+        "rid": "com.zui.calendar:id/ll_morning_slots"
+      },
+      {
+        "bounds": [
+          88,
+          835,
+          2952,
+          996
+        ],
+        "center": [
+          1520,
+          915
+        ],
+        "rid": "com.zui.calendar:id/item_container",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          154,
+          879,
+          270,
+          952
+        ],
+        "center": [
+          212,
+          915
+        ],
+        "rid": "com.zui.calendar:id/tv_slot_number",
+        "text": "第1节"
+      },
+      {
+        "bounds": [
+          2570,
+          889,
+          2803,
+          942
+        ],
+        "center": [
+          2686,
+          915
+        ],
+        "rid": "com.zui.calendar:id/tv_time_range",
+        "text": "08:00-08:50"
+      },
+      {
+        "bounds": [
+          2820,
+          882,
+          2886,
+          948
+        ],
+        "center": [
+          2853,
+          915
+        ],
+        "rid": "com.zui.calendar:id/iv_arrow",
+        "desc": "编辑",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          88,
+          996,
+          2952,
+          1157
+        ],
+        "center": [
+          1520,
+          1076
+        ],
+        "rid": "com.zui.calendar:id/item_container",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          154,
+          1040,
+          282,
+          1113
+        ],
+        "center": [
+          218,
+          1076
+        ],
+        "rid": "com.zui.calendar:id/tv_slot_number",
+        "text": "第2节"
+      },
+      {
+        "bounds": [
+          2570,
+          1050,
+          2803,
+          1103
+        ],
+        "center": [
+          2686,
+          1076
+        ],
+        "rid": "com.zui.calendar:id/tv_time_range",
+        "text": "09:00-09:50"
+      },
+      {
+        "bounds": [
+          2820,
+          1043,
+          2886,
+          1109
+        ],
+        "center": [
+          2853,
+          1076
+        ],
+        "rid": "com.zui.calendar:id/iv_arrow",
+        "desc": "编辑",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          88,
+          1157,
+          2952,
+          1318
+        ],
+        "center": [
+          1520,
+          1237
+        ],
+        "rid": "com.zui.calendar:id/item_container",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          154,
+          1201,
+          284,
+          1274
+        ],
+        "center": [
+          219,
+          1237
+        ],
+        "rid": "com.zui.calendar:id/tv_slot_number",
+        "text": "第3节"
+      },
+      {
+        "bounds": [
+          2593,
+          1211,
+          2803,
+          1264
+        ],
+        "center": [
+          2698,
+          1237
+        ],
+        "rid": "com.zui.calendar:id/tv_time_range",
+        "text": "10:00-10:50"
+      },
+      {
+        "bounds": [
+          2820,
+          1204,
+          2886,
+          1270
+        ],
+        "center": [
+          2853,
+          1237
+        ],
+        "rid": "com.zui.calendar:id/iv_arrow",
+        "desc": "编辑",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          88,
+          1318,
+          2952,
+          1479
+        ],
+        "center": [
+          1520,
+          1398
+        ],
+        "rid": "com.zui.calendar:id/item_container",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          154,
+          1362,
+          289,
+          1435
+        ],
+        "center": [
+          221,
+          1398
+        ],
+        "rid": "com.zui.calendar:id/tv_slot_number",
+        "text": "第4节"
+      },
+      {
+        "bounds": [
+          2621,
+          1372,
+          2803,
+          1425
+        ],
+        "center": [
+          2712,
+          1398
+        ],
+        "rid": "com.zui.calendar:id/tv_time_range",
+        "text": "11:00-11:50"
+      },
+      {
+        "bounds": [
+          2820,
+          1365,
+          2886,
+          1431
+        ],
+        "center": [
+          2853,
+          1398
+        ],
+        "rid": "com.zui.calendar:id/iv_arrow",
+        "desc": "编辑",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          88,
+          1523,
+          2952,
+          1699
+        ],
+        "center": [
+          1520,
+          1611
+        ],
+        "rid": "com.zui.calendar:id/layout_afternoon_header"
+      },
+      {
+        "bounds": [
+          154,
+          1574,
+          2600,
+          1647
+        ],
+        "center": [
+          1377,
+          1610
+        ],
+        "text": "下午课程"
+      },
+      {
+        "bounds": [
+          2600,
+          1567,
+          2688,
+          1655
+        ],
+        "center": [
+          2644,
+          1611
+        ],
+        "rid": "com.zui.calendar:id/btn_remove_afternoon_slot",
+        "desc": "删除",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          2710,
+          1583,
+          2776,
+          1639
+        ],
+        "center": [
+          2743,
+          1611
+        ],
+        "rid": "com.zui.calendar:id/tv_afternoon_slot_count",
+        "text": "4节"
+      },
+      {
+        "bounds": [
+          2798,
+          1567,
+          2886,
+          1655
+        ],
+        "center": [
+          2842,
+          1611
+        ],
+        "rid": "com.zui.calendar:id/btn_add_afternoon_slot",
+        "desc": "新建",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          88,
+          1699,
+          2952,
+          1871
+        ],
+        "center": [
+          1520,
+          1785
+        ],
+        "rid": "com.zui.calendar:id/ll_afternoon_slots"
+      },
+      {
+        "bounds": [
+          88,
+          1699,
+          2952,
+          1860
+        ],
+        "center": [
+          1520,
+          1779
+        ],
+        "rid": "com.zui.calendar:id/item_container",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          154,
+          1743,
+          283,
+          1816
+        ],
+        "center": [
+          218,
+          1779
+        ],
+        "rid": "com.zui.calendar:id/tv_slot_number",
+        "text": "第5节"
+      },
+      {
+        "bounds": [
+          2590,
+          1753,
+          2803,
+          1806
+        ],
+        "center": [
+          2696,
+          1779
+        ],
+        "rid": "com.zui.calendar:id/tv_time_range",
+        "text": "14:00-14:50"
+      },
+      {
+        "bounds": [
+          2820,
+          1746,
+          2886,
+          1812
+        ],
+        "center": [
+          2853,
+          1779
+        ],
+        "rid": "com.zui.calendar:id/iv_arrow",
+        "desc": "编辑",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          88,
+          1860,
+          2952,
+          1871
+        ],
+        "center": [
+          1520,
+          1865
+        ],
+        "rid": "com.zui.calendar:id/item_container",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          138,
+          1871,
+          2902,
+          1904
+        ],
+        "center": [
+          1520,
+          1887
+        ],
+        "rid": "com.zui.launcher:id/taskbar_container"
+      },
+      {
+        "bounds": [
+          138,
+          1871,
+          2902,
+          1904
+        ],
+        "center": [
+          1520,
+          1887
+        ],
+        "rid": "com.zui.launcher:id/taskbar_scrim"
+      },
+      {
+        "bounds": [
+          138,
+          1871,
+          2902,
+          1904
+        ],
+        "center": [
+          1520,
+          1887
+        ],
+        "rid": "com.zui.launcher:id/taskbar_bubbles_container"
+      },
+      {
+        "bounds": [
+          138,
+          1871,
+          2902,
+          1904
+        ],
+        "center": [
+          1520,
+          1887
+        ],
+        "rid": "com.zui.launcher:id/stashed_handle"
+      },
+      {
+        "bounds": [
+          138,
+          1871,
+          2902,
+          1904
+        ],
+        "center": [
+          1520,
+          1887
+        ],
+        "rid": "com.zui.launcher:id/navbuttons_view"
+      },
+      {
+        "bounds": [
+          0,
+          1689,
+          56,
+          1904
+        ],
+        "center": [
+          28,
+          1796
+        ],
+        "rid": "com.zui.launcher:id/start_contextual_buttons"
+      }
+    ],
+    "nodes_count": 81,
+    "nodes_mode": "full",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      3685
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "70a6d5c6c99d41a4879a29db8e80c2ab",
+    "measured_at": "2026-10-15T18:07:21.165",
+    "process_observed_ms": 13394.475,
+    "stages_ms": {
+      "device_import": 389.293,
+      "device_connect": 1150.288,
+      "permission": 5316.325,
+      "screenshot": 377.146,
+      "png_save": 172.852,
+      "ui_dump": 101.868,
+      "rotation": 220.429,
+      "xml_save": 5.228,
+      "foreground": 5397.085,
+      "meta_save": 3.284,
+      "screen_signature": 43.353,
+      "crash_detection": 127.293,
+      "event_write": 1.068,
+      "node_summary": 1.031,
+      "node_labels": 0.554,
+      "next_targets": 0.15,
+      "serialization": 0.554
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 22350
+  },
+  "response_bytes": 22350,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3685
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "call_id": "452c35e368fa47b69b0bf06d3a9db8d6",
+  "session_id": 364,
+  "tool": "session",
+  "started_at": "2026-10-09T17:50:30.893",
+  "status": "ended",
+  "expects_event": false,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T17:50:32.552",
+  "wall_ms": 1651.098,
+  "result": {
+    "session_id": 364
+  },
+  "response_bytes": 20,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": []
+  }
+}

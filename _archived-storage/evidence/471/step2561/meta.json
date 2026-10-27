@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T18:15:41",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.course.EditCourseActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1333,
+    "via": "rid=llCourseColor",
+    "why": "YAML s4：开课程背景色弹框"
+  },
+  "call_id": "40b1c73674f7412fbd8664ec23c91a9f",
+  "timing": {
+    "call_id": "40b1c73674f7412fbd8664ec23c91a9f",
+    "measured_at": "2026-10-15T18:15:41.252",
+    "process_observed_ms": 14192.55,
+    "stages_ms": {
+      "device_import": 384.12,
+      "device_connect": 1204.072,
+      "action": 208.516,
+      "settle_wait": 600.253,
+      "permission": 5407.125,
+      "screenshot": 401.155,
+      "png_save": 142.072,
+      "ui_dump": 73.985,
+      "rotation": 251.414,
+      "xml_save": 4.749,
+      "foreground": 5401.316
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

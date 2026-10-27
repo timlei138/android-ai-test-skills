@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-26T21:19:14",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.display.TimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 739,
+    "y": 371,
+    "via": "desc=关闭",
+    "why": "预期4：关闭空课程编辑页回周视图，观察空白课程表状态"
+  },
+  "call_id": "f95b1fb531f842aa80d05ac0512e553c",
+  "timing": {
+    "call_id": "f95b1fb531f842aa80d05ac0512e553c",
+    "measured_at": "2026-10-26T21:19:14.238",
+    "process_observed_ms": 4679.491,
+    "stages_ms": {
+      "device_import": 423.173,
+      "device_connect": 1109.658,
+      "action": 168.337,
+      "settle_wait": 600.321,
+      "permission": 1006.002,
+      "screenshot": 377.493,
+      "png_save": 123.75,
+      "ui_dump": 147.275,
+      "rotation": 238.848,
+      "xml_save": 6.275,
+      "foreground": 392.443
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

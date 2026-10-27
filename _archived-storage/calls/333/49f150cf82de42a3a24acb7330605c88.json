@@ -1,0 +1,45 @@
+{
+  "call_id": "49f150cf82de42a3a24acb7330605c88",
+  "session_id": 333,
+  "tool": "act",
+  "started_at": "2026-10-09T12:15:21.930",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T12:15:26.031",
+  "wall_ms": 4093.118,
+  "result": {
+    "ok": false,
+    "error": "当前不在起点「课程表页-周视图」",
+    "expect": "activity=timetable.display.TimetableActivity,desc=导入课程表",
+    "missed": [
+      "desc=导入课程表"
+    ],
+    "hint": "先导航到「课程表页-周视图」再执行；或用 --from 指定你实际所在的节点。当前 activity=.timetable.display.TimetableActivity",
+    "call_id": "49f150cf82de42a3a24acb7330605c88",
+    "event_ids": [],
+    "execution_state": "not_executed"
+  },
+  "timing": {
+    "call_id": "49f150cf82de42a3a24acb7330605c88",
+    "measured_at": "2026-10-09T12:15:25.982",
+    "process_observed_ms": 2296.185,
+    "stages_ms": {
+      "device_import": 317.832,
+      "device_connect": 1103.61,
+      "screen_signature": 28.518,
+      "serialization": 0.045
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 476
+  },
+  "response_bytes": 476,
+  "audit": {
+    "complete": true,
+    "outcome": "failed",
+    "issues": [],
+    "executed": false,
+    "event_ids": []
+  }
+}

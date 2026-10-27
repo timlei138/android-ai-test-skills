@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T19:50:49",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.EditTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 767,
+    "via": "rid=layout_current_week",
+    "why": "步骤3: 点击当前周数验证可修改"
+  }
+}

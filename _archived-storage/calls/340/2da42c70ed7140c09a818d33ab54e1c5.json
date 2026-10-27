@@ -1,0 +1,436 @@
+{
+  "call_id": "2da42c70ed7140c09a818d33ab54e1c5",
+  "session_id": 340,
+  "tool": "observe",
+  "started_at": "2026-10-09T14:11:16.097",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T14:11:21.679",
+  "wall_ms": 5572.334,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-09T14:11:21",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.temp.TempTimetableActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "2da42c70ed7140c09a818d33ab54e1c5",
+    "timing": {
+      "call_id": "2da42c70ed7140c09a818d33ab54e1c5",
+      "measured_at": "2026-10-09T14:11:21.464",
+      "process_observed_ms": 3699.44,
+      "stages_ms": {
+        "device_import": 316.045,
+        "device_connect": 1110.194,
+        "permission": 925.512,
+        "screenshot": 386.118,
+        "png_save": 127.986,
+        "ui_dump": 130.292,
+        "rotation": 288.5,
+        "xml_save": 3.902,
+        "foreground": 346.201
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=ll_custom_toolbar",
+      "rid=btn_previous",
+      "desc=上一步",
+      "rid=tv_title",
+      "text=确认识别结果",
+      "rid=btn_next",
+      "text=下一步",
+      "rid=curriculum_week_view",
+      "rid=tv_monday",
+      "text=周一",
+      "rid=tv_tuesday",
+      "text=周二",
+      "rid=tv_wednesday",
+      "text=周三",
+      "rid=tv_thursday",
+      "text=周四",
+      "rid=tv_friday",
+      "text=周五",
+      "rid=tv_monday_date",
+      "text=8/31",
+      "rid=tv_tuesday_date",
+      "text=9/1",
+      "rid=tv_wednesday_date",
+      "text=9/2",
+      "rid=tv_thursday_date",
+      "text=9/3",
+      "rid=tv_friday_date",
+      "text=9/4",
+      "rid=recyclerView",
+      "rid=tv_section",
+      "text=1",
+      "rid=tv_time",
+      "text=08:00\n08:30",
+      "rid=curriculum_card_view",
+      "rid=tv_curriculum_title",
+      "text=语文",
+      "text=数学",
+      "text=英语",
+      "text=科学",
+      "text=社会",
+      "text=2",
+      "text=09:00\n09:30",
+      "text=体育",
+      "text=音乐",
+      "text=3",
+      "text=09:40\n10:10",
+      "text=4",
+      "text=10:30\n11:00"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\340\\step0195\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\340\\step0195\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\340\\step0195\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          135,
+          203
+        ],
+        "t": "上一步",
+        "r": "btn_previous"
+      },
+      {
+        "c": [
+          2855,
+          203
+        ],
+        "t": "下一步",
+        "r": "btn_next"
+      },
+      {
+        "c": [
+          552,
+          647
+        ],
+        "t": "语文",
+        "r": "curriculum_card_view"
+      },
+      {
+        "c": [
+          1104,
+          647
+        ],
+        "t": "数学",
+        "r": "curriculum_card_view"
+      },
+      {
+        "c": [
+          1656,
+          647
+        ],
+        "t": "英语",
+        "r": "curriculum_card_view"
+      },
+      {
+        "c": [
+          2208,
+          647
+        ],
+        "t": "科学",
+        "r": "curriculum_card_view"
+      },
+      {
+        "c": [
+          2760,
+          647
+        ],
+        "t": "社会",
+        "r": "curriculum_card_view"
+      },
+      {
+        "c": [
+          552,
+          977
+        ],
+        "t": "体育",
+        "r": "curriculum_card_view"
+      },
+      {
+        "c": [
+          1104,
+          977
+        ],
+        "t": "音乐",
+        "r": "curriculum_card_view"
+      },
+      {
+        "c": [
+          552,
+          1307
+        ],
+        "t": "科学",
+        "r": "curriculum_card_view"
+      },
+      {
+        "c": [
+          1104,
+          1307
+        ],
+        "t": "社会",
+        "r": "curriculum_card_view"
+      },
+      {
+        "c": [
+          1656,
+          1142
+        ],
+        "t": "语文",
+        "r": "curriculum_card_view"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          135,
+          203
+        ],
+        "t": "上一步",
+        "r": "btn_previous"
+      },
+      {
+        "i": 1,
+        "c": [
+          2855,
+          203
+        ],
+        "t": "下一步",
+        "r": "btn_next"
+      },
+      {
+        "i": 2,
+        "c": [
+          552,
+          647
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 3,
+        "c": [
+          1104,
+          647
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 4,
+        "c": [
+          1656,
+          647
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 5,
+        "c": [
+          2208,
+          647
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 6,
+        "c": [
+          2760,
+          647
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 7,
+        "c": [
+          552,
+          977
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 8,
+        "c": [
+          1104,
+          977
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 9,
+        "c": [
+          552,
+          1307
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 10,
+        "c": [
+          1104,
+          1307
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 11,
+        "c": [
+          1656,
+          1142
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 12,
+        "c": [
+          2208,
+          1142
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 13,
+        "c": [
+          2760,
+          1142
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 14,
+        "c": [
+          552,
+          1637
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 15,
+        "c": [
+          1104,
+          1637
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 16,
+        "c": [
+          1656,
+          1637
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 17,
+        "c": [
+          2208,
+          1637
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 18,
+        "c": [
+          2760,
+          1637
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 19,
+        "c": [
+          552,
+          1843
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 20,
+        "c": [
+          1104,
+          1843
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 21,
+        "c": [
+          1656,
+          1843
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 22,
+        "c": [
+          2208,
+          1843
+        ],
+        "r": "curriculum_card_view"
+      },
+      {
+        "i": 23,
+        "c": [
+          2760,
+          1843
+        ],
+        "r": "curriculum_card_view"
+      }
+    ],
+    "nodes_count": 24,
+    "nodes_mode": "nav",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      1214
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "2da42c70ed7140c09a818d33ab54e1c5",
+    "measured_at": "2026-10-09T14:11:21.608",
+    "process_observed_ms": 3842.886,
+    "stages_ms": {
+      "device_import": 316.045,
+      "device_connect": 1110.194,
+      "permission": 925.512,
+      "screenshot": 386.118,
+      "png_save": 127.986,
+      "ui_dump": 130.292,
+      "rotation": 288.5,
+      "xml_save": 3.902,
+      "foreground": 346.201,
+      "meta_save": 3.865,
+      "screen_signature": 26.42,
+      "crash_detection": 103.275,
+      "event_write": 1.306,
+      "node_summary": 0.881,
+      "node_labels": 0.833,
+      "next_targets": 0.087,
+      "serialization": 0.209
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 6724
+  },
+  "response_bytes": 6724,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1214
+    ]
+  }
+}

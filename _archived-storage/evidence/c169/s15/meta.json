@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T10:16:37",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.display.TimetableActivity",
+  "rotation": 1,
+  "size": [
+    3840,
+    2560
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1920,
+    "y": 2222,
+    "via": "rid=btnImportFromGallery",
+    "why": "步骤2: 从图库导入（允许分支）"
+  }
+}

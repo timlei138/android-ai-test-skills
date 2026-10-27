@@ -1,0 +1,470 @@
+{
+  "call_id": "fe91293793954a72b104f3ba64f583b7",
+  "session_id": 376,
+  "tool": "observe",
+  "started_at": "2026-10-09T20:01:06.904",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T20:01:12.525",
+  "wall_ms": 5608.644,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-09T20:01:12",
+    "package": "com.zui.calendar",
+    "activity": ".curriculum.CurriculumCustomRepeatActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "fe91293793954a72b104f3ba64f583b7",
+    "timing": {
+      "call_id": "fe91293793954a72b104f3ba64f583b7",
+      "measured_at": "2026-10-09T20:01:12.293",
+      "process_observed_ms": 3654.271,
+      "stages_ms": {
+        "device_import": 305.034,
+        "device_connect": 999.547,
+        "permission": 1055.636,
+        "screenshot": 366.69,
+        "png_save": 58.72,
+        "ui_dump": 88.819,
+        "rotation": 258.854,
+        "xml_save": 6.907,
+        "foreground": 445.289
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=activity_repeat",
+      "rid=toolbar",
+      "rid=toolbar_title",
+      "text=每周",
+      "rid=wrap_week",
+      "rid=scroll_week",
+      "rid=seleted",
+      "text=选择时间",
+      "rid=week_layout3",
+      "rid=week1x",
+      "text=周一",
+      "rid=week2x",
+      "text=周二",
+      "rid=week3x",
+      "text=周三",
+      "rid=week4x",
+      "text=周四",
+      "rid=week5x",
+      "text=周五",
+      "rid=week6x",
+      "text=周六",
+      "rid=week7x",
+      "text=周日",
+      "rid=week_tips",
+      "text=事件将于每1周的周二、周五重复发生"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\376\\step1047\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\376\\step1047\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\376\\step1047\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          253,
+          203
+        ],
+        "t": "每周",
+        "r": "toolbar_title"
+      },
+      {
+        "c": [
+          1520,
+          523
+        ],
+        "t": "周四",
+        "r": "wrap_week"
+      },
+      {
+        "c": [
+          1520,
+          523
+        ],
+        "t": "周四",
+        "r": "scroll_week"
+      },
+      {
+        "c": [
+          187,
+          343
+        ],
+        "t": "选择时间",
+        "r": "seleted"
+      },
+      {
+        "c": [
+          1520,
+          497
+        ],
+        "t": "周四",
+        "r": "week_layout3"
+      },
+      {
+        "c": [
+          217,
+          497
+        ],
+        "t": "周一",
+        "r": "week1x"
+      },
+      {
+        "c": [
+          651,
+          497
+        ],
+        "t": "周二",
+        "r": "week2x"
+      },
+      {
+        "c": [
+          1085,
+          497
+        ],
+        "t": "周三",
+        "r": "week3x"
+      },
+      {
+        "c": [
+          1519,
+          497
+        ],
+        "t": "周四",
+        "r": "week4x"
+      },
+      {
+        "c": [
+          1953,
+          497
+        ],
+        "t": "周五",
+        "r": "week5x"
+      },
+      {
+        "c": [
+          2387,
+          497
+        ],
+        "t": "周六",
+        "r": "week6x"
+      },
+      {
+        "c": [
+          2822,
+          497
+        ],
+        "t": "周日",
+        "r": "week7x"
+      }
+    ],
+    "nodes": [
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "com.zui.calendar:id/action_bar_root"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "android:id/content"
+      },
+      {
+        "bounds": [
+          0,
+          107,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          1005
+        ],
+        "rid": "com.zui.calendar:id/activity_repeat"
+      },
+      {
+        "bounds": [
+          0,
+          107,
+          3040,
+          300
+        ],
+        "center": [
+          1520,
+          203
+        ],
+        "rid": "com.zui.calendar:id/toolbar"
+      },
+      {
+        "bounds": [
+          28,
+          115,
+          187,
+          291
+        ],
+        "center": [
+          107,
+          203
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          187,
+          156,
+          319,
+          251
+        ],
+        "center": [
+          253,
+          203
+        ],
+        "rid": "com.zui.calendar:id/toolbar_title",
+        "text": "每周"
+      },
+      {
+        "bounds": [
+          0,
+          300,
+          3040,
+          746
+        ],
+        "center": [
+          1520,
+          523
+        ],
+        "rid": "com.zui.calendar:id/wrap_week"
+      },
+      {
+        "bounds": [
+          0,
+          300,
+          3040,
+          746
+        ],
+        "center": [
+          1520,
+          523
+        ],
+        "rid": "com.zui.calendar:id/scroll_week"
+      },
+      {
+        "bounds": [
+          121,
+          319,
+          253,
+          367
+        ],
+        "center": [
+          187,
+          343
+        ],
+        "rid": "com.zui.calendar:id/seleted",
+        "text": "选择时间"
+      },
+      {
+        "bounds": [
+          0,
+          384,
+          3040,
+          610
+        ],
+        "center": [
+          1520,
+          497
+        ],
+        "rid": "com.zui.calendar:id/week_layout3"
+      },
+      {
+        "bounds": [
+          148,
+          428,
+          286,
+          566
+        ],
+        "center": [
+          217,
+          497
+        ],
+        "rid": "com.zui.calendar:id/week1x",
+        "text": "周一",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          582,
+          428,
+          720,
+          566
+        ],
+        "center": [
+          651,
+          497
+        ],
+        "rid": "com.zui.calendar:id/week2x",
+        "text": "周二",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1016,
+          428,
+          1154,
+          566
+        ],
+        "center": [
+          1085,
+          497
+        ],
+        "rid": "com.zui.calendar:id/week3x",
+        "text": "周三",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1450,
+          428,
+          1588,
+          566
+        ],
+        "center": [
+          1519,
+          497
+        ],
+        "rid": "com.zui.calendar:id/week4x",
+        "text": "周四",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1884,
+          428,
+          2022,
+          566
+        ],
+        "center": [
+          1953,
+          497
+        ],
+        "rid": "com.zui.calendar:id/week5x",
+        "text": "周五",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          2318,
+          428,
+          2456,
+          566
+        ],
+        "center": [
+          2387,
+          497
+        ],
+        "rid": "com.zui.calendar:id/week6x",
+        "text": "周六",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          2753,
+          428,
+          2891,
+          566
+        ],
+        "center": [
+          2822,
+          497
+        ],
+        "rid": "com.zui.calendar:id/week7x",
+        "text": "周日",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          121,
+          665,
+          2919,
+          713
+        ],
+        "center": [
+          1520,
+          689
+        ],
+        "rid": "com.zui.calendar:id/week_tips",
+        "text": "事件将于每1周的周二、周五重复发生"
+      }
+    ],
+    "nodes_count": 18,
+    "nodes_mode": "full",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      2069
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "fe91293793954a72b104f3ba64f583b7",
+    "measured_at": "2026-10-09T20:01:12.440",
+    "process_observed_ms": 3801.833,
+    "stages_ms": {
+      "device_import": 305.034,
+      "device_connect": 999.547,
+      "permission": 1055.636,
+      "screenshot": 366.69,
+      "png_save": 58.72,
+      "ui_dump": 88.819,
+      "rotation": 258.854,
+      "xml_save": 6.907,
+      "foreground": 445.289,
+      "meta_save": 6.706,
+      "screen_signature": 33.114,
+      "crash_detection": 95.997,
+      "event_write": 1.383,
+      "node_summary": 0.844,
+      "node_labels": 0.965,
+      "next_targets": 0.096,
+      "serialization": 0.584
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 7265
+  },
+  "response_bytes": 7265,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2069
+    ]
+  }
+}

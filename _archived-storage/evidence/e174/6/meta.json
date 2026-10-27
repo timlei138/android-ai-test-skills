@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T19:13:01",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.display.TimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2633,
+    "y": 486,
+    "via": "text=图库导入课程表",
+    "why": "前提: 选图库导入"
+  }
+}

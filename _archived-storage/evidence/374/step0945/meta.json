@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-09T19:28:51",
+  "package": "com.zui.calendar",
+  "activity": ".newbuild.NewBuildActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 324,
+    "y": 1365,
+    "via": "categoryName=纪念日",
+    "why": "pick-creditcard"
+  },
+  "call_id": "0548846e46a14a03840ccad5ce273ce4",
+  "timing": {
+    "call_id": "0548846e46a14a03840ccad5ce273ce4",
+    "measured_at": "2026-10-09T19:28:51.621",
+    "process_observed_ms": 4423.637,
+    "stages_ms": {
+      "device_import": 310.499,
+      "device_connect": 1054.187,
+      "action": 210.338,
+      "settle_wait": 600.533,
+      "permission": 1033.692,
+      "screenshot": 373.882,
+      "png_save": 142.739,
+      "ui_dump": 70.809,
+      "rotation": 204.651,
+      "xml_save": 6.94,
+      "foreground": 314.726
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

@@ -202,7 +202,13 @@ def check_case_expectations() -> int:
     import yaml
 
     cases_dir = ROOT / "assets" / "cases"
-    db = ROOT / "storage" / "sessions.db"
+    # ★ 2026-10-27：库不再固定是 ROOT/storage/sessions.db。
+    #   现在每次运行写 record/<uuid>/db.sqlite3，另有 record/webui.db 做聚合。
+    #   这里做的是"用例原文 vs 卡里条目"的一致性体检，读聚合库就够。
+    from runtime import RECORD_DIR
+    db = RECORD_DIR / "webui.db"
+    if not db.is_file():
+        db = ROOT / "storage" / "sessions.db"   # 老结构兜底
     if not cases_dir.is_dir() or not db.is_file():
         return 0
 

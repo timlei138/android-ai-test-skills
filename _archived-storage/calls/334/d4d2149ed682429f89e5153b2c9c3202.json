@@ -1,0 +1,118 @@
+{
+  "call_id": "d4d2149ed682429f89e5153b2c9c3202",
+  "session_id": 334,
+  "tool": "act",
+  "started_at": "2026-10-09T12:19:06.841",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T12:19:15.400",
+  "wall_ms": 8553.16,
+  "result": {
+    "ok": false,
+    "route": [
+      "课程表页-周视图",
+      "全部课程表列表页",
+      "课程表基本信息编辑页",
+      "课程时间设置页"
+    ],
+    "steps": [
+      {
+        "n": 1,
+        "from": "课程表页-周视图",
+        "to": "全部课程表列表页",
+        "anchor": "顶栏「课程表设置」",
+        "selector": "rid=action_curriculum_table_settings",
+        "how": "rid=action_curriculum_table_settings",
+        "clicked": [
+          2919,
+          203
+        ],
+        "activity": ".timetable.management.TimetableListActivity",
+        "expect": "activity=timetable.management.TimetableListActivity,text=全部课程表",
+        "checkpoint": {
+          "checked": true,
+          "ok": true,
+          "matched": [
+            "activity=timetable.management.TimetableListActivity",
+            "text=全部课程表"
+          ],
+          "missed": []
+        },
+        "event_id": 1147,
+        "status": "ok"
+      },
+      {
+        "n": 2,
+        "from": "全部课程表列表页",
+        "to": "课程表基本信息编辑页",
+        "anchor": "每行的「设置」",
+        "selector": "rid=tv_schedule_info,text=设置",
+        "how": "rid=tv_schedule_info",
+        "clicked": [
+          2853,
+          391
+        ],
+        "activity": ".timetable.management.EditTimetableActivity",
+        "expect": "activity=timetable.management.EditTimetableActivity,text=课程表名称（必填）",
+        "checkpoint": {
+          "checked": true,
+          "ok": false,
+          "matched": [
+            "activity=timetable.management.EditTimetableActivity"
+          ],
+          "missed": [
+            "text=课程表名称（必填）"
+          ]
+        },
+        "event_id": 1148,
+        "status": "checkpoint_missed"
+      }
+    ],
+    "completed": 1,
+    "total": 3,
+    "failed_at": 2,
+    "hint": "第 2 步没过（checkpoint_missed）：['text=课程表名称（必填）']。修好后可 `act.py steps --from ... --to ... --resume-from 2` 接着跑。先判断是临时弹窗（关掉继续）还是用例要的东西没了（停下来记录）。",
+    "call_id": "d4d2149ed682429f89e5153b2c9c3202",
+    "event_ids": [
+      1147,
+      1148
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "d4d2149ed682429f89e5153b2c9c3202",
+    "measured_at": "2026-10-09T12:19:15.322",
+    "process_observed_ms": 6852.0,
+    "stages_ms": {
+      "device_import": 328.004,
+      "device_connect": 1048.676,
+      "screen_signature": 21.966,
+      "node_summary": 1.684,
+      "node_labels": 1.346,
+      "screenshot": 608.489,
+      "png_save": 302.762,
+      "ui_dump": 147.473,
+      "rotation": 494.006,
+      "xml_save": 8.656,
+      "foreground": 709.433,
+      "meta_save": 8.575,
+      "event_write": 3.96,
+      "serialization": 0.173
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 2146
+  },
+  "response_bytes": 2146,
+  "audit": {
+    "complete": true,
+    "outcome": "failed",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1147,
+      1148
+    ]
+  }
+}

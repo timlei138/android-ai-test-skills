@@ -1,0 +1,40 @@
+{
+  "ts": "2026-10-09T15:50:50",
+  "package": "com.zui.calendar",
+  "activity": ".newbuild.NewBuildActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "input",
+    "x": 2128,
+    "y": 469,
+    "text": "测试农历全天C",
+    "mode": "overwrite",
+    "via": "rid=event_title",
+    "why": "填标题"
+  },
+  "call_id": "a1520c927d1b4132abae27eaaa5cf1dc",
+  "timing": {
+    "call_id": "a1520c927d1b4132abae27eaaa5cf1dc",
+    "measured_at": "2026-10-09T15:50:50.703",
+    "process_observed_ms": 5457.452,
+    "stages_ms": {
+      "device_import": 284.616,
+      "device_connect": 1135.847,
+      "action": 1024.669,
+      "input_focus_wait": 300.255,
+      "settle_wait": 600.287,
+      "permission": 879.235,
+      "screenshot": 301.932,
+      "png_save": 195.848,
+      "ui_dump": 74.67,
+      "rotation": 239.621,
+      "xml_save": 7.513,
+      "foreground": 318.757
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

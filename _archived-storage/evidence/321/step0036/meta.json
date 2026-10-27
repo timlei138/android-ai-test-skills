@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-09T10:53:18",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.EditTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 375,
+    "via": "rid=et_schedule_name",
+    "why": "点击名称字段验证可编辑（预期1）"
+  },
+  "call_id": "446ba349c0b448dcb2f0ea9aae55d46a",
+  "timing": {
+    "call_id": "446ba349c0b448dcb2f0ea9aae55d46a",
+    "measured_at": "2026-10-09T10:53:18.045",
+    "process_observed_ms": 4592.929,
+    "stages_ms": {
+      "device_import": 332.617,
+      "device_connect": 1219.459,
+      "action": 199.504,
+      "settle_wait": 600.498,
+      "permission": 920.157,
+      "screenshot": 353.105,
+      "png_save": 211.429,
+      "ui_dump": 98.771,
+      "rotation": 194.728,
+      "xml_save": 6.595,
+      "foreground": 349.902
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

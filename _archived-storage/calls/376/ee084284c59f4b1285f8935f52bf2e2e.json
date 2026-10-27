@@ -1,0 +1,395 @@
+{
+  "call_id": "ee084284c59f4b1285f8935f52bf2e2e",
+  "session_id": 376,
+  "tool": "act",
+  "started_at": "2026-10-09T19:59:30.570",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T19:59:37.125",
+  "wall_ms": 6545.267,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 297,
+      "y": 828,
+      "via": "categoryName=课程",
+      "why": "course"
+    },
+    "ts": "2026-10-09T19:59:36",
+    "package": "com.zui.calendar",
+    "activity": ".newbuild.NewBuildActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "ee084284c59f4b1285f8935f52bf2e2e",
+    "timing": {
+      "call_id": "ee084284c59f4b1285f8935f52bf2e2e",
+      "measured_at": "2026-10-09T19:59:36.916",
+      "process_observed_ms": 4508.343,
+      "stages_ms": {
+        "device_import": 290.269,
+        "device_connect": 1063.18,
+        "action": 188.381,
+        "settle_wait": 600.487,
+        "permission": 1012.115,
+        "screenshot": 338.379,
+        "png_save": 192.462,
+        "ui_dump": 58.788,
+        "rotation": 237.077,
+        "xml_save": 6.966,
+        "foreground": 413.974
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "rid=backtext",
+      "rid=toolbar_title",
+      "text=新建事件",
+      "rid=action_menu_view",
+      "rid=save_view",
+      "text=完成",
+      "rid=categoryList",
+      "rid=categoryLayout",
+      "rid=categoryIcon",
+      "rid=categoryName",
+      "text=提醒",
+      "text=日程",
+      "text=课程",
+      "text=倒数日",
+      "text=生日",
+      "text=纪念日",
+      "rid=pager_container",
+      "rid=curriculum_scroll_view",
+      "rid=mCurriculumTvTitle",
+      "text=请输入课程名称",
+      "rid=mCurriculumLlLocation",
+      "text=地点",
+      "rid=mCurriculumEtLocation",
+      "text=请输入地点",
+      "rid=mCurriculumLlRemark",
+      "text=备注",
+      "rid=mCurriculumEtRemark",
+      "text=请输入备注",
+      "rid=mCurriculumLlNormalLayout",
+      "rid=mCurriculumReminderTypeCustom",
+      "text=15分钟前",
+      "rid=mCurriculumRvTime",
+      "rid=curriculum_ll_item",
+      "rid=mCurriculumTvTimeFrame",
+      "text=时段1",
+      "rid=mCurriculumLlStartLayout",
+      "text=开始时间",
+      "rid=mCurriculumTvStartDate",
+      "text=2026年10月9日 周五 19:59",
+      "desc=开始日期",
+      "rid=mCurriculumLlEndLayout",
+      "text=结束时间",
+      "rid=mCurriculumTvEndDate",
+      "text=2026年10月9日 周五 20:44",
+      "desc=结束日期",
+      "rid=mCurriculumLlRepeatLayout",
+      "text=重复",
+      "rid=mCurriculumTvRepeatRule",
+      "text=不重复",
+      "desc=重复活动"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\376\\step1039\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\376\\step1039\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\376\\step1039\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          162,
+          203
+        ],
+        "t": "新建事件",
+        "r": "backtext"
+      },
+      {
+        "c": [
+          2847,
+          203
+        ],
+        "t": "完成",
+        "r": "save_view"
+      },
+      {
+        "c": [
+          2128,
+          469
+        ],
+        "t": "请输入课程名称",
+        "r": "mCurriculumTvTitle"
+      },
+      {
+        "c": [
+          2200,
+          642
+        ],
+        "t": "请输入地点",
+        "r": "mCurriculumEtLocation"
+      },
+      {
+        "c": [
+          2200,
+          815
+        ],
+        "t": "请输入备注",
+        "r": "mCurriculumEtRemark"
+      },
+      {
+        "c": [
+          2128,
+          1335
+        ],
+        "t": "2026年10月9日 周五 19:59",
+        "r": "mCurriculumLlStartLayout"
+      },
+      {
+        "c": [
+          2128,
+          1508
+        ],
+        "t": "2026年10月9日 周五 20:44",
+        "r": "mCurriculumLlEndLayout"
+      },
+      {
+        "c": [
+          608,
+          472
+        ],
+        "t": "提醒"
+      },
+      {
+        "c": [
+          608,
+          651
+        ],
+        "t": "日程"
+      },
+      {
+        "c": [
+          608,
+          830
+        ],
+        "t": "课程"
+      },
+      {
+        "c": [
+          608,
+          1009
+        ],
+        "t": "倒数日"
+      },
+      {
+        "c": [
+          608,
+          1188
+        ],
+        "t": "生日"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          162,
+          203
+        ],
+        "r": "backtext"
+      },
+      {
+        "i": 1,
+        "c": [
+          2847,
+          203
+        ],
+        "t": "完成",
+        "r": "save_view"
+      },
+      {
+        "i": 2,
+        "c": [
+          608,
+          472
+        ]
+      },
+      {
+        "i": 3,
+        "c": [
+          608,
+          651
+        ]
+      },
+      {
+        "i": 4,
+        "c": [
+          608,
+          830
+        ]
+      },
+      {
+        "i": 5,
+        "c": [
+          608,
+          1009
+        ]
+      },
+      {
+        "i": 6,
+        "c": [
+          608,
+          1188
+        ]
+      },
+      {
+        "i": 7,
+        "c": [
+          608,
+          1367
+        ]
+      },
+      {
+        "i": 8,
+        "c": [
+          2128,
+          1074
+        ],
+        "r": "pager_container",
+        "s": true
+      },
+      {
+        "i": 9,
+        "c": [
+          2128,
+          1074
+        ],
+        "s": true
+      },
+      {
+        "i": 10,
+        "c": [
+          2128,
+          1074
+        ],
+        "r": "curriculum_scroll_view",
+        "s": true
+      },
+      {
+        "i": 11,
+        "c": [
+          2128,
+          469
+        ],
+        "t": "请输入课程名称",
+        "r": "mCurriculumTvTitle"
+      },
+      {
+        "i": 12,
+        "c": [
+          2200,
+          642
+        ],
+        "t": "请输入地点",
+        "r": "mCurriculumEtLocation"
+      },
+      {
+        "i": 13,
+        "c": [
+          2200,
+          815
+        ],
+        "t": "请输入备注",
+        "r": "mCurriculumEtRemark"
+      },
+      {
+        "i": 14,
+        "c": [
+          2128,
+          988
+        ],
+        "r": "mCurriculumLlNormalLayout"
+      },
+      {
+        "i": 15,
+        "c": [
+          2128,
+          1335
+        ],
+        "r": "mCurriculumLlStartLayout"
+      },
+      {
+        "i": 16,
+        "c": [
+          2128,
+          1508
+        ],
+        "r": "mCurriculumLlEndLayout"
+      },
+      {
+        "i": 17,
+        "c": [
+          2128,
+          1680
+        ],
+        "r": "mCurriculumLlRepeatLayout"
+      }
+    ],
+    "nodes_count": 18,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2061
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "ee084284c59f4b1285f8935f52bf2e2e",
+    "measured_at": "2026-10-09T19:59:37.046",
+    "process_observed_ms": 4643.062,
+    "stages_ms": {
+      "device_import": 290.269,
+      "device_connect": 1063.18,
+      "action": 188.381,
+      "settle_wait": 600.487,
+      "permission": 1012.115,
+      "screenshot": 338.379,
+      "png_save": 192.462,
+      "ui_dump": 58.788,
+      "rotation": 237.077,
+      "xml_save": 6.966,
+      "foreground": 413.974,
+      "meta_save": 7.458,
+      "crash_detection": 87.825,
+      "screen_signature": 26.229,
+      "event_write": 1.504,
+      "node_summary": 2.381,
+      "node_labels": 1.878,
+      "next_targets": 0.146,
+      "serialization": 0.528
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 6390
+  },
+  "response_bytes": 6390,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2061
+    ]
+  }
+}

@@ -1,0 +1,1034 @@
+{
+  "call_id": "5441e690690e4248b3510e2e22777edf",
+  "session_id": 375,
+  "tool": "observe",
+  "started_at": "2026-10-09T19:40:04.843",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T19:40:10.524",
+  "wall_ms": 5673.345,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-09T19:40:10",
+    "package": "com.zui.calendar",
+    "activity": ".agenda.NewBuildList",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "5441e690690e4248b3510e2e22777edf",
+    "timing": {
+      "call_id": "5441e690690e4248b3510e2e22777edf",
+      "measured_at": "2026-10-09T19:40:10.318",
+      "process_observed_ms": 3749.589,
+      "stages_ms": {
+        "device_import": 322.215,
+        "device_connect": 1108.371,
+        "permission": 1008.724,
+        "screenshot": 365.633,
+        "png_save": 113.096,
+        "ui_dump": 154.664,
+        "rotation": 189.105,
+        "xml_save": 4.302,
+        "foreground": 412.676
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=dashLine",
+      "rid=build_list_content",
+      "rid=toolbar",
+      "rid=backtext",
+      "rid=toolbar_title",
+      "text=纵览",
+      "rid=action_menu_view",
+      "rid=new_build_action_today",
+      "desc=更多选项",
+      "rid=sixpage",
+      "rid=landTabs",
+      "rid=all_layoutx",
+      "rid=allx",
+      "rid=all_tvx",
+      "text=全部",
+      "rid=reminder_layoutx",
+      "rid=reminderx",
+      "rid=reminder_tvx",
+      "text=提醒",
+      "rid=event_layoutx",
+      "rid=eventx",
+      "rid=event_tvx",
+      "text=日程",
+      "rid=curriculum_layoutx",
+      "rid=curriculumx",
+      "rid=curriculum_tvx",
+      "text=课程",
+      "rid=countdown_layoutx",
+      "rid=countdownx",
+      "rid=countdown_tvx",
+      "text=倒数日",
+      "rid=birthday_layoutx",
+      "rid=birthdayx",
+      "rid=birthday_tvx",
+      "text=生日",
+      "rid=creditcard_layoutx",
+      "rid=creditcardx",
+      "rid=creditcard_tvx",
+      "text=纪念日",
+      "rid=trip_layoutx",
+      "rid=tripx",
+      "rid=trip_tvx",
+      "text=出行",
+      "rid=pager",
+      "rid=agendaRefreshView",
+      "rid=agendaRv",
+      "rid=head_layout",
+      "rid=date_left",
+      "text=2026年 10月9日（八月廿九）周五",
+      "rid=click_layout",
+      "rid=time1",
+      "text=全天",
+      "rid=line",
+      "rid=title",
+      "text=张三",
+      "text=纵览生日A",
+      "text=2026年 11月17日（十月初九）周二",
+      "text=测试生日A",
+      "rid=bottom_layout",
+      "rid=bottom_tv",
+      "text=加载2027年事件"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\375\\step0970\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\375\\step0970\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\375\\step0970\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          162,
+          203
+        ],
+        "t": "纵览",
+        "r": "backtext"
+      },
+      {
+        "c": [
+          316,
+          203
+        ],
+        "t": "纵览",
+        "r": "toolbar_title"
+      },
+      {
+        "c": [
+          1520,
+          1102
+        ],
+        "t": "2026年 11月17日（十月初九）周二",
+        "r": "sixpage"
+      },
+      {
+        "c": [
+          608,
+          1102
+        ],
+        "t": "倒数日",
+        "r": "landTabs"
+      },
+      {
+        "c": [
+          608,
+          388
+        ],
+        "t": "全部",
+        "r": "all_layoutx"
+      },
+      {
+        "c": [
+          165,
+          388
+        ],
+        "t": "全部",
+        "r": "allx"
+      },
+      {
+        "c": [
+          338,
+          387
+        ],
+        "t": "全部",
+        "r": "all_tvx"
+      },
+      {
+        "c": [
+          608,
+          565
+        ],
+        "t": "提醒",
+        "r": "reminder_layoutx"
+      },
+      {
+        "c": [
+          165,
+          565
+        ],
+        "t": "提醒",
+        "r": "reminderx"
+      },
+      {
+        "c": [
+          338,
+          564
+        ],
+        "t": "提醒",
+        "r": "reminder_tvx"
+      },
+      {
+        "c": [
+          608,
+          742
+        ],
+        "t": "日程",
+        "r": "event_layoutx"
+      },
+      {
+        "c": [
+          165,
+          742
+        ],
+        "t": "日程",
+        "r": "eventx"
+      }
+    ],
+    "nodes": [
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "com.zui.calendar:id/action_bar_root"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "android:id/content"
+      },
+      {
+        "bounds": [
+          0,
+          107,
+          1216,
+          1904
+        ],
+        "center": [
+          608,
+          1005
+        ],
+        "rid": "com.zui.calendar:id/dashLine"
+      },
+      {
+        "bounds": [
+          0,
+          107,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          1005
+        ],
+        "rid": "com.zui.calendar:id/build_list_content"
+      },
+      {
+        "bounds": [
+          0,
+          107,
+          3040,
+          300
+        ],
+        "center": [
+          1520,
+          203
+        ],
+        "rid": "com.zui.calendar:id/toolbar"
+      },
+      {
+        "bounds": [
+          118,
+          159,
+          206,
+          247
+        ],
+        "center": [
+          162,
+          203
+        ],
+        "rid": "com.zui.calendar:id/backtext",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          250,
+          156,
+          382,
+          251
+        ],
+        "center": [
+          316,
+          203
+        ],
+        "rid": "com.zui.calendar:id/toolbar_title",
+        "text": "纵览"
+      },
+      {
+        "bounds": [
+          2671,
+          126,
+          2897,
+          280
+        ],
+        "center": [
+          2784,
+          203
+        ],
+        "rid": "com.zui.calendar:id/action_menu_view"
+      },
+      {
+        "bounds": [
+          2671,
+          137,
+          2809,
+          269
+        ],
+        "center": [
+          2740,
+          203
+        ],
+        "rid": "com.zui.calendar:id/new_build_action_today",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          2809,
+          126,
+          2897,
+          280
+        ],
+        "center": [
+          2853,
+          203
+        ],
+        "desc": "更多选项",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          0,
+          300,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          1102
+        ],
+        "rid": "com.zui.calendar:id/sixpage"
+      },
+      {
+        "bounds": [
+          0,
+          300,
+          1216,
+          1904
+        ],
+        "center": [
+          608,
+          1102
+        ],
+        "rid": "com.zui.calendar:id/landTabs"
+      },
+      {
+        "bounds": [
+          0,
+          300,
+          1216,
+          476
+        ],
+        "center": [
+          608,
+          388
+        ],
+        "rid": "com.zui.calendar:id/all_layoutx",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          121,
+          344,
+          209,
+          432
+        ],
+        "center": [
+          165,
+          388
+        ],
+        "rid": "com.zui.calendar:id/allx"
+      },
+      {
+        "bounds": [
+          283,
+          348,
+          393,
+          427
+        ],
+        "center": [
+          338,
+          387
+        ],
+        "rid": "com.zui.calendar:id/all_tvx",
+        "text": "全部"
+      },
+      {
+        "bounds": [
+          0,
+          477,
+          1216,
+          653
+        ],
+        "center": [
+          608,
+          565
+        ],
+        "rid": "com.zui.calendar:id/reminder_layoutx",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          121,
+          521,
+          209,
+          609
+        ],
+        "center": [
+          165,
+          565
+        ],
+        "rid": "com.zui.calendar:id/reminderx"
+      },
+      {
+        "bounds": [
+          283,
+          525,
+          393,
+          604
+        ],
+        "center": [
+          338,
+          564
+        ],
+        "rid": "com.zui.calendar:id/reminder_tvx",
+        "text": "提醒"
+      },
+      {
+        "bounds": [
+          0,
+          654,
+          1216,
+          830
+        ],
+        "center": [
+          608,
+          742
+        ],
+        "rid": "com.zui.calendar:id/event_layoutx",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          121,
+          698,
+          209,
+          786
+        ],
+        "center": [
+          165,
+          742
+        ],
+        "rid": "com.zui.calendar:id/eventx"
+      },
+      {
+        "bounds": [
+          283,
+          702,
+          393,
+          781
+        ],
+        "center": [
+          338,
+          741
+        ],
+        "rid": "com.zui.calendar:id/event_tvx",
+        "text": "日程"
+      },
+      {
+        "bounds": [
+          0,
+          831,
+          1216,
+          1007
+        ],
+        "center": [
+          608,
+          919
+        ],
+        "rid": "com.zui.calendar:id/curriculum_layoutx",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          121,
+          875,
+          209,
+          963
+        ],
+        "center": [
+          165,
+          919
+        ],
+        "rid": "com.zui.calendar:id/curriculumx"
+      },
+      {
+        "bounds": [
+          283,
+          879,
+          393,
+          958
+        ],
+        "center": [
+          338,
+          918
+        ],
+        "rid": "com.zui.calendar:id/curriculum_tvx",
+        "text": "课程"
+      },
+      {
+        "bounds": [
+          0,
+          1008,
+          1216,
+          1184
+        ],
+        "center": [
+          608,
+          1096
+        ],
+        "rid": "com.zui.calendar:id/countdown_layoutx",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          121,
+          1052,
+          209,
+          1140
+        ],
+        "center": [
+          165,
+          1096
+        ],
+        "rid": "com.zui.calendar:id/countdownx"
+      },
+      {
+        "bounds": [
+          283,
+          1056,
+          448,
+          1135
+        ],
+        "center": [
+          365,
+          1095
+        ],
+        "rid": "com.zui.calendar:id/countdown_tvx",
+        "text": "倒数日"
+      },
+      {
+        "bounds": [
+          0,
+          1185,
+          1216,
+          1361
+        ],
+        "center": [
+          608,
+          1273
+        ],
+        "rid": "com.zui.calendar:id/birthday_layoutx",
+        "clickable": true,
+        "selected": true
+      },
+      {
+        "bounds": [
+          121,
+          1229,
+          209,
+          1317
+        ],
+        "center": [
+          165,
+          1273
+        ],
+        "rid": "com.zui.calendar:id/birthdayx",
+        "selected": true
+      },
+      {
+        "bounds": [
+          283,
+          1233,
+          393,
+          1312
+        ],
+        "center": [
+          338,
+          1272
+        ],
+        "rid": "com.zui.calendar:id/birthday_tvx",
+        "text": "生日",
+        "selected": true
+      },
+      {
+        "bounds": [
+          0,
+          1362,
+          1216,
+          1538
+        ],
+        "center": [
+          608,
+          1450
+        ],
+        "rid": "com.zui.calendar:id/creditcard_layoutx",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          121,
+          1406,
+          209,
+          1494
+        ],
+        "center": [
+          165,
+          1450
+        ],
+        "rid": "com.zui.calendar:id/creditcardx"
+      },
+      {
+        "bounds": [
+          283,
+          1410,
+          448,
+          1489
+        ],
+        "center": [
+          365,
+          1449
+        ],
+        "rid": "com.zui.calendar:id/creditcard_tvx",
+        "text": "纪念日"
+      },
+      {
+        "bounds": [
+          0,
+          1539,
+          1216,
+          1715
+        ],
+        "center": [
+          608,
+          1627
+        ],
+        "rid": "com.zui.calendar:id/trip_layoutx",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          121,
+          1583,
+          209,
+          1671
+        ],
+        "center": [
+          165,
+          1627
+        ],
+        "rid": "com.zui.calendar:id/tripx"
+      },
+      {
+        "bounds": [
+          283,
+          1587,
+          393,
+          1666
+        ],
+        "center": [
+          338,
+          1626
+        ],
+        "rid": "com.zui.calendar:id/trip_tvx",
+        "text": "出行"
+      },
+      {
+        "bounds": [
+          1216,
+          300,
+          3040,
+          1904
+        ],
+        "center": [
+          2128,
+          1102
+        ],
+        "rid": "com.zui.calendar:id/pager",
+        "scrollable": true
+      },
+      {
+        "bounds": [
+          1216,
+          300,
+          3040,
+          1904
+        ],
+        "center": [
+          2128,
+          1102
+        ],
+        "rid": "com.zui.calendar:id/agendaRefreshView",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1216,
+          300,
+          3040,
+          1904
+        ],
+        "center": [
+          2128,
+          1102
+        ],
+        "rid": "com.zui.calendar:id/agendaRv"
+      },
+      {
+        "bounds": [
+          1216,
+          300,
+          3040,
+          473
+        ],
+        "center": [
+          2128,
+          386
+        ],
+        "rid": "com.zui.calendar:id/head_layout"
+      },
+      {
+        "bounds": [
+          1304,
+          356,
+          1927,
+          416
+        ],
+        "center": [
+          1615,
+          386
+        ],
+        "rid": "com.zui.calendar:id/date_left",
+        "text": "2026年 10月9日（八月廿九）周五"
+      },
+      {
+        "bounds": [
+          1304,
+          473,
+          2919,
+          673
+        ],
+        "center": [
+          2111,
+          573
+        ],
+        "rid": "com.zui.calendar:id/click_layout",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1370,
+          535,
+          1458,
+          611
+        ],
+        "center": [
+          1414,
+          573
+        ],
+        "rid": "com.zui.calendar:id/time1",
+        "text": "全天"
+      },
+      {
+        "bounds": [
+          1513,
+          517,
+          1514,
+          629
+        ],
+        "center": [
+          1513,
+          573
+        ],
+        "rid": "com.zui.calendar:id/line"
+      },
+      {
+        "bounds": [
+          1569,
+          533,
+          1679,
+          612
+        ],
+        "center": [
+          1624,
+          572
+        ],
+        "rid": "com.zui.calendar:id/title",
+        "text": "张三"
+      },
+      {
+        "bounds": [
+          1304,
+          756,
+          2919,
+          956
+        ],
+        "center": [
+          2111,
+          856
+        ],
+        "rid": "com.zui.calendar:id/click_layout",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1370,
+          818,
+          1458,
+          894
+        ],
+        "center": [
+          1414,
+          856
+        ],
+        "rid": "com.zui.calendar:id/time1",
+        "text": "全天"
+      },
+      {
+        "bounds": [
+          1513,
+          800,
+          1514,
+          912
+        ],
+        "center": [
+          1513,
+          856
+        ],
+        "rid": "com.zui.calendar:id/line"
+      },
+      {
+        "bounds": [
+          1569,
+          816,
+          1827,
+          895
+        ],
+        "center": [
+          1698,
+          855
+        ],
+        "rid": "com.zui.calendar:id/title",
+        "text": "纵览生日A"
+      },
+      {
+        "bounds": [
+          1216,
+          1039,
+          3040,
+          1212
+        ],
+        "center": [
+          2128,
+          1125
+        ],
+        "rid": "com.zui.calendar:id/head_layout"
+      },
+      {
+        "bounds": [
+          1304,
+          1095,
+          1926,
+          1155
+        ],
+        "center": [
+          1615,
+          1125
+        ],
+        "rid": "com.zui.calendar:id/date_left",
+        "text": "2026年 11月17日（十月初九）周二"
+      },
+      {
+        "bounds": [
+          1304,
+          1212,
+          2919,
+          1412
+        ],
+        "center": [
+          2111,
+          1312
+        ],
+        "rid": "com.zui.calendar:id/click_layout",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1370,
+          1274,
+          1458,
+          1350
+        ],
+        "center": [
+          1414,
+          1312
+        ],
+        "rid": "com.zui.calendar:id/time1",
+        "text": "全天"
+      },
+      {
+        "bounds": [
+          1513,
+          1256,
+          1514,
+          1368
+        ],
+        "center": [
+          1513,
+          1312
+        ],
+        "rid": "com.zui.calendar:id/line"
+      },
+      {
+        "bounds": [
+          1569,
+          1272,
+          1827,
+          1351
+        ],
+        "center": [
+          1698,
+          1311
+        ],
+        "rid": "com.zui.calendar:id/title",
+        "text": "测试生日A"
+      },
+      {
+        "bounds": [
+          1304,
+          1495,
+          2919,
+          1605
+        ],
+        "center": [
+          2111,
+          1550
+        ],
+        "rid": "com.zui.calendar:id/bottom_layout",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1960,
+          1520,
+          2262,
+          1580
+        ],
+        "center": [
+          2111,
+          1550
+        ],
+        "rid": "com.zui.calendar:id/bottom_tv",
+        "text": "加载2027年事件"
+      }
+    ],
+    "nodes_count": 57,
+    "nodes_mode": "full",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      1992
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "5441e690690e4248b3510e2e22777edf",
+    "measured_at": "2026-10-09T19:40:10.440",
+    "process_observed_ms": 3871.744,
+    "stages_ms": {
+      "device_import": 322.215,
+      "device_connect": 1108.371,
+      "permission": 1008.724,
+      "screenshot": 365.633,
+      "png_save": 113.096,
+      "ui_dump": 154.664,
+      "rotation": 189.105,
+      "xml_save": 4.302,
+      "foreground": 412.676,
+      "meta_save": 3.729,
+      "screen_signature": 24.618,
+      "crash_detection": 82.12,
+      "event_write": 1.276,
+      "node_summary": 1.356,
+      "node_labels": 0.991,
+      "next_targets": 0.158,
+      "serialization": 0.642
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 16295
+  },
+  "response_bytes": 16295,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1992
+    ]
+  }
+}

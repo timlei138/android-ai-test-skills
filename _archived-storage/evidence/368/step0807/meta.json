@@ -1,0 +1,40 @@
+{
+  "ts": "2026-10-09T18:35:23",
+  "package": "com.zui.calendar",
+  "activity": ".event.edit.EditEventActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "input",
+    "x": 1520,
+    "y": 1817,
+    "text": "编辑后的备注XYZ",
+    "mode": "overwrite",
+    "via": "event_description",
+    "why": "改备注"
+  },
+  "call_id": "d3ef28ce708a4b6e85e051c80baced56",
+  "timing": {
+    "call_id": "d3ef28ce708a4b6e85e051c80baced56",
+    "measured_at": "2026-10-09T18:35:23.463",
+    "process_observed_ms": 5502.732,
+    "stages_ms": {
+      "device_import": 315.231,
+      "device_connect": 1073.347,
+      "action": 906.1,
+      "input_focus_wait": 300.176,
+      "settle_wait": 600.487,
+      "permission": 943.725,
+      "screenshot": 485.951,
+      "png_save": 128.289,
+      "ui_dump": 84.799,
+      "rotation": 208.915,
+      "xml_save": 5.93,
+      "foreground": 344.001
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

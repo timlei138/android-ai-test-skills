@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-14T14:34:39",
+  "package": "com.zui.launcher",
+  "activity": ".settings.ZuiLauncherSettings",
+  "rotation": 1,
+  "size": [
+    3840,
+    2560
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2470,
+    "y": 2288,
+    "via": "rid=btn_settings",
+    "why": "进桌面设置开负一屏"
+  },
+  "call_id": "b20cf88dac134f20bf998056e0e63851",
+  "timing": {
+    "call_id": "b20cf88dac134f20bf998056e0e63851",
+    "measured_at": "2026-10-14T14:34:39.907",
+    "process_observed_ms": 4760.188,
+    "stages_ms": {
+      "device_import": 423.249,
+      "device_connect": 1038.044,
+      "action": 162.27,
+      "settle_wait": 600.405,
+      "permission": 1179.745,
+      "screenshot": 425.995,
+      "png_save": 289.032,
+      "ui_dump": 85.241,
+      "rotation": 170.396,
+      "xml_save": 4.244,
+      "foreground": 275.596
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

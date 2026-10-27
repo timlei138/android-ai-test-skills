@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T14:35:01",
+  "package": "com.zui.calendar",
+  "activity": ".AllInOneActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2835,
+    "y": 203,
+    "via": "iv_more(更多)",
+    "why": "用例169步骤1：更多菜单"
+  },
+  "call_id": "53158892cb80412ba4dd7c11ad91bd27",
+  "timing": {
+    "call_id": "53158892cb80412ba4dd7c11ad91bd27",
+    "measured_at": "2026-10-15T14:35:01.146",
+    "process_observed_ms": 14203.081,
+    "stages_ms": {
+      "device_import": 406.326,
+      "device_connect": 1190.845,
+      "action": 195.238,
+      "settle_wait": 600.212,
+      "permission": 5345.227,
+      "screenshot": 376.855,
+      "png_save": 215.683,
+      "ui_dump": 71.517,
+      "rotation": 273.424,
+      "xml_save": 5.274,
+      "foreground": 5422.014
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

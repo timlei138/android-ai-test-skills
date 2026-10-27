@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-10T16:06:07",
+  "package": "com.zui.calendar",
+  "activity": ".settings.GeneralSettingsActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2697,
+    "y": 854,
+    "via": "menu-settings",
+    "why": "settings"
+  },
+  "call_id": "158a6fc7ed844492870d2b3668dc9764",
+  "timing": {
+    "call_id": "158a6fc7ed844492870d2b3668dc9764",
+    "measured_at": "2026-10-10T16:06:07.586",
+    "process_observed_ms": 4394.995,
+    "stages_ms": {
+      "device_import": 312.497,
+      "device_connect": 1152.579,
+      "action": 191.499,
+      "settle_wait": 600.418,
+      "permission": 904.187,
+      "screenshot": 278.615,
+      "png_save": 167.948,
+      "ui_dump": 71.504,
+      "rotation": 278.374,
+      "xml_save": 14.358,
+      "foreground": 347.324
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

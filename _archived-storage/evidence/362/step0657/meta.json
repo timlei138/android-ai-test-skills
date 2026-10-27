@@ -1,0 +1,39 @@
+{
+  "ts": "2026-10-09T17:35:30",
+  "package": "com.zui.calendar",
+  "activity": ".newbuild.NewBuildActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "input",
+    "x": 2128,
+    "y": 469,
+    "text": "张三",
+    "mode": "overwrite",
+    "via": "birthdayTvName",
+    "why": "验证焦点是否已在姓名框"
+  },
+  "call_id": "e9830e62550046c083fdd426089b1d5d",
+  "timing": {
+    "call_id": "e9830e62550046c083fdd426089b1d5d",
+    "measured_at": "2026-10-09T17:35:30.405",
+    "process_observed_ms": 4898.469,
+    "stages_ms": {
+      "device_import": 311.638,
+      "device_connect": 1086.31,
+      "action": 811.422,
+      "settle_wait": 600.651,
+      "permission": 856.066,
+      "screenshot": 286.22,
+      "png_save": 161.267,
+      "ui_dump": 74.522,
+      "rotation": 172.179,
+      "xml_save": 7.407,
+      "foreground": 440.701
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

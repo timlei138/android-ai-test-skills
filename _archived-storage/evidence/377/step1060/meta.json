@@ -1,0 +1,28 @@
+{
+  "ts": "2026-10-09T20:06:57",
+  "package": "com.zui.calendar",
+  "activity": ".almanac.AlmanacActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "call_id": "31329b4b70a744c18dac81aa80d1183f",
+  "timing": {
+    "call_id": "31329b4b70a744c18dac81aa80d1183f",
+    "measured_at": "2026-10-09T20:06:57.652",
+    "process_observed_ms": 3662.848,
+    "stages_ms": {
+      "device_import": 321.669,
+      "device_connect": 1122.738,
+      "permission": 967.071,
+      "screenshot": 326.558,
+      "png_save": 106.005,
+      "ui_dump": 96.411,
+      "rotation": 220.625,
+      "xml_save": 3.954,
+      "foreground": 426.431
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

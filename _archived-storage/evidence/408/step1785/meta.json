@@ -1,0 +1,39 @@
+{
+  "ts": "2026-10-10T14:27:11",
+  "package": "com.zui.calendar",
+  "activity": ".newbuild.NewBuildActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "input",
+    "x": 2128,
+    "y": 469,
+    "text": "W146大量文字测试",
+    "mode": "overwrite",
+    "why": "title"
+  },
+  "call_id": "cc769ed4b94b4140b5aa7a22326e4021",
+  "timing": {
+    "call_id": "cc769ed4b94b4140b5aa7a22326e4021",
+    "measured_at": "2026-10-10T14:27:11.724",
+    "process_observed_ms": 5585.808,
+    "stages_ms": {
+      "device_import": 293.536,
+      "device_connect": 1100.678,
+      "action": 1101.025,
+      "input_focus_wait": 300.429,
+      "settle_wait": 600.296,
+      "permission": 937.969,
+      "screenshot": 326.422,
+      "png_save": 132.408,
+      "ui_dump": 52.38,
+      "rotation": 284.389,
+      "xml_save": 2.407,
+      "foreground": 358.261
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

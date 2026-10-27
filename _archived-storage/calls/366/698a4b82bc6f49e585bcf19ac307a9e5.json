@@ -1,0 +1,51 @@
+{
+  "call_id": "698a4b82bc6f49e585bcf19ac307a9e5",
+  "session_id": 366,
+  "tool": "vision",
+  "started_at": "2026-10-09T18:02:10.290",
+  "status": "ended",
+  "expects_event": false,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T18:02:14.486",
+  "wall_ms": 4188.098,
+  "result": {
+    "ok": true,
+    "text": "1) 页面底部有 **3 个按钮**，它们都是图标按钮，没有文字。从左到右依次是：\n- 删除（垃圾桶图标）\n- 编辑（方框+铅笔图标）\n- 分享（方框+向外箭头图标）\n\n2) 页面上显示的信息项如下：\n- 页面标题：日程详情\n- 事件标题：备注测试事件A\n- 日期：今天\n- 时间：17:44–18:44\n- 提醒：15分钟前\n- 重复：不重复\n- 日历/账户：本地日程\n- 备注：这是我的测试备注内容ABC",
+    "usage": {
+      "prompt_tokens": 1012,
+      "completion_tokens": 333,
+      "total_tokens": 1345,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 198
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 1012
+    },
+    "hint": "视觉模型输出是辅助判据，PASS/FAIL 结论仍需结合 dump/OCR 证据",
+    "call_id": "698a4b82bc6f49e585bcf19ac307a9e5",
+    "event_ids": [],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "698a4b82bc6f49e585bcf19ac307a9e5",
+    "measured_at": "2026-10-09T18:02:14.460",
+    "process_observed_ms": 2440.987,
+    "stages_ms": {
+      "serialization": 0.096
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 1024
+  },
+  "response_bytes": 1024,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": []
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-10T12:19:18",
+  "package": "com.zui.calendar",
+  "activity": ".settings.LenovoSettingsActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1660,
+    "via": "自定义时区 row",
+    "why": "open-tz"
+  },
+  "call_id": "81beaa30f7144cac836f33eb9eec2e12",
+  "timing": {
+    "call_id": "81beaa30f7144cac836f33eb9eec2e12",
+    "measured_at": "2026-10-10T12:19:18.702",
+    "process_observed_ms": 4635.605,
+    "stages_ms": {
+      "device_import": 304.991,
+      "device_connect": 1113.412,
+      "action": 189.455,
+      "settle_wait": 600.183,
+      "permission": 1114.083,
+      "screenshot": 336.738,
+      "png_save": 234.963,
+      "ui_dump": 68.109,
+      "rotation": 217.06,
+      "xml_save": 6.942,
+      "foreground": 354.385
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

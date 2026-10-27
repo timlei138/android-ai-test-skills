@@ -1,0 +1,205 @@
+{
+  "call_id": "57e2a696cad74842bd7aa86621b6bb6f",
+  "session_id": 408,
+  "tool": "act",
+  "started_at": "2026-10-10T14:48:40.011",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T14:48:46.903",
+  "wall_ms": 6885.511,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 2300,
+      "y": 1729,
+      "via": "W146大文本",
+      "why": "open-event"
+    },
+    "ts": "2026-10-10T14:48:46",
+    "package": "com.zui.calendar",
+    "activity": ".reminder.ReminderInfoActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "57e2a696cad74842bd7aa86621b6bb6f",
+    "timing": {
+      "call_id": "57e2a696cad74842bd7aa86621b6bb6f",
+      "measured_at": "2026-10-10T14:48:46.637",
+      "process_observed_ms": 4790.172,
+      "stages_ms": {
+        "device_import": 297.017,
+        "device_connect": 1153.232,
+        "action": 230.316,
+        "settle_wait": 600.218,
+        "permission": 847.923,
+        "screenshot": 508.974,
+        "png_save": 289.118,
+        "ui_dump": 75.616,
+        "rotation": 313.696,
+        "xml_save": 2.43,
+        "foreground": 375.575
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "rid=toolbar_title",
+      "text=提醒详情",
+      "rid=main_frame",
+      "rid=reminderData",
+      "rid=event_info_scroll_view",
+      "rid=icon_type",
+      "rid=reminderInfoTvTitle",
+      "text=W146大文本",
+      "rid=reminderInfoTvDate",
+      "text=2026年10月10日 周六 14:45",
+      "rid=divider_line_view",
+      "rid=reminderInfoLlHead",
+      "text=提醒:",
+      "rid=reminderInfoTvReminderLabel",
+      "text=任务发生时",
+      "rid=reminderInfoTvOtherDate",
+      "text=不重复",
+      "rid=reminderInfoLlDescription",
+      "rid=reminderInfoTvDescription",
+      "text=第01段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第02段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第03段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第04段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第05段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第06段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第07段: 这是一段",
+      "rid=button_layout",
+      "rid=bottom_bar"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\408\\step1828\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\408\\step1828\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\408\\step1828\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1520,
+          562
+        ],
+        "t": "任务发生时",
+        "r": "reminderInfoLlHead"
+      },
+      {
+        "c": [
+          107,
+          203
+        ],
+        "t": "提醒详情"
+      },
+      {
+        "c": [
+          1520,
+          1018
+        ],
+        "r": "event_info_scroll_view",
+        "s": true
+      },
+      {
+        "c": [
+          897,
+          1805
+        ]
+      },
+      {
+        "c": [
+          2142,
+          1805
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          107,
+          203
+        ]
+      },
+      {
+        "i": 1,
+        "c": [
+          1520,
+          1018
+        ],
+        "r": "event_info_scroll_view",
+        "s": true
+      },
+      {
+        "i": 2,
+        "c": [
+          1520,
+          562
+        ],
+        "r": "reminderInfoLlHead"
+      },
+      {
+        "i": 3,
+        "c": [
+          897,
+          1805
+        ]
+      },
+      {
+        "i": 4,
+        "c": [
+          2142,
+          1805
+        ]
+      }
+    ],
+    "nodes_count": 5,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2849
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "57e2a696cad74842bd7aa86621b6bb6f",
+    "measured_at": "2026-10-10T14:48:46.803",
+    "process_observed_ms": 4956.357,
+    "stages_ms": {
+      "device_import": 297.017,
+      "device_connect": 1153.232,
+      "action": 230.316,
+      "settle_wait": 600.218,
+      "permission": 847.923,
+      "screenshot": 508.974,
+      "png_save": 289.118,
+      "ui_dump": 75.616,
+      "rotation": 313.696,
+      "xml_save": 2.43,
+      "foreground": 375.575,
+      "meta_save": 5.295,
+      "crash_detection": 122.716,
+      "screen_signature": 28.722,
+      "event_write": 3.376,
+      "node_summary": 0.776,
+      "node_labels": 0.728,
+      "next_targets": 0.037,
+      "serialization": 0.205
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 5102
+  },
+  "response_bytes": 5102,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2849
+    ]
+  }
+}

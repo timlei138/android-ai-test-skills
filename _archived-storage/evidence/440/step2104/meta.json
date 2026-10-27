@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T11:40:59",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimetableListActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2754,
+    "y": 203,
+    "via": "rid=action_schedule",
+    "why": "用例185步骤4：进多选态"
+  },
+  "call_id": "616e351c34d6416d8da83f5bf9629d49",
+  "timing": {
+    "call_id": "616e351c34d6416d8da83f5bf9629d49",
+    "measured_at": "2026-10-15T11:40:59.740",
+    "process_observed_ms": 13993.868,
+    "stages_ms": {
+      "device_import": 394.028,
+      "device_connect": 1091.339,
+      "action": 196.157,
+      "settle_wait": 600.403,
+      "permission": 5312.327,
+      "screenshot": 391.52,
+      "png_save": 171.454,
+      "ui_dump": 84.491,
+      "rotation": 289.228,
+      "xml_save": 4.664,
+      "foreground": 5357.454
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

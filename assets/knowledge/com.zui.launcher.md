@@ -90,7 +90,7 @@
 
 负一屏（桌面左侧资讯页）的开关位置、坐标、`checked` 判定、以及
 "预授权弹窗在本机不可重现"的结论，都写在
-**`knowledge/com.zui.calendar.md` → 「⚠️ 负一屏（桌面左侧资讯页）相关」**一节。
+**`assets/knowledge/com.zui.calendar.md` → 「⚠️ 负一屏（桌面左侧资讯页）相关」**一节。
 
 > **为什么放在日历卡里**：这些结论最初是为「负一屏日历权限弹框」类用例摸出来的，
 > 当时顺手记在了被测包（日历）的卡上。
@@ -102,7 +102,7 @@
 
 ```bash
 # 直接定位那一节
-grep -n "负一屏" knowledge/com.zui.calendar.md
+grep -n "负一屏" assets/knowledge/com.zui.calendar.md
 ```
 
 ## 验证要点

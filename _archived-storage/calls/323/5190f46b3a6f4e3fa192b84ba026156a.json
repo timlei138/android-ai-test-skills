@@ -1,0 +1,145 @@
+{
+  "call_id": "5190f46b3a6f4e3fa192b84ba026156a",
+  "session_id": 323,
+  "tool": "act",
+  "started_at": "2026-10-09T11:13:00.539",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T11:13:06.961",
+  "wall_ms": 6414.172,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 2781,
+      "y": 203,
+      "via": "rid=action_curriculum_table_import t=导入课程表",
+      "why": "打开导入课程表入口"
+    },
+    "ts": "2026-10-09T11:13:06",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.display.TimetableActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "5190f46b3a6f4e3fa192b84ba026156a",
+    "timing": {
+      "call_id": "5190f46b3a6f4e3fa192b84ba026156a",
+      "measured_at": "2026-10-09T11:13:06.761",
+      "process_observed_ms": 4363.985,
+      "stages_ms": {
+        "device_import": 311.731,
+        "device_connect": 1114.587,
+        "action": 191.546,
+        "settle_wait": 600.233,
+        "permission": 845.907,
+        "screenshot": 353.607,
+        "png_save": 145.808,
+        "ui_dump": 78.264,
+        "rotation": 256.205,
+        "xml_save": 7.085,
+        "foreground": 371.076
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=tv_import_from_camera",
+      "text=拍照导入课程表",
+      "rid=tv_import_from_gallery",
+      "text=图库导入课程表"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\323\\step0085\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\323\\step0085\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\323\\step0085\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          2633,
+          356
+        ],
+        "t": "拍照导入课程表",
+        "r": "tv_import_from_camera"
+      },
+      {
+        "c": [
+          2633,
+          486
+        ],
+        "t": "图库导入课程表",
+        "r": "tv_import_from_gallery"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          2633,
+          356
+        ],
+        "t": "拍照导入课程表",
+        "r": "tv_import_from_camera"
+      },
+      {
+        "i": 1,
+        "c": [
+          2633,
+          486
+        ],
+        "t": "图库导入课程表",
+        "r": "tv_import_from_gallery"
+      }
+    ],
+    "nodes_count": 2,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      1095
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "5190f46b3a6f4e3fa192b84ba026156a",
+    "measured_at": "2026-10-09T11:13:06.881",
+    "process_observed_ms": 4484.491,
+    "stages_ms": {
+      "device_import": 311.731,
+      "device_connect": 1114.587,
+      "action": 191.546,
+      "settle_wait": 600.233,
+      "permission": 845.907,
+      "screenshot": 353.607,
+      "png_save": 145.808,
+      "ui_dump": 78.264,
+      "rotation": 256.205,
+      "xml_save": 7.085,
+      "foreground": 371.076,
+      "meta_save": 6.673,
+      "crash_detection": 78.856,
+      "screen_signature": 25.214,
+      "event_write": 3.286,
+      "node_summary": 0.383,
+      "node_labels": 0.307,
+      "next_targets": 0.011,
+      "serialization": 0.089
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 2539
+  },
+  "response_bytes": 2539,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1095
+    ]
+  }
+}

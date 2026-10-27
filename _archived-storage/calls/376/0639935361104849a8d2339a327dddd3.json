@@ -1,0 +1,403 @@
+{
+  "call_id": "0639935361104849a8d2339a327dddd3",
+  "session_id": 376,
+  "tool": "observe",
+  "started_at": "2026-10-09T19:57:08.087",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T19:57:13.473",
+  "wall_ms": 5379.341,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-09T19:57:13",
+    "package": "com.zui.calendar",
+    "activity": ".newbuild.NewBuildActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "0639935361104849a8d2339a327dddd3",
+    "timing": {
+      "call_id": "0639935361104849a8d2339a327dddd3",
+      "measured_at": "2026-10-09T19:57:13.279",
+      "process_observed_ms": 3493.823,
+      "stages_ms": {
+        "device_import": 332.613,
+        "device_connect": 1085.938,
+        "permission": 934.069,
+        "screenshot": 242.963,
+        "png_save": 74.771,
+        "ui_dump": 54.63,
+        "rotation": 290.956,
+        "xml_save": 6.313,
+        "foreground": 404.439
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=parentPanel",
+      "rid=topPanel",
+      "text=提醒",
+      "rid=contentPanel",
+      "rid=ring",
+      "rid=text1",
+      "text=不提醒",
+      "text=任务发生时",
+      "text=5分钟前",
+      "text=15分钟前",
+      "text=30分钟前",
+      "rid=divider",
+      "rid=buttonPanel",
+      "rid=button2",
+      "text=取消"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\376\\step1029\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\376\\step1029\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\376\\step1029\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1520,
+          988
+        ],
+        "t": "5分钟前",
+        "r": "content"
+      },
+      {
+        "c": [
+          1520,
+          988
+        ],
+        "t": "5分钟前",
+        "r": "parentPanel"
+      },
+      {
+        "c": [
+          1520,
+          514
+        ],
+        "t": "提醒",
+        "r": "topPanel"
+      },
+      {
+        "c": [
+          1520,
+          1022
+        ],
+        "t": "5分钟前",
+        "r": "contentPanel"
+      },
+      {
+        "c": [
+          1520,
+          1022
+        ],
+        "t": "5分钟前",
+        "r": "ring"
+      },
+      {
+        "c": [
+          1520,
+          705
+        ],
+        "t": "不提醒",
+        "r": "text1"
+      },
+      {
+        "c": [
+          1520,
+          843
+        ],
+        "t": "任务发生时",
+        "r": "text1"
+      },
+      {
+        "c": [
+          1520,
+          981
+        ],
+        "t": "5分钟前",
+        "r": "text1"
+      },
+      {
+        "c": [
+          1520,
+          1119
+        ],
+        "t": "15分钟前",
+        "r": "text1"
+      },
+      {
+        "c": [
+          1520,
+          1257
+        ],
+        "t": "30分钟前",
+        "r": "text1"
+      },
+      {
+        "c": [
+          1520,
+          1497
+        ],
+        "t": "取消",
+        "r": "buttonPanel"
+      },
+      {
+        "c": [
+          1520,
+          1497
+        ],
+        "t": "取消",
+        "r": "button2"
+      }
+    ],
+    "nodes": [
+      {
+        "bounds": [
+          970,
+          393,
+          2070,
+          1584
+        ],
+        "center": [
+          1520,
+          988
+        ],
+        "rid": "android:id/content"
+      },
+      {
+        "bounds": [
+          970,
+          393,
+          2070,
+          1584
+        ],
+        "center": [
+          1520,
+          988
+        ],
+        "rid": "com.zui.calendar:id/parentPanel"
+      },
+      {
+        "bounds": [
+          970,
+          393,
+          2070,
+          636
+        ],
+        "center": [
+          1520,
+          514
+        ],
+        "rid": "com.zui.calendar:id/topPanel"
+      },
+      {
+        "bounds": [
+          1465,
+          475,
+          1575,
+          554
+        ],
+        "center": [
+          1520,
+          514
+        ],
+        "text": "提醒"
+      },
+      {
+        "bounds": [
+          970,
+          636,
+          2070,
+          1409
+        ],
+        "center": [
+          1520,
+          1022
+        ],
+        "rid": "com.zui.calendar:id/contentPanel"
+      },
+      {
+        "bounds": [
+          970,
+          636,
+          2070,
+          1409
+        ],
+        "center": [
+          1520,
+          1022
+        ],
+        "rid": "android:id/ring"
+      },
+      {
+        "bounds": [
+          970,
+          636,
+          2070,
+          774
+        ],
+        "center": [
+          1520,
+          705
+        ],
+        "rid": "android:id/text1",
+        "text": "不提醒",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          970,
+          774,
+          2070,
+          912
+        ],
+        "center": [
+          1520,
+          843
+        ],
+        "rid": "android:id/text1",
+        "text": "任务发生时",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          970,
+          912,
+          2070,
+          1050
+        ],
+        "center": [
+          1520,
+          981
+        ],
+        "rid": "android:id/text1",
+        "text": "5分钟前",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          970,
+          1050,
+          2070,
+          1188
+        ],
+        "center": [
+          1520,
+          1119
+        ],
+        "rid": "android:id/text1",
+        "text": "15分钟前",
+        "clickable": true,
+        "checked": true
+      },
+      {
+        "bounds": [
+          970,
+          1188,
+          2070,
+          1326
+        ],
+        "center": [
+          1520,
+          1257
+        ],
+        "rid": "android:id/text1",
+        "text": "30分钟前",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          970,
+          1409,
+          2070,
+          1411
+        ],
+        "center": [
+          1520,
+          1410
+        ],
+        "rid": "com.zui.calendar:id/divider"
+      },
+      {
+        "bounds": [
+          970,
+          1411,
+          2070,
+          1584
+        ],
+        "center": [
+          1520,
+          1497
+        ],
+        "rid": "com.zui.calendar:id/buttonPanel"
+      },
+      {
+        "bounds": [
+          970,
+          1411,
+          2070,
+          1584
+        ],
+        "center": [
+          1520,
+          1497
+        ],
+        "rid": "android:id/button2",
+        "text": "取消",
+        "clickable": true
+      }
+    ],
+    "nodes_count": 14,
+    "nodes_mode": "full",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      2051
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "0639935361104849a8d2339a327dddd3",
+    "measured_at": "2026-10-09T19:57:13.395",
+    "process_observed_ms": 3613.911,
+    "stages_ms": {
+      "device_import": 332.613,
+      "device_connect": 1085.938,
+      "permission": 934.069,
+      "screenshot": 242.963,
+      "png_save": 74.771,
+      "ui_dump": 54.63,
+      "rotation": 290.956,
+      "xml_save": 6.313,
+      "foreground": 404.439,
+      "meta_save": 6.912,
+      "screen_signature": 27.362,
+      "crash_detection": 74.31,
+      "event_write": 1.564,
+      "node_summary": 0.918,
+      "node_labels": 0.593,
+      "next_targets": 0.053,
+      "serialization": 0.316
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 6115
+  },
+  "response_bytes": 6115,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2051
+    ]
+  }
+}

@@ -1,0 +1,307 @@
+# 用例程序化描述（Programmatic Case Spec）
+#
+# 用途：把"已验证成功的路径"沉淀成**可直接回放**的结构化文件。
+#       执行时不再由 AI 临场判断，只按本文件走。
+#
+# 与用例库的关系：一个 case 对应一个 yaml，文件名 = 用例标题。
+#   用例原文（步骤/预期）→ storage/sessions.db 的 cases.input
+#   本文件              → 用例的**可执行形态**
+#
+# ⚠️ 三条硬规矩（写本文件时务必遵守）：
+#   1. **定位一律用 rid/文案，坐标只作兜底**——换设备/换分辨率后坐标必失效。
+#   2. **on_fail 必须显式**——失败就是失败，**不允许**"换个入口再试试"。
+#   3. **判据必须是机器可判的**（rid/activity/文案），不接受"显示正常"这类主观描述。
+#
+# ⚠️ 第 4 条硬规矩（**活的 next vs 死的 YAML**，会话454 回放实测后加）：
+#   `next` 是**活的**：它只报告"当前这一屏实际能点什么"；YAML 是**死的**：
+#   它写死了"应该点哪个 rid"。两者对不上时**不会报错**，只会静默跑偏。
+#   三种失败形态（实测）：
+#     ① 目标 rid 当前屏不存在 -> 点击落在空处，activity 不变，**无任何报错**
+#        （会话454：设备停在时间设置页时点 iv_more，sig 里 iv_more=False，点空）
+#     ② 目标 rid 存在但位置不同 -> 若信任 YAML 里的坐标会**点到旁边的东西**，
+#        可能执行错误动作并改坏状态  ← 最危险
+#     ③ 目标 rid 存在但语义变了 -> 同一个 button1 在不同弹框里可能是"删除"/"确定"
+#   ⇒ **回放规则（必须遵守）**：
+#     a. 每个 step 执行前，先从**当前屏**的 next/nodes 里**按 rid（或 text/desc）查**该目标；
+#     b. 找到 -> 用**本次查到的位置**执行，**不要**抄本文件里的坐标；
+#     c. **找不到 -> 立即停，按该 step 的 on_fail 处理**（通常是 BLOCKED），
+#        **绝不**改用坐标硬点、也绝不"换个入口再试试"；
+#     d. 坐标**只在元素无 rid 且无 text/desc（自绘控件）时**才用，且必须按规则现算。
+#   一句话：**rid 是判据，坐标是注释。**
+#
+# ⚠️ 已废除 `coords_hint`（2026-10-15）：它写的是"当时的实测值"，既会变、又容易被当成权威直接抄。
+#    真实事故：会话465 抄了 llCourseTime 的坐标点，实际点到 llCourseWeeks，开错弹框白扔 2 次调用。
+#    ⇒ 有 rid/text 的一律按组合定位。
+#
+# ⚠️ 编码：本文件必须为 UTF-8（无 BOM）。经 GBK 管道写入会产生大量 '?'
+#    且 YAML **仍能解析**——即"合法但内容已毁"。保存后务必肉眼确认中文正常。
+
+meta:
+  case_id: 1
+  title: 联想日历_168_图库导入入口
+  package: com.zui.calendar
+  derived_from:
+    session: 435
+    status: PASS
+    device: TB323FU (51e8bf1c)
+    resolution: [3040, 1904]
+    date: "2026-10-15"
+
+# ── 执行须知（渲染到 MD 顶部，回放前必读）────────────────
+# 为什么写在这里而不是 SKILL.md：这些是**跟着这条用例走**的操作约束，
+# 不是通用规约。放 SKILL 里会被当背景噪音跳过，放这里才会在回放前被读到。
+playbook:
+  - title: "坑挂在步骤上，不放在文件级"
+    body: |
+      本文件的坑一律写在**它真正会出现的那一步**的 `pitfalls:` 下。
+      回放是**按步走**的 —— 跑到第 2 步时第 1 步的坑还在眼前，**信息被稀释**，
+      真正相关的那条反而看不见。**走到哪一步，就只看那一步的 `pitfalls`。**
+
+  - title: "工具层的坑（与 App 无关，知识卡里不一定有）"
+    body: |
+      这类坑不属于任何页面，是**工具或操作方式本身**的问题：
+      · ❌ `act input` 清空输入框会触发工具层崩溃
+        （`ADB_KEYBOARD_CLEAR_TEXT` → `ExtractedText.text on a null object reference`），
+        且崩溃后会话状态不明（`execution_state=may_have_executed`）
+        —— 按规约**禁止重放**，会话只能以 BLOCKED 收尾。
+      · ❌ 用 `swipe` 拨滚轮/滑列表：**有惯性会过冲**，来回震荡无法收敛。
+        重复手势一律用 `act tap --repeat N --gap MS`。
+      · ❌ 用 PowerShell 的 `for`/`foreach` 包 `run.py`：**中断即锁死会话**。
+      ⚠️ 实测教训：某次**连拨滚轮 37 次**才想起查卡，而知识卡那节标题叫
+      「弹框滚轮-上课时长循环」—— 从"我在拨滚轮"这个**现象根本检索不到它**。
+      ⇒ 检索知识卡时，用你脑子里的**现象词**（拨不准/过冲/没反应）换几个说法多 grep 几次。
+
+# ── 前置条件 ──────────────────────────────────────────
+# 分四类（2026-10-15 定）——**因为"能不能动手改 / 有没有损"是不同的几件事**：
+#   goto    🧭 导航：把 App 开到某界面。起点由 session start 的冷启动钉死在首页，故必写。
+#   clean   🧹 清数据：`pm clear` 回到首次使用态。**有损但稳定**，用例要求"干净"时用。
+#   prepare 🔧 准备：动手改设备状态（建课表/建课程）。**已有则跳过**（skip_if）。
+#   assert  🔒 断言：只能检查、改不了。不满足即 BLOCKED。
+# ⚠️ BLOCKED **只留给硬件/设备/严重到跑不下去的问题**。
+#    数据前提不满足 = **自己恢复**，不是 BLOCKED —— "不做与用例无关的动作"≠"任何状态变更都不做"，
+#    把设备恢复成用例要求的样子**正是用例要求的**（不恢复就根本没法测）。
+# ⚠️ 恢复手段的选择：看用例要的是**"干净"**还是**"有某个东西"**：
+#    要干净 → `pm clear`（全清但**稳定**，一定回到确定起点；逐个删课表脆、慢、还可能删不干净）
+#    要东西 → `prepare` 造出来（如 182 建空课表、183 建课程）
+# ⚠️ `pm clear` 后**首次打开会有授权流程** —— 这是固有结果，**顺着走完即可，不特殊处理**。
+preconditions:
+  - desc: 起点即日历首页（会话已冷启动复位）
+    type: goto
+    target: 日历首页（com.zui.calendar/.AllInOneActivity）
+    path: 冷启动后**必在日历首页**，无需导航。⚠️ 若冷启动后出现权限弹框/引导页/升级提示 —— 正常不会有（只有 `pm clear` 清过数据才会）；若**每次都出现**，说明它已是流程的一部分，应记入本用例并加一步关闭动作。
+    skip_if:
+      activity: .AllInOneActivity
+    on_fail: BLOCKED
+    verified_by: 会话465 ev#3616 冷启动后 observe 实测落在 .AllInOneActivity
+  - desc: 清理日历数据，回到首次使用态（用例原文前提明写「（清理APP数据）」）
+    type: clean
+    do: pm clear com.zui.calendar
+    skip_if:
+      timetable_state: empty
+    on_fail: BLOCKED
+    note: >
+      ⚠️ **本用例要的是"干净"，不是"没有课表"** —— 所以 `pm clear` 一次性回到首次使用态，
+      而不是逐个删课表（逐个删依赖界面操作、脆、慢、还可能删不干净）。
+      ⚠️ 清完后**首次打开会有授权流程**（权限说明框/引导页）—— 清数据的固有结果，
+      **顺着走完即可，不需要特殊处理**；若它每次出现，说明已是流程的一部分，记入本 YAML。
+      ⚠️ 本用例测的正是权限与导入入口，**不要预先 grant 权限**，让它自然弹。
+    verified_by: 会话466 实测：设备残留上一个用例建的课表 → 空态入口全不可见、s2 无法执行
+  - desc: 日历已过首次运行（否则会先弹权限说明框，非本用例步骤）
+    check:
+      activity: .AllInOneActivity
+      no_dialog: 日历需要使用以下权限
+    on_fail: 先按 _system.md 默认同意策略处理，处理后在summary中如实报告环境变化
+    verified_by: 会话435 实测：本轮曾处首次运行态，已按默认同意关闭
+    type: assert
+  - desc: ★起点：当前必须停在**日历首页**（有 iv_more 工具栏的那一屏）
+    check:
+      activity: .AllInOneActivity
+    how: '读当前 activity 是否为 .AllInOneActivity。 **不是的话必须先回到首页**，否则 s1 的 iv_more 会点空、整条链路无声失败。
+
+      ⚠️ 但**清完数据后要先走 s0**（权限说明框 + 引导页），否则到不了首页 ——
+      这两屏现在是可执行的 s0，不再只写在 pitfalls 里。
+
+      '
+    on_fail: 先回首页再开跑（回首页可用 back 逐级退；注意未必一次到位）
+    note: '⚠️ **本用例的 s1 依赖起点是首页**，YAML 的 expect 无法覆盖这一点。 回放前务必确认 —— 会话454 就是这么卡住的。
+
+      ⚠️ 与原 `clean`（`pm clear`）的**表面矛盾**已澄清：清完数据必然先出现 s0 那两屏，
+      走完 s0 才谈得上「停在首页」。所以这条 assert 的正确读法是
+      **「走完 s0 之后应停在首页」**，不是「开跑前就得是首页」。
+
+      '
+    verified_by: 会话454 回放实测：从 TimeSlotSettingsActivity 起步时 s1 失败
+    type: assert
+steps:
+  - id: s0
+    desc: 处理 pm clear 后的两屏（权限说明框 → 课程表引导页），回到日历首页
+    case_step: （前提：本用例要求清理 APP 数据，清完必然多出这两屏）
+    do:
+      - tap: {rid: button1, text: "同意"}
+      - tap: {rid: timetable_guide_button, text: "我知道了"}
+    know:
+      where: 日历首次运行态 com.zui.calendar/.AllInOneActivity
+      why_this: |
+        这两屏是 **pm clear 的固有结果**，不是异常 —— 但它们是**流程的一部分**，
+        清完数据不点掉就永远到不了首页（也就永远点不到 iv_more）。
+        原先这段只写在 s1 的 pitfalls 里（给人读的注释），没写成可执行步骤，
+        于是纯回放跑 s1 时找不到 iv_more，只能落回模型 —— 白白多花 4 次模型调用。
+        现在把它提成 s0，两个点击都能纯回放。
+      locate: |
+        rid=button1（权限说明框的「同意」，坐标约 1520,1583）
+        rid=timetable_guide_button（引导页的「我知道了」，坐标约 1520,1521）
+    expect:
+      activity: ".AllInOneActivity"
+    on_fail: BLOCKED
+    pitfalls:
+      - "权限说明框是**日历自己的**，不是系统权限框（包名仍是 com.zui.calendar）——
+         不要按系统权限框那套去 revoke/grant。点「同意」即可，不要点「退出」。"
+      - "引导页文案是「我知道了」，rid 是 timetable_guide_button。"
+      - text: >-
+          两屏**只在 pm clear 之后出现**。若某次冷启动（没清数据）也出现，
+          那是另一回事，需单独排查 —— 不要当成正常流程略过。
+        evidence: "会话467 ev#3642 ev#3643 实测"
+      - "若某屏不出现（比如已过首次运行），本步的 expect 仍应满足（已在首页）——
+         这是正常的，不算失败。"
+    evidence: "会话467 ev#3642 ev#3643"
+  - id: s1
+    desc: 点右上角「更多」，菜单选「课程表」
+    case_step: "1. 日历点击页面右上角更多按钮，选择课程表"
+    do:
+      - tap: {rid: iv_more}
+      - tap: {text: "课程表"}
+    know:
+      where: 日历主页 com.zui.calendar/.AllInOneActivity
+      why_this: |
+        iv_more **无 text/desc**，只能按 rid 定位（知识卡已记载）。
+        点开后菜单四项：课程表 / 纵览 / 年视图 / 设置 —— 选第一项「课程表」。
+      locate: rid=iv_more ；菜单项无 rid，按 text="课程表" 定位
+    expect:
+      activity: ".timetable.display.TimetableActivity"
+    on_fail: BLOCKED
+    pitfalls:
+      - "iv_more 没有 text/desc —— 用文案找「更多」按钮会找不到，必须用 rid。"
+      - "菜单弹出后菜单项无 rid，只靠 text。若菜单未弹出（点空了），
+         不要重复点 iv_more 硬试，回读 activity 确认状态。"
+      - text: >-
+          整条链路是**四段**：更多 → 课程表 → 从图库导入 → 点掉提示框
+          （本步是第一段）。中间任一段漏掉都会『看起来没反应』，容易误判为功能缺陷。
+        from: "com.zui.calendar.md#链路-导入弹窗顺序"
+        quote_hash: "790023a7"
+      - text: >-
+          ⚠️ **`pm clear` 之后，从首页到本步之间会多出两屏**：
+          ①『访问文件相关信息』权限说明框（`button1`=同意 / `button2`=退出，1520×[1583]）
+          ② 课程表引导页（`rid=timetable_guide_button`，文案「我知道了」，[1520,1521]）。
+          两屏都**顺着走完**即可：权限框点「同意」，引导页点「我知道了」→ 回到 `.AllInOneActivity` 首页。
+          ⚠️ 这两屏是**清数据的固有结果**，不是异常、不需要特殊处理；
+          但它们是**本用例流程的一部分**（只在 pm clear 后出现），所以记在这里。
+          若某次**冷启动（没清数据）也出现**，那是另一回事，需单独排查。
+          ⇒ **已于 2026-10 提成独立的 `s0`**（可纯回放），本步不再需要处理这两屏。
+        evidence: "会话467 ev#3642 ev#3643 实测"
+    evidence: "会话435 ev#3144 ev#3145"
+
+  - id: s2
+    desc: 点「从图库导入课程表」
+    case_step: "2. 点击\"从图库导入课程表\"按钮"
+    do:
+      - tap: {rid: btnImportFromGallery}
+    know:
+      where: 课程表空状态页（三个入口按钮直接铺屏）
+      why_this: |
+        空状态下**没有工具栏**，三个导入按钮直接铺在屏幕上：
+        btnImportFromPhoto『拍照导入课程表』/ btnImportFromGallery『从图库导入课程表』/
+        btnCreateManually『手动创建课程表』。用 rid 精确定位，别按位置猜。
+      locate: rid=btnImportFromGallery
+    expect:
+      dialog_present: {rid: button1, text: "知道了"}
+    on_fail: BLOCKED
+    pitfalls:
+      - "⚠️ 空状态**没有「更多」菜单** —— 别再去工具栏找入口（知识卡专门记了这条）。"
+      - text: >-
+          本用例**只验入口能进去，不验导入流程**。进入 PhotoPicker 即止，
+          **不要继续选图**（选图会触发约 20s 的云端解析，超出本用例范围）。
+        from: "com.zui.calendar.md#坑-图库导入解析"
+        quote_hash: "b8c78dd6"
+    evidence: "会话435 ev#3146"
+
+  - id: s3
+    desc: 关掉 App 内提示框
+    case_step: "（不属于用例步骤，但为进入图片选择入口的必要前置）"
+    do:
+      - tap: {rid: button1, text: "知道了"}
+    know:
+      where: 课程表页上的模态提示框
+      why_this: |
+        **这一步不能省**：点击图库导入会先弹日历自己的提示框，
+        必须点掉，否则后面什么都不发生（PhotoPicker 不会出现）。
+        该框**与系统权限弹窗无关，无论权限是否已授予都会弹**。
+      locate: rid=button1（文案「知道了」）
+    expect:
+      activity_changed_to: "com.android.providers.media.photopicker.PhotoPickerGetContentActivity"
+    on_fail: BLOCKED
+    pitfalls:
+      - text: "⚠️ 不点掉这个框，PhotoPicker 永远不出现 —— 不要归因为『权限没给』或『功能坏了』。"
+        # ↓ 引用锚：该结论来自知识卡。改了知识卡这一节，kb_check 会报"引用已过期"
+        from: "com.zui.calendar.md#链路-导入弹窗顺序"
+        quote_hash: "790023a7"
+      - text: "该框是日历自己的，不是系统权限框；**不需要也不应该**去 revoke/grant 权限。"
+        from: "com.zui.calendar.md#链路-导入弹窗顺序"
+        quote_hash: "790023a7"
+      - "**不要用『功能没反应』断定缺陷** —— 先确认提示框是否已点掉。
+         会话435 实测：点掉后 PhotoPicker 立即出现。"
+      - text: >-
+          选图阶段（本用例不涉及）注意：所有缩略图**共用 icon_thumbnail 一个 rid**，
+          且照片按时间倒序，别盲点第一张。缩略图 desc 含拍摄时间戳，可据此精确选图。
+        from: "com.zui.calendar.md#坑-图库导入解析"
+        quote_hash: "b8c78dd6"
+    evidence: "会话435 ev#3147"
+
+# ── 断言（对应用例的预期）─────────────────────────────
+assertions:
+  - id: a1
+    case_expect: "1. 可打开课程表页面"
+    desc: 进入课程表页面
+    check:
+      activity: ".timetable.display.TimetableActivity"
+      node_text: {rid: toolbar_title, equals: "课程表"}
+    status_last_run: PASS
+    evidence: "会话435 finding#282"
+
+  - id: a2
+    case_expect: "2. 图库导入入口可点击"
+    desc: 「从图库导入课程表」可点且有响应
+    check:
+      # 可点 + 点了有响应（弹提示框）即为达成
+      node_present: {rid: btnImportFromGallery}
+      after_tap: {dialog_present: {rid: button1, text: "知道了"}}
+    status_last_run: PASS
+    evidence: "会话435 finding#283"
+
+  - id: a3
+    case_expect: "3. 可正常进入图片选择入口"
+    desc: 系统图片选择器正常拉起
+    check:
+      activity: "com.android.providers.media.photopicker.PhotoPickerGetContentActivity"
+      package: "com.android.providers.media.module"
+    status_last_run: PASS
+    evidence: "会话435 finding#284"
+
+# ── 坑 ────────────────────────────────────────────────
+# ⚠️ **坑一律挂在具体步骤上**（每步的 `pitfalls:`），本文件**不再设文件级 pitfalls**。
+#    原因（2026-10-15 定）：文件级是"全用例的坑混在一起"，
+#    跑到第 2 步时第 1 步的坑还在眼前，**信息被稀释**；
+#    而回放时是按步走的，坑必须跟着步走才用得上。
+
+# ── 元信息 ────────────────────────────────────────────
+confidence:
+  level: verified
+  # verified    = 多会话验证稳定
+  # single-run  = 只跑通过一次
+  # flaky       = 时好时坏
+  # device-specific = 仅特定设备成立
+  # unreproducible  = 本机无法复现
+  reason: >
+    本用例历史上通过 5 次（会话 #165/#178/#236/#273 及本次 #435），
+    跨 2 台设备（HA2J36T6、51e8bf1c）。链路稳定，无 flaky 迹象。
+  todo:
+    - "补记：首次运行态会先弹权限说明框，回放时需先处理该框（本文件已含前置）"

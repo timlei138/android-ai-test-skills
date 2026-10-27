@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T13:24:36",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.temp.TempConfirmTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2759,
+    "y": 991,
+    "via": "tv_total_weeks",
+    "why": "用例174：周数选择"
+  },
+  "call_id": "1c480a7a5ef74d24979f36736bcd272b",
+  "timing": {
+    "call_id": "1c480a7a5ef74d24979f36736bcd272b",
+    "measured_at": "2026-10-15T13:24:36.360",
+    "process_observed_ms": 14092.972,
+    "stages_ms": {
+      "device_import": 387.179,
+      "device_connect": 1150.452,
+      "action": 197.477,
+      "settle_wait": 600.313,
+      "permission": 5344.146,
+      "screenshot": 417.435,
+      "png_save": 174.144,
+      "ui_dump": 64.535,
+      "rotation": 242.967,
+      "xml_save": 4.498,
+      "foreground": 5413.923
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

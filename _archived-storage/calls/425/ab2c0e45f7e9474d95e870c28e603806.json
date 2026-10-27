@@ -1,0 +1,361 @@
+{
+  "call_id": "ab2c0e45f7e9474d95e870c28e603806",
+  "session_id": 425,
+  "tool": "act",
+  "started_at": "2026-10-10T16:40:07.606",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T16:40:15.195",
+  "wall_ms": 7579.544,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "input",
+      "x": 756,
+      "y": 653,
+      "text": "日历",
+      "mode": "overwrite",
+      "why": "search"
+    },
+    "ts": "2026-10-10T16:40:14",
+    "package": "com.zui.launcher",
+    "activity": ".drawer.NormalLauncher",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "ab2c0e45f7e9474d95e870c28e603806",
+    "timing": {
+      "call_id": "ab2c0e45f7e9474d95e870c28e603806",
+      "measured_at": "2026-10-10T16:40:14.951",
+      "process_observed_ms": 5503.276,
+      "stages_ms": {
+        "device_import": 322.715,
+        "device_connect": 1045.245,
+        "action": 970.155,
+        "input_focus_wait": 300.431,
+        "settle_wait": 600.727,
+        "permission": 912.625,
+        "screenshot": 410.73,
+        "png_save": 152.522,
+        "ui_dump": 104.915,
+        "rotation": 249.679,
+        "xml_save": 2.943,
+        "foreground": 337.134
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=taskbar_container",
+      "rid=taskbar_scrim",
+      "rid=taskbar_bubbles_container",
+      "rid=stashed_handle",
+      "rid=navbuttons_view",
+      "rid=start_contextual_buttons",
+      "rid=content",
+      "rid=launcher",
+      "rid=static_blur_view_container",
+      "rid=static_blur_view",
+      "rid=drag_layer",
+      "rid=container",
+      "rid=collapse_handle",
+      "rid=title",
+      "text=小部件",
+      "rid=widget_picker_description",
+      "text=点击或长按添加到桌面",
+      "rid=linear_layout_container",
+      "rid=recycler_view_container",
+      "rid=widgets_two_pane_sheet_recyclerview",
+      "rid=search_and_recommendations_container",
+      "rid=search_bar_container",
+      "rid=widgets_search_bar",
+      "rid=widgets_search_bar_edit_text",
+      "text=日历",
+      "rid=widgets_search_cancel_button",
+      "desc=清除搜索框中的文字",
+      "rid=search_widgets_list_view",
+      "rid=widgets_list_header",
+      "rid=app_icon",
+      "rid=app_title",
+      "rid=app_subtitle",
+      "text=6 个小部件",
+      "rid=right_pane_container",
+      "rid=right_pane_scroll_view",
+      "rid=right_pane_padding",
+      "rid=right_pane",
+      "rid=widgets_table",
+      "desc=“倒数日”微件，宽 2，高 1",
+      "rid=widget_preview_container",
+      "desc=倒数日 2x1",
+      "rid=widget_text_container",
+      "rid=widget_name",
+      "text=倒数日",
+      "rid=widget_dims",
+      "text=2 × 1",
+      "desc=“日程”微件，宽 2，高 1",
+      "desc=日程 2x1",
+      "text=日程",
+      "desc=“周日历”微件，宽 2，高 1",
+      "desc=周日历 2x1",
+      "text=周日历",
+      "desc=“日程”微件，宽 2，高 2",
+      "desc=日程 2x2",
+      "desc=“月日历”微件，宽 2，高 2",
+      "desc=月日历 2x2"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\425\\step1993\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\425\\step1993\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\425\\step1993\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          672,
+          653
+        ],
+        "t": "日历",
+        "r": "widgets_search_bar_edit_text"
+      },
+      {
+        "c": [
+          976,
+          653
+        ],
+        "t": "清除搜索框中的文字",
+        "r": "widgets_search_cancel_button"
+      },
+      {
+        "c": [
+          756,
+          887
+        ],
+        "t": "6 个小部件",
+        "r": "widgets_list_header"
+      },
+      {
+        "c": [
+          1887,
+          1253
+        ],
+        "r": "right_pane_scroll_view",
+        "s": true
+      },
+      {
+        "c": [
+          1487,
+          797
+        ],
+        "r": "widget_preview_container"
+      },
+      {
+        "c": [
+          2199,
+          797
+        ],
+        "r": "widget_preview_container"
+      },
+      {
+        "c": [
+          1843,
+          1318
+        ],
+        "r": "widget_preview_container"
+      },
+      {
+        "c": [
+          1487,
+          1796
+        ],
+        "r": "widget_preview_container"
+      },
+      {
+        "c": [
+          2199,
+          1796
+        ],
+        "r": "widget_preview_container"
+      },
+      {
+        "c": [
+          1487,
+          798
+        ]
+      },
+      {
+        "c": [
+          2199,
+          798
+        ]
+      },
+      {
+        "c": [
+          1843,
+          1319
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          672,
+          653
+        ],
+        "t": "日历",
+        "r": "widgets_search_bar_edit_text"
+      },
+      {
+        "i": 1,
+        "c": [
+          976,
+          653
+        ],
+        "t": "清除搜索框中的文字",
+        "r": "widgets_search_cancel_button"
+      },
+      {
+        "i": 2,
+        "c": [
+          756,
+          887
+        ],
+        "r": "widgets_list_header"
+      },
+      {
+        "i": 3,
+        "c": [
+          1887,
+          1253
+        ],
+        "r": "right_pane_scroll_view",
+        "s": true
+      },
+      {
+        "i": 4,
+        "c": [
+          1487,
+          797
+        ],
+        "r": "widget_preview_container"
+      },
+      {
+        "i": 5,
+        "c": [
+          1487,
+          798
+        ]
+      },
+      {
+        "i": 6,
+        "c": [
+          2199,
+          797
+        ],
+        "r": "widget_preview_container"
+      },
+      {
+        "i": 7,
+        "c": [
+          2199,
+          798
+        ]
+      },
+      {
+        "i": 8,
+        "c": [
+          1843,
+          1318
+        ],
+        "r": "widget_preview_container"
+      },
+      {
+        "i": 9,
+        "c": [
+          1843,
+          1319
+        ]
+      },
+      {
+        "i": 10,
+        "c": [
+          1487,
+          1796
+        ],
+        "r": "widget_preview_container"
+      },
+      {
+        "i": 11,
+        "c": [
+          1487,
+          1824
+        ]
+      },
+      {
+        "i": 12,
+        "c": [
+          2199,
+          1796
+        ],
+        "r": "widget_preview_container"
+      },
+      {
+        "i": 13,
+        "c": [
+          2199,
+          1824
+        ]
+      }
+    ],
+    "nodes_count": 14,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      3019
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "ab2c0e45f7e9474d95e870c28e603806",
+    "measured_at": "2026-10-10T16:40:15.114",
+    "process_observed_ms": 5667.31,
+    "stages_ms": {
+      "device_import": 322.715,
+      "device_connect": 1045.245,
+      "action": 970.155,
+      "input_focus_wait": 300.431,
+      "settle_wait": 600.727,
+      "permission": 912.625,
+      "screenshot": 410.73,
+      "png_save": 152.522,
+      "ui_dump": 104.915,
+      "rotation": 249.679,
+      "xml_save": 2.943,
+      "foreground": 337.134,
+      "meta_save": 2.826,
+      "crash_detection": 128.117,
+      "screen_signature": 25.287,
+      "event_write": 1.732,
+      "node_summary": 0.776,
+      "node_labels": 0.668,
+      "next_targets": 0.043,
+      "serialization": 0.181
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 6194
+  },
+  "response_bytes": 6194,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3019
+    ]
+  }
+}

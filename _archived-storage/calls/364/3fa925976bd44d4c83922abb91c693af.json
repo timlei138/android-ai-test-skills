@@ -1,0 +1,51 @@
+{
+  "call_id": "3fa925976bd44d4c83922abb91c693af",
+  "session_id": 364,
+  "tool": "vision",
+  "started_at": "2026-10-09T17:47:12.996",
+  "status": "ended",
+  "expects_event": false,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T17:47:16.464",
+  "wall_ms": 3458.812,
+  "result": {
+    "ok": true,
+    "text": "没有弹框",
+    "usage": {
+      "prompt_tokens": 994,
+      "completion_tokens": 60,
+      "total_tokens": 1054,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 56
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 994
+    },
+    "hint": "视觉模型输出是辅助判据，PASS/FAIL 结论仍需结合 dump/OCR 证据",
+    "call_id": "3fa925976bd44d4c83922abb91c693af",
+    "event_ids": [],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "3fa925976bd44d4c83922abb91c693af",
+    "measured_at": "2026-10-09T17:47:16.436",
+    "process_observed_ms": 1665.411,
+    "stages_ms": {
+      "serialization": 0.068
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 541
+  },
+  "response_bytes": 541,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": []
+  }
+}

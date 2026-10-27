@@ -1,0 +1,283 @@
+{
+  "call_id": "cfc380266cf34cffb0d42481ed43c4cb",
+  "session_id": 396,
+  "tool": "act",
+  "started_at": "2026-10-10T13:01:15.452",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T13:01:22.298",
+  "wall_ms": 6838.59,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 1795,
+      "y": 1117,
+      "via": "button1 删除",
+      "why": "confirm-delete"
+    },
+    "ts": "2026-10-10T13:01:22",
+    "package": "com.zui.calendar",
+    "activity": ".common.backup.SelectRestoreActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "cfc380266cf34cffb0d42481ed43c4cb",
+    "timing": {
+      "call_id": "cfc380266cf34cffb0d42481ed43c4cb",
+      "measured_at": "2026-10-10T13:01:22.041",
+      "process_observed_ms": 4960.695,
+      "stages_ms": {
+        "device_import": 305.925,
+        "device_connect": 1095.129,
+        "action": 232.906,
+        "settle_wait": 600.423,
+        "permission": 1179.401,
+        "screenshot": 437.774,
+        "png_save": 148.916,
+        "ui_dump": 125.527,
+        "rotation": 258.241,
+        "xml_save": 8.146,
+        "foreground": 493.514
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "rid=toolbar_title",
+      "text=自定义恢复",
+      "rid=edit_menu",
+      "rid=restoreIvSelect",
+      "rid=mainFrame",
+      "rid=list",
+      "rid=slideview_check",
+      "rid=slideview_group",
+      "rid=slideview_content",
+      "rid=text1",
+      "text=日历_2026年10月10日_12时40分12秒",
+      "text=日历_2026年10月10日_12时56分25秒",
+      "text=日历_2026年10月10日_12时56分37秒",
+      "text=日历_2026年10月10日_12时56分49秒",
+      "rid=bottom_view",
+      "rid=restoreLlDeleteLayout",
+      "rid=restoreBtnDelete",
+      "text=删除",
+      "rid=parentPanel",
+      "rid=titlePanel",
+      "rid=listviewx_cancel",
+      "rid=listviewx_edit_title",
+      "text=选取项目",
+      "rid=listviewx_select_all",
+      "text=全选"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\396\\step1706\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\396\\step1706\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\396\\step1706\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          2949,
+          203
+        ],
+        "t": "全选",
+        "r": "edit_menu"
+      },
+      {
+        "c": [
+          2924,
+          203
+        ],
+        "t": "全选",
+        "r": "restoreIvSelect"
+      },
+      {
+        "c": [
+          1520,
+          1799
+        ],
+        "t": "删除",
+        "r": "restoreLlDeleteLayout"
+      },
+      {
+        "c": [
+          132,
+          204
+        ],
+        "t": "自定义恢复",
+        "r": "listviewx_cancel"
+      },
+      {
+        "c": [
+          2902,
+          204
+        ],
+        "t": "全选",
+        "r": "listviewx_select_all"
+      },
+      {
+        "c": [
+          107,
+          203
+        ],
+        "t": "自定义恢复"
+      },
+      {
+        "c": [
+          1520,
+          370
+        ]
+      },
+      {
+        "c": [
+          1520,
+          511
+        ]
+      },
+      {
+        "c": [
+          1520,
+          652
+        ]
+      },
+      {
+        "c": [
+          1520,
+          793
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          107,
+          203
+        ]
+      },
+      {
+        "i": 1,
+        "c": [
+          2949,
+          203
+        ],
+        "r": "edit_menu"
+      },
+      {
+        "i": 2,
+        "c": [
+          2924,
+          203
+        ],
+        "r": "restoreIvSelect"
+      },
+      {
+        "i": 3,
+        "c": [
+          1520,
+          370
+        ]
+      },
+      {
+        "i": 4,
+        "c": [
+          1520,
+          511
+        ]
+      },
+      {
+        "i": 5,
+        "c": [
+          1520,
+          652
+        ]
+      },
+      {
+        "i": 6,
+        "c": [
+          1520,
+          793
+        ]
+      },
+      {
+        "i": 7,
+        "c": [
+          1520,
+          1799
+        ],
+        "r": "restoreLlDeleteLayout",
+        "off": true
+      },
+      {
+        "i": 8,
+        "c": [
+          132,
+          204
+        ],
+        "r": "listviewx_cancel"
+      },
+      {
+        "i": 9,
+        "c": [
+          2902,
+          204
+        ],
+        "t": "全选",
+        "r": "listviewx_select_all"
+      }
+    ],
+    "nodes_count": 10,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2727
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "cfc380266cf34cffb0d42481ed43c4cb",
+    "measured_at": "2026-10-10T13:01:22.199",
+    "process_observed_ms": 5118.322,
+    "stages_ms": {
+      "device_import": 305.925,
+      "device_connect": 1095.129,
+      "action": 232.906,
+      "settle_wait": 600.423,
+      "permission": 1179.401,
+      "screenshot": 437.774,
+      "png_save": 148.916,
+      "ui_dump": 125.527,
+      "rotation": 258.241,
+      "xml_save": 8.146,
+      "foreground": 493.514,
+      "meta_save": 7.146,
+      "crash_detection": 99.762,
+      "screen_signature": 37.05,
+      "event_write": 3.707,
+      "node_summary": 0.592,
+      "node_labels": 0.954,
+      "next_targets": 0.085,
+      "serialization": 0.523
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 4432
+  },
+  "response_bytes": 4432,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2727
+    ]
+  }
+}

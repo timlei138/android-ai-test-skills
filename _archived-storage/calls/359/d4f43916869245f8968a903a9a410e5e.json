@@ -1,0 +1,163 @@
+{
+  "call_id": "d4f43916869245f8968a903a9a410e5e",
+  "session_id": 359,
+  "tool": "act",
+  "started_at": "2026-10-09T16:44:33.053",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T16:44:39.481",
+  "wall_ms": 6419.485,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 2186,
+      "y": 815,
+      "via": "rid=start_date",
+      "why": "打开日期弹框"
+    },
+    "ts": "2026-10-09T16:44:39",
+    "package": "com.zui.calendar",
+    "activity": ".newbuild.NewBuildActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "d4f43916869245f8968a903a9a410e5e",
+    "timing": {
+      "call_id": "d4f43916869245f8968a903a9a410e5e",
+      "measured_at": "2026-10-09T16:44:39.278",
+      "process_observed_ms": 4420.396,
+      "stages_ms": {
+        "device_import": 332.996,
+        "device_connect": 1159.607,
+        "action": 183.733,
+        "settle_wait": 600.184,
+        "permission": 873.527,
+        "screenshot": 313.95,
+        "png_save": 227.997,
+        "ui_dump": 50.345,
+        "rotation": 189.54,
+        "xml_save": 5.098,
+        "foreground": 384.587
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=parentPanel",
+      "rid=customPanel",
+      "rid=custom",
+      "rid=title",
+      "text=2026年10月9日  周五",
+      "rid=datePicker",
+      "rid=parent",
+      "rid=selector_top_divider",
+      "rid=button_divider2",
+      "rid=left_button",
+      "text=取消",
+      "rid=right_button",
+      "text=确定"
+    ],
+    "checkpoint": {
+      "checked": true,
+      "ok": true,
+      "matched": [
+        "rid=right_button"
+      ],
+      "missed": []
+    },
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\359\\step0530\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\359\\step0530\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\359\\step0530\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1244,
+          1276
+        ],
+        "t": "取消",
+        "r": "left_button"
+      },
+      {
+        "c": [
+          1795,
+          1276
+        ],
+        "t": "确定",
+        "r": "right_button"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          1244,
+          1276
+        ],
+        "t": "取消",
+        "r": "left_button"
+      },
+      {
+        "i": 1,
+        "c": [
+          1795,
+          1276
+        ],
+        "t": "确定",
+        "r": "right_button"
+      }
+    ],
+    "nodes_count": 2,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      1551
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "d4f43916869245f8968a903a9a410e5e",
+    "measured_at": "2026-10-09T16:44:39.411",
+    "process_observed_ms": 4553.907,
+    "stages_ms": {
+      "device_import": 332.996,
+      "device_connect": 1159.607,
+      "action": 183.733,
+      "settle_wait": 600.184,
+      "permission": 873.527,
+      "screenshot": 313.95,
+      "png_save": 227.997,
+      "ui_dump": 50.345,
+      "rotation": 189.54,
+      "xml_save": 5.098,
+      "foreground": 384.587,
+      "meta_save": 6.321,
+      "crash_detection": 92.354,
+      "screen_signature": 24.488,
+      "event_write": 2.844,
+      "node_summary": 0.691,
+      "node_labels": 0.538,
+      "next_targets": 0.015,
+      "serialization": 0.119
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 2696
+  },
+  "response_bytes": 2696,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1551
+    ]
+  }
+}

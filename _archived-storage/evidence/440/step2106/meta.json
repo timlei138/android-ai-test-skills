@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T11:41:45",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimetableListActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 176,
+    "y": 391,
+    "via": "rid=checkbox_select(课表A)",
+    "why": "用例185步骤5：仅勾选当前课程表"
+  },
+  "call_id": "dce4e258c65b4d87bfe5dd866d737aed",
+  "timing": {
+    "call_id": "dce4e258c65b4d87bfe5dd866d737aed",
+    "measured_at": "2026-10-15T11:41:45.488",
+    "process_observed_ms": 13918.286,
+    "stages_ms": {
+      "device_import": 373.235,
+      "device_connect": 1195.992,
+      "action": 206.783,
+      "settle_wait": 600.435,
+      "permission": 5378.704,
+      "screenshot": 271.086,
+      "png_save": 142.455,
+      "ui_dump": 69.12,
+      "rotation": 259.29,
+      "xml_save": 6.496,
+      "foreground": 5318.588
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

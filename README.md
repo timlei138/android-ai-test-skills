@@ -117,7 +117,7 @@ PASS/FAIL/WARN 断言必须显式绑定本会话证据：`session.py finding --e
 ```
 ├── SKILL.md        # 工具说明书（AI 按需加载）
 ├── tools/          # 薄工具层：observe / act / read / session + db
-├── knowledge/      # App 知识卡（按包名，按交互类型组织）
+├── assets/knowledge/      # App 知识卡（按包名，按交互类型组织）
 ├── webui/          # 测试台前端（会话时间线 / 知识库编辑）
 ├── webui.py        # 测试台服务（标准库，零依赖）
 └── storage/        # 运行产物：evidence/ 证据、sessions.db 记录

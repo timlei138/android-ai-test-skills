@@ -1,0 +1,62 @@
+{
+  "call_id": "0c040f06e9c747ff89e0efcce438d85e",
+  "session_id": 329,
+  "tool": "act",
+  "started_at": "2026-10-09T12:10:17.745",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T12:10:21.323",
+  "wall_ms": 3554.568,
+  "result": {
+    "ok": false,
+    "route": [
+      "日历首页",
+      "菜单（弹层）",
+      "课程表页-空态",
+      "课程表基本信息编辑页"
+    ],
+    "steps": [
+      {
+        "n": 1,
+        "from": "日历首页",
+        "to": "菜单（弹层）",
+        "status": "anchor_not_found",
+        "selector": "rid=iv_more",
+        "reason": "当前屏幕找不到锚点 rid=iv_more"
+      }
+    ],
+    "completed": 0,
+    "total": 3,
+    "failed_at": 1,
+    "hint": "第 1 步没过（anchor_not_found）：当前屏幕找不到锚点 rid=iv_more。修好后可 `act.py steps --from ... --to ... --resume-from 1` 接着跑。先判断是临时弹窗（关掉继续）还是用例要的东西没了（停下来记录）。",
+    "call_id": "0c040f06e9c747ff89e0efcce438d85e",
+    "event_ids": [],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "0c040f06e9c747ff89e0efcce438d85e",
+    "measured_at": "2026-10-09T12:10:21.261",
+    "process_observed_ms": 1590.032,
+    "stages_ms": {
+      "device_import": 315.248,
+      "device_connect": 1073.837,
+      "node_summary": 31.975,
+      "node_labels": 0.407,
+      "serialization": 0.045
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 800
+  },
+  "response_bytes": 800,
+  "audit": {
+    "complete": false,
+    "outcome": "failed",
+    "issues": [
+      "no recorded observation/action event"
+    ],
+    "executed": true,
+    "event_ids": []
+  }
+}

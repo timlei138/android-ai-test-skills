@@ -1,0 +1,139 @@
+{
+  "call_id": "cf69148dbb0d48b9a7247c9bf7d4de18",
+  "session_id": 374,
+  "tool": "act",
+  "started_at": "2026-10-09T19:29:59.390",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T19:30:05.916",
+  "wall_ms": 6518.09,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 2853,
+      "y": 203,
+      "via": "search-entry",
+      "why": "open-search"
+    },
+    "ts": "2026-10-09T19:30:05",
+    "package": "com.zui.calendar",
+    "activity": ".agenda.NewBuildList",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "cf69148dbb0d48b9a7247c9bf7d4de18",
+    "timing": {
+      "call_id": "cf69148dbb0d48b9a7247c9bf7d4de18",
+      "measured_at": "2026-10-09T19:30:05.677",
+      "process_observed_ms": 4530.528,
+      "stages_ms": {
+        "device_import": 321.775,
+        "device_connect": 1052.999,
+        "action": 182.918,
+        "settle_wait": 600.467,
+        "permission": 1010.217,
+        "screenshot": 320.558,
+        "png_save": 180.463,
+        "ui_dump": 82.24,
+        "rotation": 264.651,
+        "xml_save": 5.297,
+        "foreground": 410.055
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=title",
+      "text=新建",
+      "text=搜索"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\374\\step0951\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\374\\step0951\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\374\\step0951\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          2673,
+          492
+        ],
+        "t": "新建"
+      },
+      {
+        "c": [
+          2673,
+          630
+        ],
+        "t": "搜索"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          2673,
+          492
+        ]
+      },
+      {
+        "i": 1,
+        "c": [
+          2673,
+          630
+        ]
+      }
+    ],
+    "nodes_count": 2,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      1973
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "cf69148dbb0d48b9a7247c9bf7d4de18",
+    "measured_at": "2026-10-09T19:30:05.823",
+    "process_observed_ms": 4677.52,
+    "stages_ms": {
+      "device_import": 321.775,
+      "device_connect": 1052.999,
+      "action": 182.918,
+      "settle_wait": 600.467,
+      "permission": 1010.217,
+      "screenshot": 320.558,
+      "png_save": 180.463,
+      "ui_dump": 82.24,
+      "rotation": 264.651,
+      "xml_save": 5.297,
+      "foreground": 410.055,
+      "meta_save": 4.543,
+      "crash_detection": 109.087,
+      "screen_signature": 26.696,
+      "event_write": 1.634,
+      "node_summary": 0.296,
+      "node_labels": 0.273,
+      "next_targets": 0.014,
+      "serialization": 0.084
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 2158
+  },
+  "response_bytes": 2158,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1973
+    ]
+  }
+}

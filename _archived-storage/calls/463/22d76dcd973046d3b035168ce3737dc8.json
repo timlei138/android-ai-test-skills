@@ -1,0 +1,248 @@
+{
+  "call_id": "22d76dcd973046d3b035168ce3737dc8",
+  "session_id": 463,
+  "tool": "observe",
+  "started_at": "2026-10-15T16:16:31.938",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-15T16:16:46.698",
+  "wall_ms": 14741.631,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-15T16:16:46",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.course.EditCourseActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "22d76dcd973046d3b035168ce3737dc8",
+    "timing": {
+      "call_id": "22d76dcd973046d3b035168ce3737dc8",
+      "measured_at": "2026-10-15T16:16:46.342",
+      "process_observed_ms": 13846.937,
+      "stages_ms": {
+        "device_import": 685.335,
+        "device_connect": 1279.789,
+        "permission": 5363.308,
+        "screenshot": 436.682,
+        "png_save": 299.836,
+        "ui_dump": 86.004,
+        "rotation": 179.234,
+        "xml_save": 9.423,
+        "foreground": 5403.061
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=toolbar",
+      "desc=关闭",
+      "text=新建课程",
+      "text=完成",
+      "rid=contentPanel",
+      "rid=curriculum_scroll_view",
+      "text=课程名",
+      "rid=etCourseName",
+      "text=必填",
+      "text=教室",
+      "rid=etClassroom",
+      "text=非必填",
+      "text=备注（如老师）",
+      "rid=etTeacher",
+      "rid=llCourseTime",
+      "text=课程时间",
+      "rid=tvCourseTime",
+      "text=第1节",
+      "rid=llCourseWeeks",
+      "text=上课周数",
+      "rid=tvCourseWeeks",
+      "text=第1-20周",
+      "rid=llCourseColor",
+      "text=课程背景色",
+      "rid=viewColorIndicator"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\463\\step2461\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\463\\step2461\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\463\\step2461\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1586,
+          522
+        ],
+        "t": "必填",
+        "r": "etCourseName"
+      },
+      {
+        "c": [
+          1564,
+          682
+        ],
+        "t": "非必填",
+        "r": "etClassroom"
+      },
+      {
+        "c": [
+          1674,
+          842
+        ],
+        "t": "非必填",
+        "r": "etTeacher"
+      },
+      {
+        "c": [
+          739,
+          371
+        ],
+        "t": "关闭"
+      },
+      {
+        "c": [
+          2295,
+          370
+        ],
+        "t": "完成"
+      },
+      {
+        "c": [
+          1520,
+          1022
+        ],
+        "r": "llCourseTime"
+      },
+      {
+        "c": [
+          1520,
+          1206
+        ],
+        "r": "llCourseWeeks"
+      },
+      {
+        "c": [
+          1520,
+          1390
+        ],
+        "r": "llCourseColor"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          739,
+          371
+        ],
+        "t": "关闭"
+      },
+      {
+        "i": 1,
+        "c": [
+          2295,
+          370
+        ],
+        "t": "完成"
+      },
+      {
+        "i": 2,
+        "c": [
+          1586,
+          522
+        ],
+        "t": "必填",
+        "r": "etCourseName"
+      },
+      {
+        "i": 3,
+        "c": [
+          1564,
+          682
+        ],
+        "t": "非必填",
+        "r": "etClassroom"
+      },
+      {
+        "i": 4,
+        "c": [
+          1674,
+          842
+        ],
+        "t": "非必填",
+        "r": "etTeacher"
+      },
+      {
+        "i": 5,
+        "c": [
+          1520,
+          1022
+        ],
+        "r": "llCourseTime"
+      },
+      {
+        "i": 6,
+        "c": [
+          1520,
+          1206
+        ],
+        "r": "llCourseWeeks"
+      },
+      {
+        "i": 7,
+        "c": [
+          1520,
+          1390
+        ],
+        "r": "llCourseColor"
+      }
+    ],
+    "nodes_count": 8,
+    "nodes_mode": "nav",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      3601
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "22d76dcd973046d3b035168ce3737dc8",
+    "measured_at": "2026-10-15T16:16:46.573",
+    "process_observed_ms": 14078.343,
+    "stages_ms": {
+      "device_import": 685.335,
+      "device_connect": 1279.789,
+      "permission": 5363.308,
+      "screenshot": 436.682,
+      "png_save": 299.836,
+      "ui_dump": 86.004,
+      "rotation": 179.234,
+      "xml_save": 9.423,
+      "foreground": 5403.061,
+      "meta_save": 8.715,
+      "screen_signature": 71.611,
+      "crash_detection": 106.437,
+      "event_write": 24.973,
+      "node_summary": 3.052,
+      "node_labels": 1.57,
+      "next_targets": 0.079,
+      "serialization": 0.451
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 3832
+  },
+  "response_bytes": 3832,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3601
+    ]
+  }
+}

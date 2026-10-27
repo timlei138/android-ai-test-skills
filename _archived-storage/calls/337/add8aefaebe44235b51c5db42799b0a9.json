@@ -1,0 +1,40 @@
+{
+  "call_id": "add8aefaebe44235b51c5db42799b0a9",
+  "session_id": 337,
+  "tool": "session",
+  "started_at": "2026-10-09T13:52:25.866",
+  "status": "ended",
+  "expects_event": false,
+  "structured_result_required": true,
+  "returncode": 1,
+  "ended_at": "2026-10-09T13:52:28.229",
+  "wall_ms": 2348.027,
+  "result": {
+    "ok": false,
+    "error": "Event 1178 must contain evidence from session 337",
+    "stage": "session",
+    "rejected": true,
+    "hint": "Correct the input or storage issue; rejected finish does not commit.",
+    "call_id": "add8aefaebe44235b51c5db42799b0a9",
+    "event_ids": [],
+    "execution_state": "unknown"
+  },
+  "timing": {
+    "call_id": "add8aefaebe44235b51c5db42799b0a9",
+    "measured_at": "2026-10-09T13:52:28.204",
+    "process_observed_ms": 45.733,
+    "stages_ms": {
+      "serialization": 0.04
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 306
+  },
+  "response_bytes": 306,
+  "audit": {
+    "complete": true,
+    "outcome": "refused",
+    "issues": [],
+    "executed": true,
+    "event_ids": []
+  }
+}

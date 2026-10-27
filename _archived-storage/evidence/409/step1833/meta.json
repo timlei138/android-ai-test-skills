@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-10T14:54:09",
+  "package": "com.lenovo.leos.appstore",
+  "activity": ".activities.Main",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1519,
+    "y": 1609,
+    "via": "知道了",
+    "why": "dismiss"
+  },
+  "call_id": "9b9d15a5a46b4c66bf55ccd08f554705",
+  "timing": {
+    "call_id": "9b9d15a5a46b4c66bf55ccd08f554705",
+    "measured_at": "2026-10-10T14:54:09.673",
+    "process_observed_ms": 4642.399,
+    "stages_ms": {
+      "device_import": 356.726,
+      "device_connect": 1118.475,
+      "action": 209.288,
+      "settle_wait": 600.329,
+      "permission": 997.773,
+      "screenshot": 329.855,
+      "png_save": 170.922,
+      "ui_dump": 97.549,
+      "rotation": 245.319,
+      "xml_save": 6.679,
+      "foreground": 405.249
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

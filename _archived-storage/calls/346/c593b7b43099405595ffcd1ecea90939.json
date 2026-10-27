@@ -1,0 +1,738 @@
+{
+  "call_id": "c593b7b43099405595ffcd1ecea90939",
+  "session_id": 346,
+  "tool": "observe",
+  "started_at": "2026-10-09T15:05:10.427",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T15:05:16.141",
+  "wall_ms": 5695.38,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-09T15:05:15",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.widget.TimetableGuideActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "c593b7b43099405595ffcd1ecea90939",
+    "timing": {
+      "call_id": "c593b7b43099405595ffcd1ecea90939",
+      "measured_at": "2026-10-09T15:05:15.901",
+      "process_observed_ms": 3560.639,
+      "stages_ms": {
+        "device_import": 273.634,
+        "device_connect": 1108.705,
+        "permission": 967.151,
+        "screenshot": 326.572,
+        "png_save": 92.497,
+        "ui_dump": 97.072,
+        "rotation": 262.133,
+        "xml_save": 4.681,
+        "foreground": 374.946
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=taskbar_container",
+      "rid=taskbar_scrim",
+      "rid=taskbar_bubbles_container",
+      "rid=stashed_handle",
+      "rid=navbuttons_view",
+      "rid=start_contextual_buttons",
+      "rid=status_bar_launch_animation_container",
+      "rid=container",
+      "rid=status_bar_container",
+      "rid=status_bar",
+      "rid=status_bar_contents",
+      "rid=status_bar_start_side_container",
+      "rid=status_bar_start_side_content",
+      "rid=status_bar_start_side_except_heads_up",
+      "rid=clock",
+      "text=15:05",
+      "desc=15:05",
+      "rid=start_side_notif_and_chip_container",
+      "rid=notification_icon_area",
+      "rid=notificationIcons",
+      "desc=应用商店通知：",
+      "desc=Android 系统通知：",
+      "desc=Legion Zone通知：",
+      "rid=status_bar_end_side_container",
+      "rid=status_bar_end_side_content",
+      "rid=system_icons",
+      "rid=statusIcons",
+      "rid=wifi_combo",
+      "rid=wifi_group",
+      "rid=inout_activity_container",
+      "rid=wifi_signal",
+      "desc=WLAN 信号满格。",
+      "rid=wifi_activity",
+      "rid=battery",
+      "desc=正在充电，已完成百分之 100。",
+      "rid=content",
+      "rid=contentPanel",
+      "rid=curriculum_guide_title",
+      "text=课程表上新了！",
+      "rid=curriculum_guide_message",
+      "text=点击快速导入课表，自动同步所有上课时间",
+      "desc=课程表上新了！",
+      "rid=timetable_guide_button",
+      "text=我知道了"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\346\\step0263\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\346\\step0263\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\346\\step0263\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          132,
+          53
+        ],
+        "t": "15:05",
+        "d": "15:05",
+        "r": "clock"
+      },
+      {
+        "c": [
+          224,
+          53
+        ],
+        "t": "15:05",
+        "r": "status_bar_start_side_content"
+      },
+      {
+        "c": [
+          224,
+          53
+        ],
+        "t": "15:05",
+        "r": "status_bar_start_side_except_heads_up"
+      },
+      {
+        "c": [
+          290,
+          53
+        ],
+        "t": "15:05",
+        "r": "start_side_notif_and_chip_container"
+      },
+      {
+        "c": [
+          290,
+          53
+        ],
+        "t": "15:05",
+        "r": "notification_icon_area"
+      },
+      {
+        "c": [
+          290,
+          53
+        ],
+        "t": "15:05",
+        "r": "notificationIcons"
+      },
+      {
+        "c": [
+          1520,
+          438
+        ],
+        "t": "课程表上新了！",
+        "r": "curriculum_guide_title"
+      },
+      {
+        "c": [
+          1520,
+          566
+        ],
+        "t": "点击快速导入课表，自动同步所有上课时间",
+        "r": "curriculum_guide_message"
+      },
+      {
+        "c": [
+          1520,
+          1521
+        ],
+        "t": "我知道了",
+        "r": "timetable_guide_button"
+      },
+      {
+        "c": [
+          2844,
+          53
+        ],
+        "d": "WLAN 信号满格。",
+        "r": "wifi_signal"
+      },
+      {
+        "c": [
+          2923,
+          53
+        ],
+        "d": "正在充电，已完成百分之 100。",
+        "r": "battery"
+      },
+      {
+        "c": [
+          229,
+          53
+        ],
+        "d": "应用商店通知："
+      }
+    ],
+    "nodes": [
+      {
+        "bounds": [
+          138,
+          1871,
+          2902,
+          1904
+        ],
+        "center": [
+          1520,
+          1887
+        ],
+        "rid": "com.zui.launcher:id/taskbar_container"
+      },
+      {
+        "bounds": [
+          138,
+          1871,
+          2902,
+          1904
+        ],
+        "center": [
+          1520,
+          1887
+        ],
+        "rid": "com.zui.launcher:id/taskbar_scrim"
+      },
+      {
+        "bounds": [
+          138,
+          1871,
+          2902,
+          1904
+        ],
+        "center": [
+          1520,
+          1887
+        ],
+        "rid": "com.zui.launcher:id/taskbar_bubbles_container"
+      },
+      {
+        "bounds": [
+          138,
+          1871,
+          2902,
+          1904
+        ],
+        "center": [
+          1520,
+          1887
+        ],
+        "rid": "com.zui.launcher:id/stashed_handle"
+      },
+      {
+        "bounds": [
+          138,
+          1871,
+          2902,
+          1904
+        ],
+        "center": [
+          1520,
+          1887
+        ],
+        "rid": "com.zui.launcher:id/navbuttons_view"
+      },
+      {
+        "bounds": [
+          0,
+          1689,
+          56,
+          1904
+        ],
+        "center": [
+          28,
+          1796
+        ],
+        "rid": "com.zui.launcher:id/start_contextual_buttons"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          107
+        ],
+        "center": [
+          1520,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_launch_animation_container"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          107
+        ],
+        "center": [
+          1520,
+          53
+        ],
+        "rid": "com.android.systemui:id/container"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          107
+        ],
+        "center": [
+          1520,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_container"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          107
+        ],
+        "center": [
+          1520,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar"
+      },
+      {
+        "bounds": [
+          55,
+          0,
+          2985,
+          107
+        ],
+        "center": [
+          1520,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_contents"
+      },
+      {
+        "bounds": [
+          66,
+          0,
+          1525,
+          107
+        ],
+        "center": [
+          795,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_start_side_container"
+      },
+      {
+        "bounds": [
+          66,
+          0,
+          382,
+          107
+        ],
+        "center": [
+          224,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_start_side_content"
+      },
+      {
+        "bounds": [
+          66,
+          0,
+          382,
+          107
+        ],
+        "center": [
+          224,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_start_side_except_heads_up"
+      },
+      {
+        "bounds": [
+          66,
+          23,
+          199,
+          84
+        ],
+        "center": [
+          132,
+          53
+        ],
+        "rid": "com.android.systemui:id/clock",
+        "text": "15:05",
+        "desc": "15:05"
+      },
+      {
+        "bounds": [
+          199,
+          0,
+          382,
+          107
+        ],
+        "center": [
+          290,
+          53
+        ],
+        "rid": "com.android.systemui:id/start_side_notif_and_chip_container"
+      },
+      {
+        "bounds": [
+          199,
+          0,
+          382,
+          107
+        ],
+        "center": [
+          290,
+          53
+        ],
+        "rid": "com.android.systemui:id/notification_icon_area"
+      },
+      {
+        "bounds": [
+          199,
+          0,
+          382,
+          107
+        ],
+        "center": [
+          290,
+          53
+        ],
+        "rid": "com.android.systemui:id/notificationIcons"
+      },
+      {
+        "bounds": [
+          199,
+          0,
+          260,
+          107
+        ],
+        "center": [
+          229,
+          53
+        ],
+        "desc": "应用商店通知："
+      },
+      {
+        "bounds": [
+          260,
+          0,
+          321,
+          107
+        ],
+        "center": [
+          290,
+          53
+        ],
+        "desc": "Android 系统通知："
+      },
+      {
+        "bounds": [
+          321,
+          0,
+          382,
+          107
+        ],
+        "center": [
+          351,
+          53
+        ],
+        "desc": "Legion Zone通知："
+      },
+      {
+        "bounds": [
+          1525,
+          0,
+          2985,
+          107
+        ],
+        "center": [
+          2255,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_end_side_container"
+      },
+      {
+        "bounds": [
+          2812,
+          0,
+          2985,
+          107
+        ],
+        "center": [
+          2898,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_end_side_content"
+      },
+      {
+        "bounds": [
+          2812,
+          23,
+          2985,
+          84
+        ],
+        "center": [
+          2898,
+          53
+        ],
+        "rid": "com.android.systemui:id/system_icons"
+      },
+      {
+        "bounds": [
+          2820,
+          23,
+          2874,
+          84
+        ],
+        "center": [
+          2847,
+          53
+        ],
+        "rid": "com.android.systemui:id/statusIcons"
+      },
+      {
+        "bounds": [
+          2820,
+          23,
+          2874,
+          84
+        ],
+        "center": [
+          2847,
+          53
+        ],
+        "rid": "com.android.systemui:id/wifi_combo"
+      },
+      {
+        "bounds": [
+          2820,
+          23,
+          2874,
+          84
+        ],
+        "center": [
+          2847,
+          53
+        ],
+        "rid": "com.android.systemui:id/wifi_combo"
+      },
+      {
+        "bounds": [
+          2820,
+          23,
+          2874,
+          84
+        ],
+        "center": [
+          2847,
+          53
+        ],
+        "rid": "com.android.systemui:id/wifi_group"
+      },
+      {
+        "bounds": [
+          2820,
+          23,
+          2874,
+          84
+        ],
+        "center": [
+          2847,
+          53
+        ],
+        "rid": "com.android.systemui:id/inout_activity_container"
+      },
+      {
+        "bounds": [
+          2820,
+          23,
+          2869,
+          84
+        ],
+        "center": [
+          2844,
+          53
+        ],
+        "rid": "com.android.systemui:id/wifi_signal",
+        "desc": "WLAN 信号满格。"
+      },
+      {
+        "bounds": [
+          2823,
+          27,
+          2874,
+          84
+        ],
+        "center": [
+          2848,
+          55
+        ],
+        "rid": "com.android.systemui:id/wifi_activity"
+      },
+      {
+        "bounds": [
+          2873,
+          29,
+          2974,
+          78
+        ],
+        "center": [
+          2923,
+          53
+        ],
+        "rid": "com.android.systemui:id/battery",
+        "desc": "正在充电，已完成百分之 100。"
+      },
+      {
+        "bounds": [
+          640,
+          275,
+          2400,
+          1703
+        ],
+        "center": [
+          1520,
+          989
+        ],
+        "rid": "android:id/content"
+      },
+      {
+        "bounds": [
+          640,
+          275,
+          2400,
+          1703
+        ],
+        "center": [
+          1520,
+          989
+        ],
+        "rid": "com.zui.calendar:id/contentPanel"
+      },
+      {
+        "bounds": [
+          1289,
+          391,
+          1751,
+          486
+        ],
+        "center": [
+          1520,
+          438
+        ],
+        "rid": "com.zui.calendar:id/curriculum_guide_title",
+        "text": "课程表上新了！"
+      },
+      {
+        "bounds": [
+          1045,
+          530,
+          1995,
+          603
+        ],
+        "center": [
+          1520,
+          566
+        ],
+        "rid": "com.zui.calendar:id/curriculum_guide_message",
+        "text": "点击快速导入课表，自动同步所有上课时间"
+      },
+      {
+        "bounds": [
+          915,
+          658,
+          2125,
+          1356
+        ],
+        "center": [
+          1520,
+          1007
+        ],
+        "desc": "课程表上新了！"
+      },
+      {
+        "bounds": [
+          1102,
+          1455,
+          1938,
+          1587
+        ],
+        "center": [
+          1520,
+          1521
+        ],
+        "rid": "com.zui.calendar:id/timetable_guide_button",
+        "text": "我知道了",
+        "clickable": true
+      }
+    ],
+    "nodes_count": 38,
+    "nodes_mode": "full",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      1284
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "c593b7b43099405595ffcd1ecea90939",
+    "measured_at": "2026-10-09T15:05:16.046",
+    "process_observed_ms": 3709.853,
+    "stages_ms": {
+      "device_import": 273.634,
+      "device_connect": 1108.705,
+      "permission": 967.151,
+      "screenshot": 326.572,
+      "png_save": 92.497,
+      "ui_dump": 97.072,
+      "rotation": 262.133,
+      "xml_save": 4.681,
+      "foreground": 374.946,
+      "meta_save": 4.754,
+      "screen_signature": 32.57,
+      "crash_detection": 96.603,
+      "event_write": 3.809,
+      "node_summary": 2.77,
+      "node_labels": 0.777,
+      "next_targets": 0.148,
+      "serialization": 0.861
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 12339
+  },
+  "response_bytes": 12339,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1284
+    ]
+  }
+}

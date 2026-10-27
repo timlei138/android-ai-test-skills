@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T17:23:58",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.display.TimetableActivity",
+  "rotation": 1,
+  "size": [
+    3840,
+    2560
+  ],
+  "action": {
+    "type": "tap",
+    "x": 3605,
+    "y": 185,
+    "via": "rid=action_curriculum_table_import(导入课程表)",
+    "why": "步骤1: 点右上角添加(导入课程表)按钮"
+  }
+}

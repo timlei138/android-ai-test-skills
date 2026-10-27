@@ -1,0 +1,28 @@
+{
+  "ts": "2026-10-15T10:42:27",
+  "package": "com.android.providers.media.module",
+  "activity": "com.android.providers.media.photopicker.PhotoPickerGetContentActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "call_id": "4cf537b17e074645aacf35d6f05b4bc0",
+  "timing": {
+    "call_id": "4cf537b17e074645aacf35d6f05b4bc0",
+    "measured_at": "2026-10-15T10:42:27.404",
+    "process_observed_ms": 13063.039,
+    "stages_ms": {
+      "device_import": 387.488,
+      "device_connect": 1064.889,
+      "permission": 5265.45,
+      "screenshot": 392.643,
+      "png_save": 217.334,
+      "ui_dump": 83.799,
+      "rotation": 236.229,
+      "xml_save": 8.043,
+      "foreground": 5339.327
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

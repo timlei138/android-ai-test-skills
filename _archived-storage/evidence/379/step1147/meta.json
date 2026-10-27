@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-09T20:25:29",
+  "package": "com.zui.calendar",
+  "activity": ".birthday.BirthdayDetailActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 511,
+    "y": 440,
+    "via": "title=农历生日L",
+    "why": "open"
+  },
+  "call_id": "447fcb1e7dd249229ab1ffe2f36d5a28",
+  "timing": {
+    "call_id": "447fcb1e7dd249229ab1ffe2f36d5a28",
+    "measured_at": "2026-10-09T20:25:29.923",
+    "process_observed_ms": 4588.32,
+    "stages_ms": {
+      "device_import": 309.145,
+      "device_connect": 1078.453,
+      "action": 209.583,
+      "settle_wait": 600.365,
+      "permission": 1068.82,
+      "screenshot": 371.168,
+      "png_save": 142.818,
+      "ui_dump": 67.338,
+      "rotation": 200.54,
+      "xml_save": 3.583,
+      "foreground": 443.978
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

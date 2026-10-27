@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T18:19:53",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimeSlotSettingsActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1694,
+    "via": "rid=layout_time_settings",
+    "why": "YAML s1：进课程时间设置页"
+  },
+  "call_id": "fea8512ca2bb40d6b51792dffd78f4bf",
+  "timing": {
+    "call_id": "fea8512ca2bb40d6b51792dffd78f4bf",
+    "measured_at": "2026-10-15T18:19:53.410",
+    "process_observed_ms": 14278.04,
+    "stages_ms": {
+      "device_import": 412.731,
+      "device_connect": 1266.739,
+      "action": 212.9,
+      "settle_wait": 600.631,
+      "permission": 5302.591,
+      "screenshot": 397.753,
+      "png_save": 214.361,
+      "ui_dump": 73.896,
+      "rotation": 293.252,
+      "xml_save": 9.286,
+      "foreground": 5406.053
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

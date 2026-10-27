@@ -1,0 +1,38 @@
+{
+  "call_id": "d2087d4e23744f57b266649437ed5625",
+  "session_id": 416,
+  "tool": "observe",
+  "started_at": "2026-10-10T15:49:03.459",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 1,
+  "ended_at": "2026-10-10T15:49:05.509",
+  "wall_ms": 2035.148,
+  "result": {
+    "ok": false,
+    "error": "Session 416 has incomplete recording. Resolve it and finish ERROR/BLOCKED; do not replay actions.",
+    "rejected": true,
+    "call_id": "d2087d4e23744f57b266649437ed5625",
+    "event_ids": [],
+    "execution_state": "not_executed"
+  },
+  "timing": {
+    "call_id": "d2087d4e23744f57b266649437ed5625",
+    "measured_at": "2026-10-10T15:49:05.482",
+    "process_observed_ms": 33.679,
+    "stages_ms": {
+      "serialization": 0.025
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 255
+  },
+  "response_bytes": 255,
+  "audit": {
+    "complete": true,
+    "outcome": "refused",
+    "issues": [],
+    "executed": false,
+    "event_ids": []
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T19:59:15",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimeSlotSettingsActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1192,
+    "via": "OCR:滚轮下一行",
+    "why": "步骤2: +1 档（第）"
+  }
+}

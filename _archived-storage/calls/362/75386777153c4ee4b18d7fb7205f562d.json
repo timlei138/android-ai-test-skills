@@ -1,0 +1,396 @@
+{
+  "call_id": "75386777153c4ee4b18d7fb7205f562d",
+  "session_id": 362,
+  "tool": "observe",
+  "started_at": "2026-10-09T17:38:30.853",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T17:38:36.444",
+  "wall_ms": 5584.317,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-09T17:38:36",
+    "package": "com.zui.calendar",
+    "activity": ".newbuild.NewBuildActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "75386777153c4ee4b18d7fb7205f562d",
+    "timing": {
+      "call_id": "75386777153c4ee4b18d7fb7205f562d",
+      "measured_at": "2026-10-09T17:38:36.202",
+      "process_observed_ms": 3569.315,
+      "stages_ms": {
+        "device_import": 317.023,
+        "device_connect": 1094.654,
+        "permission": 935.973,
+        "screenshot": 335.184,
+        "png_save": 73.634,
+        "ui_dump": 102.361,
+        "rotation": 218.64,
+        "xml_save": 6.804,
+        "foreground": 418.412
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=parentPanel",
+      "rid=customPanel",
+      "rid=custom",
+      "rid=title",
+      "text=10月9日",
+      "rid=dialog_sub_title",
+      "text=忽略年份时，无法计算农历生日",
+      "rid=datePicker",
+      "rid=parent",
+      "rid=selector_top_divider",
+      "rid=switch_layout",
+      "rid=lunarToggle",
+      "text=按照农历选择",
+      "rid=button_divider2",
+      "rid=left_button",
+      "text=取消",
+      "rid=right_button",
+      "text=确定"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\362\\step0669\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\362\\step0669\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\362\\step0669\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1520,
+          589
+        ],
+        "t": "10月9日",
+        "r": "title"
+      },
+      {
+        "c": [
+          1520,
+          655
+        ],
+        "t": "忽略年份时，无法计算农历生日",
+        "r": "dialog_sub_title"
+      },
+      {
+        "c": [
+          1520,
+          1123
+        ],
+        "t": "按照农历选择",
+        "r": "datePicker"
+      },
+      {
+        "c": [
+          1520,
+          1202
+        ],
+        "t": "按照农历选择",
+        "r": "switch_layout"
+      },
+      {
+        "c": [
+          1798,
+          1202
+        ],
+        "t": "按照农历选择",
+        "r": "lunarToggle"
+      },
+      {
+        "c": [
+          1244,
+          1399
+        ],
+        "t": "取消",
+        "r": "left_button"
+      },
+      {
+        "c": [
+          1795,
+          1399
+        ],
+        "t": "确定",
+        "r": "right_button"
+      },
+      {
+        "c": [
+          1520,
+          988
+        ],
+        "r": "content"
+      },
+      {
+        "c": [
+          1520,
+          988
+        ],
+        "r": "parentPanel"
+      },
+      {
+        "c": [
+          1520,
+          988
+        ],
+        "r": "customPanel"
+      },
+      {
+        "c": [
+          1520,
+          988
+        ],
+        "r": "custom"
+      },
+      {
+        "c": [
+          1520,
+          936
+        ],
+        "r": "parent"
+      }
+    ],
+    "nodes": [
+      {
+        "bounds": [
+          970,
+          495,
+          2070,
+          1482
+        ],
+        "center": [
+          1520,
+          988
+        ],
+        "rid": "android:id/content"
+      },
+      {
+        "bounds": [
+          970,
+          495,
+          2070,
+          1482
+        ],
+        "center": [
+          1520,
+          988
+        ],
+        "rid": "com.zui.calendar:id/parentPanel"
+      },
+      {
+        "bounds": [
+          970,
+          495,
+          2070,
+          1482
+        ],
+        "center": [
+          1520,
+          988
+        ],
+        "rid": "com.zui.calendar:id/customPanel"
+      },
+      {
+        "bounds": [
+          970,
+          495,
+          2070,
+          1482
+        ],
+        "center": [
+          1520,
+          988
+        ],
+        "rid": "com.zui.calendar:id/custom"
+      },
+      {
+        "bounds": [
+          1036,
+          550,
+          2004,
+          629
+        ],
+        "center": [
+          1520,
+          589
+        ],
+        "rid": "com.zui.calendar:id/title",
+        "text": "10月9日"
+      },
+      {
+        "bounds": [
+          1036,
+          629,
+          2004,
+          681
+        ],
+        "center": [
+          1520,
+          655
+        ],
+        "rid": "com.zui.calendar:id/dialog_sub_title",
+        "text": "忽略年份时，无法计算农历生日"
+      },
+      {
+        "bounds": [
+          970,
+          764,
+          2070,
+          1482
+        ],
+        "center": [
+          1520,
+          1123
+        ],
+        "rid": "com.zui.calendar:id/datePicker"
+      },
+      {
+        "bounds": [
+          970,
+          764,
+          2070,
+          1108
+        ],
+        "center": [
+          1520,
+          936
+        ],
+        "rid": "com.zui.calendar:id/parent"
+      },
+      {
+        "bounds": [
+          1036,
+          866,
+          2004,
+          869
+        ],
+        "center": [
+          1520,
+          867
+        ],
+        "rid": "com.zui.calendar:id/selector_top_divider"
+      },
+      {
+        "bounds": [
+          970,
+          1136,
+          2070,
+          1268
+        ],
+        "center": [
+          1520,
+          1202
+        ],
+        "rid": "com.zui.calendar:id/switch_layout"
+      },
+      {
+        "bounds": [
+          1592,
+          1136,
+          2004,
+          1268
+        ],
+        "center": [
+          1798,
+          1202
+        ],
+        "rid": "com.zui.calendar:id/lunarToggle",
+        "text": "按照农历选择",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          970,
+          1316,
+          2070,
+          1317
+        ],
+        "center": [
+          1520,
+          1316
+        ],
+        "rid": "com.zui.calendar:id/button_divider2"
+      },
+      {
+        "bounds": [
+          970,
+          1317,
+          1519,
+          1482
+        ],
+        "center": [
+          1244,
+          1399
+        ],
+        "rid": "com.zui.calendar:id/left_button",
+        "text": "取消",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1520,
+          1317,
+          2070,
+          1482
+        ],
+        "center": [
+          1795,
+          1399
+        ],
+        "rid": "com.zui.calendar:id/right_button",
+        "text": "确定",
+        "clickable": true
+      }
+    ],
+    "nodes_count": 14,
+    "nodes_mode": "full",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      1691
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "75386777153c4ee4b18d7fb7205f562d",
+    "measured_at": "2026-10-09T17:38:36.356",
+    "process_observed_ms": 3723.795,
+    "stages_ms": {
+      "device_import": 317.023,
+      "device_connect": 1094.654,
+      "permission": 935.973,
+      "screenshot": 335.184,
+      "png_save": 73.634,
+      "ui_dump": 102.361,
+      "rotation": 218.64,
+      "xml_save": 6.804,
+      "foreground": 418.412,
+      "meta_save": 7.296,
+      "screen_signature": 35.718,
+      "crash_detection": 99.011,
+      "event_write": 1.854,
+      "node_summary": 1.4,
+      "node_labels": 1.082,
+      "next_targets": 0.082,
+      "serialization": 0.49
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 6251
+  },
+  "response_bytes": 6251,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1691
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-27T09:46:15",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.EditTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2913,
+    "y": 202,
+    "via": "rid=save_view text=完成",
+    "why": "步骤3 点击完成应用信息到空课程表(名称为空)"
+  },
+  "call_id": "8eaebc7fa95c4d5e9c3cbec41243d57f",
+  "timing": {
+    "call_id": "8eaebc7fa95c4d5e9c3cbec41243d57f",
+    "measured_at": "2026-10-27T09:46:15.531",
+    "process_observed_ms": 4382.895,
+    "stages_ms": {
+      "device_import": 404.693,
+      "device_connect": 1122.521,
+      "action": 170.419,
+      "settle_wait": 600.604,
+      "permission": 815.526,
+      "screenshot": 384.157,
+      "png_save": 159.353,
+      "ui_dump": 46.011,
+      "rotation": 208.507,
+      "xml_save": 2.821,
+      "foreground": 393.182
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

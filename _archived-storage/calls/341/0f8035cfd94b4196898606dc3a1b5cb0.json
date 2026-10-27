@@ -1,0 +1,178 @@
+{
+  "call_id": "0f8035cfd94b4196898606dc3a1b5cb0",
+  "session_id": 341,
+  "tool": "observe",
+  "started_at": "2026-10-09T14:43:08.183",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T14:43:13.884",
+  "wall_ms": 5690.512,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-09T14:43:13",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.crop.CropImageActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "0f8035cfd94b4196898606dc3a1b5cb0",
+    "timing": {
+      "call_id": "0f8035cfd94b4196898606dc3a1b5cb0",
+      "measured_at": "2026-10-09T14:43:13.659",
+      "process_observed_ms": 3847.328,
+      "stages_ms": {
+        "device_import": 286.638,
+        "device_connect": 1197.265,
+        "permission": 964.987,
+        "screenshot": 387.121,
+        "png_save": 188.42,
+        "ui_dump": 82.548,
+        "rotation": 299.945,
+        "xml_save": 6.29,
+        "foreground": 371.875
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=topToolbar",
+      "rid=btnCancel",
+      "text=上一步",
+      "rid=tvTitle",
+      "text=裁剪",
+      "rid=btnDone",
+      "text=完成",
+      "rid=cropImageView",
+      "rid=bottomControlLayout",
+      "rid=btnRotateLeft",
+      "desc=右转",
+      "text=左转",
+      "rid=btnRotateRight",
+      "text=右转"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\341\\step0210\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\341\\step0210\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\341\\step0210\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          154,
+          189
+        ],
+        "t": "上一步",
+        "r": "btnCancel"
+      },
+      {
+        "c": [
+          2908,
+          189
+        ],
+        "t": "完成",
+        "r": "btnDone"
+      },
+      {
+        "c": [
+          760,
+          1760
+        ],
+        "t": "左转",
+        "r": "btnRotateLeft"
+      },
+      {
+        "c": [
+          2280,
+          1760
+        ],
+        "t": "右转",
+        "r": "btnRotateRight"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          154,
+          189
+        ],
+        "t": "上一步",
+        "r": "btnCancel"
+      },
+      {
+        "i": 1,
+        "c": [
+          2908,
+          189
+        ],
+        "t": "完成",
+        "r": "btnDone"
+      },
+      {
+        "i": 2,
+        "c": [
+          760,
+          1760
+        ],
+        "r": "btnRotateLeft"
+      },
+      {
+        "i": 3,
+        "c": [
+          2280,
+          1760
+        ],
+        "r": "btnRotateRight"
+      }
+    ],
+    "nodes_count": 4,
+    "nodes_mode": "nav",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      1229
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "0f8035cfd94b4196898606dc3a1b5cb0",
+    "measured_at": "2026-10-09T14:43:13.797",
+    "process_observed_ms": 3983.833,
+    "stages_ms": {
+      "device_import": 286.638,
+      "device_connect": 1197.265,
+      "permission": 964.987,
+      "screenshot": 387.121,
+      "png_save": 188.42,
+      "ui_dump": 82.548,
+      "rotation": 299.945,
+      "xml_save": 6.29,
+      "foreground": 371.875,
+      "meta_save": 6.456,
+      "screen_signature": 31.601,
+      "crash_detection": 85.751,
+      "event_write": 3.778,
+      "node_summary": 0.584,
+      "node_labels": 0.311,
+      "next_targets": 0.019,
+      "serialization": 0.101
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 2814
+  },
+  "response_bytes": 2814,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1229
+    ]
+  }
+}

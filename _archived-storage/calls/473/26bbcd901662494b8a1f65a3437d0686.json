@@ -1,0 +1,186 @@
+{
+  "call_id": "26bbcd901662494b8a1f65a3437d0686",
+  "session_id": 473,
+  "tool": "act",
+  "started_at": "2026-10-15T18:37:07.688",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-15T18:37:12.705",
+  "wall_ms": 5009.194,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 2919,
+      "y": 203,
+      "via": "rid=action_curriculum_table_settings",
+      "why": "重试：进全部课程表列表"
+    },
+    "ts": "2026-10-15T18:37:12",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.management.TimetableListActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "26bbcd901662494b8a1f65a3437d0686",
+    "timing": {
+      "call_id": "26bbcd901662494b8a1f65a3437d0686",
+      "measured_at": "2026-10-15T18:37:12.466",
+      "process_observed_ms": 4335.747,
+      "stages_ms": {
+        "device_import": 399.61,
+        "device_connect": 1097.345,
+        "action": 164.033,
+        "settle_wait": 600.142,
+        "permission": 1131.319,
+        "screenshot": 251.697,
+        "png_save": 107.079,
+        "ui_dump": 46.665,
+        "rotation": 154.949,
+        "xml_save": 5.821,
+        "foreground": 261.582
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "desc=转到上一层级",
+      "rid=toolbar_title",
+      "text=全部课程表",
+      "rid=action_schedule",
+      "desc=编辑",
+      "rid=action_add_schedule",
+      "desc=添加课程表",
+      "rid=recyclerView",
+      "rid=tv_schedule_name",
+      "text=测试课表182",
+      "rid=tv_default_badge",
+      "text=当前",
+      "rid=tv_schedule_info",
+      "text=设置"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\473\\step2589\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\473\\step2589\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\473\\step2589\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          2754,
+          203
+        ],
+        "t": "编辑",
+        "r": "action_schedule"
+      },
+      {
+        "c": [
+          2891,
+          203
+        ],
+        "t": "添加课程表",
+        "r": "action_add_schedule"
+      },
+      {
+        "c": [
+          123,
+          203
+        ],
+        "t": "转到上一层级"
+      },
+      {
+        "c": [
+          1520,
+          391
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          123,
+          203
+        ],
+        "t": "转到上一层级"
+      },
+      {
+        "i": 1,
+        "c": [
+          2754,
+          203
+        ],
+        "t": "编辑",
+        "r": "action_schedule"
+      },
+      {
+        "i": 2,
+        "c": [
+          2891,
+          203
+        ],
+        "t": "添加课程表",
+        "r": "action_add_schedule"
+      },
+      {
+        "i": 3,
+        "c": [
+          1520,
+          391
+        ]
+      }
+    ],
+    "nodes_count": 4,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      3733
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "26bbcd901662494b8a1f65a3437d0686",
+    "measured_at": "2026-10-15T18:37:12.603",
+    "process_observed_ms": 4472.211,
+    "stages_ms": {
+      "device_import": 399.61,
+      "device_connect": 1097.345,
+      "action": 164.033,
+      "settle_wait": 600.142,
+      "permission": 1131.319,
+      "screenshot": 251.697,
+      "png_save": 107.079,
+      "ui_dump": 46.665,
+      "rotation": 154.949,
+      "xml_save": 5.821,
+      "foreground": 261.582,
+      "meta_save": 5.83,
+      "crash_detection": 75.259,
+      "screen_signature": 46.993,
+      "event_write": 1.942,
+      "node_summary": 0.393,
+      "node_labels": 1.168,
+      "next_targets": 0.053,
+      "serialization": 0.369
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 3101
+  },
+  "response_bytes": 3101,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3733
+    ]
+  }
+}

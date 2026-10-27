@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T19:49:35",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.EditTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 575,
+    "via": "rid=layout_semester_start_date",
+    "why": "步骤2: 点击学期开始时间"
+  }
+}

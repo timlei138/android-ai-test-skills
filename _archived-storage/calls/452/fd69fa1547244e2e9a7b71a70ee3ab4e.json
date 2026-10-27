@@ -1,0 +1,1184 @@
+{
+  "call_id": "fd69fa1547244e2e9a7b71a70ee3ab4e",
+  "session_id": 452,
+  "tool": "observe",
+  "started_at": "2026-10-15T14:40:49.326",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-15T14:41:03.268",
+  "wall_ms": 13919.916,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-15T14:41:02",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.management.EditTimetableActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "fd69fa1547244e2e9a7b71a70ee3ab4e",
+    "timing": {
+      "call_id": "fd69fa1547244e2e9a7b71a70ee3ab4e",
+      "measured_at": "2026-10-15T14:41:02.997",
+      "process_observed_ms": 13298.269,
+      "stages_ms": {
+        "device_import": 411.495,
+        "device_connect": 1204.943,
+        "permission": 5362.65,
+        "screenshot": 333.763,
+        "png_save": 181.957,
+        "ui_dump": 77.985,
+        "rotation": 257.854,
+        "xml_save": 6.118,
+        "foreground": 5400.299
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "desc=转到上一层级",
+      "rid=toolbar_title",
+      "text=新建课程表",
+      "rid=action_save",
+      "rid=save_view",
+      "text=完成",
+      "rid=schedule_content",
+      "rid=et_schedule_name",
+      "text=课程表名称（必填）",
+      "rid=layout_semester_start_date",
+      "text=学期开始时间",
+      "rid=tv_semester_start_date",
+      "text=2026年09月01日",
+      "rid=layout_current_week",
+      "rid=tv_current_week_title",
+      "text=当前周数",
+      "rid=tv_current_week_desc",
+      "text=根据你选择的开学日期推算当前周数",
+      "rid=tv_current_week",
+      "text=第7周",
+      "rid=arrow_current_week",
+      "rid=layout_total_weeks",
+      "rid=tv_total_weeks_title",
+      "text=学期总周数",
+      "rid=tv_total_weeks_desc",
+      "text=请选择学期共多少周",
+      "rid=tv_total_weeks",
+      "text=20周",
+      "rid=arrow_total_weeks",
+      "rid=layout_weekend_classes",
+      "text=周末是否有课",
+      "rid=switch_weekend_classes",
+      "rid=layout_show_non_current_week",
+      "text=显示非本周课程",
+      "rid=switch_show_non_current_week",
+      "rid=layout_time_settings",
+      "rid=tv_time_settings_title",
+      "text=课程时间设置",
+      "rid=tv_time_settings_desc",
+      "text=设置课程节数，调整每节课时间",
+      "rid=right_arrow_time",
+      "rid=status_bar_launch_animation_container",
+      "rid=container",
+      "rid=status_bar_container",
+      "rid=status_bar",
+      "rid=status_bar_contents",
+      "rid=status_bar_start_side_container",
+      "rid=status_bar_start_side_content",
+      "rid=status_bar_start_side_except_heads_up",
+      "rid=clock",
+      "text=14:40",
+      "desc=14:40",
+      "rid=start_side_notif_and_chip_container",
+      "rid=notification_icon_area",
+      "rid=notificationIcons",
+      "desc=Legion Zone通知：",
+      "desc=Android 系统通知：",
+      "rid=status_bar_end_side_container",
+      "rid=status_bar_end_side_content",
+      "rid=system_icons",
+      "rid=statusIcons",
+      "rid=wifi_combo",
+      "rid=wifi_group",
+      "rid=inout_activity_container",
+      "rid=wifi_signal",
+      "desc=WLAN 信号满格。",
+      "rid=wifi_activity",
+      "rid=battery",
+      "desc=正在充电，已完成百分之 100。",
+      "rid=taskbar_container",
+      "rid=taskbar_scrim",
+      "rid=taskbar_bubbles_container",
+      "rid=stashed_handle",
+      "rid=navbuttons_view",
+      "rid=start_contextual_buttons",
+      "rid=parentPanel",
+      "rid=inputArea"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\c177\\editpage\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\c177\\editpage\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\c177\\editpage\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          132,
+          53
+        ],
+        "t": "14:40",
+        "d": "14:40",
+        "r": "clock"
+      },
+      {
+        "c": [
+          1520,
+          952
+        ],
+        "t": "请选择学期共多少周",
+        "r": "action_bar_root"
+      },
+      {
+        "c": [
+          1520,
+          952
+        ],
+        "t": "请选择学期共多少周",
+        "r": "content"
+      },
+      {
+        "c": [
+          368,
+          203
+        ],
+        "t": "新建课程表",
+        "r": "toolbar_title"
+      },
+      {
+        "c": [
+          2913,
+          202
+        ],
+        "t": "完成",
+        "r": "action_save"
+      },
+      {
+        "c": [
+          2913,
+          202
+        ],
+        "t": "完成",
+        "r": "save_view"
+      },
+      {
+        "c": [
+          1520,
+          1085
+        ],
+        "t": "请选择学期共多少周",
+        "r": "schedule_content",
+        "s": true
+      },
+      {
+        "c": [
+          1520,
+          375
+        ],
+        "t": "课程表名称（必填）",
+        "r": "et_schedule_name"
+      },
+      {
+        "c": [
+          2654,
+          575
+        ],
+        "t": "2026年09月01日",
+        "r": "tv_semester_start_date"
+      },
+      {
+        "c": [
+          1520,
+          767
+        ],
+        "t": "根据你选择的开学日期推算当前周数",
+        "r": "layout_current_week"
+      },
+      {
+        "c": [
+          1411,
+          736
+        ],
+        "t": "当前周数",
+        "r": "tv_current_week_title"
+      },
+      {
+        "c": [
+          1411,
+          807
+        ],
+        "t": "根据你选择的开学日期推算当前周数",
+        "r": "tv_current_week_desc"
+      }
+    ],
+    "nodes": [
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "com.zui.calendar:id/action_bar_root"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "android:id/content"
+      },
+      {
+        "bounds": [
+          0,
+          107,
+          2985,
+          300
+        ],
+        "center": [
+          1492,
+          203
+        ],
+        "rid": "com.zui.calendar:id/toolbar"
+      },
+      {
+        "bounds": [
+          44,
+          115,
+          203,
+          291
+        ],
+        "center": [
+          123,
+          203
+        ],
+        "desc": "转到上一层级",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          203,
+          156,
+          533,
+          251
+        ],
+        "center": [
+          368,
+          203
+        ],
+        "rid": "com.zui.calendar:id/toolbar_title",
+        "text": "新建课程表"
+      },
+      {
+        "bounds": [
+          2863,
+          166,
+          2963,
+          239
+        ],
+        "center": [
+          2913,
+          202
+        ],
+        "rid": "com.zui.calendar:id/action_save"
+      },
+      {
+        "bounds": [
+          2863,
+          166,
+          2963,
+          239
+        ],
+        "center": [
+          2913,
+          202
+        ],
+        "rid": "com.zui.calendar:id/save_view",
+        "text": "完成",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          0,
+          300,
+          3040,
+          1871
+        ],
+        "center": [
+          1520,
+          1085
+        ],
+        "rid": "com.zui.calendar:id/schedule_content",
+        "scrollable": true
+      },
+      {
+        "bounds": [
+          88,
+          339,
+          2952,
+          412
+        ],
+        "center": [
+          1520,
+          375
+        ],
+        "rid": "com.zui.calendar:id/et_schedule_name",
+        "text": "课程表名称（必填）",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          88,
+          495,
+          2952,
+          656
+        ],
+        "center": [
+          1520,
+          575
+        ],
+        "rid": "com.zui.calendar:id/layout_semester_start_date",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          154,
+          539,
+          454,
+          612
+        ],
+        "center": [
+          304,
+          575
+        ],
+        "text": "学期开始时间"
+      },
+      {
+        "bounds": [
+          2506,
+          547,
+          2803,
+          603
+        ],
+        "center": [
+          2654,
+          575
+        ],
+        "rid": "com.zui.calendar:id/tv_semester_start_date",
+        "text": "2026年09月01日"
+      },
+      {
+        "bounds": [
+          88,
+          656,
+          2952,
+          879
+        ],
+        "center": [
+          1520,
+          767
+        ],
+        "rid": "com.zui.calendar:id/layout_current_week",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          154,
+          700,
+          2669,
+          773
+        ],
+        "center": [
+          1411,
+          736
+        ],
+        "rid": "com.zui.calendar:id/tv_current_week_title",
+        "text": "当前周数"
+      },
+      {
+        "bounds": [
+          154,
+          779,
+          2669,
+          835
+        ],
+        "center": [
+          1411,
+          807
+        ],
+        "rid": "com.zui.calendar:id/tv_current_week_desc",
+        "text": "根据你选择的开学日期推算当前周数"
+      },
+      {
+        "bounds": [
+          2702,
+          740,
+          2803,
+          796
+        ],
+        "center": [
+          2752,
+          768
+        ],
+        "rid": "com.zui.calendar:id/tv_current_week",
+        "text": "第7周"
+      },
+      {
+        "bounds": [
+          2820,
+          735,
+          2886,
+          801
+        ],
+        "center": [
+          2853,
+          768
+        ],
+        "rid": "com.zui.calendar:id/arrow_current_week"
+      },
+      {
+        "bounds": [
+          88,
+          879,
+          2952,
+          1102
+        ],
+        "center": [
+          1520,
+          990
+        ],
+        "rid": "com.zui.calendar:id/layout_total_weeks",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          154,
+          923,
+          2683,
+          996
+        ],
+        "center": [
+          1418,
+          959
+        ],
+        "rid": "com.zui.calendar:id/tv_total_weeks_title",
+        "text": "学期总周数"
+      },
+      {
+        "bounds": [
+          154,
+          1002,
+          2683,
+          1058
+        ],
+        "center": [
+          1418,
+          1030
+        ],
+        "rid": "com.zui.calendar:id/tv_total_weeks_desc",
+        "text": "请选择学期共多少周"
+      },
+      {
+        "bounds": [
+          2716,
+          963,
+          2803,
+          1019
+        ],
+        "center": [
+          2759,
+          991
+        ],
+        "rid": "com.zui.calendar:id/tv_total_weeks",
+        "text": "20周"
+      },
+      {
+        "bounds": [
+          2820,
+          958,
+          2886,
+          1024
+        ],
+        "center": [
+          2853,
+          991
+        ],
+        "rid": "com.zui.calendar:id/arrow_total_weeks"
+      },
+      {
+        "bounds": [
+          88,
+          1102,
+          2952,
+          1322
+        ],
+        "center": [
+          1520,
+          1212
+        ],
+        "rid": "com.zui.calendar:id/layout_weekend_classes",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          154,
+          1175,
+          2734,
+          1248
+        ],
+        "center": [
+          1444,
+          1211
+        ],
+        "text": "周末是否有课"
+      },
+      {
+        "bounds": [
+          2734,
+          1146,
+          2886,
+          1278
+        ],
+        "center": [
+          2810,
+          1212
+        ],
+        "rid": "com.zui.calendar:id/switch_weekend_classes"
+      },
+      {
+        "bounds": [
+          88,
+          1322,
+          2952,
+          1542
+        ],
+        "center": [
+          1520,
+          1432
+        ],
+        "rid": "com.zui.calendar:id/layout_show_non_current_week",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          154,
+          1395,
+          2734,
+          1468
+        ],
+        "center": [
+          1444,
+          1431
+        ],
+        "text": "显示非本周课程"
+      },
+      {
+        "bounds": [
+          2734,
+          1366,
+          2886,
+          1498
+        ],
+        "center": [
+          2810,
+          1432
+        ],
+        "rid": "com.zui.calendar:id/switch_show_non_current_week"
+      },
+      {
+        "bounds": [
+          88,
+          1583,
+          2952,
+          1806
+        ],
+        "center": [
+          1520,
+          1694
+        ],
+        "rid": "com.zui.calendar:id/layout_time_settings",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          154,
+          1627,
+          2787,
+          1700
+        ],
+        "center": [
+          1470,
+          1663
+        ],
+        "rid": "com.zui.calendar:id/tv_time_settings_title",
+        "text": "课程时间设置"
+      },
+      {
+        "bounds": [
+          154,
+          1706,
+          2787,
+          1762
+        ],
+        "center": [
+          1470,
+          1734
+        ],
+        "rid": "com.zui.calendar:id/tv_time_settings_desc",
+        "text": "设置课程节数，调整每节课时间"
+      },
+      {
+        "bounds": [
+          2820,
+          1662,
+          2886,
+          1728
+        ],
+        "center": [
+          2853,
+          1695
+        ],
+        "rid": "com.zui.calendar:id/right_arrow_time"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          107
+        ],
+        "center": [
+          1520,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_launch_animation_container"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          107
+        ],
+        "center": [
+          1520,
+          53
+        ],
+        "rid": "com.android.systemui:id/container"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          107
+        ],
+        "center": [
+          1520,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_container"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          107
+        ],
+        "center": [
+          1520,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar"
+      },
+      {
+        "bounds": [
+          55,
+          0,
+          2985,
+          107
+        ],
+        "center": [
+          1520,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_contents"
+      },
+      {
+        "bounds": [
+          66,
+          0,
+          1525,
+          107
+        ],
+        "center": [
+          795,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_start_side_container"
+      },
+      {
+        "bounds": [
+          66,
+          0,
+          321,
+          107
+        ],
+        "center": [
+          193,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_start_side_content"
+      },
+      {
+        "bounds": [
+          66,
+          0,
+          321,
+          107
+        ],
+        "center": [
+          193,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_start_side_except_heads_up"
+      },
+      {
+        "bounds": [
+          66,
+          23,
+          199,
+          84
+        ],
+        "center": [
+          132,
+          53
+        ],
+        "rid": "com.android.systemui:id/clock",
+        "text": "14:40",
+        "desc": "14:40"
+      },
+      {
+        "bounds": [
+          199,
+          0,
+          321,
+          107
+        ],
+        "center": [
+          260,
+          53
+        ],
+        "rid": "com.android.systemui:id/start_side_notif_and_chip_container"
+      },
+      {
+        "bounds": [
+          199,
+          0,
+          321,
+          107
+        ],
+        "center": [
+          260,
+          53
+        ],
+        "rid": "com.android.systemui:id/notification_icon_area"
+      },
+      {
+        "bounds": [
+          199,
+          0,
+          321,
+          107
+        ],
+        "center": [
+          260,
+          53
+        ],
+        "rid": "com.android.systemui:id/notificationIcons"
+      },
+      {
+        "bounds": [
+          199,
+          0,
+          260,
+          107
+        ],
+        "center": [
+          229,
+          53
+        ],
+        "desc": "Legion Zone通知："
+      },
+      {
+        "bounds": [
+          260,
+          0,
+          321,
+          107
+        ],
+        "center": [
+          290,
+          53
+        ],
+        "desc": "Android 系统通知："
+      },
+      {
+        "bounds": [
+          1525,
+          0,
+          2985,
+          107
+        ],
+        "center": [
+          2255,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_end_side_container"
+      },
+      {
+        "bounds": [
+          2812,
+          0,
+          2985,
+          107
+        ],
+        "center": [
+          2898,
+          53
+        ],
+        "rid": "com.android.systemui:id/status_bar_end_side_content"
+      },
+      {
+        "bounds": [
+          2812,
+          23,
+          2985,
+          84
+        ],
+        "center": [
+          2898,
+          53
+        ],
+        "rid": "com.android.systemui:id/system_icons"
+      },
+      {
+        "bounds": [
+          2820,
+          23,
+          2874,
+          84
+        ],
+        "center": [
+          2847,
+          53
+        ],
+        "rid": "com.android.systemui:id/statusIcons"
+      },
+      {
+        "bounds": [
+          2820,
+          23,
+          2874,
+          84
+        ],
+        "center": [
+          2847,
+          53
+        ],
+        "rid": "com.android.systemui:id/wifi_combo"
+      },
+      {
+        "bounds": [
+          2820,
+          23,
+          2874,
+          84
+        ],
+        "center": [
+          2847,
+          53
+        ],
+        "rid": "com.android.systemui:id/wifi_combo"
+      },
+      {
+        "bounds": [
+          2820,
+          23,
+          2874,
+          84
+        ],
+        "center": [
+          2847,
+          53
+        ],
+        "rid": "com.android.systemui:id/wifi_group"
+      },
+      {
+        "bounds": [
+          2820,
+          23,
+          2874,
+          84
+        ],
+        "center": [
+          2847,
+          53
+        ],
+        "rid": "com.android.systemui:id/inout_activity_container"
+      },
+      {
+        "bounds": [
+          2820,
+          23,
+          2869,
+          84
+        ],
+        "center": [
+          2844,
+          53
+        ],
+        "rid": "com.android.systemui:id/wifi_signal",
+        "desc": "WLAN 信号满格。"
+      },
+      {
+        "bounds": [
+          2823,
+          27,
+          2874,
+          84
+        ],
+        "center": [
+          2848,
+          55
+        ],
+        "rid": "com.android.systemui:id/wifi_activity"
+      },
+      {
+        "bounds": [
+          2873,
+          29,
+          2974,
+          78
+        ],
+        "center": [
+          2923,
+          53
+        ],
+        "rid": "com.android.systemui:id/battery",
+        "desc": "正在充电，已完成百分之 100。"
+      },
+      {
+        "bounds": [
+          138,
+          1871,
+          2902,
+          1904
+        ],
+        "center": [
+          1520,
+          1887
+        ],
+        "rid": "com.zui.launcher:id/taskbar_container"
+      },
+      {
+        "bounds": [
+          138,
+          1871,
+          2902,
+          1904
+        ],
+        "center": [
+          1520,
+          1887
+        ],
+        "rid": "com.zui.launcher:id/taskbar_scrim"
+      },
+      {
+        "bounds": [
+          138,
+          1871,
+          2902,
+          1904
+        ],
+        "center": [
+          1520,
+          1887
+        ],
+        "rid": "com.zui.launcher:id/taskbar_bubbles_container"
+      },
+      {
+        "bounds": [
+          138,
+          1871,
+          2902,
+          1904
+        ],
+        "center": [
+          1520,
+          1887
+        ],
+        "rid": "com.zui.launcher:id/stashed_handle"
+      },
+      {
+        "bounds": [
+          138,
+          1871,
+          2902,
+          1904
+        ],
+        "center": [
+          1520,
+          1887
+        ],
+        "rid": "com.zui.launcher:id/navbuttons_view"
+      },
+      {
+        "bounds": [
+          0,
+          1792,
+          56,
+          1904
+        ],
+        "center": [
+          28,
+          1848
+        ],
+        "rid": "com.zui.launcher:id/start_contextual_buttons"
+      },
+      {
+        "bounds": [
+          0,
+          1757,
+          3040,
+          1871
+        ],
+        "center": [
+          1520,
+          1814
+        ],
+        "rid": "android:id/content"
+      },
+      {
+        "bounds": [
+          0,
+          1757,
+          3040,
+          1871
+        ],
+        "center": [
+          1520,
+          1814
+        ],
+        "rid": "android:id/parentPanel"
+      },
+      {
+        "bounds": [
+          0,
+          1757,
+          3040,
+          1871
+        ],
+        "center": [
+          1520,
+          1814
+        ],
+        "rid": "android:id/inputArea"
+      },
+      {
+        "bounds": [
+          0,
+          1757,
+          3040,
+          1871
+        ],
+        "center": [
+          1520,
+          1814
+        ],
+        "rid": "com.github.uiautomator:id/keyboard"
+      },
+      {
+        "bounds": [
+          0,
+          1871,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          1887
+        ],
+        "rid": "android:id/navigationBarBackground"
+      }
+    ],
+    "nodes_count": 68,
+    "nodes_mode": "full",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      3531
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "fd69fa1547244e2e9a7b71a70ee3ab4e",
+    "measured_at": "2026-10-15T14:41:03.184",
+    "process_observed_ms": 13485.965,
+    "stages_ms": {
+      "device_import": 411.495,
+      "device_connect": 1204.943,
+      "permission": 5362.65,
+      "screenshot": 333.763,
+      "png_save": 181.957,
+      "ui_dump": 77.985,
+      "rotation": 257.854,
+      "xml_save": 6.118,
+      "foreground": 5400.299,
+      "meta_save": 6.586,
+      "screen_signature": 45.764,
+      "crash_detection": 122.706,
+      "event_write": 3.05,
+      "node_summary": 0.747,
+      "node_labels": 0.46,
+      "next_targets": 0.129,
+      "serialization": 0.453
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 19889
+  },
+  "response_bytes": 19889,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3531
+    ]
+  }
+}

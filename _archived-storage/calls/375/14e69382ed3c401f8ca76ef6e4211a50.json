@@ -1,0 +1,336 @@
+{
+  "call_id": "14e69382ed3c401f8ca76ef6e4211a50",
+  "session_id": 375,
+  "tool": "act",
+  "started_at": "2026-10-09T19:46:23.809",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T19:46:30.313",
+  "wall_ms": 6495.272,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 301,
+      "y": 738,
+      "via": "reminder_title=1天前",
+      "why": "pick2"
+    },
+    "ts": "2026-10-09T19:46:30",
+    "package": "com.zui.calendar",
+    "activity": ".reminder.ReminderMultiSelectActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "14e69382ed3c401f8ca76ef6e4211a50",
+    "timing": {
+      "call_id": "14e69382ed3c401f8ca76ef6e4211a50",
+      "measured_at": "2026-10-09T19:46:30.115",
+      "process_observed_ms": 4435.875,
+      "stages_ms": {
+        "device_import": 334.509,
+        "device_connect": 1149.705,
+        "action": 162.388,
+        "settle_wait": 600.157,
+        "permission": 927.553,
+        "screenshot": 264.094,
+        "png_save": 150.343,
+        "ui_dump": 77.818,
+        "rotation": 260.002,
+        "xml_save": 3.883,
+        "foreground": 401.313
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "rid=toolbar_title",
+      "text=提醒",
+      "rid=no_reminder_layout",
+      "text=不提醒",
+      "rid=no_reminder_switch",
+      "rid=divider_line_view",
+      "rid=reminder_0_layout",
+      "rid=reminder_checkbox",
+      "rid=reminder_title",
+      "text=任务发生当天",
+      "rid=reminder_1_layout",
+      "text=1天前",
+      "rid=reminder_2_layout",
+      "text=2天前",
+      "rid=reminder_3_layout",
+      "text=3天前",
+      "rid=reminder_4_layout",
+      "text=1周前",
+      "rid=reminder_5_layout",
+      "text=15天前",
+      "rid=reminder_6_layout",
+      "text=1个月前",
+      "rid=reminder_time_layout",
+      "rid=reminder_time_text",
+      "text=时间",
+      "rid=reminder_time",
+      "text=09:00"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\375\\step0994\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\375\\step0994\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\375\\step0994\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          2819,
+          1794
+        ],
+        "t": "09:00",
+        "r": "reminder_time"
+      },
+      {
+        "c": [
+          107,
+          203
+        ],
+        "t": "提醒"
+      },
+      {
+        "c": [
+          1520,
+          386
+        ],
+        "r": "no_reminder_layout"
+      },
+      {
+        "c": [
+          2843,
+          386
+        ],
+        "r": "no_reminder_switch"
+      },
+      {
+        "c": [
+          1520,
+          562
+        ],
+        "r": "reminder_0_layout"
+      },
+      {
+        "c": [
+          1520,
+          738
+        ],
+        "r": "reminder_1_layout"
+      },
+      {
+        "c": [
+          1520,
+          914
+        ],
+        "r": "reminder_2_layout"
+      },
+      {
+        "c": [
+          1520,
+          1090
+        ],
+        "r": "reminder_3_layout"
+      },
+      {
+        "c": [
+          1520,
+          1266
+        ],
+        "r": "reminder_4_layout"
+      },
+      {
+        "c": [
+          1520,
+          1442
+        ],
+        "r": "reminder_5_layout"
+      },
+      {
+        "c": [
+          1520,
+          1618
+        ],
+        "r": "reminder_6_layout"
+      },
+      {
+        "c": [
+          1520,
+          1794
+        ],
+        "r": "reminder_time_layout"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          107,
+          203
+        ]
+      },
+      {
+        "i": 1,
+        "c": [
+          1520,
+          1102
+        ],
+        "s": true
+      },
+      {
+        "i": 2,
+        "c": [
+          1520,
+          386
+        ],
+        "r": "no_reminder_layout"
+      },
+      {
+        "i": 3,
+        "c": [
+          2843,
+          386
+        ],
+        "r": "no_reminder_switch",
+        "checked": true
+      },
+      {
+        "i": 4,
+        "c": [
+          1520,
+          562
+        ],
+        "r": "reminder_0_layout",
+        "off": true
+      },
+      {
+        "i": 5,
+        "c": [
+          1520,
+          738
+        ],
+        "r": "reminder_1_layout",
+        "off": true
+      },
+      {
+        "i": 6,
+        "c": [
+          1520,
+          914
+        ],
+        "r": "reminder_2_layout",
+        "off": true
+      },
+      {
+        "i": 7,
+        "c": [
+          1520,
+          1090
+        ],
+        "r": "reminder_3_layout",
+        "off": true
+      },
+      {
+        "i": 8,
+        "c": [
+          1520,
+          1266
+        ],
+        "r": "reminder_4_layout",
+        "off": true
+      },
+      {
+        "i": 9,
+        "c": [
+          1520,
+          1442
+        ],
+        "r": "reminder_5_layout",
+        "off": true
+      },
+      {
+        "i": 10,
+        "c": [
+          1520,
+          1618
+        ],
+        "r": "reminder_6_layout",
+        "off": true
+      },
+      {
+        "i": 11,
+        "c": [
+          1520,
+          1794
+        ],
+        "r": "reminder_time_layout",
+        "off": true
+      },
+      {
+        "i": 12,
+        "c": [
+          2819,
+          1794
+        ],
+        "t": "09:00",
+        "r": "reminder_time",
+        "off": true
+      }
+    ],
+    "nodes_count": 13,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2016
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "14e69382ed3c401f8ca76ef6e4211a50",
+    "measured_at": "2026-10-09T19:46:30.234",
+    "process_observed_ms": 4554.327,
+    "stages_ms": {
+      "device_import": 334.509,
+      "device_connect": 1149.705,
+      "action": 162.388,
+      "settle_wait": 600.157,
+      "permission": 927.553,
+      "screenshot": 264.094,
+      "png_save": 150.343,
+      "ui_dump": 77.818,
+      "rotation": 260.002,
+      "xml_save": 3.883,
+      "foreground": 401.313,
+      "meta_save": 2.66,
+      "crash_detection": 83.452,
+      "screen_signature": 25.89,
+      "event_write": 1.422,
+      "node_summary": 0.534,
+      "node_labels": 0.534,
+      "next_targets": 0.035,
+      "serialization": 0.185
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 5226
+  },
+  "response_bytes": 5226,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2016
+    ]
+  }
+}

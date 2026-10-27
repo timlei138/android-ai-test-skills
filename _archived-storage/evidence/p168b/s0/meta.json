@@ -1,0 +1,10 @@
+{
+  "ts": "2026-09-22T18:16:36",
+  "package": "com.android.providers.media.module",
+  "activity": "com.android.providers.media.photopicker.PhotoPickerGetContentActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ]
+}

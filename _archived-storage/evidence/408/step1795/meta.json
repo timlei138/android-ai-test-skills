@@ -1,0 +1,39 @@
+{
+  "ts": "2026-10-10T14:34:25",
+  "package": "com.zui.calendar",
+  "activity": ".newbuild.NewBuildActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "input",
+    "x": 1800,
+    "y": 1215,
+    "text": "第01段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第02段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第03段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第04段:",
+    "mode": "overwrite",
+    "why": "big-text-0"
+  },
+  "call_id": "60149918965f435ba5f5455f86b8ef4f",
+  "timing": {
+    "call_id": "60149918965f435ba5f5455f86b8ef4f",
+    "measured_at": "2026-10-10T14:34:25.023",
+    "process_observed_ms": 5733.273,
+    "stages_ms": {
+      "device_import": 412.927,
+      "device_connect": 1178.427,
+      "action": 997.406,
+      "input_focus_wait": 300.167,
+      "settle_wait": 600.247,
+      "permission": 924.851,
+      "screenshot": 323.908,
+      "png_save": 217.027,
+      "ui_dump": 64.218,
+      "rotation": 260.094,
+      "xml_save": 3.571,
+      "foreground": 345.177
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

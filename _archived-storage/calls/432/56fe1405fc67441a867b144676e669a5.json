@@ -1,0 +1,436 @@
+{
+  "call_id": "56fe1405fc67441a867b144676e669a5",
+  "session_id": 432,
+  "tool": "observe",
+  "started_at": "2026-10-14T15:03:28.987",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-14T15:03:43.005",
+  "wall_ms": 14024.562,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-14T15:03:42",
+    "package": "com.zui.calendar",
+    "activity": ".widget.countdown.CountdownListActivity",
+    "rotation": 1,
+    "size": [
+      3840,
+      2560
+    ],
+    "call_id": "56fe1405fc67441a867b144676e669a5",
+    "timing": {
+      "call_id": "56fe1405fc67441a867b144676e669a5",
+      "measured_at": "2026-10-14T15:03:42.758",
+      "process_observed_ms": 13353.635,
+      "stages_ms": {
+        "device_import": 485.353,
+        "device_connect": 1141.331,
+        "permission": 5294.39,
+        "screenshot": 392.755,
+        "png_save": 325.99,
+        "ui_dump": 108.455,
+        "rotation": 212.005,
+        "xml_save": 7.198,
+        "foreground": 5314.254
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "rid=toolbar_title",
+      "text=倒数日",
+      "rid=action_menu_view",
+      "rid=countdown_action_add",
+      "rid=countDownTip",
+      "text=小部件中支持切换今天至未来两年内的日期。",
+      "rid=main_frame",
+      "rid=agendaRefreshView",
+      "rid=agendaRv",
+      "rid=head_layout",
+      "rid=date_left",
+      "text=2026年 10月14日（九月初五）周三",
+      "rid=todaynull_layout",
+      "rid=todaynull_tv",
+      "text=无事件",
+      "rid=bottom_layout",
+      "rid=bottom_tv",
+      "text=加载2027年事件"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\c121\\s03\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\c121\\s03\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\c121\\s03\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          343,
+          185
+        ],
+        "t": "倒数日",
+        "r": "toolbar_title"
+      },
+      {
+        "c": [
+          460,
+          298
+        ],
+        "t": "小部件中支持切换今天至未来两年内的日期。",
+        "r": "countDownTip"
+      },
+      {
+        "c": [
+          407,
+          402
+        ],
+        "t": "2026年 10月14日（九月初五）周三",
+        "r": "date_left"
+      },
+      {
+        "c": [
+          245,
+          573
+        ],
+        "t": "无事件",
+        "r": "todaynull_tv"
+      },
+      {
+        "c": [
+          1920,
+          790
+        ],
+        "t": "加载2027年事件",
+        "r": "bottom_layout"
+      },
+      {
+        "c": [
+          1919,
+          789
+        ],
+        "t": "加载2027年事件",
+        "r": "bottom_tv"
+      },
+      {
+        "c": [
+          158,
+          185
+        ],
+        "t": "倒数日"
+      },
+      {
+        "c": [
+          1920,
+          1280
+        ],
+        "r": "action_bar_root"
+      },
+      {
+        "c": [
+          1920,
+          1280
+        ],
+        "r": "content"
+      },
+      {
+        "c": [
+          1920,
+          185
+        ],
+        "r": "toolbar"
+      },
+      {
+        "c": [
+          3650,
+          185
+        ],
+        "r": "action_menu_view"
+      },
+      {
+        "c": [
+          3650,
+          185
+        ],
+        "r": "countdown_action_add"
+      }
+    ],
+    "nodes": [
+      {
+        "bounds": [
+          0,
+          0,
+          3840,
+          2560
+        ],
+        "center": [
+          1920,
+          1280
+        ],
+        "rid": "com.zui.calendar:id/action_bar_root"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3840,
+          2560
+        ],
+        "center": [
+          1920,
+          1280
+        ],
+        "rid": "android:id/content"
+      },
+      {
+        "bounds": [
+          0,
+          98,
+          3840,
+          273
+        ],
+        "center": [
+          1920,
+          185
+        ],
+        "rid": "com.zui.calendar:id/toolbar"
+      },
+      {
+        "bounds": [
+          63,
+          105,
+          253,
+          265
+        ],
+        "center": [
+          158,
+          185
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          253,
+          142,
+          433,
+          229
+        ],
+        "center": [
+          343,
+          185
+        ],
+        "rid": "com.zui.calendar:id/toolbar_title",
+        "text": "倒数日"
+      },
+      {
+        "bounds": [
+          3590,
+          125,
+          3710,
+          245
+        ],
+        "center": [
+          3650,
+          185
+        ],
+        "rid": "com.zui.calendar:id/action_menu_view"
+      },
+      {
+        "bounds": [
+          3590,
+          125,
+          3710,
+          245
+        ],
+        "center": [
+          3650,
+          185
+        ],
+        "rid": "com.zui.calendar:id/countdown_action_add",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          110,
+          273,
+          810,
+          324
+        ],
+        "center": [
+          460,
+          298
+        ],
+        "rid": "com.zui.calendar:id/countDownTip",
+        "text": "小部件中支持切换今天至未来两年内的日期。"
+      },
+      {
+        "bounds": [
+          30,
+          324,
+          3840,
+          2522
+        ],
+        "center": [
+          1935,
+          1423
+        ],
+        "rid": "com.zui.calendar:id/main_frame"
+      },
+      {
+        "bounds": [
+          30,
+          324,
+          3840,
+          2522
+        ],
+        "center": [
+          1935,
+          1423
+        ],
+        "rid": "com.zui.calendar:id/agendaRefreshView",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          30,
+          324,
+          3840,
+          2522
+        ],
+        "center": [
+          1935,
+          1423
+        ],
+        "rid": "com.zui.calendar:id/agendaRv"
+      },
+      {
+        "bounds": [
+          30,
+          324,
+          3840,
+          482
+        ],
+        "center": [
+          1935,
+          403
+        ],
+        "rid": "com.zui.calendar:id/head_layout"
+      },
+      {
+        "bounds": [
+          110,
+          375,
+          704,
+          430
+        ],
+        "center": [
+          407,
+          402
+        ],
+        "rid": "com.zui.calendar:id/date_left",
+        "text": "2026年 10月14日（九月初五）周三"
+      },
+      {
+        "bounds": [
+          110,
+          482,
+          3730,
+          665
+        ],
+        "center": [
+          1920,
+          573
+        ],
+        "rid": "com.zui.calendar:id/todaynull_layout"
+      },
+      {
+        "bounds": [
+          170,
+          537,
+          320,
+          610
+        ],
+        "center": [
+          245,
+          573
+        ],
+        "rid": "com.zui.calendar:id/todaynull_tv",
+        "text": "无事件"
+      },
+      {
+        "bounds": [
+          110,
+          740,
+          3730,
+          840
+        ],
+        "center": [
+          1920,
+          790
+        ],
+        "rid": "com.zui.calendar:id/bottom_layout",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1780,
+          762,
+          2059,
+          817
+        ],
+        "center": [
+          1919,
+          789
+        ],
+        "rid": "com.zui.calendar:id/bottom_tv",
+        "text": "加载2027年事件"
+      }
+    ],
+    "nodes_count": 17,
+    "nodes_mode": "full",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      3090
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "56fe1405fc67441a867b144676e669a5",
+    "measured_at": "2026-10-14T15:03:42.925",
+    "process_observed_ms": 13526.276,
+    "stages_ms": {
+      "device_import": 485.353,
+      "device_connect": 1141.331,
+      "permission": 5294.39,
+      "screenshot": 392.755,
+      "png_save": 325.99,
+      "ui_dump": 108.455,
+      "rotation": 212.005,
+      "xml_save": 7.198,
+      "foreground": 5314.254,
+      "meta_save": 6.511,
+      "screen_signature": 48.661,
+      "crash_detection": 94.513,
+      "event_write": 3.271,
+      "node_summary": 0.948,
+      "node_labels": 0.673,
+      "next_targets": 0.062,
+      "serialization": 0.559
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 7009
+  },
+  "response_bytes": 7009,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3090
+    ]
+  }
+}

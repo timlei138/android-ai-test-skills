@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T20:24:53",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.course.EditCourseActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1390,
+    "via": "rid=llCourseColor",
+    "why": "预期5: 点课程背景色"
+  }
+}

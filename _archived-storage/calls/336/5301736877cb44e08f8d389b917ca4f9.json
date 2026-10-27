@@ -1,0 +1,40 @@
+{
+  "call_id": "5301736877cb44e08f8d389b917ca4f9",
+  "session_id": 336,
+  "tool": "session",
+  "started_at": "2026-10-09T13:53:04.330",
+  "status": "ended",
+  "expects_event": false,
+  "structured_result_required": true,
+  "returncode": 1,
+  "ended_at": "2026-10-09T13:53:06.330",
+  "wall_ms": 1978.152,
+  "result": {
+    "ok": false,
+    "error": "Findings require an existing unfinished session",
+    "stage": "session",
+    "rejected": true,
+    "hint": "Correct the input or storage issue; rejected finish does not commit.",
+    "call_id": "5301736877cb44e08f8d389b917ca4f9",
+    "event_ids": [],
+    "execution_state": "unknown"
+  },
+  "timing": {
+    "call_id": "5301736877cb44e08f8d389b917ca4f9",
+    "measured_at": "2026-10-09T13:53:06.312",
+    "process_observed_ms": 35.652,
+    "stages_ms": {
+      "serialization": 0.031
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 304
+  },
+  "response_bytes": 304,
+  "audit": {
+    "complete": true,
+    "outcome": "refused",
+    "issues": [],
+    "executed": true,
+    "event_ids": []
+  }
+}

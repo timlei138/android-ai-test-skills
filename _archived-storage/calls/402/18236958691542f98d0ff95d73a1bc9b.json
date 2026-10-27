@@ -1,0 +1,363 @@
+{
+  "call_id": "18236958691542f98d0ff95d73a1bc9b",
+  "session_id": 402,
+  "tool": "act",
+  "started_at": "2026-10-10T13:53:20.294",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T13:53:26.876",
+  "wall_ms": 6575.064,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "longclick",
+      "x": 2700,
+      "y": 1600,
+      "via": "桌面空白底部",
+      "why": "desktop-edit"
+    },
+    "ts": "2026-10-10T13:53:26",
+    "package": "com.zui.launcher",
+    "activity": ".drawer.NormalLauncher",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "18236958691542f98d0ff95d73a1bc9b",
+    "timing": {
+      "call_id": "18236958691542f98d0ff95d73a1bc9b",
+      "measured_at": "2026-10-10T13:53:26.691",
+      "process_observed_ms": 4692.926,
+      "stages_ms": {
+        "device_import": 307.011,
+        "device_connect": 1111.896,
+        "action": 577.63,
+        "settle_wait": 600.397,
+        "permission": 872.269,
+        "screenshot": 314.712,
+        "png_save": 127.001,
+        "ui_dump": 49.789,
+        "rotation": 262.66,
+        "xml_save": 2.434,
+        "foreground": 369.002
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=launcher",
+      "rid=static_blur_view_container",
+      "rid=static_blur_view",
+      "rid=drag_layer",
+      "rid=scrim_view",
+      "rid=edit_panel",
+      "rid=topBar",
+      "rid=txv_tips",
+      "text=批量选择图标，长按后拖动即可跨屏移动。",
+      "rid=complete_button",
+      "text=完成",
+      "desc=完成",
+      "rid=bottom_panel",
+      "rid=btn_wallpaper_container",
+      "rid=btn_wallpaper",
+      "text=壁纸和主题风格",
+      "rid=btn_widgets_container",
+      "rid=btn_widgets",
+      "text=添加小部件",
+      "rid=drop_combine_folder_container",
+      "rid=btn_settings_container",
+      "rid=btn_settings",
+      "text=桌面设置",
+      "rid=drop_remove_icon_container",
+      "rid=workspace",
+      "rid=search_bar_bg",
+      "rid=search_widget_img",
+      "rid=search_widget_text",
+      "text=13岁中国女孩的一封信获全球唯一金奖",
+      "desc=服务与反馈",
+      "desc=天气 2x2",
+      "desc=文件夹: 未命名文件夹, 4 or more items",
+      "rid=folder_icon_name",
+      "text=文件夹",
+      "text=应用商店",
+      "desc=“应用商店”有 8 条通知",
+      "desc=安全中心",
+      "rid=active_icon_container",
+      "rid=app_name",
+      "text=安全中心",
+      "text=设置",
+      "desc=设置",
+      "text=天禧智能体",
+      "desc=天禧智能体",
+      "text=超级文件",
+      "desc=超级文件",
+      "text=服务与反馈",
+      "rid=accessibility_action_view",
+      "desc=主屏幕",
+      "rid=page_indicator",
+      "rid=overview_actions_view",
+      "rid=taskbar_container",
+      "rid=taskbar_scrim",
+      "rid=taskbar_bubbles_container",
+      "rid=stashed_handle",
+      "rid=navbuttons_view",
+      "rid=start_contextual_buttons"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\402\\step1731\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\402\\step1731\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\402\\step1731\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          2707,
+          182
+        ],
+        "t": "完成 完成",
+        "r": "complete_button"
+      },
+      {
+        "c": [
+          975,
+          1667
+        ],
+        "t": "壁纸和主题风格",
+        "r": "btn_wallpaper"
+      },
+      {
+        "c": [
+          1520,
+          1667
+        ],
+        "t": "添加小部件",
+        "r": "btn_widgets"
+      },
+      {
+        "c": [
+          2065,
+          1667
+        ],
+        "t": "桌面设置",
+        "r": "btn_settings"
+      },
+      {
+        "c": [
+          1520,
+          405
+        ],
+        "t": "13岁中国女孩的一封信获全球唯一金奖",
+        "r": "search_bar_bg"
+      },
+      {
+        "c": [
+          2242,
+          845
+        ],
+        "t": "文件夹: 未命名文件夹, 4 or more items"
+      },
+      {
+        "c": [
+          617,
+          1285
+        ],
+        "t": "应用商店 “应用商店”有 8 条通知"
+      },
+      {
+        "c": [
+          978,
+          1285
+        ],
+        "t": "安全中心"
+      },
+      {
+        "c": [
+          1339,
+          1285
+        ],
+        "t": "设置 设置"
+      },
+      {
+        "c": [
+          1700,
+          1285
+        ],
+        "t": "天禧智能体 天禧智能体"
+      },
+      {
+        "c": [
+          2062,
+          1285
+        ],
+        "t": "超级文件 超级文件"
+      },
+      {
+        "c": [
+          2423,
+          1285
+        ],
+        "t": "服务与反馈 服务与反馈"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          2707,
+          182
+        ],
+        "t": "完成 完成",
+        "r": "complete_button"
+      },
+      {
+        "i": 1,
+        "c": [
+          975,
+          1667
+        ],
+        "t": "壁纸和主题风格",
+        "r": "btn_wallpaper"
+      },
+      {
+        "i": 2,
+        "c": [
+          1520,
+          1667
+        ],
+        "t": "添加小部件",
+        "r": "btn_widgets"
+      },
+      {
+        "i": 3,
+        "c": [
+          2065,
+          1667
+        ],
+        "t": "桌面设置",
+        "r": "btn_settings"
+      },
+      {
+        "i": 4,
+        "c": [
+          1520,
+          958
+        ],
+        "r": "workspace",
+        "s": true
+      },
+      {
+        "i": 5,
+        "c": [
+          1520,
+          405
+        ],
+        "r": "search_bar_bg"
+      },
+      {
+        "i": 6,
+        "c": [
+          2242,
+          845
+        ],
+        "t": "文件夹: 未命名文件夹, 4 or more items"
+      },
+      {
+        "i": 7,
+        "c": [
+          617,
+          1285
+        ],
+        "t": "应用商店 “应用商店”有 8 条通知"
+      },
+      {
+        "i": 8,
+        "c": [
+          978,
+          1285
+        ],
+        "t": "安全中心"
+      },
+      {
+        "i": 9,
+        "c": [
+          1339,
+          1285
+        ],
+        "t": "设置 设置"
+      },
+      {
+        "i": 10,
+        "c": [
+          1700,
+          1285
+        ],
+        "t": "天禧智能体 天禧智能体"
+      },
+      {
+        "i": 11,
+        "c": [
+          2062,
+          1285
+        ],
+        "t": "超级文件 超级文件"
+      },
+      {
+        "i": 12,
+        "c": [
+          2423,
+          1285
+        ],
+        "t": "服务与反馈 服务与反馈"
+      }
+    ],
+    "nodes_count": 13,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2752
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "18236958691542f98d0ff95d73a1bc9b",
+    "measured_at": "2026-10-10T13:53:26.817",
+    "process_observed_ms": 4819.084,
+    "stages_ms": {
+      "device_import": 307.011,
+      "device_connect": 1111.896,
+      "action": 577.63,
+      "settle_wait": 600.397,
+      "permission": 872.269,
+      "screenshot": 314.712,
+      "png_save": 127.001,
+      "ui_dump": 49.789,
+      "rotation": 262.66,
+      "xml_save": 2.434,
+      "foreground": 369.002,
+      "meta_save": 3.132,
+      "crash_detection": 93.884,
+      "screen_signature": 21.594,
+      "event_write": 2.481,
+      "node_summary": 0.669,
+      "node_labels": 0.611,
+      "next_targets": 0.027,
+      "serialization": 0.17
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 6410
+  },
+  "response_bytes": 6410,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2752
+    ]
+  }
+}

@@ -1,0 +1,465 @@
+{
+  "call_id": "e3077bcbf0fc4431a854d3ab9da2b4d3",
+  "session_id": 391,
+  "tool": "act",
+  "started_at": "2026-10-10T12:09:44.388",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T12:09:51.131",
+  "wall_ms": 6732.347,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 1341,
+      "y": 1452,
+      "via": "其他",
+      "why": "expand"
+    },
+    "ts": "2026-10-10T12:09:50",
+    "package": "com.android.settings",
+    "activity": ".Settings$AppNotificationSettingsActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "e3077bcbf0fc4431a854d3ab9da2b4d3",
+    "timing": {
+      "call_id": "e3077bcbf0fc4431a854d3ab9da2b4d3",
+      "measured_at": "2026-10-10T12:09:50.888",
+      "process_observed_ms": 4768.802,
+      "stages_ms": {
+        "device_import": 304.339,
+        "device_connect": 1075.508,
+        "action": 205.91,
+        "settle_wait": 600.236,
+        "permission": 1039.152,
+        "screenshot": 376.397,
+        "png_save": 227.549,
+        "ui_dump": 145.392,
+        "rotation": 261.175,
+        "xml_save": 4.839,
+        "foreground": 449.226
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=content_parent",
+      "rid=action_bar_container",
+      "rid=action_bar",
+      "desc=日历",
+      "desc=返回",
+      "text=日历",
+      "rid=oobe_card_view",
+      "rid=content_frame",
+      "rid=main_content",
+      "rid=container_material",
+      "rid=list_container",
+      "rid=recycler_view",
+      "rid=entity_header",
+      "rid=entity_header_content",
+      "rid=entity_header_icon",
+      "rid=entity_header_title",
+      "rid=frame",
+      "rid=switch_text",
+      "text=所有“日历”通知",
+      "rid=switch_widget",
+      "rid=title",
+      "text=利用 AI 进行管理",
+      "text=通知整理助手",
+      "rid=summary",
+      "text=对优先级较低的通知进行整合并静音",
+      "rid=two_target_divider",
+      "rid=widget_frame",
+      "rid=switchWidget",
+      "desc=通知整理助手",
+      "text=通知类别",
+      "text=其他",
+      "rid=expand_icon",
+      "rid=icon_frame",
+      "rid=icon",
+      "text=高优先级提醒",
+      "text=每天大约 4 条通知",
+      "desc=高优先级提醒",
+      "text=低优先级提醒",
+      "desc=低优先级提醒",
+      "rid=settings_homepage_container",
+      "rid=app_bar_container",
+      "rid=search_action_bar_title",
+      "text=设置",
+      "rid=main_content_scrollable_container",
+      "rid=homepage_container",
+      "rid=contextual_cards_content",
+      "rid=card_container",
+      "rid=suggestion_card",
+      "rid=container",
+      "text=保护手机安全",
+      "text=设置屏幕锁定方式以保护平板电脑",
+      "rid=close_button",
+      "desc=关闭",
+      "text=加入用户体验计划",
+      "text=Vtime",
+      "rid=account_item_storage_info",
+      "rid=account_item_to_detail",
+      "text=查看",
+      "rid=account_item_percentage_bar_chart",
+      "rid=text_frame",
+      "text=WLAN",
+      "text=lenovo-internet",
+      "text=蓝牙",
+      "text=已关闭",
+      "text=个人热点",
+      "rid=search_bar_root",
+      "rid=search_bar",
+      "rid=search_bar_container",
+      "desc=搜索设置",
+      "rid=search_homepage_img",
+      "rid=tv_search_text",
+      "text=搜索设置",
+      "rid=dividing_line"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\391\\step1618\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\391\\step1618\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\391\\step1618\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          2754,
+          1112
+        ],
+        "t": "通知整理助手",
+        "r": "switchWidget"
+      },
+      {
+        "c": [
+          2754,
+          1660
+        ],
+        "t": "高优先级提醒",
+        "r": "switchWidget"
+      },
+      {
+        "c": [
+          2754,
+          1809
+        ],
+        "t": "低优先级提醒",
+        "r": "switchWidget"
+      },
+      {
+        "c": [
+          552,
+          1079
+        ],
+        "t": "Vtime",
+        "r": "main_content_scrollable_container",
+        "s": true
+      },
+      {
+        "c": [
+          552,
+          533
+        ],
+        "t": "设置屏幕锁定方式以保护平板电脑",
+        "r": "suggestion_card"
+      },
+      {
+        "c": [
+          904,
+          534
+        ],
+        "t": "关闭",
+        "r": "close_button"
+      },
+      {
+        "c": [
+          552,
+          790
+        ],
+        "t": "加入用户体验计划",
+        "r": "suggestion_card"
+      },
+      {
+        "c": [
+          904,
+          790
+        ],
+        "t": "关闭",
+        "r": "close_button"
+      },
+      {
+        "c": [
+          877,
+          1161
+        ],
+        "t": "查看",
+        "r": "account_item_to_detail"
+      },
+      {
+        "c": [
+          552,
+          337
+        ],
+        "t": "搜索设置",
+        "r": "search_bar_container"
+      },
+      {
+        "c": [
+          607,
+          337
+        ],
+        "t": "搜索设置",
+        "r": "tv_search_text"
+      },
+      {
+        "c": [
+          1259,
+          203
+        ],
+        "t": "返回"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          1259,
+          203
+        ],
+        "t": "返回"
+      },
+      {
+        "i": 1,
+        "c": [
+          2072,
+          1074
+        ],
+        "r": "recycler_view",
+        "s": true
+      },
+      {
+        "i": 2,
+        "c": [
+          2072,
+          437
+        ],
+        "r": "entity_header_content"
+      },
+      {
+        "i": 3,
+        "c": [
+          2072,
+          772
+        ]
+      },
+      {
+        "i": 4,
+        "c": [
+          2072,
+          1112
+        ]
+      },
+      {
+        "i": 5,
+        "c": [
+          2754,
+          1112
+        ],
+        "t": "通知整理助手",
+        "r": "switchWidget",
+        "checked": true
+      },
+      {
+        "i": 6,
+        "c": [
+          2072,
+          1453
+        ]
+      },
+      {
+        "i": 7,
+        "c": [
+          2072,
+          1660
+        ]
+      },
+      {
+        "i": 8,
+        "c": [
+          2754,
+          1660
+        ],
+        "t": "高优先级提醒",
+        "r": "switchWidget",
+        "checked": true
+      },
+      {
+        "i": 9,
+        "c": [
+          2072,
+          1809
+        ]
+      },
+      {
+        "i": 10,
+        "c": [
+          2754,
+          1809
+        ],
+        "t": "低优先级提醒",
+        "r": "switchWidget",
+        "checked": true
+      },
+      {
+        "i": 11,
+        "c": [
+          552,
+          1079
+        ],
+        "r": "main_content_scrollable_container",
+        "s": true
+      },
+      {
+        "i": 12,
+        "c": [
+          552,
+          533
+        ],
+        "r": "suggestion_card"
+      },
+      {
+        "i": 13,
+        "c": [
+          904,
+          534
+        ],
+        "t": "关闭",
+        "r": "close_button"
+      },
+      {
+        "i": 14,
+        "c": [
+          552,
+          790
+        ],
+        "r": "suggestion_card"
+      },
+      {
+        "i": 15,
+        "c": [
+          904,
+          790
+        ],
+        "t": "关闭",
+        "r": "close_button"
+      },
+      {
+        "i": 16,
+        "c": [
+          552,
+          1132
+        ]
+      },
+      {
+        "i": 17,
+        "c": [
+          877,
+          1161
+        ],
+        "t": "查看",
+        "r": "account_item_to_detail"
+      },
+      {
+        "i": 18,
+        "c": [
+          552,
+          1453
+        ]
+      },
+      {
+        "i": 19,
+        "c": [
+          552,
+          1629
+        ]
+      },
+      {
+        "i": 20,
+        "c": [
+          552,
+          1794
+        ]
+      },
+      {
+        "i": 21,
+        "c": [
+          552,
+          337
+        ],
+        "t": "搜索设置",
+        "r": "search_bar_container"
+      },
+      {
+        "i": 22,
+        "c": [
+          607,
+          337
+        ],
+        "t": "搜索设置",
+        "r": "tv_search_text"
+      }
+    ],
+    "nodes_count": 23,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2639
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "e3077bcbf0fc4431a854d3ab9da2b4d3",
+    "measured_at": "2026-10-10T12:09:51.038",
+    "process_observed_ms": 4919.869,
+    "stages_ms": {
+      "device_import": 304.339,
+      "device_connect": 1075.508,
+      "action": 205.91,
+      "settle_wait": 600.236,
+      "permission": 1039.152,
+      "screenshot": 376.397,
+      "png_save": 227.549,
+      "ui_dump": 145.392,
+      "rotation": 261.175,
+      "xml_save": 4.839,
+      "foreground": 449.226,
+      "meta_save": 5.868,
+      "crash_detection": 95.68,
+      "screen_signature": 34.356,
+      "event_write": 2.891,
+      "node_summary": 2.246,
+      "node_labels": 2.259,
+      "next_targets": 0.166,
+      "serialization": 0.611
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 7736
+  },
+  "response_bytes": 7736,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2639
+    ]
+  }
+}

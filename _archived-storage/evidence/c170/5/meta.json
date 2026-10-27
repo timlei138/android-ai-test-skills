@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T18:25:01",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.display.TimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2913,
+    "y": 202,
+    "via": "rid=save_view(完成)",
+    "why": "保存创建课表（前提）"
+  }
+}

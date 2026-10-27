@@ -1,0 +1,48 @@
+{
+  "call_id": "1b24b439ae4a45a59c68649e2bf8679b",
+  "session_id": 351,
+  "tool": "logcat",
+  "started_at": "2026-10-09T15:59:43.224",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T15:59:46.431",
+  "wall_ms": 3199.791,
+  "result": {
+    "ok": true,
+    "count": 0,
+    "entries": [],
+    "log_path": null,
+    "raw": null,
+    "hint": "count>0 且 process 为被测/关联包 = 本次会话内崩溃；前 20s 上下文日志已存 log_path；判定'包名回桌面'类可疑信号必须以此为准，不能只凭画面猜",
+    "call_id": "1b24b439ae4a45a59c68649e2bf8679b",
+    "event_ids": [
+      1444
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "1b24b439ae4a45a59c68649e2bf8679b",
+    "measured_at": "2026-10-09T15:59:46.382",
+    "process_observed_ms": 1488.275,
+    "stages_ms": {
+      "device_import": 297.631,
+      "device_connect": 1055.18,
+      "event_write": 10.776,
+      "serialization": 0.129
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 397
+  },
+  "response_bytes": 397,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1444
+    ]
+  }
+}

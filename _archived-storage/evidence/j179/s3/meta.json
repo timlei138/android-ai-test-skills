@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T20:09:15",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimeSlotSettingsActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1864,
+    "y": 1192,
+    "via": "OCR:结束分轮下方行",
+    "why": "步骤1: 结束分 +1（第）"
+  }
+}

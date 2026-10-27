@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-10T14:40:23",
+  "package": "com.zui.calendar",
+  "activity": ".newbuild.NewBuildActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2847,
+    "y": 203,
+    "via": "完成 save_view",
+    "why": "save-event"
+  },
+  "call_id": "5ac990e6cd7f4b758dc3d8a9d6b9bacb",
+  "timing": {
+    "call_id": "5ac990e6cd7f4b758dc3d8a9d6b9bacb",
+    "measured_at": "2026-10-10T14:40:23.285",
+    "process_observed_ms": 4569.974,
+    "stages_ms": {
+      "device_import": 309.017,
+      "device_connect": 1034.197,
+      "action": 199.166,
+      "settle_wait": 600.518,
+      "permission": 893.363,
+      "screenshot": 407.99,
+      "png_save": 276.165,
+      "ui_dump": 97.971,
+      "rotation": 277.931,
+      "xml_save": 4.721,
+      "foreground": 364.073
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

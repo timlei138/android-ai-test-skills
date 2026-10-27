@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T20:43:59",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimetableListActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2754,
+    "y": 203,
+    "via": "rid=action_schedule(编辑)",
+    "why": "步骤4: 点勾选按钮"
+  }
+}

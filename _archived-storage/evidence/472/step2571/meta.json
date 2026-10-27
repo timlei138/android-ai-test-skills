@@ -1,0 +1,39 @@
+{
+  "ts": "2026-10-15T18:20:25",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimeSlotSettingsActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2842,
+    "y": 1611,
+    "repeat": 8,
+    "gap_ms": 700,
+    "via": "rid=btn_add_afternoon_slot",
+    "why": "YAML s2：反复点下午新建到上限"
+  },
+  "call_id": "e23a770205794d6f95e1c39fca26a58f",
+  "timing": {
+    "call_id": "e23a770205794d6f95e1c39fca26a58f",
+    "measured_at": "2026-10-15T18:20:25.601",
+    "process_observed_ms": 20273.837,
+    "stages_ms": {
+      "device_import": 408.606,
+      "device_connect": 1152.437,
+      "action": 1453.189,
+      "settle_wait": 600.192,
+      "permission": 5375.704,
+      "screenshot": 400.652,
+      "png_save": 143.641,
+      "ui_dump": 87.749,
+      "rotation": 253.202,
+      "xml_save": 7.737,
+      "foreground": 5381.881
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

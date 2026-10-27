@@ -1,0 +1,51 @@
+{
+  "call_id": "f6ebc52040f54cc3b668ed8121ee1050",
+  "session_id": 364,
+  "tool": "vision",
+  "started_at": "2026-10-09T17:46:00.678",
+  "status": "ended",
+  "expects_event": false,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T17:46:04.918",
+  "wall_ms": 4231.374,
+  "result": {
+    "ok": true,
+    "text": "1) 勾选状态（开启）。  \n2) 2024年1月1日（周一）。",
+    "usage": {
+      "prompt_tokens": 1018,
+      "completion_tokens": 346,
+      "total_tokens": 1364,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 322
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 1018
+    },
+    "hint": "视觉模型输出是辅助判据，PASS/FAIL 结论仍需结合 dump/OCR 证据",
+    "call_id": "f6ebc52040f54cc3b668ed8121ee1050",
+    "event_ids": [],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "f6ebc52040f54cc3b668ed8121ee1050",
+    "measured_at": "2026-10-09T17:46:04.884",
+    "process_observed_ms": 2451.137,
+    "stages_ms": {
+      "serialization": 0.091
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 600
+  },
+  "response_bytes": 600,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": []
+  }
+}

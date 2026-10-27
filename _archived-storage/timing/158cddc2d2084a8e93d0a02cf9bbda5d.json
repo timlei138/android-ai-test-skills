@@ -1,0 +1,1 @@
+{"call_id": "158cddc2d2084a8e93d0a02cf9bbda5d", "measured_at": "2026-10-15T10:06:56.907", "process_observed_ms": 44.429, "stages_ms": {"serialization": 0.029}, "scope": "since runtime import; startup and earlier imports require launcher timing", "response_bytes": 255}

@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T20:18:57",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.EditTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2810,
+    "y": 1432,
+    "via": "rid=switch_show_non_current_week",
+    "why": "关闭显示非本周课程"
+  }
+}

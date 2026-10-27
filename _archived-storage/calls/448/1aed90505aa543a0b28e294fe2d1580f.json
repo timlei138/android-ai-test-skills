@@ -1,0 +1,23 @@
+{
+  "call_id": "1aed90505aa543a0b28e294fe2d1580f",
+  "session_id": 448,
+  "tool": "logcat",
+  "started_at": "2026-10-15T13:57:00.136",
+  "status": "ended",
+  "expects_event": false,
+  "structured_result_required": true,
+  "returncode": 2,
+  "ended_at": "2026-10-15T13:57:00.573",
+  "wall_ms": 427.626,
+  "result": null,
+  "response_bytes": 0,
+  "audit": {
+    "complete": true,
+    "outcome": "failed",
+    "issues": [
+      "tool rejected arguments (usage error); device untouched"
+    ],
+    "executed": false,
+    "event_ids": []
+  }
+}

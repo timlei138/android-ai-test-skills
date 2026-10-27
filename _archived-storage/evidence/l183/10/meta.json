@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T20:37:45",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.display.TimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1795,
+    "y": 1109,
+    "via": "text=删除",
+    "why": "步骤3: 确认删除"
+  }
+}

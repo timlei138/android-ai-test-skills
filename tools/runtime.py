@@ -12,7 +12,54 @@ from functools import wraps
 from typing import Callable, ParamSpec, TypeVar
 
 ROOT = Path(__file__).resolve().parent.parent
-STORAGE_DIR = Path(os.environ.get("ANDROID_TEST_STORAGE", str(ROOT / "storage"))).resolve()
+
+
+def _resolve_storage_root() -> Path:
+    """storage/ 放哪？
+
+    ## 用户的要求（2026-10-27 原话）
+
+    「storage 应该是当前工作目录下新建 storage 目录。里面有 tmp 和 record 两个路径。
+      record 里面包含 webui 相关的数据库。和每次的记录。」
+
+    ## 优先级
+
+      ① `ANDROID_TEST_STORAGE` 环境变量（显式指定，测试和特殊场景用）
+      ② **当前工作目录下的 `storage/`**  ← 默认，用户要的就是这个
+      ③ cwd 不可写时，退回本文件所在项目的 `storage/`
+
+    ## 为什么默认是 cwd 而不是项目目录
+
+    这是一套「从任何目录都能调」的 CLI 工具。产物应该落在**用户干活的目录**，
+    不是落在工具自己的安装目录 —— 否则：
+      · 换个项目用，两个项目的证据混在一个 storage 里
+      · 工具升级/重装，历史产物跟着丢
+      · 别人 clone 这个仓库，会看到一堆别人的运行记录
+
+    ## 为什么 cwd 不可写要兜底
+
+    CI / 只读挂载 / 从系统目录误跑 —— 这种情况下不能直接崩，
+    退到项目目录至少能跑完。
+    """
+    explicit = (os.environ.get("ANDROID_TEST_STORAGE") or "").strip()
+    if explicit:
+        return Path(explicit).resolve()
+
+    cwd_storage = (Path.cwd() / "storage").resolve()
+    try:
+        cwd_storage.mkdir(parents=True, exist_ok=True)
+        # 真写一个探针文件，确认不是"能建目录但不能写"
+        probe = cwd_storage / ".write_probe"
+        probe.write_text("ok", encoding="utf-8")
+        probe.unlink(missing_ok=True)
+        return cwd_storage
+    except OSError:
+        # cwd 不可写（CI / 只读挂载 / 从系统目录误跑）时的最后兜底。
+        # 这不是"正常路径"，只是不想直接崩 —— 所以只在写不进去时才走。
+        return (ROOT / "storage").resolve()
+
+
+STORAGE_DIR = _resolve_storage_root()
 
 # ══════════════════════════════════════════════════════════════════════
 # 目录约定（2026-10-27 重构）
@@ -22,7 +69,9 @@ STORAGE_DIR = Path(os.environ.get("ANDROID_TEST_STORAGE", str(ROOT / "storage"))
 #     cases/<应用>/              ← 按应用分目录
 #       <标题>.md                ← 原始用例（人写的，或从需求文档粘的）
 #       <标题>.yaml              ← 跑过之后生成的结构化用例（AI 读这个）
-#     knowledge/<包名>.md        ← 知识卡 + paths/<包名>.md 路径图
+#     knowledge/<包名>.md        ← 知识卡
+#     knowledge/paths/<包名>.md  ← 路径图
+#     （在 assets/ 下，即 assets/knowledge/**）
 #
 #   storage/                     ← **不进 git**，纯本地运行产物
 #     record/<uuid>/             ← 每次运行一个目录，互不干扰
@@ -56,6 +105,18 @@ KNOWLEDGE_DIR = Path(os.environ.get(
 PATHS_DIR = KNOWLEDGE_DIR / "paths"
 RECORD_DIR = STORAGE_DIR / "record"
 TMP_DIR = STORAGE_DIR / "tmp"
+
+# ★ 两个子目录在模块加载时就建好。
+#
+#   为什么不懒建（用到才建）：
+#     AI 会自己 `dir storage` 看有什么。如果 tmp/ 还没建，它会以为这个约定不存在，
+#     然后自己找个地方放临时文件（实测踩过：放到了 storage/ 根下）。
+#     目录先建出来，约定就是"看得见的"。
+for _d in (RECORD_DIR, TMP_DIR):
+    try:
+        _d.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        pass
 
 CALL_ID = os.environ.get("ANDROID_TEST_CALL_ID") or uuid.uuid4().hex
 PROCESS_STARTED = time.perf_counter()

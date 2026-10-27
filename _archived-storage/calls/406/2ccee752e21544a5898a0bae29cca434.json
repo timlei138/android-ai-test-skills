@@ -1,0 +1,259 @@
+{
+  "call_id": "2ccee752e21544a5898a0bae29cca434",
+  "session_id": 406,
+  "tool": "act",
+  "started_at": "2026-10-10T14:13:59.273",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T14:14:05.967",
+  "wall_ms": 6686.928,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 2735,
+      "y": 1457,
+      "via": "下一步/完成",
+      "why": "guide-done"
+    },
+    "ts": "2026-10-10T14:14:05",
+    "package": "com.zui.calendar",
+    "activity": ".AllInOneActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "2ccee752e21544a5898a0bae29cca434",
+    "timing": {
+      "call_id": "2ccee752e21544a5898a0bae29cca434",
+      "measured_at": "2026-10-10T14:14:05.747",
+      "process_observed_ms": 4788.887,
+      "stages_ms": {
+        "device_import": 302.054,
+        "device_connect": 1146.514,
+        "action": 255.536,
+        "settle_wait": 600.192,
+        "permission": 911.704,
+        "screenshot": 357.925,
+        "png_save": 389.11,
+        "ui_dump": 99.024,
+        "rotation": 247.005,
+        "xml_save": 4.913,
+        "foreground": 391.168
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=month_week_pane",
+      "rid=toolbar",
+      "rid=top_button_date_layout",
+      "rid=top_button_month",
+      "text=10",
+      "rid=top_button_year",
+      "text=2026年",
+      "rid=top_button_month_unit",
+      "text=月",
+      "rid=top_button_day",
+      "text=10日",
+      "rid=top_button_lunar_countdown",
+      "text=今天",
+      "rid=iv_more",
+      "desc=更多选项",
+      "rid=calendarLayout",
+      "rid=calendarView",
+      "rid=frameContent",
+      "text=一",
+      "text=二",
+      "text=三",
+      "text=四",
+      "text=五",
+      "text=六",
+      "text=日",
+      "rid=line",
+      "rid=vp_month",
+      "rid=list_frame",
+      "rid=full_day_containter_layout",
+      "rid=xuiDashLine",
+      "rid=eventList",
+      "rid=top_button_lunar_month",
+      "text=农历九月初一  (丙午马年 戊戌月 丁巳日)",
+      "rid=iconyi",
+      "text=宜:",
+      "rid=titleyi",
+      "text=嫁娶 求嗣  纳采 进人口 纳财 结网 纳畜 牧养 会亲友",
+      "rid=iconji",
+      "text=忌:",
+      "rid=titleji",
+      "text=上梁 作灶 伐木 出行 安葬 安门 理发"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\406\\step1764\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\406\\step1764\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\406\\step1764\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          2154,
+          379
+        ],
+        "t": "2026年",
+        "r": "top_button_date_layout"
+      },
+      {
+        "c": [
+          2679,
+          379
+        ],
+        "t": "今天",
+        "r": "iv_more"
+      },
+      {
+        "c": [
+          2396,
+          1613
+        ],
+        "t": "嫁娶 求嗣  纳采 进人口 纳财 结网 纳畜 牧养 会亲友",
+        "r": "eventList",
+        "s": true
+      },
+      {
+        "c": [
+          2773,
+          379
+        ],
+        "t": "更多选项"
+      },
+      {
+        "c": [
+          2396,
+          1613
+        ],
+        "t": "嫁娶 求嗣  纳采 进人口 纳财 结网 纳畜 牧养 会亲友"
+      },
+      {
+        "c": [
+          2396,
+          1020
+        ],
+        "r": "vp_month",
+        "s": true
+      },
+      {
+        "c": [
+          2396,
+          1020
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          2154,
+          379
+        ],
+        "r": "top_button_date_layout"
+      },
+      {
+        "i": 1,
+        "c": [
+          2679,
+          379
+        ],
+        "r": "iv_more"
+      },
+      {
+        "i": 2,
+        "c": [
+          2773,
+          379
+        ],
+        "t": "更多选项"
+      },
+      {
+        "i": 3,
+        "c": [
+          2396,
+          1020
+        ],
+        "r": "vp_month",
+        "s": true
+      },
+      {
+        "i": 4,
+        "c": [
+          2396,
+          1020
+        ]
+      },
+      {
+        "i": 5,
+        "c": [
+          2396,
+          1613
+        ],
+        "r": "eventList",
+        "s": true
+      },
+      {
+        "i": 6,
+        "c": [
+          2396,
+          1613
+        ]
+      }
+    ],
+    "nodes_count": 7,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2785
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "2ccee752e21544a5898a0bae29cca434",
+    "measured_at": "2026-10-10T14:14:05.875",
+    "process_observed_ms": 4916.918,
+    "stages_ms": {
+      "device_import": 302.054,
+      "device_connect": 1146.514,
+      "action": 255.536,
+      "settle_wait": 600.192,
+      "permission": 911.704,
+      "screenshot": 357.925,
+      "png_save": 389.11,
+      "ui_dump": 99.024,
+      "rotation": 247.005,
+      "xml_save": 4.913,
+      "foreground": 391.168,
+      "meta_save": 2.791,
+      "crash_detection": 86.292,
+      "screen_signature": 25.966,
+      "event_write": 3.549,
+      "node_summary": 1.574,
+      "node_labels": 1.761,
+      "next_targets": 0.037,
+      "serialization": 0.147
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 4353
+  },
+  "response_bytes": 4353,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2785
+    ]
+  }
+}

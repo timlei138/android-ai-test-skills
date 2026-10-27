@@ -1,0 +1,513 @@
+{
+  "call_id": "fe0fee8d31d84746a69f41fd9347b18e",
+  "session_id": 379,
+  "tool": "observe",
+  "started_at": "2026-10-09T20:25:02.696",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T20:25:08.126",
+  "wall_ms": 5424.966,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-09T20:25:07",
+    "package": "com.zui.calendar",
+    "activity": ".agenda.NewBuildList",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "fe0fee8d31d84746a69f41fd9347b18e",
+    "timing": {
+      "call_id": "fe0fee8d31d84746a69f41fd9347b18e",
+      "measured_at": "2026-10-09T20:25:07.909",
+      "process_observed_ms": 3562.056,
+      "stages_ms": {
+        "device_import": 297.011,
+        "device_connect": 1103.164,
+        "permission": 1024.604,
+        "screenshot": 249.955,
+        "png_save": 54.26,
+        "ui_dump": 70.161,
+        "rotation": 259.107,
+        "xml_save": 6.824,
+        "foreground": 423.345
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=build_list_content",
+      "rid=contentx",
+      "rid=search_view",
+      "rid=click_layout",
+      "rid=time1",
+      "text=全天",
+      "rid=line",
+      "rid=title",
+      "text=农历生日L",
+      "text=2026年10月9日 09:00",
+      "text=农历纪念日L",
+      "text=2026年10月9日 20:22",
+      "text=农历提醒L",
+      "rid=searchEditText",
+      "text=农历",
+      "rid=icon_search",
+      "rid=imageButtonClear",
+      "rid=cancel",
+      "text=取消"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\379\\step1146\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\379\\step1146\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\379\\step1146\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1520,
+          203
+        ],
+        "t": "农历",
+        "r": "contentx"
+      },
+      {
+        "c": [
+          806,
+          441
+        ],
+        "t": "农历生日L",
+        "r": "click_layout"
+      },
+      {
+        "c": [
+          231,
+          441
+        ],
+        "t": "全天",
+        "r": "time1"
+      },
+      {
+        "c": [
+          330,
+          441
+        ],
+        "t": "农历生日L",
+        "r": "line"
+      },
+      {
+        "c": [
+          511,
+          440
+        ],
+        "t": "农历生日L",
+        "r": "title"
+      },
+      {
+        "c": [
+          2233,
+          441
+        ],
+        "t": "2026年10月9日 09:00",
+        "r": "click_layout"
+      },
+      {
+        "c": [
+          1833,
+          441
+        ],
+        "t": "2026年10月9日 09:00",
+        "r": "time1"
+      },
+      {
+        "c": [
+          2109,
+          441
+        ],
+        "t": "2026年10月9日 09:00",
+        "r": "line"
+      },
+      {
+        "c": [
+          2317,
+          440
+        ],
+        "t": "农历纪念日L",
+        "r": "title"
+      },
+      {
+        "c": [
+          806,
+          724
+        ],
+        "t": "农历提醒L",
+        "r": "click_layout"
+      },
+      {
+        "c": [
+          403,
+          724
+        ],
+        "t": "2026年10月9日 20:22",
+        "r": "time1"
+      },
+      {
+        "c": [
+          674,
+          724
+        ],
+        "t": "2026年10月9日 20:22",
+        "r": "line"
+      }
+    ],
+    "nodes": [
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "com.zui.calendar:id/action_bar_root"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "android:id/content"
+      },
+      {
+        "bounds": [
+          0,
+          107,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          1005
+        ],
+        "rid": "com.zui.calendar:id/build_list_content"
+      },
+      {
+        "bounds": [
+          0,
+          107,
+          3040,
+          300
+        ],
+        "center": [
+          1520,
+          203
+        ],
+        "rid": "com.zui.calendar:id/contentx"
+      },
+      {
+        "bounds": [
+          66,
+          341,
+          2919,
+          1904
+        ],
+        "center": [
+          1492,
+          1122
+        ],
+        "rid": "com.zui.calendar:id/search_view"
+      },
+      {
+        "bounds": [
+          121,
+          341,
+          1492,
+          541
+        ],
+        "center": [
+          806,
+          441
+        ],
+        "rid": "com.zui.calendar:id/click_layout",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          187,
+          403,
+          275,
+          479
+        ],
+        "center": [
+          231,
+          441
+        ],
+        "rid": "com.zui.calendar:id/time1",
+        "text": "全天"
+      },
+      {
+        "bounds": [
+          330,
+          385,
+          331,
+          497
+        ],
+        "center": [
+          330,
+          441
+        ],
+        "rid": "com.zui.calendar:id/line"
+      },
+      {
+        "bounds": [
+          386,
+          401,
+          636,
+          480
+        ],
+        "center": [
+          511,
+          440
+        ],
+        "rid": "com.zui.calendar:id/title",
+        "text": "农历生日L"
+      },
+      {
+        "bounds": [
+          1547,
+          341,
+          2919,
+          541
+        ],
+        "center": [
+          2233,
+          441
+        ],
+        "rid": "com.zui.calendar:id/click_layout",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1613,
+          403,
+          2054,
+          479
+        ],
+        "center": [
+          1833,
+          441
+        ],
+        "rid": "com.zui.calendar:id/time1",
+        "text": "2026年10月9日 09:00"
+      },
+      {
+        "bounds": [
+          2109,
+          385,
+          2110,
+          497
+        ],
+        "center": [
+          2109,
+          441
+        ],
+        "rid": "com.zui.calendar:id/line"
+      },
+      {
+        "bounds": [
+          2165,
+          401,
+          2470,
+          480
+        ],
+        "center": [
+          2317,
+          440
+        ],
+        "rid": "com.zui.calendar:id/title",
+        "text": "农历纪念日L"
+      },
+      {
+        "bounds": [
+          121,
+          624,
+          1492,
+          824
+        ],
+        "center": [
+          806,
+          724
+        ],
+        "rid": "com.zui.calendar:id/click_layout",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          187,
+          686,
+          619,
+          762
+        ],
+        "center": [
+          403,
+          724
+        ],
+        "rid": "com.zui.calendar:id/time1",
+        "text": "2026年10月9日 20:22"
+      },
+      {
+        "bounds": [
+          674,
+          668,
+          675,
+          780
+        ],
+        "center": [
+          674,
+          724
+        ],
+        "rid": "com.zui.calendar:id/line"
+      },
+      {
+        "bounds": [
+          730,
+          684,
+          980,
+          763
+        ],
+        "center": [
+          855,
+          723
+        ],
+        "rid": "com.zui.calendar:id/title",
+        "text": "农历提醒L"
+      },
+      {
+        "bounds": [
+          0,
+          107,
+          3040,
+          300
+        ],
+        "center": [
+          1520,
+          203
+        ],
+        "rid": "com.zui.calendar:id/content"
+      },
+      {
+        "bounds": [
+          121,
+          154,
+          2792,
+          253
+        ],
+        "center": [
+          1456,
+          203
+        ],
+        "rid": "com.zui.calendar:id/searchEditText",
+        "text": "农历",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          146,
+          176,
+          201,
+          231
+        ],
+        "center": [
+          173,
+          203
+        ],
+        "rid": "com.zui.calendar:id/icon_search"
+      },
+      {
+        "bounds": [
+          2687,
+          151,
+          2792,
+          256
+        ],
+        "center": [
+          2739,
+          203
+        ],
+        "rid": "com.zui.calendar:id/imageButtonClear",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          2792,
+          107,
+          3040,
+          300
+        ],
+        "center": [
+          2916,
+          203
+        ],
+        "rid": "com.zui.calendar:id/cancel",
+        "text": "取消",
+        "clickable": true
+      }
+    ],
+    "nodes_count": 22,
+    "nodes_mode": "full",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      2168
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "fe0fee8d31d84746a69f41fd9347b18e",
+    "measured_at": "2026-10-09T20:25:08.047",
+    "process_observed_ms": 3700.113,
+    "stages_ms": {
+      "device_import": 297.011,
+      "device_connect": 1103.164,
+      "permission": 1024.604,
+      "screenshot": 249.955,
+      "png_save": 54.26,
+      "ui_dump": 70.161,
+      "rotation": 259.107,
+      "xml_save": 6.824,
+      "foreground": 423.345,
+      "meta_save": 7.25,
+      "screen_signature": 37.197,
+      "crash_detection": 80.997,
+      "event_write": 1.54,
+      "node_summary": 0.707,
+      "node_labels": 0.686,
+      "next_targets": 0.114,
+      "serialization": 0.651
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 7962
+  },
+  "response_bytes": 7962,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2168
+    ]
+  }
+}

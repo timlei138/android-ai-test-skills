@@ -1,0 +1,993 @@
+{
+  "call_id": "676fa640487c46a8953528ab91295ca0",
+  "session_id": 365,
+  "tool": "observe",
+  "started_at": "2026-10-09T17:54:20.892",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T17:54:26.338",
+  "wall_ms": 5438.591,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-09T17:54:26",
+    "package": "com.zui.calendar",
+    "activity": ".AllInOneActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "676fa640487c46a8953528ab91295ca0",
+    "timing": {
+      "call_id": "676fa640487c46a8953528ab91295ca0",
+      "measured_at": "2026-10-09T17:54:26.071",
+      "process_observed_ms": 3517.285,
+      "stages_ms": {
+        "device_import": 298.057,
+        "device_connect": 1078.172,
+        "permission": 927.2,
+        "screenshot": 361.961,
+        "png_save": 85.799,
+        "ui_dump": 134.121,
+        "rotation": 236.723,
+        "xml_save": 5.11,
+        "foreground": 332.661
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=month_week_pane",
+      "rid=toolbar",
+      "rid=top_button_date_layout",
+      "rid=top_button_month",
+      "text=10",
+      "rid=top_button_year",
+      "text=2026年",
+      "rid=top_button_month_unit",
+      "text=月",
+      "rid=top_button_day",
+      "text=9日",
+      "rid=top_button_lunar_countdown",
+      "text=今天",
+      "rid=action_add_all_event",
+      "rid=action_back_today",
+      "rid=iv_more",
+      "rid=calendarView",
+      "rid=frameContent",
+      "text=一",
+      "text=二",
+      "text=三",
+      "text=四",
+      "text=五",
+      "text=六",
+      "text=日",
+      "rid=line",
+      "rid=vp_month",
+      "rid=divider",
+      "rid=list_frame",
+      "rid=full_day_containter_layout",
+      "rid=eventList",
+      "rid=top_button_lunar_month",
+      "text=农历八月廿九  (丙午马年 戊戌月 丙辰日)",
+      "rid=iconyi",
+      "text=宜:",
+      "rid=titleyi",
+      "text=祭祀 解除 破屋 坏垣 馀事勿取",
+      "rid=iconji",
+      "text=忌:",
+      "rid=titleji",
+      "text=诸事不宜",
+      "rid=agenda_item_text_container",
+      "rid=date_ll",
+      "rid=date_tv",
+      "text=全天",
+      "rid=title",
+      "text=测试全天A",
+      "text=张三的生日",
+      "text=10:50",
+      "text=G",
+      "text=o",
+      "text=g"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\365\\step0718\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\365\\step0718\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\365\\step0718\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1520,
+          1005
+        ],
+        "t": "全天",
+        "r": "month_week_pane"
+      },
+      {
+        "c": [
+          330,
+          203
+        ],
+        "t": "2026年",
+        "r": "top_button_date_layout"
+      },
+      {
+        "c": [
+          210,
+          203
+        ],
+        "t": "10",
+        "r": "top_button_month"
+      },
+      {
+        "c": [
+          368,
+          168
+        ],
+        "t": "2026年",
+        "r": "top_button_year"
+      },
+      {
+        "c": [
+          316,
+          237
+        ],
+        "t": "月",
+        "r": "top_button_month_unit"
+      },
+      {
+        "c": [
+          373,
+          237
+        ],
+        "t": "9日",
+        "r": "top_button_day"
+      },
+      {
+        "c": [
+          474,
+          237
+        ],
+        "t": "今天",
+        "r": "top_button_lunar_countdown"
+      },
+      {
+        "c": [
+          779,
+          440
+        ],
+        "t": "三",
+        "r": "line"
+      },
+      {
+        "c": [
+          1492,
+          1102
+        ],
+        "t": "全天",
+        "r": "divider"
+      },
+      {
+        "c": [
+          2206,
+          1102
+        ],
+        "t": "张三的生日",
+        "r": "list_frame"
+      },
+      {
+        "c": [
+          2206,
+          1102
+        ],
+        "t": "张三的生日",
+        "r": "full_day_containter_layout"
+      },
+      {
+        "c": [
+          2252,
+          1102
+        ],
+        "t": "张三的生日",
+        "r": "eventList",
+        "s": true
+      }
+    ],
+    "nodes": [
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "com.zui.calendar:id/action_bar_root"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "android:id/content"
+      },
+      {
+        "bounds": [
+          0,
+          107,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          1005
+        ],
+        "rid": "com.zui.calendar:id/month_week_pane"
+      },
+      {
+        "bounds": [
+          121,
+          107,
+          2919,
+          300
+        ],
+        "center": [
+          1520,
+          203
+        ],
+        "rid": "com.zui.calendar:id/toolbar"
+      },
+      {
+        "bounds": [
+          143,
+          107,
+          518,
+          300
+        ],
+        "center": [
+          330,
+          203
+        ],
+        "rid": "com.zui.calendar:id/top_button_date_layout",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          143,
+          119,
+          277,
+          288
+        ],
+        "center": [
+          210,
+          203
+        ],
+        "rid": "com.zui.calendar:id/top_button_month",
+        "text": "10"
+      },
+      {
+        "bounds": [
+          294,
+          134,
+          443,
+          203
+        ],
+        "center": [
+          368,
+          168
+        ],
+        "rid": "com.zui.calendar:id/top_button_year",
+        "text": "2026年"
+      },
+      {
+        "bounds": [
+          294,
+          206,
+          338,
+          268
+        ],
+        "center": [
+          316,
+          237
+        ],
+        "rid": "com.zui.calendar:id/top_button_month_unit",
+        "text": "月"
+      },
+      {
+        "bounds": [
+          338,
+          206,
+          408,
+          268
+        ],
+        "center": [
+          373,
+          237
+        ],
+        "rid": "com.zui.calendar:id/top_button_day",
+        "text": "9日"
+      },
+      {
+        "bounds": [
+          430,
+          206,
+          518,
+          268
+        ],
+        "center": [
+          474,
+          237
+        ],
+        "rid": "com.zui.calendar:id/top_button_lunar_countdown",
+        "text": "今天"
+      },
+      {
+        "bounds": [
+          2497,
+          159,
+          2635,
+          247
+        ],
+        "center": [
+          2566,
+          203
+        ],
+        "rid": "com.zui.calendar:id/action_add_all_event",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          2635,
+          159,
+          2773,
+          247
+        ],
+        "center": [
+          2704,
+          203
+        ],
+        "rid": "com.zui.calendar:id/action_back_today",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          2773,
+          159,
+          2897,
+          247
+        ],
+        "center": [
+          2835,
+          203
+        ],
+        "rid": "com.zui.calendar:id/iv_more",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          66,
+          344,
+          1492,
+          1630
+        ],
+        "center": [
+          779,
+          987
+        ],
+        "rid": "com.zui.calendar:id/calendarView"
+      },
+      {
+        "bounds": [
+          66,
+          344,
+          1492,
+          1630
+        ],
+        "center": [
+          779,
+          987
+        ],
+        "rid": "com.zui.calendar:id/frameContent"
+      },
+      {
+        "bounds": [
+          79,
+          344,
+          277,
+          440
+        ],
+        "center": [
+          178,
+          392
+        ],
+        "text": "一"
+      },
+      {
+        "bounds": [
+          277,
+          344,
+          475,
+          440
+        ],
+        "center": [
+          376,
+          392
+        ],
+        "text": "二"
+      },
+      {
+        "bounds": [
+          475,
+          344,
+          673,
+          440
+        ],
+        "center": [
+          574,
+          392
+        ],
+        "text": "三"
+      },
+      {
+        "bounds": [
+          673,
+          344,
+          871,
+          440
+        ],
+        "center": [
+          772,
+          392
+        ],
+        "text": "四"
+      },
+      {
+        "bounds": [
+          871,
+          344,
+          1069,
+          440
+        ],
+        "center": [
+          970,
+          392
+        ],
+        "text": "五"
+      },
+      {
+        "bounds": [
+          1069,
+          344,
+          1267,
+          440
+        ],
+        "center": [
+          1168,
+          392
+        ],
+        "text": "六"
+      },
+      {
+        "bounds": [
+          1267,
+          344,
+          1465,
+          440
+        ],
+        "center": [
+          1366,
+          392
+        ],
+        "text": "日"
+      },
+      {
+        "bounds": [
+          71,
+          440,
+          1487,
+          441
+        ],
+        "center": [
+          779,
+          440
+        ],
+        "rid": "com.zui.calendar:id/line"
+      },
+      {
+        "bounds": [
+          66,
+          443,
+          1492,
+          1630
+        ],
+        "center": [
+          779,
+          1036
+        ],
+        "rid": "com.zui.calendar:id/vp_month",
+        "scrollable": true
+      },
+      {
+        "bounds": [
+          66,
+          443,
+          1492,
+          1630
+        ],
+        "center": [
+          779,
+          1036
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1492,
+          300,
+          1493,
+          1904
+        ],
+        "center": [
+          1492,
+          1102
+        ],
+        "rid": "com.zui.calendar:id/divider"
+      },
+      {
+        "bounds": [
+          1493,
+          300,
+          2919,
+          1904
+        ],
+        "center": [
+          2206,
+          1102
+        ],
+        "rid": "com.zui.calendar:id/list_frame"
+      },
+      {
+        "bounds": [
+          1493,
+          300,
+          2919,
+          1904
+        ],
+        "center": [
+          2206,
+          1102
+        ],
+        "rid": "com.zui.calendar:id/full_day_containter_layout"
+      },
+      {
+        "bounds": [
+          1614,
+          300,
+          2891,
+          1904
+        ],
+        "center": [
+          2252,
+          1102
+        ],
+        "rid": "com.zui.calendar:id/eventList",
+        "scrollable": true
+      },
+      {
+        "bounds": [
+          1614,
+          300,
+          2891,
+          575
+        ],
+        "center": [
+          2252,
+          437
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1642,
+          313,
+          2620,
+          392
+        ],
+        "center": [
+          2131,
+          352
+        ],
+        "rid": "com.zui.calendar:id/top_button_lunar_month",
+        "text": "农历八月廿九  (丙午马年 戊戌月 丙辰日)"
+      },
+      {
+        "bounds": [
+          1642,
+          425,
+          1698,
+          489
+        ],
+        "center": [
+          1670,
+          457
+        ],
+        "rid": "com.zui.calendar:id/iconyi",
+        "text": "宜:"
+      },
+      {
+        "bounds": [
+          1704,
+          425,
+          2280,
+          489
+        ],
+        "center": [
+          1992,
+          457
+        ],
+        "rid": "com.zui.calendar:id/titleyi",
+        "text": "祭祀 解除 破屋 坏垣 馀事勿取"
+      },
+      {
+        "bounds": [
+          1642,
+          497,
+          1698,
+          561
+        ],
+        "center": [
+          1670,
+          529
+        ],
+        "rid": "com.zui.calendar:id/iconji",
+        "text": "忌:"
+      },
+      {
+        "bounds": [
+          1704,
+          497,
+          1880,
+          561
+        ],
+        "center": [
+          1792,
+          529
+        ],
+        "rid": "com.zui.calendar:id/titleji",
+        "text": "诸事不宜"
+      },
+      {
+        "bounds": [
+          1614,
+          657,
+          2891,
+          857
+        ],
+        "center": [
+          2252,
+          757
+        ],
+        "rid": "com.zui.calendar:id/agenda_item_text_container",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1642,
+          725,
+          1769,
+          789
+        ],
+        "center": [
+          1705,
+          757
+        ],
+        "rid": "com.zui.calendar:id/date_ll"
+      },
+      {
+        "bounds": [
+          1681,
+          725,
+          1769,
+          789
+        ],
+        "center": [
+          1725,
+          757
+        ],
+        "rid": "com.zui.calendar:id/date_tv",
+        "text": "全天"
+      },
+      {
+        "bounds": [
+          1835,
+          717,
+          2863,
+          796
+        ],
+        "center": [
+          2349,
+          756
+        ],
+        "rid": "com.zui.calendar:id/title",
+        "text": "测试全天A"
+      },
+      {
+        "bounds": [
+          1614,
+          939,
+          2891,
+          1139
+        ],
+        "center": [
+          2252,
+          1039
+        ],
+        "rid": "com.zui.calendar:id/agenda_item_text_container",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1642,
+          1007,
+          1769,
+          1071
+        ],
+        "center": [
+          1705,
+          1039
+        ],
+        "rid": "com.zui.calendar:id/date_ll"
+      },
+      {
+        "bounds": [
+          1681,
+          1007,
+          1769,
+          1071
+        ],
+        "center": [
+          1725,
+          1039
+        ],
+        "rid": "com.zui.calendar:id/date_tv",
+        "text": "全天"
+      },
+      {
+        "bounds": [
+          1835,
+          999,
+          2863,
+          1078
+        ],
+        "center": [
+          2349,
+          1038
+        ],
+        "rid": "com.zui.calendar:id/title",
+        "text": "张三的生日"
+      },
+      {
+        "bounds": [
+          1614,
+          1221,
+          2891,
+          1421
+        ],
+        "center": [
+          2252,
+          1321
+        ],
+        "rid": "com.zui.calendar:id/agenda_item_text_container",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1642,
+          1291,
+          1788,
+          1350
+        ],
+        "center": [
+          1715,
+          1320
+        ],
+        "rid": "com.zui.calendar:id/date_ll"
+      },
+      {
+        "bounds": [
+          1681,
+          1291,
+          1788,
+          1350
+        ],
+        "center": [
+          1734,
+          1320
+        ],
+        "rid": "com.zui.calendar:id/date_tv",
+        "text": "10:50"
+      },
+      {
+        "bounds": [
+          1854,
+          1284,
+          2863,
+          1357
+        ],
+        "center": [
+          2358,
+          1320
+        ],
+        "rid": "com.zui.calendar:id/title",
+        "text": "G"
+      },
+      {
+        "bounds": [
+          1614,
+          1503,
+          2891,
+          1703
+        ],
+        "center": [
+          2252,
+          1603
+        ],
+        "rid": "com.zui.calendar:id/agenda_item_text_container",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1642,
+          1573,
+          1788,
+          1632
+        ],
+        "center": [
+          1715,
+          1602
+        ],
+        "rid": "com.zui.calendar:id/date_ll"
+      },
+      {
+        "bounds": [
+          1681,
+          1573,
+          1788,
+          1632
+        ],
+        "center": [
+          1734,
+          1602
+        ],
+        "rid": "com.zui.calendar:id/date_tv",
+        "text": "10:50"
+      },
+      {
+        "bounds": [
+          1854,
+          1566,
+          2863,
+          1639
+        ],
+        "center": [
+          2358,
+          1602
+        ],
+        "rid": "com.zui.calendar:id/title",
+        "text": "o"
+      },
+      {
+        "bounds": [
+          1614,
+          1785,
+          2891,
+          1904
+        ],
+        "center": [
+          2252,
+          1844
+        ],
+        "rid": "com.zui.calendar:id/agenda_item_text_container",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1642,
+          1855,
+          1788,
+          1904
+        ],
+        "center": [
+          1715,
+          1879
+        ],
+        "rid": "com.zui.calendar:id/date_ll"
+      },
+      {
+        "bounds": [
+          1681,
+          1855,
+          1788,
+          1904
+        ],
+        "center": [
+          1734,
+          1879
+        ],
+        "rid": "com.zui.calendar:id/date_tv",
+        "text": "10:50"
+      },
+      {
+        "bounds": [
+          1854,
+          1848,
+          2863,
+          1904
+        ],
+        "center": [
+          2358,
+          1876
+        ],
+        "rid": "com.zui.calendar:id/title",
+        "text": "g"
+      }
+    ],
+    "nodes_count": 55,
+    "nodes_mode": "full",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      1740
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "676fa640487c46a8953528ab91295ca0",
+    "measured_at": "2026-10-09T17:54:26.248",
+    "process_observed_ms": 3694.53,
+    "stages_ms": {
+      "device_import": 298.057,
+      "device_connect": 1078.172,
+      "permission": 927.2,
+      "screenshot": 361.961,
+      "png_save": 85.799,
+      "ui_dump": 134.121,
+      "rotation": 236.723,
+      "xml_save": 5.11,
+      "foreground": 332.661,
+      "meta_save": 6.347,
+      "screen_signature": 34.509,
+      "crash_detection": 121.612,
+      "event_write": 2.463,
+      "node_summary": 2.279,
+      "node_labels": 1.656,
+      "next_targets": 0.291,
+      "serialization": 1.09
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 15458
+  },
+  "response_bytes": 15458,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1740
+    ]
+  }
+}

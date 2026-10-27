@@ -1,0 +1,14 @@
+{
+  "call_id": "bf67a2314c1d4c7d8e594aecb045f134",
+  "session_id": 351,
+  "error": "Invocation evidence is incomplete",
+  "audit": {
+    "complete": false,
+    "outcome": "failed",
+    "issues": [
+      "no recorded observation/action event"
+    ],
+    "executed": true,
+    "event_ids": []
+  }
+}

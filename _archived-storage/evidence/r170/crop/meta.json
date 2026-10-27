@@ -1,0 +1,10 @@
+{
+  "ts": "2026-09-22T17:24:57",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.crop.CropImageActivity",
+  "rotation": 1,
+  "size": [
+    3840,
+    2560
+  ]
+}

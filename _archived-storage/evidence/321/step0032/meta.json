@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-09T10:52:00",
+  "package": "com.zui.calendar",
+  "activity": ".AllInOneActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2835,
+    "y": 203,
+    "via": "rid=iv_more",
+    "why": "打开更多菜单以进入课程表"
+  },
+  "call_id": "8d4568e612504f1493ab7764d5e2b5a4",
+  "timing": {
+    "call_id": "8d4568e612504f1493ab7764d5e2b5a4",
+    "measured_at": "2026-10-09T10:52:00.871",
+    "process_observed_ms": 4387.556,
+    "stages_ms": {
+      "device_import": 303.416,
+      "device_connect": 1078.44,
+      "action": 179.498,
+      "settle_wait": 600.241,
+      "permission": 911.186,
+      "screenshot": 362.29,
+      "png_save": 240.364,
+      "ui_dump": 62.933,
+      "rotation": 216.029,
+      "xml_save": 6.137,
+      "foreground": 343.174
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

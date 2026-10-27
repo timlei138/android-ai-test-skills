@@ -1,0 +1,51 @@
+{
+  "call_id": "085cc7a4a3e14b168c64261a72c44728",
+  "session_id": 361,
+  "tool": "vision",
+  "started_at": "2026-10-09T17:21:11.100",
+  "status": "ended",
+  "expects_event": false,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T17:21:15.032",
+  "wall_ms": 3927.892,
+  "result": {
+    "ok": true,
+    "text": "没有。当前页面只显示“时段1”（开始/结束时间），未出现“添加其他时间段”按钮。",
+    "usage": {
+      "prompt_tokens": 1004,
+      "completion_tokens": 107,
+      "total_tokens": 1111,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 82
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 1004
+    },
+    "hint": "视觉模型输出是辅助判据，PASS/FAIL 结论仍需结合 dump/OCR 证据",
+    "call_id": "085cc7a4a3e14b168c64261a72c44728",
+    "event_ids": [],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "085cc7a4a3e14b168c64261a72c44728",
+    "measured_at": "2026-10-09T17:21:15.004",
+    "process_observed_ms": 1964.368,
+    "stages_ms": {
+      "serialization": 0.051
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 648
+  },
+  "response_bytes": 648,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": []
+  }
+}

@@ -1,0 +1,342 @@
+{
+  "call_id": "e5e76f570c6c4d80a500614885e7d359",
+  "session_id": 351,
+  "tool": "observe",
+  "started_at": "2026-10-09T16:03:35.713",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T16:03:41.535",
+  "wall_ms": 5803.303,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-09T16:03:41",
+    "package": "com.zui.calendar",
+    "activity": ".newbuild.NewBuildActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "e5e76f570c6c4d80a500614885e7d359",
+    "timing": {
+      "call_id": "e5e76f570c6c4d80a500614885e7d359",
+      "measured_at": "2026-10-09T16:03:41.268",
+      "process_observed_ms": 3717.593,
+      "stages_ms": {
+        "device_import": 318.45,
+        "device_connect": 1199.947,
+        "permission": 966.857,
+        "screenshot": 323.057,
+        "png_save": 137.388,
+        "ui_dump": 91.515,
+        "rotation": 192.835,
+        "xml_save": 7.822,
+        "foreground": 408.183
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "rid=backtext",
+      "rid=toolbar_title",
+      "text=新建事件",
+      "rid=action_menu_view",
+      "rid=save_view",
+      "text=完成",
+      "rid=categoryList",
+      "rid=categoryLayout",
+      "rid=categoryIcon",
+      "rid=categoryName",
+      "text=提醒",
+      "text=日程",
+      "text=课程",
+      "text=倒数日",
+      "text=生日",
+      "text=纪念日",
+      "rid=pager_container",
+      "rid=reminder_title",
+      "text=PROBE2",
+      "rid=eventTimeLayout",
+      "text=时间",
+      "rid=eventTimeTxt",
+      "text=2026年10月9日 周五 16:03",
+      "desc=开始日期",
+      "rid=reminder_custom_linearlayout",
+      "rid=reminderTimeLayout",
+      "rid=reminderTimeTxt",
+      "text=任务发生时",
+      "rid=reminderRepeatLayout",
+      "text=重复",
+      "rid=reminderRepeatTxt",
+      "text=不重复",
+      "rid=reminder_repeattype_arrow_custom",
+      "rid=reminderDescription",
+      "text=备注"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\351\\step0440\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\351\\step0440\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\351\\step0440\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          162,
+          203
+        ],
+        "t": "新建事件",
+        "r": "backtext"
+      },
+      {
+        "c": [
+          2847,
+          203
+        ],
+        "t": "完成",
+        "r": "save_view"
+      },
+      {
+        "c": [
+          2128,
+          469
+        ],
+        "t": "PROBE2",
+        "r": "reminder_title"
+      },
+      {
+        "c": [
+          2128,
+          642
+        ],
+        "t": "2026年10月9日 周五 16:03",
+        "r": "eventTimeLayout"
+      },
+      {
+        "c": [
+          2128,
+          988
+        ],
+        "t": "不重复",
+        "r": "reminderRepeatLayout"
+      },
+      {
+        "c": [
+          2128,
+          1161
+        ],
+        "t": "备注",
+        "r": "reminderDescription"
+      },
+      {
+        "c": [
+          608,
+          472
+        ],
+        "t": "提醒"
+      },
+      {
+        "c": [
+          608,
+          651
+        ],
+        "t": "日程"
+      },
+      {
+        "c": [
+          608,
+          830
+        ],
+        "t": "课程"
+      },
+      {
+        "c": [
+          608,
+          1009
+        ],
+        "t": "倒数日"
+      },
+      {
+        "c": [
+          608,
+          1188
+        ],
+        "t": "生日"
+      },
+      {
+        "c": [
+          608,
+          1367
+        ],
+        "t": "纪念日"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          162,
+          203
+        ],
+        "r": "backtext"
+      },
+      {
+        "i": 1,
+        "c": [
+          2847,
+          203
+        ],
+        "t": "完成",
+        "r": "save_view"
+      },
+      {
+        "i": 2,
+        "c": [
+          608,
+          472
+        ]
+      },
+      {
+        "i": 3,
+        "c": [
+          608,
+          651
+        ]
+      },
+      {
+        "i": 4,
+        "c": [
+          608,
+          830
+        ]
+      },
+      {
+        "i": 5,
+        "c": [
+          608,
+          1009
+        ]
+      },
+      {
+        "i": 6,
+        "c": [
+          608,
+          1188
+        ]
+      },
+      {
+        "i": 7,
+        "c": [
+          608,
+          1367
+        ]
+      },
+      {
+        "i": 8,
+        "c": [
+          2128,
+          1074
+        ],
+        "r": "pager_container",
+        "s": true
+      },
+      {
+        "i": 9,
+        "c": [
+          2128,
+          1074
+        ],
+        "s": true
+      },
+      {
+        "i": 10,
+        "c": [
+          2128,
+          469
+        ],
+        "t": "PROBE2",
+        "r": "reminder_title"
+      },
+      {
+        "i": 11,
+        "c": [
+          2128,
+          642
+        ],
+        "r": "eventTimeLayout"
+      },
+      {
+        "i": 12,
+        "c": [
+          2128,
+          815
+        ],
+        "r": "reminderTimeLayout"
+      },
+      {
+        "i": 13,
+        "c": [
+          2128,
+          988
+        ],
+        "r": "reminderRepeatLayout"
+      },
+      {
+        "i": 14,
+        "c": [
+          2128,
+          1161
+        ],
+        "t": "备注",
+        "r": "reminderDescription"
+      }
+    ],
+    "nodes_count": 15,
+    "nodes_mode": "nav",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      1462
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "e5e76f570c6c4d80a500614885e7d359",
+    "measured_at": "2026-10-09T16:03:41.440",
+    "process_observed_ms": 3889.702,
+    "stages_ms": {
+      "device_import": 318.45,
+      "device_connect": 1199.947,
+      "permission": 966.857,
+      "screenshot": 323.057,
+      "png_save": 137.388,
+      "ui_dump": 91.515,
+      "rotation": 192.835,
+      "xml_save": 7.822,
+      "foreground": 408.183,
+      "meta_save": 5.314,
+      "screen_signature": 35.78,
+      "crash_detection": 121.571,
+      "event_write": 1.926,
+      "node_summary": 0.743,
+      "node_labels": 0.541,
+      "next_targets": 0.041,
+      "serialization": 0.177
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 5166
+  },
+  "response_bytes": 5166,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1462
+    ]
+  }
+}

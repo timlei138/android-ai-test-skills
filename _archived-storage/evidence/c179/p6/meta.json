@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T12:24:00",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimeSlotSettingsActivity",
+  "rotation": 1,
+  "size": [
+    3840,
+    2560
+  ],
+  "action": {
+    "type": "tap",
+    "x": 3740,
+    "y": 485,
+    "via": "rid=iv_arrow(第1节)",
+    "why": "步骤1: 打开第1节时间设置弹窗"
+  }
+}

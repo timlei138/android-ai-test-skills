@@ -1,0 +1,188 @@
+{
+  "call_id": "d183ddce2a3a4c0297702541bdafe41f",
+  "session_id": 432,
+  "tool": "act",
+  "started_at": "2026-10-14T15:03:16.602",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-14T15:03:22.285",
+  "wall_ms": 5678.549,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 2726,
+      "y": 608,
+      "via": "countdownLlNo 倒数日部件占位区",
+      "why": "用例步骤2：无倒数日时点击小部件"
+    },
+    "ts": "2026-10-14T15:03:22",
+    "package": "com.zui.calendar",
+    "activity": ".widget.countdown.CountdownListActivity",
+    "rotation": 1,
+    "size": [
+      3840,
+      2560
+    ],
+    "call_id": "d183ddce2a3a4c0297702541bdafe41f",
+    "timing": {
+      "call_id": "d183ddce2a3a4c0297702541bdafe41f",
+      "measured_at": "2026-10-14T15:03:22.048",
+      "process_observed_ms": 5013.337,
+      "stages_ms": {
+        "device_import": 423.778,
+        "device_connect": 1121.723,
+        "action": 187.314,
+        "settle_wait": 600.298,
+        "permission": 1332.752,
+        "screenshot": 428.515,
+        "png_save": 261.838,
+        "ui_dump": 81.615,
+        "rotation": 183.947,
+        "xml_save": 3.852,
+        "foreground": 284.18
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "rid=toolbar_title",
+      "text=倒数日",
+      "rid=action_menu_view",
+      "rid=countdown_action_add",
+      "rid=countDownTip",
+      "text=小部件中支持切换今天至未来两年内的日期。",
+      "rid=main_frame",
+      "rid=agendaRefreshView",
+      "rid=agendaRv",
+      "rid=head_layout",
+      "rid=date_left",
+      "text=2026年 10月14日（九月初五）周三",
+      "rid=todaynull_layout",
+      "rid=todaynull_tv",
+      "text=无事件",
+      "rid=bottom_layout",
+      "rid=bottom_tv",
+      "text=加载2027年事件"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\432\\step2050\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\432\\step2050\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\432\\step2050\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1920,
+          790
+        ],
+        "t": "加载2027年事件",
+        "r": "bottom_layout"
+      },
+      {
+        "c": [
+          158,
+          185
+        ],
+        "t": "倒数日"
+      },
+      {
+        "c": [
+          3650,
+          185
+        ],
+        "r": "countdown_action_add"
+      },
+      {
+        "c": [
+          1935,
+          1423
+        ],
+        "r": "agendaRefreshView"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          158,
+          185
+        ]
+      },
+      {
+        "i": 1,
+        "c": [
+          3650,
+          185
+        ],
+        "r": "countdown_action_add"
+      },
+      {
+        "i": 2,
+        "c": [
+          1935,
+          1423
+        ],
+        "r": "agendaRefreshView"
+      },
+      {
+        "i": 3,
+        "c": [
+          1920,
+          790
+        ],
+        "r": "bottom_layout"
+      }
+    ],
+    "nodes_count": 4,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      3089
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "d183ddce2a3a4c0297702541bdafe41f",
+    "measured_at": "2026-10-14T15:03:22.204",
+    "process_observed_ms": 5170.497,
+    "stages_ms": {
+      "device_import": 423.778,
+      "device_connect": 1121.723,
+      "action": 187.314,
+      "settle_wait": 600.298,
+      "permission": 1332.752,
+      "screenshot": 428.515,
+      "png_save": 261.838,
+      "ui_dump": 81.615,
+      "rotation": 183.947,
+      "xml_save": 3.852,
+      "foreground": 284.18,
+      "meta_save": 3.591,
+      "crash_detection": 53.98,
+      "screen_signature": 48.852,
+      "event_write": 41.672,
+      "node_summary": 0.941,
+      "node_labels": 0.678,
+      "next_targets": 0.039,
+      "serialization": 0.21
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 3229
+  },
+  "response_bytes": 3229,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3089
+    ]
+  }
+}

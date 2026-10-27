@@ -1,0 +1,284 @@
+{
+  "call_id": "0d6d17dd38d94b2a997ce8fb11461964",
+  "session_id": 475,
+  "tool": "observe",
+  "started_at": "2026-10-26T21:00:32.276",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-26T21:00:36.514",
+  "wall_ms": 4230.273,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-26T21:00:36",
+    "package": "com.zui.calendar",
+    "activity": ".AllInOneActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "0d6d17dd38d94b2a997ce8fb11461964",
+    "timing": {
+      "call_id": "0d6d17dd38d94b2a997ce8fb11461964",
+      "measured_at": "2026-10-26T21:00:36.261",
+      "process_observed_ms": 3646.192,
+      "stages_ms": {
+        "device_import": 395.191,
+        "device_connect": 1131.988,
+        "permission": 847.952,
+        "screenshot": 347.723,
+        "png_save": 199.874,
+        "ui_dump": 62.485,
+        "rotation": 240.211,
+        "xml_save": 3.028,
+        "foreground": 361.523
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=month_week_pane",
+      "rid=toolbar",
+      "rid=top_button_date_layout",
+      "rid=top_button_month",
+      "text=10",
+      "rid=top_button_year",
+      "text=2026年",
+      "rid=top_button_month_unit",
+      "text=月",
+      "rid=top_button_day",
+      "text=26日",
+      "rid=top_button_lunar_countdown",
+      "text=今天",
+      "rid=action_add_all_event",
+      "rid=action_back_today",
+      "rid=iv_more",
+      "rid=calendarView",
+      "rid=frameContent",
+      "text=一",
+      "text=二",
+      "text=三",
+      "text=四",
+      "text=五",
+      "text=六",
+      "text=日",
+      "rid=line",
+      "rid=vp_month",
+      "rid=divider",
+      "rid=list_frame",
+      "rid=full_day_containter_layout",
+      "rid=eventList",
+      "rid=top_button_lunar_month",
+      "text=农历九月十七  (丙午马年 戊戌月 癸酉日)",
+      "rid=iconyi",
+      "text=宜:",
+      "rid=titleyi",
+      "text=嫁娶 裁衣 冠笄 合帐 祭祀 出行 安床 移徙 塞穴 入殓 破土 移柩 安葬",
+      "rid=iconji",
+      "text=忌:",
+      "rid=titleji",
+      "text=开市 出行 栽种 置产 词讼 安门 掘井 开光",
+      "rid=agenda_item_text_container",
+      "rid=date_ll",
+      "rid=date_tv",
+      "text=全天",
+      "rid=title",
+      "text=新建日程",
+      "text=19:57\n20:57",
+      "text=重复测试事件"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "D:\\Project\\deepseek\\android-ai-test-skills\\storage\\evidence\\475\\step2653\\shot.png",
+      "xml": "D:\\Project\\deepseek\\android-ai-test-skills\\storage\\evidence\\475\\step2653\\dump.xml",
+      "meta": "D:\\Project\\deepseek\\android-ai-test-skills\\storage\\evidence\\475\\step2653\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          343,
+          203
+        ],
+        "t": "2026年",
+        "r": "top_button_date_layout"
+      },
+      {
+        "c": [
+          2252,
+          757
+        ],
+        "t": "新建日程",
+        "r": "agenda_item_text_container"
+      },
+      {
+        "c": [
+          2252,
+          1039
+        ],
+        "t": "重复测试事件",
+        "r": "agenda_item_text_container"
+      },
+      {
+        "c": [
+          2252,
+          437
+        ],
+        "t": "嫁娶 裁衣 冠笄 合帐 祭祀 出行 安床 移徙 塞穴 入殓 破土 移柩 安葬"
+      },
+      {
+        "c": [
+          2566,
+          203
+        ],
+        "r": "action_add_all_event"
+      },
+      {
+        "c": [
+          2704,
+          203
+        ],
+        "r": "action_back_today"
+      },
+      {
+        "c": [
+          2835,
+          203
+        ],
+        "r": "iv_more"
+      },
+      {
+        "c": [
+          779,
+          1036
+        ],
+        "r": "vp_month",
+        "s": true
+      },
+      {
+        "c": [
+          779,
+          1036
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          343,
+          203
+        ],
+        "r": "top_button_date_layout"
+      },
+      {
+        "i": 1,
+        "c": [
+          2566,
+          203
+        ],
+        "r": "action_add_all_event"
+      },
+      {
+        "i": 2,
+        "c": [
+          2704,
+          203
+        ],
+        "r": "action_back_today"
+      },
+      {
+        "i": 3,
+        "c": [
+          2835,
+          203
+        ],
+        "r": "iv_more"
+      },
+      {
+        "i": 4,
+        "c": [
+          779,
+          1036
+        ],
+        "r": "vp_month",
+        "s": true
+      },
+      {
+        "i": 5,
+        "c": [
+          779,
+          1036
+        ]
+      },
+      {
+        "i": 6,
+        "c": [
+          2252,
+          437
+        ]
+      },
+      {
+        "i": 7,
+        "c": [
+          2252,
+          757
+        ],
+        "r": "agenda_item_text_container"
+      },
+      {
+        "i": 8,
+        "c": [
+          2252,
+          1039
+        ],
+        "r": "agenda_item_text_container"
+      }
+    ],
+    "nodes_count": 9,
+    "nodes_mode": "nav",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      3798
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "0d6d17dd38d94b2a997ce8fb11461964",
+    "measured_at": "2026-10-26T21:00:36.409",
+    "process_observed_ms": 3806.766,
+    "stages_ms": {
+      "device_import": 395.191,
+      "device_connect": 1131.988,
+      "permission": 847.952,
+      "screenshot": 347.723,
+      "png_save": 199.874,
+      "ui_dump": 62.485,
+      "rotation": 240.211,
+      "xml_save": 3.028,
+      "foreground": 361.523,
+      "meta_save": 6.082,
+      "screen_signature": 42.987,
+      "crash_detection": 92.592,
+      "event_write": 5.479,
+      "node_summary": 1.909,
+      "node_labels": 1.614,
+      "next_targets": 0.128,
+      "serialization": 0.366
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 4734
+  },
+  "response_bytes": 4734,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3798
+    ]
+  }
+}

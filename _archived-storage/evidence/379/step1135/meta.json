@@ -1,0 +1,40 @@
+{
+  "ts": "2026-10-09T20:23:20",
+  "package": "com.zui.calendar",
+  "activity": ".newbuild.NewBuildActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "input",
+    "x": 2128,
+    "y": 469,
+    "text": "农历提醒L",
+    "mode": "overwrite",
+    "via": "reminder_title",
+    "why": "fill"
+  },
+  "call_id": "4db3d1c9d7ed4d8f82d1b66f04fb7688",
+  "timing": {
+    "call_id": "4db3d1c9d7ed4d8f82d1b66f04fb7688",
+    "measured_at": "2026-10-09T20:23:20.992",
+    "process_observed_ms": 5422.338,
+    "stages_ms": {
+      "device_import": 287.836,
+      "device_connect": 1058.239,
+      "action": 1002.085,
+      "input_focus_wait": 300.387,
+      "settle_wait": 600.303,
+      "permission": 959.372,
+      "screenshot": 356.276,
+      "png_save": 129.765,
+      "ui_dump": 126.636,
+      "rotation": 185.031,
+      "xml_save": 7.52,
+      "foreground": 313.789
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

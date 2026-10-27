@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T18:02:52",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.EditTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1212,
+    "via": "rid=layout_weekend_classes",
+    "why": "YAML s2：点周末是否有课开关"
+  },
+  "call_id": "bef19839dc554be8870bf684db1b53d9",
+  "timing": {
+    "call_id": "bef19839dc554be8870bf684db1b53d9",
+    "measured_at": "2026-10-15T18:02:52.900",
+    "process_observed_ms": 14589.869,
+    "stages_ms": {
+      "device_import": 624.844,
+      "device_connect": 1276.78,
+      "action": 197.875,
+      "settle_wait": 600.318,
+      "permission": 5298.533,
+      "screenshot": 433.788,
+      "png_save": 299.002,
+      "ui_dump": 74.471,
+      "rotation": 204.059,
+      "xml_save": 8.738,
+      "foreground": 5373.552
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

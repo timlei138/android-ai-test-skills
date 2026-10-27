@@ -1,0 +1,40 @@
+{
+  "ts": "2026-10-09T18:42:19",
+  "package": "com.zui.calendar",
+  "activity": ".newbuild.NewBuildActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "input",
+    "x": 2128,
+    "y": 469,
+    "text": "超长标题测试ABCDEFGHIJ一二三四五六七八九十甲乙丙丁戊己庚辛壬癸子丑寅卯辰巳午未申酉戌亥",
+    "mode": "overwrite",
+    "via": "event_title",
+    "why": "填50字标题"
+  },
+  "call_id": "53154f2b48a548b7b51dc51f2a827527",
+  "timing": {
+    "call_id": "53154f2b48a548b7b51dc51f2a827527",
+    "measured_at": "2026-10-09T18:42:19.522",
+    "process_observed_ms": 5716.313,
+    "stages_ms": {
+      "device_import": 294.026,
+      "device_connect": 1068.873,
+      "action": 1025.276,
+      "input_focus_wait": 300.182,
+      "settle_wait": 600.58,
+      "permission": 1033.227,
+      "screenshot": 359.126,
+      "png_save": 135.01,
+      "ui_dump": 158.802,
+      "rotation": 228.431,
+      "xml_save": 8.326,
+      "foreground": 402.547
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

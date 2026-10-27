@@ -1,0 +1,245 @@
+{
+  "call_id": "46e087eef54b4afb85932d88d9080bdc",
+  "session_id": 404,
+  "tool": "act",
+  "started_at": "2026-10-10T14:03:10.256",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T14:03:17.328",
+  "wall_ms": 7060.293,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "longclick",
+      "x": 2700,
+      "y": 1600,
+      "via": "桌面空白",
+      "why": "desktop-edit"
+    },
+    "ts": "2026-10-10T14:03:17",
+    "package": "com.zui.launcher",
+    "activity": ".drawer.NormalLauncher",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "46e087eef54b4afb85932d88d9080bdc",
+    "timing": {
+      "call_id": "46e087eef54b4afb85932d88d9080bdc",
+      "measured_at": "2026-10-10T14:03:17.105",
+      "process_observed_ms": 4919.254,
+      "stages_ms": {
+        "device_import": 329.079,
+        "device_connect": 1068.515,
+        "action": 614.647,
+        "settle_wait": 600.151,
+        "permission": 900.395,
+        "screenshot": 305.189,
+        "png_save": 267.945,
+        "ui_dump": 103.902,
+        "rotation": 255.956,
+        "xml_save": 3.924,
+        "foreground": 391.96
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=launcher",
+      "rid=static_blur_view_container",
+      "rid=static_blur_view",
+      "rid=drag_layer",
+      "rid=scrim_view",
+      "rid=workspace",
+      "text=My Application",
+      "desc=My Application",
+      "rid=edit_panel",
+      "rid=topBar",
+      "rid=txv_tips",
+      "text=批量选择图标，长按后拖动即可跨屏移动。",
+      "rid=complete_button",
+      "text=完成",
+      "desc=完成",
+      "rid=bottom_panel",
+      "rid=btn_wallpaper_container",
+      "rid=btn_wallpaper",
+      "text=壁纸和主题风格",
+      "rid=btn_widgets_container",
+      "rid=btn_widgets",
+      "text=添加小部件",
+      "rid=drop_combine_folder_container",
+      "rid=btn_settings_container",
+      "rid=btn_settings",
+      "text=桌面设置",
+      "rid=drop_remove_icon_container",
+      "rid=accessibility_action_view",
+      "desc=主屏幕",
+      "rid=page_indicator",
+      "rid=overview_actions_view",
+      "rid=taskbar_container",
+      "rid=taskbar_scrim",
+      "rid=taskbar_bubbles_container",
+      "rid=stashed_handle",
+      "rid=navbuttons_view",
+      "rid=start_contextual_buttons"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\404\\step1749\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\404\\step1749\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\404\\step1749\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          2707,
+          182
+        ],
+        "t": "完成 完成",
+        "r": "complete_button"
+      },
+      {
+        "c": [
+          975,
+          1667
+        ],
+        "t": "壁纸和主题风格",
+        "r": "btn_wallpaper"
+      },
+      {
+        "c": [
+          1520,
+          1667
+        ],
+        "t": "添加小部件",
+        "r": "btn_widgets"
+      },
+      {
+        "c": [
+          2065,
+          1667
+        ],
+        "t": "桌面设置",
+        "r": "btn_settings"
+      },
+      {
+        "c": [
+          617,
+          405
+        ],
+        "t": "My Application My Application"
+      },
+      {
+        "c": [
+          1520,
+          958
+        ],
+        "r": "workspace",
+        "s": true
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          1520,
+          958
+        ],
+        "r": "workspace",
+        "s": true
+      },
+      {
+        "i": 1,
+        "c": [
+          617,
+          405
+        ],
+        "t": "My Application My Application"
+      },
+      {
+        "i": 2,
+        "c": [
+          2707,
+          182
+        ],
+        "t": "完成 完成",
+        "r": "complete_button"
+      },
+      {
+        "i": 3,
+        "c": [
+          975,
+          1667
+        ],
+        "t": "壁纸和主题风格",
+        "r": "btn_wallpaper"
+      },
+      {
+        "i": 4,
+        "c": [
+          1520,
+          1667
+        ],
+        "t": "添加小部件",
+        "r": "btn_widgets"
+      },
+      {
+        "i": 5,
+        "c": [
+          2065,
+          1667
+        ],
+        "t": "桌面设置",
+        "r": "btn_settings"
+      }
+    ],
+    "nodes_count": 6,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2770
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "46e087eef54b4afb85932d88d9080bdc",
+    "measured_at": "2026-10-10T14:03:17.233",
+    "process_observed_ms": 5046.764,
+    "stages_ms": {
+      "device_import": 329.079,
+      "device_connect": 1068.515,
+      "action": 614.647,
+      "settle_wait": 600.151,
+      "permission": 900.395,
+      "screenshot": 305.189,
+      "png_save": 267.945,
+      "ui_dump": 103.902,
+      "rotation": 255.956,
+      "xml_save": 3.924,
+      "foreground": 391.96,
+      "meta_save": 3.836,
+      "crash_detection": 83.706,
+      "screen_signature": 29.788,
+      "event_write": 3.127,
+      "node_summary": 1.215,
+      "node_labels": 1.055,
+      "next_targets": 0.052,
+      "serialization": 0.392
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 4305
+  },
+  "response_bytes": 4305,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2770
+    ]
+  }
+}

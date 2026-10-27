@@ -1,0 +1,28 @@
+{
+  "ts": "2026-10-15T16:10:52",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.course.EditCourseActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "call_id": "28b7286248fa47d1882992d82ebdf617",
+  "timing": {
+    "call_id": "28b7286248fa47d1882992d82ebdf617",
+    "measured_at": "2026-10-15T16:10:52.940",
+    "process_observed_ms": 14195.51,
+    "stages_ms": {
+      "device_import": 756.366,
+      "device_connect": 1306.417,
+      "permission": 5418.051,
+      "screenshot": 417.46,
+      "png_save": 388.669,
+      "ui_dump": 82.819,
+      "rotation": 258.425,
+      "xml_save": 10.183,
+      "foreground": 5435.937
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

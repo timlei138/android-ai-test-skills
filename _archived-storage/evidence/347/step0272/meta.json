@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-09T15:07:50",
+  "package": "com.zui.calendar",
+  "activity": ".almanac.AlmanacActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2566,
+    "y": 203,
+    "via": "rid=action_add_all_event",
+    "why": "新建事件造提醒"
+  },
+  "call_id": "e1aadeb2960543aaa45c555d36231310",
+  "timing": {
+    "call_id": "e1aadeb2960543aaa45c555d36231310",
+    "measured_at": "2026-10-09T15:07:50.662",
+    "process_observed_ms": 4587.134,
+    "stages_ms": {
+      "device_import": 314.481,
+      "device_connect": 1156.734,
+      "action": 513.375,
+      "settle_wait": 600.129,
+      "permission": 847.526,
+      "screenshot": 320.101,
+      "png_save": 158.623,
+      "ui_dump": 36.242,
+      "rotation": 202.527,
+      "xml_save": 2.342,
+      "foreground": 334.849
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

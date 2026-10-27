@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T19:08:19",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.temp.TempConfirmTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2855,
+    "y": 203,
+    "via": "rid=btn_next(下一步)",
+    "why": "步骤3: 重新进入确认流程"
+  }
+}

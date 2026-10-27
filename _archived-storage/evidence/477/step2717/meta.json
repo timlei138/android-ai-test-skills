@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-27T09:58:10",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.course.EditCourseActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2295,
+    "y": 370,
+    "via": "text=完成 (新建课程页, 课程名为空)",
+    "why": "预期4 复验空课程名点完成是否保存并观察提示"
+  },
+  "call_id": "f78f0b8642894078bbdb9019d4fa0952",
+  "timing": {
+    "call_id": "f78f0b8642894078bbdb9019d4fa0952",
+    "measured_at": "2026-10-27T09:58:10.196",
+    "process_observed_ms": 4599.724,
+    "stages_ms": {
+      "device_import": 399.021,
+      "device_connect": 1139.039,
+      "action": 176.645,
+      "settle_wait": 600.502,
+      "permission": 888.086,
+      "screenshot": 389.344,
+      "png_save": 156.443,
+      "ui_dump": 109.763,
+      "rotation": 251.378,
+      "xml_save": 5.754,
+      "foreground": 395.108
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

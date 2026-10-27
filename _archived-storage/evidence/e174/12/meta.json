@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-22T19:15:16",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.temp.TempConfirmTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "input",
+    "x": 1520,
+    "y": 375,
+    "text": "1234567890123456789012345",
+    "mode": "overwrite",
+    "via": "rid=et_schedule_name",
+    "why": "步骤1: 验证名称最多20字符"
+  }
+}

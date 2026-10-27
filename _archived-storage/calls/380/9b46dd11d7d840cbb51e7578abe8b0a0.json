@@ -1,0 +1,311 @@
+{
+  "call_id": "9b46dd11d7d840cbb51e7578abe8b0a0",
+  "session_id": 380,
+  "tool": "act",
+  "started_at": "2026-10-09T20:30:50.264",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T20:30:56.834",
+  "wall_ms": 6549.611,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 2704,
+      "y": 203,
+      "via": "yearNavToday=返回今天",
+      "why": "back-to-today"
+    },
+    "ts": "2026-10-09T20:30:56",
+    "package": "com.zui.calendar",
+    "activity": ".month.YearActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "9b46dd11d7d840cbb51e7578abe8b0a0",
+    "timing": {
+      "call_id": "9b46dd11d7d840cbb51e7578abe8b0a0",
+      "measured_at": "2026-10-09T20:30:56.615",
+      "process_observed_ms": 4598.569,
+      "stages_ms": {
+        "device_import": 314.05,
+        "device_connect": 1122.091,
+        "action": 206.577,
+        "settle_wait": 600.406,
+        "permission": 978.985,
+        "screenshot": 357.484,
+        "png_save": 149.849,
+        "ui_dump": 111.457,
+        "rotation": 255.503,
+        "xml_save": 6.532,
+        "foreground": 393.189
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=yearTitle",
+      "text=2027",
+      "rid=yearNavToday",
+      "rid=yearView",
+      "rid=selectLayout",
+      "rid=frameContent",
+      "rid=line",
+      "rid=vp_month"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\380\\step1167\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\380\\step1167\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\380\\step1167\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          2886,
+          203
+        ],
+        "r": "yearNavToday"
+      },
+      {
+        "c": [
+          1520,
+          1085
+        ],
+        "r": "selectLayout",
+        "s": true
+      },
+      {
+        "c": [
+          1520,
+          798
+        ],
+        "r": "vp_month",
+        "s": true
+      },
+      {
+        "c": [
+          335,
+          692
+        ]
+      },
+      {
+        "c": [
+          809,
+          692
+        ]
+      },
+      {
+        "c": [
+          1282,
+          692
+        ]
+      },
+      {
+        "c": [
+          1756,
+          692
+        ]
+      },
+      {
+        "c": [
+          2230,
+          692
+        ]
+      },
+      {
+        "c": [
+          2703,
+          692
+        ]
+      },
+      {
+        "c": [
+          335,
+          1477
+        ]
+      },
+      {
+        "c": [
+          809,
+          1477
+        ]
+      },
+      {
+        "c": [
+          1282,
+          1477
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          2886,
+          203
+        ],
+        "r": "yearNavToday"
+      },
+      {
+        "i": 1,
+        "c": [
+          1520,
+          1085
+        ],
+        "r": "selectLayout",
+        "s": true
+      },
+      {
+        "i": 2,
+        "c": [
+          335,
+          692
+        ]
+      },
+      {
+        "i": 3,
+        "c": [
+          809,
+          692
+        ]
+      },
+      {
+        "i": 4,
+        "c": [
+          1282,
+          692
+        ]
+      },
+      {
+        "i": 5,
+        "c": [
+          1756,
+          692
+        ]
+      },
+      {
+        "i": 6,
+        "c": [
+          2230,
+          692
+        ]
+      },
+      {
+        "i": 7,
+        "c": [
+          2703,
+          692
+        ]
+      },
+      {
+        "i": 8,
+        "c": [
+          335,
+          1477
+        ]
+      },
+      {
+        "i": 9,
+        "c": [
+          809,
+          1477
+        ]
+      },
+      {
+        "i": 10,
+        "c": [
+          1282,
+          1477
+        ]
+      },
+      {
+        "i": 11,
+        "c": [
+          1756,
+          1477
+        ]
+      },
+      {
+        "i": 12,
+        "c": [
+          2230,
+          1477
+        ]
+      },
+      {
+        "i": 13,
+        "c": [
+          2703,
+          1477
+        ]
+      },
+      {
+        "i": 14,
+        "c": [
+          1520,
+          798
+        ],
+        "r": "vp_month",
+        "s": true
+      },
+      {
+        "i": 15,
+        "c": [
+          1520,
+          798
+        ]
+      }
+    ],
+    "nodes_count": 16,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2189
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "9b46dd11d7d840cbb51e7578abe8b0a0",
+    "measured_at": "2026-10-09T20:30:56.740",
+    "process_observed_ms": 4734.649,
+    "stages_ms": {
+      "device_import": 314.05,
+      "device_connect": 1122.091,
+      "action": 206.577,
+      "settle_wait": 600.406,
+      "permission": 978.985,
+      "screenshot": 357.484,
+      "png_save": 149.849,
+      "ui_dump": 111.457,
+      "rotation": 255.503,
+      "xml_save": 6.532,
+      "foreground": 393.189,
+      "meta_save": 4.222,
+      "crash_detection": 91.205,
+      "screen_signature": 33.689,
+      "event_write": 1.455,
+      "node_summary": 0.407,
+      "node_labels": 0.345,
+      "next_targets": 0.029,
+      "serialization": 0.149
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 4136
+  },
+  "response_bytes": 4136,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2189
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "ts": "2026-10-26T21:17:17",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.course.EditCourseActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1104,
+    "y": 648,
+    "repeat": 2,
+    "gap_ms": 400,
+    "via": "cv_empty_content 周二第1小节",
+    "why": "用例步骤5：点击空日历上的某一小节（预期5：弹出编辑弹窗）"
+  },
+  "call_id": "14c6a93d6c0948749d9fbe030e35cac1",
+  "timing": {
+    "call_id": "14c6a93d6c0948749d9fbe030e35cac1",
+    "measured_at": "2026-10-26T21:17:17.140",
+    "process_observed_ms": 5156.107,
+    "stages_ms": {
+      "device_import": 401.714,
+      "device_connect": 1152.73,
+      "action": 371.717,
+      "settle_wait": 600.661,
+      "permission": 940.402,
+      "screenshot": 350.0,
+      "png_save": 214.26,
+      "ui_dump": 76.429,
+      "rotation": 214.929,
+      "xml_save": 6.095,
+      "foreground": 320.032
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

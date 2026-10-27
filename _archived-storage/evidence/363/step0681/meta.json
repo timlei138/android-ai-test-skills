@@ -1,0 +1,28 @@
+{
+  "ts": "2026-10-09T17:42:45",
+  "package": "com.android.contactspicker",
+  "activity": ".ContactsPickerActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "call_id": "d26d2acc023e499a97b3a6e93ef482f9",
+  "timing": {
+    "call_id": "d26d2acc023e499a97b3a6e93ef482f9",
+    "measured_at": "2026-10-09T17:42:45.266",
+    "process_observed_ms": 3369.237,
+    "stages_ms": {
+      "device_import": 311.829,
+      "device_connect": 1030.274,
+      "permission": 804.566,
+      "screenshot": 396.295,
+      "png_save": 68.186,
+      "ui_dump": 111.878,
+      "rotation": 202.788,
+      "xml_save": 5.385,
+      "foreground": 377.749
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

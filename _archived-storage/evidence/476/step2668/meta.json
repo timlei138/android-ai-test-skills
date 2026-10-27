@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-26T21:13:51",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.display.TimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 99,
+    "y": 404,
+    "via": "desc=取消（图片选择器）",
+    "why": "退出 PhotoPicker 返回日历"
+  },
+  "call_id": "b69082aa1970421fbc54adde333a6b1a",
+  "timing": {
+    "call_id": "b69082aa1970421fbc54adde333a6b1a",
+    "measured_at": "2026-10-26T21:13:51.067",
+    "process_observed_ms": 4407.498,
+    "stages_ms": {
+      "device_import": 393.486,
+      "device_connect": 1143.007,
+      "action": 224.456,
+      "settle_wait": 600.323,
+      "permission": 932.074,
+      "screenshot": 359.078,
+      "png_save": 182.611,
+      "ui_dump": 32.687,
+      "rotation": 175.626,
+      "xml_save": 4.576,
+      "foreground": 289.66
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

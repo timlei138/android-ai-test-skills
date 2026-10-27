@@ -1,0 +1,23 @@
+{
+  "call_id": "2670abba2c2442129e5a649e9343af73",
+  "session_id": 364,
+  "tool": "session",
+  "started_at": "2026-10-09T17:50:19.326",
+  "status": "ended",
+  "expects_event": false,
+  "structured_result_required": true,
+  "returncode": 2,
+  "ended_at": "2026-10-09T17:50:21.465",
+  "wall_ms": 2129.827,
+  "result": null,
+  "response_bytes": 0,
+  "audit": {
+    "complete": true,
+    "outcome": "failed",
+    "issues": [
+      "tool rejected arguments (usage error); device untouched"
+    ],
+    "executed": false,
+    "event_ids": []
+  }
+}

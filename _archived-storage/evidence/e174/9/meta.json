@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T19:13:28",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.crop.CropImageActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2908,
+    "y": 189,
+    "via": "rid=btnDone(完成)",
+    "why": "前提: 完成裁剪触发解析"
+  }
+}

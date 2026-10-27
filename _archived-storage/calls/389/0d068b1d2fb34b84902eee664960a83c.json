@@ -1,0 +1,432 @@
+{
+  "call_id": "0d068b1d2fb34b84902eee664960a83c",
+  "session_id": 389,
+  "tool": "read",
+  "started_at": "2026-10-10T11:54:34.079",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T11:54:48.800",
+  "wall_ms": 14707.83,
+  "result": {
+    "ok": true,
+    "image": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\389\\step1597\\shot.png",
+    "lines": [
+      {
+        "text": "P:0/1",
+        "score": 0.957,
+        "center": [
+          45,
+          17
+        ],
+        "norm": [
+          0.0148,
+          0.0089
+        ],
+        "bounds": [
+          0,
+          1,
+          90,
+          33
+        ]
+      },
+      {
+        "text": "dX:-1180.0",
+        "score": 0.944,
+        "center": [
+          504,
+          16
+        ],
+        "norm": [
+          0.1658,
+          0.0084
+        ],
+        "bounds": [
+          433,
+          1,
+          574,
+          32
+        ]
+      },
+      {
+        "text": "dY:0.0",
+        "score": 0.941,
+        "center": [
+          913,
+          18
+        ],
+        "norm": [
+          0.3003,
+          0.0095
+        ],
+        "bounds": [
+          867,
+          0,
+          959,
+          36
+        ]
+      },
+      {
+        "text": "Xv:-0.740",
+        "score": 0.942,
+        "center": [
+          1362,
+          17
+        ],
+        "norm": [
+          0.448,
+          0.0089
+        ],
+        "bounds": [
+          1300,
+          1,
+          1425,
+          33
+        ]
+      },
+      {
+        "text": "Yv:0.0",
+        "score": 0.932,
+        "center": [
+          1778,
+          18
+        ],
+        "norm": [
+          0.5849,
+          0.0095
+        ],
+        "bounds": [
+          1732,
+          0,
+          1823,
+          36
+        ]
+      },
+      {
+        "text": "Prs: 1.0",
+        "score": 0.98,
+        "center": [
+          2218,
+          18
+        ],
+        "norm": [
+          0.7296,
+          0.0095
+        ],
+        "bounds": [
+          2168,
+          0,
+          2269,
+          36
+        ]
+      },
+      {
+        "text": "Size: 1.0",
+        "score": 0.946,
+        "center": [
+          2657,
+          17
+        ],
+        "norm": [
+          0.874,
+          0.0089
+        ],
+        "bounds": [
+          2603,
+          1,
+          2712,
+          33
+        ]
+      },
+      {
+        "text": "11:5410月10日周六",
+        "score": 0.983,
+        "center": [
+          443,
+          54
+        ],
+        "norm": [
+          0.1457,
+          0.0284
+        ],
+        "bounds": [
+          231,
+          32,
+          655,
+          77
+        ]
+      },
+      {
+        "text": "[提醒]T83G·2分钟",
+        "score": 0.988,
+        "center": [
+          606,
+          209
+        ],
+        "norm": [
+          0.1993,
+          0.1098
+        ],
+        "bounds": [
+          429,
+          183,
+          784,
+          234
+        ]
+      },
+      {
+        "text": "10月10日11:51",
+        "score": 0.979,
+        "center": [
+          537,
+          261
+        ],
+        "norm": [
+          0.1766,
+          0.1371
+        ],
+        "bounds": [
+          424,
+          239,
+          649,
+          283
+        ]
+      },
+      {
+        "text": "已开启USB文件传输模式·1小时",
+        "score": 0.997,
+        "center": [
+          717,
+          423
+        ],
+        "norm": [
+          0.2359,
+          0.2222
+        ],
+        "bounds": [
+          429,
+          399,
+          1006,
+          447
+        ]
+      },
+      {
+        "text": "点按即可查看更多选项。",
+        "score": 0.999,
+        "center": [
+          622,
+          475
+        ],
+        "norm": [
+          0.2046,
+          0.2495
+        ],
+        "bounds": [
+          430,
+          453,
+          815,
+          497
+        ]
+      },
+      {
+        "text": "Legion Zone · 1l1小时",
+        "score": 0.913,
+        "center": [
+          619,
+          638
+        ],
+        "norm": [
+          0.2036,
+          0.3351
+        ],
+        "bounds": [
+          425,
+          611,
+          812,
+          665
+        ]
+      },
+      {
+        "text": "别人都抱走奖品了，你还在观望？百份好礼等...",
+        "score": 0.949,
+        "center": [
+          830,
+          699
+        ],
+        "norm": [
+          0.273,
+          0.3671
+        ],
+        "bounds": [
+          427,
+          677,
+          1233,
+          721
+        ]
+      },
+      {
+        "text": "大奖池已满，只差你这一抽！中奖率超高，拯.",
+        "score": 0.985,
+        "center": [
+          828,
+          773
+        ],
+        "norm": [
+          0.2724,
+          0.406
+        ],
+        "bounds": [
+          430,
+          752,
+          1227,
+          794
+        ]
+      },
+      {
+        "text": "应用商店·2小时",
+        "score": 0.999,
+        "center": [
+          584,
+          932
+        ],
+        "norm": [
+          0.1921,
+          0.4895
+        ],
+        "bounds": [
+          432,
+          909,
+          737,
+          955
+        ]
+      },
+      {
+        "text": "3",
+        "score": 0.999,
+        "center": [
+          1183,
+          929
+        ],
+        "norm": [
+          0.3891,
+          0.4879
+        ],
+        "bounds": [
+          1173,
+          918,
+          1193,
+          941
+        ]
+      },
+      {
+        "text": "应用商店·22小时",
+        "score": 0.975,
+        "center": [
+          580,
+          993
+        ],
+        "norm": [
+          0.1908,
+          0.5215
+        ],
+        "bounds": [
+          430,
+          970,
+          730,
+          1016
+        ]
+      },
+      {
+        "text": "你常用的8款应用有更新，抢先体验新功能！",
+        "score": 0.997,
+        "center": [
+          802,
+          1067
+        ],
+        "norm": [
+          0.2638,
+          0.5604
+        ],
+        "bounds": [
+          430,
+          1048,
+          1175,
+          1087
+        ]
+      },
+      {
+        "text": "静音",
+        "score": 0.998,
+        "center": [
+          314,
+          1222
+        ],
+        "norm": [
+          0.1033,
+          0.6418
+        ],
+        "bounds": [
+          268,
+          1194,
+          361,
+          1251
+        ]
+      },
+      {
+        "text": "日历·2分钟",
+        "score": 0.999,
+        "center": [
+          543,
+          1376
+        ],
+        "norm": [
+          0.1786,
+          0.7227
+        ],
+        "bounds": [
+          430,
+          1353,
+          655,
+          1400
+        ]
+      }
+    ],
+    "hint": "center 可直接用于 act.py tap；toast 断言请在 act 后尽快 read（浮层会消失）",
+    "call_id": "0d068b1d2fb34b84902eee664960a83c",
+    "event_ids": [
+      2618
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "0d068b1d2fb34b84902eee664960a83c",
+    "measured_at": "2026-10-10T11:54:48.565",
+    "process_observed_ms": 12491.453,
+    "stages_ms": {
+      "device_import": 301.399,
+      "device_connect": 1052.166,
+      "ocr_import": 967.282,
+      "screenshot": 361.985,
+      "png_save": 242.547,
+      "ocr_initialize": 1614.644,
+      "ocr_inference": 7858.326,
+      "ocr_image_info": 2.113,
+      "ocr_result_conversion": 0.245,
+      "event_write": 5.13,
+      "serialization": 0.908
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 5814
+  },
+  "response_bytes": 5814,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2618
+    ]
+  }
+}

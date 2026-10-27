@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-10T16:27:57",
+  "package": "com.zui.launcher",
+  "activity": ".drawer.NormalLauncher",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1427,
+    "y": 1607,
+    "via": "today-course-card",
+    "why": "tap"
+  },
+  "call_id": "bdebd4a5eaac48a2a60b384af097e1ca",
+  "timing": {
+    "call_id": "bdebd4a5eaac48a2a60b384af097e1ca",
+    "measured_at": "2026-10-10T16:27:57.489",
+    "process_observed_ms": 4436.881,
+    "stages_ms": {
+      "device_import": 308.515,
+      "device_connect": 1117.953,
+      "action": 172.663,
+      "settle_wait": 600.108,
+      "permission": 875.499,
+      "screenshot": 381.94,
+      "png_save": 173.639,
+      "ui_dump": 67.928,
+      "rotation": 249.167,
+      "xml_save": 12.698,
+      "foreground": 400.102
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

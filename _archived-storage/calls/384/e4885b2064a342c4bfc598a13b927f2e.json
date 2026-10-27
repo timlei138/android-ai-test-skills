@@ -1,0 +1,44 @@
+{
+  "call_id": "e4885b2064a342c4bfc598a13b927f2e",
+  "session_id": 384,
+  "tool": "session",
+  "started_at": "2026-10-10T10:42:42.074",
+  "status": "ended",
+  "expects_event": false,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T10:42:44.212",
+  "wall_ms": 2130.395,
+  "result": {
+    "ok": true,
+    "session_id": 384,
+    "crash_events": 0,
+    "findings": {
+      "PASS": 2
+    },
+    "self_check": [],
+    "case_hint": null,
+    "hint": "无崩溃事件",
+    "call_id": "e4885b2064a342c4bfc598a13b927f2e",
+    "event_ids": [],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "e4885b2064a342c4bfc598a13b927f2e",
+    "measured_at": "2026-10-10T10:42:44.186",
+    "process_observed_ms": 42.763,
+    "stages_ms": {
+      "serialization": 0.05
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 265
+  },
+  "response_bytes": 265,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": []
+  }
+}

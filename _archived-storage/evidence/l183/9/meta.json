@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T20:37:20",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.course.EditCourseActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1536,
+    "via": "rid=btnDelete",
+    "why": "再次点删除课程"
+  }
+}

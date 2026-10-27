@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T17:52:33",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.display.TimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1365,
+    "via": "rid=btnImportFromPhoto,text=拍照导入课程表",
+    "why": "YAML s2：拍照导入，验权限流程"
+  },
+  "call_id": "5d4f7705baf245c5bba30d4513384d2c",
+  "timing": {
+    "call_id": "5d4f7705baf245c5bba30d4513384d2c",
+    "measured_at": "2026-10-15T17:52:33.494",
+    "process_observed_ms": 14568.507,
+    "stages_ms": {
+      "device_import": 690.415,
+      "device_connect": 1216.03,
+      "action": 173.807,
+      "settle_wait": 600.582,
+      "permission": 5313.998,
+      "screenshot": 426.536,
+      "png_save": 274.559,
+      "ui_dump": 78.685,
+      "rotation": 216.249,
+      "xml_save": 8.326,
+      "foreground": 5387.271
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

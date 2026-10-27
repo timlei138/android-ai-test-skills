@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-27T09:52:26",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.course.EditCourseActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1206,
+    "via": "rid=llCourseWeeks",
+    "why": "预期5 点上课周数行验多选弹窗"
+  },
+  "call_id": "2ed0fbaf34664962b7dbefddc4fdc100",
+  "timing": {
+    "call_id": "2ed0fbaf34664962b7dbefddc4fdc100",
+    "measured_at": "2026-10-27T09:52:26.475",
+    "process_observed_ms": 4461.865,
+    "stages_ms": {
+      "device_import": 404.537,
+      "device_connect": 1149.655,
+      "action": 168.875,
+      "settle_wait": 600.157,
+      "permission": 878.945,
+      "screenshot": 310.173,
+      "png_save": 230.509,
+      "ui_dump": 67.511,
+      "rotation": 255.391,
+      "xml_save": 2.64,
+      "foreground": 316.053
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

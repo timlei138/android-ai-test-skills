@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-09T17:46:44",
+  "package": "com.zui.calendar",
+  "activity": ".event.options.EventLastDateActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2685,
+    "y": 559,
+    "via": "lastTvOvertime",
+    "why": "设自定义结束日期"
+  },
+  "call_id": "64120418131b4860b131d82926e5a7d9",
+  "timing": {
+    "call_id": "64120418131b4860b131d82926e5a7d9",
+    "measured_at": "2026-10-09T17:46:44.120",
+    "process_observed_ms": 4331.456,
+    "stages_ms": {
+      "device_import": 305.844,
+      "device_connect": 1052.177,
+      "action": 174.32,
+      "settle_wait": 600.423,
+      "permission": 871.616,
+      "screenshot": 413.642,
+      "png_save": 132.864,
+      "ui_dump": 102.782,
+      "rotation": 244.752,
+      "xml_save": 5.674,
+      "foreground": 341.525
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

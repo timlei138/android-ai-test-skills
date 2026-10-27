@@ -1,0 +1,138 @@
+{
+  "call_id": "9b9d15a5a46b4c66bf55ccd08f554705",
+  "session_id": 409,
+  "tool": "act",
+  "started_at": "2026-10-10T14:54:03.104",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T14:54:10.201",
+  "wall_ms": 7082.382,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 1519,
+      "y": 1609,
+      "via": "知道了",
+      "why": "dismiss"
+    },
+    "ts": "2026-10-10T14:54:09",
+    "package": "com.lenovo.leos.appstore",
+    "activity": ".activities.Main",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "9b9d15a5a46b4c66bf55ccd08f554705",
+    "timing": {
+      "call_id": "9b9d15a5a46b4c66bf55ccd08f554705",
+      "measured_at": "2026-10-10T14:54:09.673",
+      "process_observed_ms": 4642.399,
+      "stages_ms": {
+        "device_import": 356.726,
+        "device_connect": 1118.475,
+        "action": 209.288,
+        "settle_wait": 600.329,
+        "permission": 997.773,
+        "screenshot": 329.855,
+        "png_save": 170.922,
+        "ui_dump": 97.549,
+        "rotation": 245.319,
+        "xml_save": 6.679,
+        "foreground": 405.249
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=top_container",
+      "rid=root",
+      "rid=refresh_page",
+      "rid=icon",
+      "rid=hint",
+      "text=网络不给力，服务受阻\n请尝试刷新！",
+      "rid=guess",
+      "text=刷新",
+      "rid=left_tab_layout",
+      "rid=tabRoot",
+      "rid=viewTabGap",
+      "rid=main_layout",
+      "rid=navigationBarBackground"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\409\\step1833\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\409\\step1833\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\409\\step1833\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1520,
+          1164
+        ],
+        "t": "刷新",
+        "r": "guess"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          1520,
+          1164
+        ],
+        "t": "刷新",
+        "r": "guess"
+      }
+    ],
+    "nodes_count": 1,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2854
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "9b9d15a5a46b4c66bf55ccd08f554705",
+    "measured_at": "2026-10-10T14:54:09.922",
+    "process_observed_ms": 4900.651,
+    "stages_ms": {
+      "device_import": 356.726,
+      "device_connect": 1118.475,
+      "action": 209.288,
+      "settle_wait": 600.329,
+      "permission": 997.773,
+      "screenshot": 329.855,
+      "png_save": 170.922,
+      "ui_dump": 97.549,
+      "rotation": 245.319,
+      "xml_save": 6.679,
+      "foreground": 405.249,
+      "meta_save": 15.359,
+      "crash_detection": 139.959,
+      "screen_signature": 87.757,
+      "event_write": 3.779,
+      "node_summary": 0.68,
+      "node_labels": 0.567,
+      "next_targets": 0.019,
+      "serialization": 0.178
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 2331
+  },
+  "response_bytes": 2331,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2854
+    ]
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "call_id": "c6b87aeba50347c3bc3f4cebc5f49055",
+  "session_id": 391,
+  "tool": "read",
+  "started_at": "2026-10-10T12:13:46.485",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T12:13:59.594",
+  "wall_ms": 13098.481,
+  "result": {
+    "ok": true,
+    "image": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\391\\step1629\\shot.png",
+    "lines": [
+      {
+        "text": "2026年10月10日周六12:13",
+        "score": 0.991,
+        "center": [
+          1519,
+          616
+        ],
+        "norm": [
+          0.4997,
+          0.3235
+        ],
+        "bounds": [
+          1176,
+          587,
+          1861,
+          645
+        ]
+      },
+      {
+        "text": "10月9日周五",
+        "score": 1.0,
+        "center": [
+          1225,
+          797
+        ],
+        "norm": [
+          0.403,
+          0.4186
+        ],
+        "bounds": [
+          1094,
+          771,
+          1356,
+          822
+        ]
+      },
+      {
+        "text": "11",
+        "score": 0.977,
+        "center": [
+          1561,
+          797
+        ],
+        "norm": [
+          0.5135,
+          0.4186
+        ],
+        "bounds": [
+          1541,
+          775,
+          1581,
+          820
+        ]
+      },
+      {
+        "text": "12",
+        "score": 0.999,
+        "center": [
+          1855,
+          799
+        ],
+        "norm": [
+          0.6102,
+          0.4196
+        ],
+        "bounds": [
+          1831,
+          775,
+          1880,
+          823
+        ]
+      }
+    ],
+    "hint": "center 可直接用于 act.py tap；toast 断言请在 act 后尽快 read（浮层会消失）",
+    "call_id": "c6b87aeba50347c3bc3f4cebc5f49055",
+    "event_ids": [
+      2650
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "c6b87aeba50347c3bc3f4cebc5f49055",
+    "measured_at": "2026-10-10T12:13:59.400",
+    "process_observed_ms": 11256.283,
+    "stages_ms": {
+      "device_import": 290.48,
+      "device_connect": 1079.94,
+      "ocr_import": 840.433,
+      "screenshot": 331.479,
+      "png_save": 74.128,
+      "ocr_initialize": 1516.873,
+      "ocr_inference": 7027.388,
+      "ocr_image_info": 0.831,
+      "ocr_result_conversion": 0.229,
+      "event_write": 3.443,
+      "serialization": 0.335
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 1382
+  },
+  "response_bytes": 1382,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2650
+    ]
+  }
+}

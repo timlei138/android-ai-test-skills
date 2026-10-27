@@ -1,0 +1,311 @@
+{
+  "call_id": "2d24ec9f21984112ba8f318af2582c24",
+  "session_id": 393,
+  "tool": "act",
+  "started_at": "2026-10-10T12:24:27.594",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T12:24:35.652",
+  "wall_ms": 8055.219,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "swipe",
+      "from": [
+        1520,
+        1650
+      ],
+      "to": [
+        1520,
+        600
+      ],
+      "dur_ms": 300,
+      "via": "scroll",
+      "why": "other-section"
+    },
+    "ts": "2026-10-10T12:24:35",
+    "package": "com.zui.calendar",
+    "activity": ".settings.GeneralSettingsActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "2d24ec9f21984112ba8f318af2582c24",
+    "timing": {
+      "call_id": "2d24ec9f21984112ba8f318af2582c24",
+      "measured_at": "2026-10-10T12:24:35.393",
+      "process_observed_ms": 6060.824,
+      "stages_ms": {
+        "device_import": 323.885,
+        "device_connect": 1093.298,
+        "action": 1454.582,
+        "settle_wait": 600.238,
+        "permission": 1063.26,
+        "screenshot": 392.382,
+        "png_save": 222.249,
+        "ui_dump": 82.845,
+        "rotation": 233.13,
+        "xml_save": 6.963,
+        "foreground": 487.229
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=toolbar",
+      "desc=关闭",
+      "text=设置",
+      "rid=contentPanel",
+      "rid=main_frame",
+      "rid=list_container",
+      "rid=recycler_view",
+      "rid=title",
+      "text=默认提醒方式",
+      "rid=summary",
+      "text=通知栏提醒",
+      "rid=widget_frame",
+      "rid=forward",
+      "text=提醒铃声",
+      "text=默认铃声",
+      "text=时区",
+      "text=使用自定义时区",
+      "rid=switch_widget",
+      "text=自定义时区",
+      "text=(GMT+8:00) 北京",
+      "text=其它",
+      "text=备份与恢复"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\393\\step1652\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\393\\step1652\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\393\\step1652\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          766,
+          371
+        ],
+        "t": "关闭"
+      },
+      {
+        "c": [
+          1520,
+          545
+        ],
+        "t": "默认提醒方式"
+      },
+      {
+        "c": [
+          1520,
+          706
+        ],
+        "t": "提醒铃声"
+      },
+      {
+        "c": [
+          1520,
+          1195
+        ],
+        "t": "自定义时区"
+      },
+      {
+        "c": [
+          1520,
+          1536
+        ],
+        "t": "备份与恢复"
+      },
+      {
+        "c": [
+          1520,
+          1085
+        ],
+        "r": "recycler_view",
+        "s": true
+      },
+      {
+        "c": [
+          1520,
+          624
+        ]
+      },
+      {
+        "c": [
+          1520,
+          788
+        ]
+      },
+      {
+        "c": [
+          1520,
+          1031
+        ]
+      },
+      {
+        "c": [
+          1520,
+          1113
+        ]
+      },
+      {
+        "c": [
+          1520,
+          1285
+        ]
+      },
+      {
+        "c": [
+          1520,
+          1618
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          766,
+          371
+        ],
+        "t": "关闭"
+      },
+      {
+        "i": 1,
+        "c": [
+          1520,
+          1085
+        ],
+        "r": "recycler_view",
+        "s": true
+      },
+      {
+        "i": 2,
+        "c": [
+          1520,
+          545
+        ]
+      },
+      {
+        "i": 3,
+        "c": [
+          1520,
+          624
+        ]
+      },
+      {
+        "i": 4,
+        "c": [
+          1520,
+          706
+        ]
+      },
+      {
+        "i": 5,
+        "c": [
+          1520,
+          788
+        ]
+      },
+      {
+        "i": 6,
+        "c": [
+          1520,
+          1031
+        ]
+      },
+      {
+        "i": 7,
+        "c": [
+          1520,
+          1113
+        ]
+      },
+      {
+        "i": 8,
+        "c": [
+          1520,
+          1195
+        ],
+        "off": true
+      },
+      {
+        "i": 9,
+        "c": [
+          1520,
+          1285
+        ]
+      },
+      {
+        "i": 10,
+        "c": [
+          1520,
+          1536
+        ]
+      },
+      {
+        "i": 11,
+        "c": [
+          1520,
+          1618
+        ]
+      },
+      {
+        "i": 12,
+        "c": [
+          1520,
+          1661
+        ]
+      }
+    ],
+    "nodes_count": 13,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2673
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "2d24ec9f21984112ba8f318af2582c24",
+    "measured_at": "2026-10-10T12:24:35.555",
+    "process_observed_ms": 6222.735,
+    "stages_ms": {
+      "device_import": 323.885,
+      "device_connect": 1093.298,
+      "action": 1454.582,
+      "settle_wait": 600.238,
+      "permission": 1063.26,
+      "screenshot": 392.382,
+      "png_save": 222.249,
+      "ui_dump": 82.845,
+      "rotation": 233.13,
+      "xml_save": 6.963,
+      "foreground": 487.229,
+      "meta_save": 5.543,
+      "crash_detection": 108.377,
+      "screen_signature": 36.897,
+      "event_write": 3.25,
+      "node_summary": 1.913,
+      "node_labels": 1.114,
+      "next_targets": 0.073,
+      "serialization": 0.328
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 4374
+  },
+  "response_bytes": 4374,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2673
+    ]
+  }
+}

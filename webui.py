@@ -20,12 +20,17 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "tools"))
 from db import get_db  # noqa: E402
+from runtime import KNOWLEDGE_DIR, RECORD_DIR, STORAGE_DIR  # noqa: E402
 
 WEBUI_DIR = ROOT / "webui"
-STORAGE_DIR = ROOT / "storage"
-KNOWLEDGE_DIR = ROOT / "assets" / "knowledge"
-# 路由名 /api/knowledge 指的是这个目录（名字没改，前端在用）；
-# 它和文件路径 assets/knowledge/ 是两回事。
+# ★ 2026-10-27：不再自己算 `ROOT / "storage"`。
+#
+#   上一版这里写死了 ROOT（skill 项目目录），而 runtime.py 已经改成
+#   "storage 落在当前工作目录"。两边不一致 -> webui 显示的是旧目录里的数据，
+#   而 AI 在新目录里跑 —— 用户看到的就是"有的用新的有的用旧的"。
+#
+#   现在统一从 runtime 导入，一个来源。
+#   KNOWLEDGE_DIR 同理。
 MD_NAME_RE = re.compile(r"^[\w\u4e00-\u9fff.\-]+\.md$")
 
 # 用例程序化描述：YAML 是唯一执行真相，同名 .md 是渲染产物（由 tools/case_md.py 生成）。

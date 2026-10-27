@@ -1,0 +1,39 @@
+{
+  "ts": "2026-10-26T21:16:51",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.course.EditCourseActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 552,
+    "y": 648,
+    "repeat": 2,
+    "gap_ms": 400,
+    "via": "cv_empty_content 第一小节（第一个小节的加号位置）",
+    "why": "用例步骤4：点击第一个小节的加号（该格无加号绘制，点格子本体；知识卡记载首次点击被吸收，故 repeat 2）"
+  },
+  "call_id": "5bf9f55a877a4f3b89e0639c86c1b1ac",
+  "timing": {
+    "call_id": "5bf9f55a877a4f3b89e0639c86c1b1ac",
+    "measured_at": "2026-10-26T21:16:51.784",
+    "process_observed_ms": 5178.142,
+    "stages_ms": {
+      "device_import": 380.464,
+      "device_connect": 1106.731,
+      "action": 410.755,
+      "settle_wait": 600.278,
+      "permission": 1021.936,
+      "screenshot": 343.129,
+      "png_save": 137.884,
+      "ui_dump": 76.853,
+      "rotation": 241.609,
+      "xml_save": 2.484,
+      "foreground": 371.367
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

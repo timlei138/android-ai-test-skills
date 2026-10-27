@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T20:15:57",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimeSlotSettingsActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2913,
+    "y": 202,
+    "via": "rid=save_view(完成)",
+    "why": "预期3: 点完成，抓冲突 toast"
+  }
+}

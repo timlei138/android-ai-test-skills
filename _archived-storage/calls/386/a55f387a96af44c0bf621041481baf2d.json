@@ -1,0 +1,177 @@
+{
+  "call_id": "a55f387a96af44c0bf621041481baf2d",
+  "session_id": 386,
+  "tool": "act",
+  "started_at": "2026-10-10T11:01:21.019",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T11:01:29.958",
+  "wall_ms": 8928.863,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 1887,
+      "y": 1040,
+      "repeat": 6,
+      "gap_ms": 250,
+      "via": "day-col +6",
+      "why": "d+6"
+    },
+    "ts": "2026-10-10T11:01:29",
+    "package": "com.zui.calendar",
+    "activity": ".settings.GrabVoteSettingsActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "a55f387a96af44c0bf621041481baf2d",
+    "timing": {
+      "call_id": "a55f387a96af44c0bf621041481baf2d",
+      "measured_at": "2026-10-10T11:01:29.727",
+      "process_observed_ms": 6857.518,
+      "stages_ms": {
+        "device_import": 324.078,
+        "device_connect": 1134.946,
+        "action": 1203.605,
+        "settle_wait": 600.43,
+        "permission": 996.609,
+        "screenshot": 344.612,
+        "png_save": 206.995,
+        "ui_dump": 76.77,
+        "rotation": 219.473,
+        "xml_save": 2.462,
+        "foreground": 401.183
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=parentPanel",
+      "rid=customPanel",
+      "rid=custom",
+      "rid=title",
+      "text=2026年8月20日  周四",
+      "rid=datePicker",
+      "rid=parent",
+      "rid=selector_top_divider",
+      "rid=switch_layout",
+      "rid=lunarToggle",
+      "text=按照农历选择",
+      "rid=button_divider2",
+      "rid=left_button",
+      "text=取消",
+      "rid=right_button",
+      "text=确定"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\386\\step1456\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\386\\step1456\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\386\\step1456\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1798,
+          1159
+        ],
+        "t": "按照农历选择",
+        "r": "lunarToggle"
+      },
+      {
+        "c": [
+          1244,
+          1356
+        ],
+        "t": "取消",
+        "r": "left_button"
+      },
+      {
+        "c": [
+          1795,
+          1356
+        ],
+        "t": "确定",
+        "r": "right_button"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          1798,
+          1159
+        ],
+        "t": "按照农历选择",
+        "r": "lunarToggle"
+      },
+      {
+        "i": 1,
+        "c": [
+          1244,
+          1356
+        ],
+        "t": "取消",
+        "r": "left_button"
+      },
+      {
+        "i": 2,
+        "c": [
+          1795,
+          1356
+        ],
+        "t": "确定",
+        "r": "right_button"
+      }
+    ],
+    "nodes_count": 3,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2477
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "a55f387a96af44c0bf621041481baf2d",
+    "measured_at": "2026-10-10T11:01:29.876",
+    "process_observed_ms": 7007.711,
+    "stages_ms": {
+      "device_import": 324.078,
+      "device_connect": 1134.946,
+      "action": 1203.605,
+      "settle_wait": 600.43,
+      "permission": 996.609,
+      "screenshot": 344.612,
+      "png_save": 206.995,
+      "ui_dump": 76.77,
+      "rotation": 219.473,
+      "xml_save": 2.462,
+      "foreground": 401.183,
+      "meta_save": 3.858,
+      "crash_detection": 96.304,
+      "screen_signature": 38.887,
+      "event_write": 3.315,
+      "node_summary": 0.656,
+      "node_labels": 0.343,
+      "next_targets": 0.015,
+      "serialization": 0.118
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 2930
+  },
+  "response_bytes": 2930,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2477
+    ]
+  }
+}

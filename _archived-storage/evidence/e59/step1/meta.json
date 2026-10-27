@@ -1,0 +1,28 @@
+{
+  "ts": "2026-10-15T10:04:28",
+  "package": "com.zui.launcher",
+  "activity": ".drawer.NormalLauncher",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "call_id": "8481655e93a64dbeb16a4471af2a36ff",
+  "timing": {
+    "call_id": "8481655e93a64dbeb16a4471af2a36ff",
+    "measured_at": "2026-10-15T10:04:28.186",
+    "process_observed_ms": 13202.944,
+    "stages_ms": {
+      "device_import": 369.01,
+      "device_connect": 1123.765,
+      "permission": 5379.705,
+      "screenshot": 351.123,
+      "png_save": 279.505,
+      "ui_dump": 100.617,
+      "rotation": 191.509,
+      "xml_save": 3.868,
+      "foreground": 5338.454
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

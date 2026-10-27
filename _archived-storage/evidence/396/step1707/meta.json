@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-10T13:02:29",
+  "package": "com.zui.calendar",
+  "activity": ".common.backup.SelectRestoreActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1795,
+    "y": 1117,
+    "via": "button1 删除",
+    "why": "confirm"
+  },
+  "call_id": "855cbf79f66e415f875f8370b920426e",
+  "timing": {
+    "call_id": "855cbf79f66e415f875f8370b920426e",
+    "measured_at": "2026-10-10T13:02:29.699",
+    "process_observed_ms": 4397.541,
+    "stages_ms": {
+      "device_import": 293.263,
+      "device_connect": 1056.378,
+      "action": 161.44,
+      "settle_wait": 600.271,
+      "permission": 980.302,
+      "screenshot": 360.538,
+      "png_save": 123.448,
+      "ui_dump": 81.922,
+      "rotation": 248.974,
+      "xml_save": 9.437,
+      "foreground": 408.877
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

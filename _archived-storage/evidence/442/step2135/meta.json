@@ -1,0 +1,40 @@
+{
+  "ts": "2026-10-15T11:54:02",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.EditTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "input",
+    "x": 1520,
+    "y": 375,
+    "text": "空课表",
+    "mode": "overwrite",
+    "via": "rid=et_schedule_name",
+    "why": "填课表名"
+  },
+  "call_id": "f43e9eb741bb40fb9cec234e3fe3c93f",
+  "timing": {
+    "call_id": "f43e9eb741bb40fb9cec234e3fe3c93f",
+    "measured_at": "2026-10-15T11:54:02.740",
+    "process_observed_ms": 14806.179,
+    "stages_ms": {
+      "device_import": 349.754,
+      "device_connect": 994.304,
+      "action": 1038.129,
+      "input_focus_wait": 300.67,
+      "settle_wait": 600.758,
+      "permission": 5360.15,
+      "screenshot": 344.466,
+      "png_save": 152.438,
+      "ui_dump": 49.081,
+      "rotation": 203.528,
+      "xml_save": 5.404,
+      "foreground": 5311.001
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

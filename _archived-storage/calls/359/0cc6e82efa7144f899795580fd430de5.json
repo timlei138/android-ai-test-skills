@@ -1,0 +1,263 @@
+{
+  "call_id": "0cc6e82efa7144f899795580fd430de5",
+  "session_id": 359,
+  "tool": "observe",
+  "started_at": "2026-10-09T16:51:16.159",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T16:51:21.834",
+  "wall_ms": 5666.81,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-09T16:51:21",
+    "package": "com.zui.calendar",
+    "activity": ".AllInOneActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "0cc6e82efa7144f899795580fd430de5",
+    "timing": {
+      "call_id": "0cc6e82efa7144f899795580fd430de5",
+      "measured_at": "2026-10-09T16:51:21.607",
+      "process_observed_ms": 3755.433,
+      "stages_ms": {
+        "device_import": 354.181,
+        "device_connect": 1181.843,
+        "permission": 926.227,
+        "screenshot": 357.955,
+        "png_save": 138.745,
+        "ui_dump": 93.94,
+        "rotation": 203.843,
+        "xml_save": 8.22,
+        "foreground": 421.198
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=month_week_pane",
+      "rid=toolbar",
+      "rid=top_button_date_layout",
+      "rid=top_button_month",
+      "text=10",
+      "rid=top_button_year",
+      "text=2026年",
+      "rid=top_button_month_unit",
+      "text=月",
+      "rid=top_button_day",
+      "text=18日",
+      "rid=top_button_lunar_countdown",
+      "text=9 天后",
+      "rid=action_add_all_event",
+      "rid=action_back_today",
+      "rid=iv_more",
+      "rid=calendarView",
+      "rid=frameContent",
+      "text=一",
+      "text=二",
+      "text=三",
+      "text=四",
+      "text=五",
+      "text=六",
+      "text=日",
+      "rid=line",
+      "rid=vp_month",
+      "rid=divider",
+      "rid=list_frame",
+      "rid=full_day_containter_layout",
+      "rid=eventList",
+      "rid=top_button_lunar_month",
+      "text=农历九月初九  (丙午马年 戊戌月 乙丑日)",
+      "rid=iconyi",
+      "text=宜:",
+      "rid=titleyi",
+      "text=解除 祭祀 修饰垣墙 平治道涂 造畜稠 馀事勿取",
+      "rid=iconji",
+      "text=忌:",
+      "rid=titleji",
+      "text=嫁娶 开市 交易 入宅 入学 安葬",
+      "rid=agenda_item_text_container",
+      "rid=title",
+      "text=重阳节"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\359\\step0565\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\359\\step0565\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\359\\step0565\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          362,
+          203
+        ],
+        "t": "2026年",
+        "r": "top_button_date_layout"
+      },
+      {
+        "c": [
+          2252,
+          757
+        ],
+        "t": "重阳节",
+        "r": "agenda_item_text_container"
+      },
+      {
+        "c": [
+          2252,
+          437
+        ],
+        "t": "解除 祭祀 修饰垣墙 平治道涂 造畜稠 馀事勿取"
+      },
+      {
+        "c": [
+          2566,
+          203
+        ],
+        "r": "action_add_all_event"
+      },
+      {
+        "c": [
+          2704,
+          203
+        ],
+        "r": "action_back_today"
+      },
+      {
+        "c": [
+          2835,
+          203
+        ],
+        "r": "iv_more"
+      },
+      {
+        "c": [
+          779,
+          1036
+        ],
+        "r": "vp_month",
+        "s": true
+      },
+      {
+        "c": [
+          779,
+          1036
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          362,
+          203
+        ],
+        "r": "top_button_date_layout"
+      },
+      {
+        "i": 1,
+        "c": [
+          2566,
+          203
+        ],
+        "r": "action_add_all_event"
+      },
+      {
+        "i": 2,
+        "c": [
+          2704,
+          203
+        ],
+        "r": "action_back_today"
+      },
+      {
+        "i": 3,
+        "c": [
+          2835,
+          203
+        ],
+        "r": "iv_more"
+      },
+      {
+        "i": 4,
+        "c": [
+          779,
+          1036
+        ],
+        "r": "vp_month",
+        "s": true
+      },
+      {
+        "i": 5,
+        "c": [
+          779,
+          1036
+        ]
+      },
+      {
+        "i": 6,
+        "c": [
+          2252,
+          437
+        ]
+      },
+      {
+        "i": 7,
+        "c": [
+          2252,
+          757
+        ],
+        "r": "agenda_item_text_container"
+      }
+    ],
+    "nodes_count": 8,
+    "nodes_mode": "nav",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      1586
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "0cc6e82efa7144f899795580fd430de5",
+    "measured_at": "2026-10-09T16:51:21.760",
+    "process_observed_ms": 3908.624,
+    "stages_ms": {
+      "device_import": 354.181,
+      "device_connect": 1181.843,
+      "permission": 926.227,
+      "screenshot": 357.955,
+      "png_save": 138.745,
+      "ui_dump": 93.94,
+      "rotation": 203.843,
+      "xml_save": 8.22,
+      "foreground": 421.198,
+      "meta_save": 3.354,
+      "screen_signature": 34.27,
+      "crash_detection": 104.945,
+      "event_write": 1.578,
+      "node_summary": 1.207,
+      "node_labels": 1.157,
+      "next_targets": 0.06,
+      "serialization": 0.228
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 4339
+  },
+  "response_bytes": 4339,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1586
+    ]
+  }
+}

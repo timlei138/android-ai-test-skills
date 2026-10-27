@@ -1,0 +1,319 @@
+{
+  "call_id": "8fdb1e39a020409f9cfa667743ecd2ce",
+  "session_id": 346,
+  "tool": "act",
+  "started_at": "2026-10-09T15:06:25.147",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T15:06:31.911",
+  "wall_ms": 6755.03,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 2925,
+      "y": 203,
+      "via": "rid=almanac_action_share",
+      "why": "点分享"
+    },
+    "ts": "2026-10-09T15:06:31",
+    "package": "com.zui.resolver",
+    "activity": ".ChooserActivityLauncher",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "8fdb1e39a020409f9cfa667743ecd2ce",
+    "timing": {
+      "call_id": "8fdb1e39a020409f9cfa667743ecd2ce",
+      "measured_at": "2026-10-09T15:06:31.689",
+      "process_observed_ms": 4575.952,
+      "stages_ms": {
+        "device_import": 277.441,
+        "device_connect": 1078.654,
+        "action": 163.312,
+        "settle_wait": 600.88,
+        "permission": 912.367,
+        "screenshot": 403.725,
+        "png_save": 253.935,
+        "ui_dump": 82.979,
+        "rotation": 222.185,
+        "xml_save": 6.476,
+        "foreground": 482.875
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=chooser_container",
+      "rid=contentPanel",
+      "rid=chooser_header",
+      "rid=drag",
+      "rid=chooser_headline_row_container",
+      "rid=chooser_headline_row",
+      "rid=headline",
+      "text=分享图片",
+      "rid=chooser_scrollable_container",
+      "rid=content_preview_container",
+      "rid=scrollable_image_preview",
+      "desc=图片预览缩略图",
+      "rid=image",
+      "rid=edit",
+      "desc=编辑",
+      "rid=rl_freestyle",
+      "rid=bt_freestyle",
+      "text=分享文件",
+      "rid=bt_add_share_hub",
+      "text=文件中转站",
+      "rid=profile_tabhost",
+      "rid=tabcontent",
+      "rid=profile_pager",
+      "rid=resolver_list",
+      "rid=shortcuts_container",
+      "rid=suggested_apps_container",
+      "rid=chooser_row_text_option",
+      "text=没有任何推荐的分享对象",
+      "rid=item",
+      "rid=icon",
+      "rid=text1",
+      "text=天禧智能体",
+      "text=便签",
+      "text=打印",
+      "text=短信",
+      "text=抖音"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\346\\step0269\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\346\\step0269\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\346\\step0269\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          2268,
+          994
+        ],
+        "t": "编辑",
+        "r": "edit"
+      },
+      {
+        "c": [
+          867,
+          1226
+        ],
+        "t": "分享文件",
+        "r": "bt_freestyle"
+      },
+      {
+        "c": [
+          1198,
+          1226
+        ],
+        "t": "文件中转站",
+        "r": "bt_add_share_hub"
+      },
+      {
+        "c": [
+          1520,
+          952
+        ],
+        "r": "contentPanel",
+        "s": true
+      },
+      {
+        "c": [
+          1520,
+          1091
+        ],
+        "r": "chooser_scrollable_container",
+        "s": true
+      },
+      {
+        "c": [
+          805,
+          1800
+        ],
+        "r": "item"
+      },
+      {
+        "c": [
+          1091,
+          1800
+        ],
+        "r": "item"
+      },
+      {
+        "c": [
+          1377,
+          1800
+        ],
+        "r": "item"
+      },
+      {
+        "c": [
+          1663,
+          1800
+        ],
+        "r": "item"
+      },
+      {
+        "c": [
+          1949,
+          1800
+        ],
+        "r": "item"
+      },
+      {
+        "c": [
+          2235,
+          1800
+        ],
+        "r": "item"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          1520,
+          952
+        ],
+        "r": "contentPanel",
+        "s": true
+      },
+      {
+        "i": 1,
+        "c": [
+          1520,
+          1091
+        ],
+        "r": "chooser_scrollable_container",
+        "s": true
+      },
+      {
+        "i": 2,
+        "c": [
+          2268,
+          994
+        ],
+        "t": "编辑",
+        "r": "edit"
+      },
+      {
+        "i": 3,
+        "c": [
+          867,
+          1226
+        ],
+        "t": "分享文件",
+        "r": "bt_freestyle"
+      },
+      {
+        "i": 4,
+        "c": [
+          1198,
+          1226
+        ],
+        "t": "文件中转站",
+        "r": "bt_add_share_hub"
+      },
+      {
+        "i": 5,
+        "c": [
+          805,
+          1800
+        ],
+        "r": "item"
+      },
+      {
+        "i": 6,
+        "c": [
+          1091,
+          1800
+        ],
+        "r": "item"
+      },
+      {
+        "i": 7,
+        "c": [
+          1377,
+          1800
+        ],
+        "r": "item"
+      },
+      {
+        "i": 8,
+        "c": [
+          1663,
+          1800
+        ],
+        "r": "item"
+      },
+      {
+        "i": 9,
+        "c": [
+          1949,
+          1800
+        ],
+        "r": "item"
+      },
+      {
+        "i": 10,
+        "c": [
+          2235,
+          1800
+        ],
+        "r": "item"
+      }
+    ],
+    "nodes_count": 11,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      1290
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "8fdb1e39a020409f9cfa667743ecd2ce",
+    "measured_at": "2026-10-09T15:06:31.824",
+    "process_observed_ms": 4714.5,
+    "stages_ms": {
+      "device_import": 277.441,
+      "device_connect": 1078.654,
+      "action": 163.312,
+      "settle_wait": 600.88,
+      "permission": 912.367,
+      "screenshot": 403.725,
+      "png_save": 253.935,
+      "ui_dump": 82.979,
+      "rotation": 222.185,
+      "xml_save": 6.476,
+      "foreground": 482.875,
+      "meta_save": 7.755,
+      "crash_detection": 86.021,
+      "screen_signature": 33.048,
+      "event_write": 1.605,
+      "node_summary": 1.808,
+      "node_labels": 1.263,
+      "next_targets": 0.076,
+      "serialization": 0.408
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 4984
+  },
+  "response_bytes": 4984,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1290
+    ]
+  }
+}

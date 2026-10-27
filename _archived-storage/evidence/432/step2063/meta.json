@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-14T15:12:36",
+  "package": "com.zui.calendar",
+  "activity": ".widget.countdown.CountdownListActivity",
+  "rotation": 1,
+  "size": [
+    3840,
+    2560
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1920,
+    "y": 573,
+    "via": "click_layout 倒数日条目",
+    "why": "预期3：点选中的倒数日卡片应返回桌面并完成切换"
+  },
+  "call_id": "8fcd17fc4c3f4ab48268faf87e46d937",
+  "timing": {
+    "call_id": "8fcd17fc4c3f4ab48268faf87e46d937",
+    "measured_at": "2026-10-14T15:12:36.122",
+    "process_observed_ms": 13999.509,
+    "stages_ms": {
+      "device_import": 461.244,
+      "device_connect": 1105.995,
+      "action": 184.648,
+      "settle_wait": 600.296,
+      "permission": 5317.464,
+      "screenshot": 349.998,
+      "png_save": 290.085,
+      "ui_dump": 76.978,
+      "rotation": 184.997,
+      "xml_save": 6.381,
+      "foreground": 5275.274
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

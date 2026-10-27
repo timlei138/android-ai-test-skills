@@ -1,0 +1,334 @@
+{
+  "call_id": "19377676e7b44ae5a647376529e4561e",
+  "session_id": 323,
+  "tool": "act",
+  "started_at": "2026-10-09T11:17:39.920",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T11:17:47.126",
+  "wall_ms": 7198.555,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "input",
+      "x": 1520,
+      "y": 375,
+      "text": " ",
+      "mode": "overwrite",
+      "via": "rid=et_schedule_name",
+      "why": "清空名称验证完成按钮置灰（预期5）"
+    },
+    "ts": "2026-10-09T11:17:46",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.temp.TempConfirmTimetableActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "19377676e7b44ae5a647376529e4561e",
+    "timing": {
+      "call_id": "19377676e7b44ae5a647376529e4561e",
+      "measured_at": "2026-10-09T11:17:46.911",
+      "process_observed_ms": 5296.65,
+      "stages_ms": {
+        "device_import": 273.8,
+        "device_connect": 1035.473,
+        "action": 1074.064,
+        "input_focus_wait": 300.424,
+        "settle_wait": 601.277,
+        "permission": 834.751,
+        "screenshot": 339.711,
+        "png_save": 173.795,
+        "ui_dump": 58.706,
+        "rotation": 186.583,
+        "xml_save": 4.267,
+        "foreground": 320.373
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=ll_custom_toolbar",
+      "rid=btn_previous",
+      "desc=上一步",
+      "rid=tv_title",
+      "text=确认课程表基本信息",
+      "rid=btn_finish",
+      "text=完成",
+      "rid=schedule_content",
+      "rid=et_schedule_name",
+      "rid=layout_semester_start_date",
+      "text=学期开始时间",
+      "rid=tv_semester_start_date",
+      "text=2026年09月01日",
+      "rid=layout_current_week",
+      "rid=tv_current_week_title",
+      "text=当前周数",
+      "rid=tv_current_week_desc",
+      "text=根据你选择的开学日期推算当前周数",
+      "rid=tv_current_week",
+      "text=第6周",
+      "rid=arrow_current_week",
+      "rid=layout_total_weeks",
+      "rid=tv_total_weeks_title",
+      "text=学期总周数",
+      "rid=tv_total_weeks_desc",
+      "text=请选择学期共多少周",
+      "rid=tv_total_weeks",
+      "text=20周",
+      "rid=arrow_total_weeks",
+      "rid=layout_weekend_classes",
+      "text=周末是否有课",
+      "rid=switch_weekend_classes",
+      "rid=layout_show_non_current_week",
+      "text=显示非本周课程",
+      "rid=switch_show_non_current_week",
+      "rid=layout_time_settings",
+      "rid=tv_time_settings_title",
+      "text=课程时间设置",
+      "rid=tv_time_settings_desc",
+      "text=设置课程节数，调整每节课时间",
+      "rid=right_arrow_time",
+      "rid=layout_default_reminder"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\323\\step0100\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\323\\step0100\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\323\\step0100\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          135,
+          203
+        ],
+        "t": "上一步",
+        "r": "btn_previous"
+      },
+      {
+        "c": [
+          2880,
+          203
+        ],
+        "t": "完成",
+        "r": "btn_finish"
+      },
+      {
+        "c": [
+          1520,
+          1085
+        ],
+        "t": "请选择学期共多少周",
+        "r": "schedule_content",
+        "s": true
+      },
+      {
+        "c": [
+          1520,
+          375
+        ],
+        "t": " ",
+        "r": "et_schedule_name"
+      },
+      {
+        "c": [
+          1520,
+          767
+        ],
+        "t": "根据你选择的开学日期推算当前周数",
+        "r": "layout_current_week"
+      },
+      {
+        "c": [
+          1520,
+          990
+        ],
+        "t": "请选择学期共多少周",
+        "r": "layout_total_weeks"
+      },
+      {
+        "c": [
+          1520,
+          1212
+        ],
+        "t": "周末是否有课",
+        "r": "layout_weekend_classes"
+      },
+      {
+        "c": [
+          1520,
+          1432
+        ],
+        "t": "显示非本周课程",
+        "r": "layout_show_non_current_week"
+      },
+      {
+        "c": [
+          1520,
+          1694
+        ],
+        "t": "设置课程节数，调整每节课时间",
+        "r": "layout_time_settings"
+      },
+      {
+        "c": [
+          1520,
+          575
+        ],
+        "r": "layout_semester_start_date"
+      },
+      {
+        "c": [
+          1520,
+          1859
+        ],
+        "r": "layout_default_reminder"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          135,
+          203
+        ],
+        "t": "上一步",
+        "r": "btn_previous"
+      },
+      {
+        "i": 1,
+        "c": [
+          2880,
+          203
+        ],
+        "t": "完成",
+        "r": "btn_finish"
+      },
+      {
+        "i": 2,
+        "c": [
+          1520,
+          1085
+        ],
+        "r": "schedule_content",
+        "s": true
+      },
+      {
+        "i": 3,
+        "c": [
+          1520,
+          375
+        ],
+        "t": " ",
+        "r": "et_schedule_name"
+      },
+      {
+        "i": 4,
+        "c": [
+          1520,
+          575
+        ],
+        "r": "layout_semester_start_date"
+      },
+      {
+        "i": 5,
+        "c": [
+          1520,
+          767
+        ],
+        "r": "layout_current_week"
+      },
+      {
+        "i": 6,
+        "c": [
+          1520,
+          990
+        ],
+        "r": "layout_total_weeks"
+      },
+      {
+        "i": 7,
+        "c": [
+          1520,
+          1212
+        ],
+        "r": "layout_weekend_classes"
+      },
+      {
+        "i": 8,
+        "c": [
+          1520,
+          1432
+        ],
+        "r": "layout_show_non_current_week"
+      },
+      {
+        "i": 9,
+        "c": [
+          1520,
+          1694
+        ],
+        "r": "layout_time_settings"
+      },
+      {
+        "i": 10,
+        "c": [
+          1520,
+          1859
+        ],
+        "r": "layout_default_reminder"
+      }
+    ],
+    "nodes_count": 11,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      1111
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "19377676e7b44ae5a647376529e4561e",
+    "measured_at": "2026-10-09T11:17:47.043",
+    "process_observed_ms": 5429.215,
+    "stages_ms": {
+      "device_import": 273.8,
+      "device_connect": 1035.473,
+      "action": 1074.064,
+      "input_focus_wait": 300.424,
+      "settle_wait": 601.277,
+      "permission": 834.751,
+      "screenshot": 339.711,
+      "png_save": 173.795,
+      "ui_dump": 58.706,
+      "rotation": 186.583,
+      "xml_save": 4.267,
+      "foreground": 320.373,
+      "meta_save": 7.807,
+      "crash_detection": 91.968,
+      "screen_signature": 26.092,
+      "event_write": 1.641,
+      "node_summary": 0.475,
+      "node_labels": 0.393,
+      "next_targets": 0.033,
+      "serialization": 0.155
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 5949
+  },
+  "response_bytes": 5949,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1111
+    ]
+  }
+}

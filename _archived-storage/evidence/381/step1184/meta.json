@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-09T20:35:35",
+  "package": "com.zui.calendar",
+  "activity": ".dialog.WeekStartDayActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1241,
+    "via": "每周起始日",
+    "why": "open"
+  },
+  "call_id": "0b558ca42dd34ef985f42e9efc0044ba",
+  "timing": {
+    "call_id": "0b558ca42dd34ef985f42e9efc0044ba",
+    "measured_at": "2026-10-09T20:35:35.607",
+    "process_observed_ms": 4517.224,
+    "stages_ms": {
+      "device_import": 313.705,
+      "device_connect": 1058.153,
+      "action": 201.175,
+      "settle_wait": 600.474,
+      "permission": 953.862,
+      "screenshot": 389.93,
+      "png_save": 167.617,
+      "ui_dump": 62.327,
+      "rotation": 261.075,
+      "xml_save": 6.874,
+      "foreground": 409.534
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

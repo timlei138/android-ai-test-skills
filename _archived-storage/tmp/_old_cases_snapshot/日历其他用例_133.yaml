@@ -1,0 +1,193 @@
+# 用例程序化描述（Programmatic Case Spec）
+#
+# 用途：把"已验证成功的路径"沉淀成**可直接回放**的结构化文件。
+#       执行时不再由 AI 临场判断，只按本文件走。
+#
+# 与用例库的关系：一个 case 对应一个 yaml，文件名 = 用例标题。
+#   用例原文（步骤/预期）→ storage/sessions.db 的 cases.input
+#   本文件              → 用例的**可执行形态**
+#
+# ⚠️ 三条硬规矩（写本文件时务必遵守）：
+#   1. **定位一律用 rid/文案，坐标只作兜底**——换设备/换分辨率后坐标必失效。
+#   2. **on_fail 必须显式**——失败就是失败，**不允许**"换个入口再试试"。
+#   3. **判据必须是机器可判的**（rid/activity/文案），不接受"显示正常"这类主观描述。
+#
+# ⚠️ 第 4 条硬规矩（**活的 next vs 死的 YAML**，会话454 回放实测后加）：
+#   `next` 是**活的**：它只报告"当前这一屏实际能点什么"；YAML 是**死的**：
+#   它写死了"应该点哪个 rid"。两者对不上时**不会报错**，只会静默跑偏。
+#   三种失败形态（实测）：
+#     ① 目标 rid 当前屏不存在 -> 点击落在空处，activity 不变，**无任何报错**
+#        （会话454：设备停在时间设置页时点 iv_more，sig 里 iv_more=False，点空）
+#     ② 目标 rid 存在但位置不同 -> 若信任 YAML 里的坐标会**点到旁边的东西**，
+#        可能执行错误动作并改坏状态  ← 最危险
+#     ③ 目标 rid 存在但语义变了 -> 同一个 button1 在不同弹框里可能是"删除"/"确定"
+#   ⇒ **回放规则（必须遵守）**：
+#     a. 每个 step 执行前，先从**当前屏**的 next/nodes 里**按 rid（或 text/desc）查**该目标；
+#     b. 找到 -> 用**本次查到的位置**执行，**不要**抄本文件里的坐标；
+#     c. **找不到 -> 立即停，按该 step 的 on_fail 处理**（通常是 BLOCKED），
+#        **绝不**改用坐标硬点、也绝不"换个入口再试试"；
+#     d. 坐标**只在元素无 rid 且无 text/desc（自绘控件）时**才用，且必须按规则现算。
+#   一句话：**rid 是判据，坐标是注释。**
+#
+# ⚠️ 已废除 `coords_hint`（2026-10-15）：它写的是"当时的实测值"，既会变、又容易被当成权威直接抄。
+#    真实事故：会话465 抄了 llCourseTime 的坐标点，实际点到 llCourseWeeks，开错弹框白扔 2 次调用。
+#    ⇒ 有 rid/text 的一律按组合定位。
+#
+# ⚠️ 编码：本文件必须为 UTF-8（无 BOM）。经 GBK 管道写入会产生大量 '?'
+#    且 YAML **仍能解析**——即"合法但内容已毁"。保存后务必肉眼确认中文正常。
+
+meta:
+  case_id: 68
+  title: 日历其他用例_133
+  package: com.zui.calendar
+  # 来源会话：本文件的证据溯源。改本文件前先看它。
+  derived_from:
+    session: 407
+    status: PASS
+    device: TB522FU
+    resolution: [3040, 1904]
+    date: "2026-10-10"
+
+# ── 执行须知（渲染到 MD 顶部，回放前必读）────────────────
+# 为什么写在这里而不是 SKILL.md：这些是**跟着这条用例走**的操作约束，
+# 不是通用规约。放 SKILL 里会被当背景噪音跳过，放这里才会在回放前被读到。
+playbook:
+  - title: "坑挂在步骤上，不放在文件级"
+    body: |
+      本文件的坑一律写在**它真正会出现的那一步**的 `pitfalls:` 下。
+      回放是**按步走**的 —— 跑到第 2 步时第 1 步的坑还在眼前，**信息被稀释**，
+      真正相关的那条反而看不见。**走到哪一步，就只看那一步的 `pitfalls`。**
+
+  - title: "工具层的坑（与 App 无关，知识卡里不一定有）"
+    body: |
+      这类坑不属于任何页面，是**工具或操作方式本身**的问题：
+      · ❌ `act input` 清空输入框会触发工具层崩溃
+        （`ADB_KEYBOARD_CLEAR_TEXT` → `ExtractedText.text on a null object reference`），
+        且崩溃后会话状态不明（`execution_state=may_have_executed`）
+        —— 按规约**禁止重放**，会话只能以 BLOCKED 收尾。
+      · ❌ 用 `swipe` 拨滚轮/滑列表：**有惯性会过冲**，来回震荡无法收敛。
+        重复手势一律用 `act tap --repeat N --gap MS`。
+      · ❌ 用 PowerShell 的 `for`/`foreach` 包 `run.py`：**中断即锁死会话**。
+      ⚠️ 实测教训：某次**连拨滚轮 37 次**才想起查卡，而知识卡那节标题叫
+      「弹框滚轮-上课时长循环」—— 从"我在拨滚轮"这个**现象根本检索不到它**。
+      ⇒ 检索知识卡时，用你脑子里的**现象词**（拨不准/过冲/没反应）换几个说法多 grep 几次。
+
+# ── 前置条件 ──────────────────────────────────────────
+# 不满足就 BLOCKED。**绝不自己去凑条件**
+# （典型反例：为了让权限弹窗出现而 pm revoke——环境是给定的，不是造出来的）
+# ── 前置条件 ──────────────────────────────────────────
+# 分三类（2026-10-15 定）——**因为"能不能动手改"是三种不同的事**：
+#   goto    🧭 导航：把 App 开到某界面。起点由 session start 的冷启动钉死在首页，故必写。
+#   prepare 🔧 准备：要动手改设备状态。**已有则跳过**（skip_if），做法写死在 do 里。
+#   assert  🔒 断言：只能检查、改不了。不满足即 BLOCKED。
+# ⚠️ 为什么必须分：原先笼统一个列表，AI 分不清该"动手做"还是"直接停"——
+#    同一份 YAML 里，「存在课表」动手建了，「周视图有空白格」却不敢动而卡住。
+# ⚠️ 清理类（pm clear / pm revoke）**只在用例明确要求时**才用（如「首次使用」）。
+#    会话开始只 force-stop（关进程、不碰数据）。
+# ⚠️ 条目**只增不删**：老条目里常含用例前提（如「未授予相机权限」「记下节数基线」），
+#    那是断言依据，删掉了就没法判卷。
+preconditions:
+  - desc: 从日历退出到桌面，再上滑进全局搜索（本用例起点在**桌面**，不在日历）
+    type: goto
+    target: 全局搜索界面（com.zui.launcher，**不切包**）
+    path: 冷启动的是**日历**，而本用例测的是桌面搜索 → 先 `act back`/`act home` 回到桌面，再**上滑**唤出全局搜索。⚠️ 上滑用 `act swipe` —— 这是允许 swipe 的少数场景之一（桌面手势，不是列表/滚轮，无惯性收敛问题）。会话407 实测开头 3 次动手才落位。
+    skip_if:
+      has_node: search_keyword
+    on_fail: BLOCKED
+    verified_by: 会话407 ev#2794~#2798 实测 back + swipe 进入搜索
+  - desc: 处于主桌面
+    check:
+      activity: .drawer.NormalLauncher
+    on_fail: BLOCKED
+    type: assert
+  - desc: 桌面设置里『上滑打开全局搜索』开关为开（否则上滑唤不出搜索）
+    check:
+      switch_on: 上滑打开全局搜索
+    on_fail: BLOCKED
+    verified_by: 会话407 finding#252 实测 checked=true
+    type: assert
+steps:
+  - id: s1
+    desc: 上滑桌面，进入全局搜索
+    case_step: "1.进入普通模式，上滑桌面，进入全局搜索"
+    do: swipe [1520, 1600] -> [1520, 400]
+
+    # 这一步当下需要知道的上下文（执行者不必重新探索）
+    know:
+      where: 主桌面 com.zui.launcher/.drawer.NormalLauncher
+      why_this: |
+        上滑唤出全局搜索是由桌面设置项『上滑打开全局搜索』控制的；
+        该开关为关时上滑无反应——先查开关，不要反复换坐标重试。
+      locate: "无 rid：这是手势，非控件。落点靠 expect 判定。"
+      duration_ms: 200
+
+    expect:
+      # 判据：出现搜索框即可，不必断言具体 class
+      rid_present: search_keyword
+      also_present: [search_cancel]
+    on_fail: BLOCKED
+
+    pitfalls:
+      - "上滑起点要落在**空白区**；落在图标/文件夹上会变成翻页或拖拽。"
+      - "起点太低（贴近 dock）会触发抽屉；起点太高会没反应。"
+      - "本会话实测：前 4 次上滑不同坐标均未进入搜索（见 events #2794/#2795/#2798），
+         第 5 次 (2000,1300)->(2000,250) 才成功 —— 说明**该手势对坐标敏感**，
+         回放时若首次失败，应先查前置开关，而不是换坐标硬试。"
+      - "⚠️ 成功进入搜索的那次上滑**同时触发了一个权限弹窗**
+         (.permission.ui.GrantPermissionsActivity)。该弹窗为偶发，非本用例关注点，
+         回放时若出现应记录但不作为判据。"
+
+    evidence: "会话407 ev#2799 (storage/evidence/407/step1778)"
+
+  - id: s2
+    desc: 点击搜索框并输入「日历」
+    case_step: "2.点击上方搜索框，输入日历"
+    do:
+      - tap: {rid: search_keyword}
+      - input: "日历"
+    know:
+      where: 全局搜索界面（仍在 com.zui.launcher 内，**不切包**）
+      why_this: |
+        搜索框 rid=search_keyword，class=EditText。
+        输入后结果**实时**返回，无需点搜索按钮/回车。
+      locate: rid=search_keyword
+    expect:
+      input_text: "日历"
+    on_fail: BLOCKED
+    pitfalls:
+      - "搜索结果**是分组的**：『相关应用』分组出的是**应用本身**，『设置』分组出的是系统内的**日历相关条目**（日历存储 / 日历，breadcrumb=应用信息）。判定『搜到了日历应用』必须看**『相关应用』分组下的 about_text**，别被『设置』分组的同名条目混淆。"
+      - "⚠️ 整个搜索过程**前台包始终是 com.zui.launcher**，**不会**切到 com.zui.calendar。若用 package 变化作判据会误判失败。"
+    evidence: "会话407 ev#2800 ev#2801"
+
+# ── 断言（对应用例的预期）─────────────────────────────
+assertions:
+  - id: a1
+    case_expect: "2.成功搜索到日历应用"
+    desc: 搜索结果里出现日历应用条目
+    check:
+      # 机器可判：指定 rid 的节点文案等于目标值
+      node_text: {rid: about_text, equals: "日历"}
+      # 佐证（不单独构成判据）
+      supporting:
+        - {rid: search_item_title, equals: "相关应用"}
+    status_last_run: PASS
+    evidence: "会话407 finding#252"
+
+# ── 坑 ────────────────────────────────────────────────
+# ⚠️ **坑一律挂在具体步骤上**（每步的 `pitfalls:`），本文件**不再设文件级 pitfalls**。
+#    原因（2026-10-15 定）：文件级是"全用例的坑混在一起"，
+#    跑到第 2 步时第 1 步的坑还在眼前，**信息被稀释**；
+#    而回放时是按步走的，坑必须跟着步走才用得上。
+
+# ── 元信息 ────────────────────────────────────────────
+confidence:
+  level: single-run
+  # verified    = 多会话验证稳定
+  # single-run  = 只跑通过一次
+  # flaky       = 时好时坏（本用例上滑手势接近此类）
+  # device-specific = 仅特定设备成立
+  # unreproducible  = 本机无法复现（如用例59的权限弹窗）
+  reason: "仅 1 次会话(#407)通过；上滑手势对坐标敏感程度未被充分验证。"
+  todo:
+    - "换设备/换分辨率复跑一次，确认 s1 的手势落点是否需调整"
+    - "确认上滑失败是否真的只与前置开关有关"

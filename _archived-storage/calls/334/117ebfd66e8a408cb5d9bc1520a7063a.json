@@ -1,0 +1,96 @@
+{
+  "call_id": "117ebfd66e8a408cb5d9bc1520a7063a",
+  "session_id": 334,
+  "tool": "act",
+  "started_at": "2026-10-09T12:20:39.568",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T12:20:45.128",
+  "wall_ms": 5550.391,
+  "result": {
+    "ok": false,
+    "route": [
+      "课程表页-周视图",
+      "全部课程表列表页",
+      "课程表基本信息编辑页",
+      "课程时间设置页"
+    ],
+    "steps": [
+      {
+        "n": 1,
+        "from": "课程表页-周视图",
+        "to": "全部课程表列表页",
+        "status": "skipped"
+      },
+      {
+        "n": 2,
+        "from": "全部课程表列表页",
+        "to": "课程表基本信息编辑页",
+        "anchor": "每行的「设置」",
+        "selector": "rid=tv_schedule_info,text=设置",
+        "how": "text≈设置",
+        "clicked": [
+          1520,
+          1694
+        ],
+        "activity": ".timetable.management.TimeSlotSettingsActivity",
+        "expect": "activity=timetable.management.EditTimetableActivity,rid=layout_time_settings",
+        "checkpoint": {
+          "checked": true,
+          "ok": false,
+          "matched": [],
+          "missed": [
+            "activity=timetable.management.EditTimetableActivity（实际 .timetable.management.TimeSlotSettingsActivity）",
+            "rid=layout_time_settings"
+          ]
+        },
+        "event_id": 1150,
+        "status": "checkpoint_missed"
+      }
+    ],
+    "completed": 0,
+    "total": 3,
+    "failed_at": 2,
+    "hint": "第 2 步没过（checkpoint_missed）：['activity=timetable.management.EditTimetableActivity（实际 .timetable.management.TimeSlotSettingsActivity）', 'rid=layout_time_settings']。修好后可 `act.py steps --from ... --to ... --resume-from 2` 接着跑。先判断是临时弹窗（关掉继续）还是用例要的东西没了（停下来记录）。",
+    "call_id": "117ebfd66e8a408cb5d9bc1520a7063a",
+    "event_ids": [
+      1150
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "117ebfd66e8a408cb5d9bc1520a7063a",
+    "measured_at": "2026-10-09T12:20:45.046",
+    "process_observed_ms": 3772.908,
+    "stages_ms": {
+      "device_import": 280.216,
+      "device_connect": 1022.542,
+      "node_summary": 31.284,
+      "node_labels": 0.406,
+      "screenshot": 371.433,
+      "png_save": 64.338,
+      "ui_dump": 104.532,
+      "rotation": 231.658,
+      "xml_save": 4.58,
+      "foreground": 360.922,
+      "meta_save": 4.686,
+      "screen_signature": 1.684,
+      "event_write": 1.718,
+      "serialization": 0.12
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 1659
+  },
+  "response_bytes": 1659,
+  "audit": {
+    "complete": true,
+    "outcome": "failed",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1150
+    ]
+  }
+}

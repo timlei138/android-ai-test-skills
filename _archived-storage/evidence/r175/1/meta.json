@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T19:32:46",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.temp.TempConfirmTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1746,
+    "via": "rid=layout_default_reminder",
+    "why": "步骤6: 打开课程提醒时间设置入口"
+  }
+}

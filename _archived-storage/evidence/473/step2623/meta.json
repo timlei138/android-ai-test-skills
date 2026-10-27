@@ -1,0 +1,39 @@
+{
+  "ts": "2026-10-15T18:48:42",
+  "package": "com.zui.calendar",
+  "activity": ".AllInOneActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1085,
+    "repeat": 2,
+    "gap_ms": 800,
+    "via": "rid=cv_empty_content",
+    "why": "182：进新建课程页，验证周数toast"
+  },
+  "call_id": "4a1324f0f3d7489e8c3312a4b1f398c7",
+  "timing": {
+    "call_id": "4a1324f0f3d7489e8c3312a4b1f398c7",
+    "measured_at": "2026-10-15T18:48:42.652",
+    "process_observed_ms": 5780.745,
+    "stages_ms": {
+      "device_import": 400.285,
+      "device_connect": 1099.0,
+      "action": 486.355,
+      "settle_wait": 600.51,
+      "permission": 997.898,
+      "screenshot": 394.986,
+      "png_save": 159.953,
+      "ui_dump": 96.418,
+      "rotation": 227.398,
+      "xml_save": 4.393,
+      "foreground": 378.746
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

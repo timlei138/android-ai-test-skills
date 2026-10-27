@@ -1,0 +1,155 @@
+{
+  "call_id": "3171539a691443dfa0c836a2b4da899d",
+  "session_id": 385,
+  "tool": "act",
+  "started_at": "2026-10-10T10:46:39.232",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T10:46:45.497",
+  "wall_ms": 6258.977,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 1520,
+      "y": 965,
+      "via": "month-col",
+      "why": "m+1"
+    },
+    "ts": "2026-10-10T10:46:45",
+    "package": "com.zui.calendar",
+    "activity": ".AllInOneActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "3171539a691443dfa0c836a2b4da899d",
+    "timing": {
+      "call_id": "3171539a691443dfa0c836a2b4da899d",
+      "measured_at": "2026-10-10T10:46:45.331",
+      "process_observed_ms": 4318.21,
+      "stages_ms": {
+        "device_import": 314.887,
+        "device_connect": 1017.15,
+        "action": 212.244,
+        "settle_wait": 600.487,
+        "permission": 1018.617,
+        "screenshot": 260.46,
+        "png_save": 84.293,
+        "ui_dump": 120.322,
+        "rotation": 208.104,
+        "xml_save": 2.387,
+        "foreground": 398.997
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=parentPanel",
+      "rid=customPanel",
+      "rid=custom",
+      "rid=title",
+      "text=2027年2月9日  周二",
+      "rid=datePicker",
+      "rid=parent",
+      "rid=selector_top_divider",
+      "rid=button_divider2",
+      "rid=left_button",
+      "text=取消",
+      "rid=right_button",
+      "text=确定"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\385\\step1396\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\385\\step1396\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\385\\step1396\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1244,
+          1276
+        ],
+        "t": "取消",
+        "r": "left_button"
+      },
+      {
+        "c": [
+          1795,
+          1276
+        ],
+        "t": "确定",
+        "r": "right_button"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          1244,
+          1276
+        ],
+        "t": "取消",
+        "r": "left_button"
+      },
+      {
+        "i": 1,
+        "c": [
+          1795,
+          1276
+        ],
+        "t": "确定",
+        "r": "right_button"
+      }
+    ],
+    "nodes_count": 2,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2418
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "3171539a691443dfa0c836a2b4da899d",
+    "measured_at": "2026-10-10T10:46:45.443",
+    "process_observed_ms": 4433.215,
+    "stages_ms": {
+      "device_import": 314.887,
+      "device_connect": 1017.15,
+      "action": 212.244,
+      "settle_wait": 600.487,
+      "permission": 1018.617,
+      "screenshot": 260.46,
+      "png_save": 84.293,
+      "ui_dump": 120.322,
+      "rotation": 208.104,
+      "xml_save": 2.387,
+      "foreground": 398.997,
+      "meta_save": 2.372,
+      "crash_detection": 86.814,
+      "screen_signature": 20.427,
+      "event_write": 1.68,
+      "node_summary": 0.371,
+      "node_labels": 0.347,
+      "next_targets": 0.012,
+      "serialization": 0.108
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 2540
+  },
+  "response_bytes": 2540,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2418
+    ]
+  }
+}

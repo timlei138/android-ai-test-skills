@@ -330,7 +330,7 @@
 
 | 节点 | 认出它 | 说明 |
 |---|---|---|
-| 系统权限弹窗 | `com.android.permissioncontroller` | 见 `knowledge/_system.md` |
+| 系统权限弹窗 | `com.android.permissioncontroller` | 见 `assets/knowledge/_system.md` |
 | 照片选择器 | `com.android.providers.media.module` | 见「图库导入流程」 |
 | 相机 | `com.zui.camera/.CaptureActivity` | 返回键可能被取景器吃掉，`am force-stop` 更稳 |
 | 桌面 | `com.zui.launcher` | App 崩溃/退出后回落 |

@@ -1,0 +1,459 @@
+{
+  "call_id": "63b0e452f4a2475a9946214f31acc6fa",
+  "session_id": 379,
+  "tool": "observe",
+  "started_at": "2026-10-09T20:25:33.412",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T20:25:38.725",
+  "wall_ms": 5300.539,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-09T20:25:38",
+    "package": "com.zui.calendar",
+    "activity": ".birthday.BirthdayDetailActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "63b0e452f4a2475a9946214f31acc6fa",
+    "timing": {
+      "call_id": "63b0e452f4a2475a9946214f31acc6fa",
+      "measured_at": "2026-10-09T20:25:38.508",
+      "process_observed_ms": 3476.658,
+      "stages_ms": {
+        "device_import": 288.251,
+        "device_connect": 1076.671,
+        "permission": 920.155,
+        "screenshot": 347.749,
+        "png_save": 54.627,
+        "ui_dump": 77.72,
+        "rotation": 252.482,
+        "xml_save": 5.092,
+        "foreground": 386.503
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "rid=toolbar_title",
+      "text=生日详情",
+      "rid=birthday_photo",
+      "rid=birthdayTvName",
+      "text=农历生日L",
+      "rid=birthdayTvSolarDate",
+      "text=农历生日: 十月初九",
+      "rid=divider_line_view",
+      "rid=birthdayLlReminder",
+      "rid=birthdayTvReminderType",
+      "text=提醒: 任务发生当天",
+      "rid=birthdayLlNextLunar",
+      "rid=birthdayTvNextLunar",
+      "text=距离农历生日还有39天",
+      "rid=birthdayLlNextLunar_line",
+      "rid=button_layout",
+      "rid=bottom_bar"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\379\\step1148\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\379\\step1148\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\379\\step1148\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          319,
+          203
+        ],
+        "t": "生日详情",
+        "r": "toolbar_title"
+      },
+      {
+        "c": [
+          165,
+          386
+        ],
+        "t": "农历生日: 十月初九",
+        "r": "birthday_photo"
+      },
+      {
+        "c": [
+          355,
+          354
+        ],
+        "t": "农历生日L",
+        "r": "birthdayTvName"
+      },
+      {
+        "c": [
+          408,
+          427
+        ],
+        "t": "农历生日: 十月初九",
+        "r": "birthdayTvSolarDate"
+      },
+      {
+        "c": [
+          455,
+          562
+        ],
+        "t": "提醒: 任务发生当天",
+        "r": "birthdayTvReminderType"
+      },
+      {
+        "c": [
+          497,
+          738
+        ],
+        "t": "距离农历生日还有39天",
+        "r": "birthdayTvNextLunar"
+      },
+      {
+        "c": [
+          107,
+          203
+        ],
+        "t": "生日详情"
+      },
+      {
+        "c": [
+          1520,
+          952
+        ],
+        "r": "action_bar_root"
+      },
+      {
+        "c": [
+          1520,
+          952
+        ],
+        "r": "content"
+      },
+      {
+        "c": [
+          1520,
+          203
+        ],
+        "r": "toolbar"
+      },
+      {
+        "c": [
+          1520,
+          474
+        ],
+        "r": "divider_line_view"
+      },
+      {
+        "c": [
+          1520,
+          562
+        ],
+        "r": "birthdayLlReminder"
+      }
+    ],
+    "nodes": [
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "com.zui.calendar:id/action_bar_root"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "android:id/content"
+      },
+      {
+        "bounds": [
+          0,
+          107,
+          3040,
+          300
+        ],
+        "center": [
+          1520,
+          203
+        ],
+        "rid": "com.zui.calendar:id/toolbar"
+      },
+      {
+        "bounds": [
+          28,
+          115,
+          187,
+          291
+        ],
+        "center": [
+          107,
+          203
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          187,
+          156,
+          451,
+          251
+        ],
+        "center": [
+          319,
+          203
+        ],
+        "rid": "com.zui.calendar:id/toolbar_title",
+        "text": "生日详情"
+      },
+      {
+        "bounds": [
+          121,
+          342,
+          209,
+          430
+        ],
+        "center": [
+          165,
+          386
+        ],
+        "rid": "com.zui.calendar:id/birthday_photo"
+      },
+      {
+        "bounds": [
+          242,
+          318,
+          469,
+          391
+        ],
+        "center": [
+          355,
+          354
+        ],
+        "rid": "com.zui.calendar:id/birthdayTvName",
+        "text": "农历生日L"
+      },
+      {
+        "bounds": [
+          242,
+          399,
+          575,
+          455
+        ],
+        "center": [
+          408,
+          427
+        ],
+        "rid": "com.zui.calendar:id/birthdayTvSolarDate",
+        "text": "农历生日: 十月初九"
+      },
+      {
+        "bounds": [
+          121,
+          473,
+          2919,
+          476
+        ],
+        "center": [
+          1520,
+          474
+        ],
+        "rid": "com.zui.calendar:id/divider_line_view"
+      },
+      {
+        "bounds": [
+          0,
+          476,
+          3040,
+          649
+        ],
+        "center": [
+          1520,
+          562
+        ],
+        "rid": "com.zui.calendar:id/birthdayLlReminder",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          242,
+          526,
+          669,
+          599
+        ],
+        "center": [
+          455,
+          562
+        ],
+        "rid": "com.zui.calendar:id/birthdayTvReminderType",
+        "text": "提醒: 任务发生当天"
+      },
+      {
+        "bounds": [
+          121,
+          649,
+          2919,
+          652
+        ],
+        "center": [
+          1520,
+          650
+        ],
+        "rid": "com.zui.calendar:id/divider_line_view"
+      },
+      {
+        "bounds": [
+          0,
+          652,
+          3040,
+          825
+        ],
+        "center": [
+          1520,
+          738
+        ],
+        "rid": "com.zui.calendar:id/birthdayLlNextLunar"
+      },
+      {
+        "bounds": [
+          242,
+          702,
+          752,
+          775
+        ],
+        "center": [
+          497,
+          738
+        ],
+        "rid": "com.zui.calendar:id/birthdayTvNextLunar",
+        "text": "距离农历生日还有39天"
+      },
+      {
+        "bounds": [
+          121,
+          825,
+          2919,
+          828
+        ],
+        "center": [
+          1520,
+          826
+        ],
+        "rid": "com.zui.calendar:id/birthdayLlNextLunar_line"
+      },
+      {
+        "bounds": [
+          0,
+          1736,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          1820
+        ],
+        "rid": "com.zui.calendar:id/button_layout"
+      },
+      {
+        "bounds": [
+          275,
+          1739,
+          2765,
+          1871
+        ],
+        "center": [
+          1520,
+          1805
+        ],
+        "rid": "com.zui.calendar:id/bottom_bar"
+      },
+      {
+        "bounds": [
+          275,
+          1739,
+          1520,
+          1871
+        ],
+        "center": [
+          897,
+          1805
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1520,
+          1739,
+          2765,
+          1871
+        ],
+        "center": [
+          2142,
+          1805
+        ],
+        "clickable": true
+      }
+    ],
+    "nodes_count": 19,
+    "nodes_mode": "full",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      2170
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "63b0e452f4a2475a9946214f31acc6fa",
+    "measured_at": "2026-10-09T20:25:38.649",
+    "process_observed_ms": 3616.17,
+    "stages_ms": {
+      "device_import": 288.251,
+      "device_connect": 1076.671,
+      "permission": 920.155,
+      "screenshot": 347.749,
+      "png_save": 54.627,
+      "ui_dump": 77.72,
+      "rotation": 252.482,
+      "xml_save": 5.092,
+      "foreground": 386.503,
+      "meta_save": 4.117,
+      "screen_signature": 30.805,
+      "crash_detection": 94.468,
+      "event_write": 2.276,
+      "node_summary": 0.726,
+      "node_labels": 0.405,
+      "next_targets": 0.039,
+      "serialization": 0.378
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 7310
+  },
+  "response_bytes": 7310,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2170
+    ]
+  }
+}

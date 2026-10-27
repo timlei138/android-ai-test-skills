@@ -1,0 +1,175 @@
+{
+  "call_id": "29954acc0d4c419f890ce1f879cc4a0a",
+  "session_id": 449,
+  "tool": "act",
+  "started_at": "2026-10-15T14:17:13.159",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-15T14:17:28.030",
+  "wall_ms": 14860.235,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 552,
+      "y": 648,
+      "via": "curriculum_card_view(语文)",
+      "why": "进课程列表"
+    },
+    "ts": "2026-10-15T14:17:27",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.course.CourseListActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "29954acc0d4c419f890ce1f879cc4a0a",
+    "timing": {
+      "call_id": "29954acc0d4c419f890ce1f879cc4a0a",
+      "measured_at": "2026-10-15T14:17:27.754",
+      "process_observed_ms": 14168.735,
+      "stages_ms": {
+        "device_import": 408.725,
+        "device_connect": 1186.197,
+        "action": 184.232,
+        "settle_wait": 600.175,
+        "permission": 5378.307,
+        "screenshot": 398.806,
+        "png_save": 174.325,
+        "ui_dump": 85.694,
+        "rotation": 270.053,
+        "xml_save": 2.889,
+        "foreground": 5389.474
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=toolbar",
+      "desc=关闭",
+      "text=课程列表",
+      "text=添加",
+      "rid=contentPanel",
+      "rid=recyclerViewCourses",
+      "rid=clCourseDetail",
+      "rid=tvFirstLine",
+      "text=语文",
+      "rid=tvSecondLine",
+      "text=第1节 | 第1-20周",
+      "rid=ivEdit",
+      "desc=编辑"
+    ],
+    "checkpoint": {
+      "checked": true,
+      "ok": true,
+      "matched": [
+        "activity=CourseListActivity"
+      ],
+      "missed": []
+    },
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\449\\step2359\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\449\\step2359\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\449\\step2359\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1520,
+          593
+        ],
+        "t": "第1节 | 第1-20周",
+        "r": "clCourseDetail"
+      },
+      {
+        "c": [
+          739,
+          371
+        ],
+        "t": "关闭"
+      },
+      {
+        "c": [
+          2295,
+          370
+        ],
+        "t": "添加"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          739,
+          371
+        ],
+        "t": "关闭"
+      },
+      {
+        "i": 1,
+        "c": [
+          2295,
+          370
+        ],
+        "t": "添加"
+      },
+      {
+        "i": 2,
+        "c": [
+          1520,
+          593
+        ],
+        "r": "clCourseDetail"
+      }
+    ],
+    "nodes_count": 3,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      3480
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "29954acc0d4c419f890ce1f879cc4a0a",
+    "measured_at": "2026-10-15T14:17:27.930",
+    "process_observed_ms": 14350.792,
+    "stages_ms": {
+      "device_import": 408.725,
+      "device_connect": 1186.197,
+      "action": 184.232,
+      "settle_wait": 600.175,
+      "permission": 5378.307,
+      "screenshot": 398.806,
+      "png_save": 174.325,
+      "ui_dump": 85.694,
+      "rotation": 270.053,
+      "xml_save": 2.889,
+      "foreground": 5389.474,
+      "meta_save": 2.814,
+      "crash_detection": 110.159,
+      "screen_signature": 55.211,
+      "event_write": 3.955,
+      "node_summary": 1.051,
+      "node_labels": 0.869,
+      "next_targets": 0.04,
+      "serialization": 0.281
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 2844
+  },
+  "response_bytes": 2844,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3480
+    ]
+  }
+}

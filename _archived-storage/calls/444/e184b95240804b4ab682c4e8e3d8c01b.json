@@ -1,0 +1,412 @@
+{
+  "call_id": "e184b95240804b4ab682c4e8e3d8c01b",
+  "session_id": 444,
+  "tool": "observe",
+  "started_at": "2026-10-15T12:08:40.832",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-15T12:08:54.635",
+  "wall_ms": 13783.903,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-15T12:08:54",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.management.TimetableListActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "e184b95240804b4ab682c4e8e3d8c01b",
+    "timing": {
+      "call_id": "e184b95240804b4ab682c4e8e3d8c01b",
+      "measured_at": "2026-10-15T12:08:54.336",
+      "process_observed_ms": 13157.789,
+      "stages_ms": {
+        "device_import": 388.066,
+        "device_connect": 1136.67,
+        "permission": 5395.761,
+        "screenshot": 399.996,
+        "png_save": 131.211,
+        "ui_dump": 78.978,
+        "rotation": 215.715,
+        "xml_save": 6.484,
+        "foreground": 5340.968
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "desc=转到上一层级",
+      "rid=toolbar_title",
+      "text=全部课程表",
+      "rid=action_schedule",
+      "desc=编辑",
+      "rid=action_add_schedule",
+      "desc=添加课程表",
+      "rid=recyclerView",
+      "rid=tv_schedule_name",
+      "text=空课表",
+      "rid=tv_default_badge",
+      "text=当前",
+      "rid=tv_schedule_info",
+      "text=设置",
+      "text=学生课程表"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\444\\step2159\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\444\\step2159\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\444\\step2159\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          368,
+          203
+        ],
+        "t": "全部课程表",
+        "r": "toolbar_title"
+      },
+      {
+        "c": [
+          218,
+          391
+        ],
+        "t": "空课表",
+        "r": "tv_schedule_name"
+      },
+      {
+        "c": [
+          365,
+          391
+        ],
+        "t": "当前",
+        "r": "tv_default_badge"
+      },
+      {
+        "c": [
+          2853,
+          391
+        ],
+        "t": "设置",
+        "r": "tv_schedule_info"
+      },
+      {
+        "c": [
+          268,
+          615
+        ],
+        "t": "学生课程表",
+        "r": "tv_schedule_name"
+      },
+      {
+        "c": [
+          2853,
+          615
+        ],
+        "t": "设置",
+        "r": "tv_schedule_info"
+      },
+      {
+        "c": [
+          2754,
+          203
+        ],
+        "d": "编辑",
+        "r": "action_schedule"
+      },
+      {
+        "c": [
+          2891,
+          203
+        ],
+        "d": "添加课程表",
+        "r": "action_add_schedule"
+      },
+      {
+        "c": [
+          123,
+          203
+        ],
+        "d": "转到上一层级"
+      },
+      {
+        "c": [
+          1520,
+          952
+        ],
+        "r": "action_bar_root"
+      },
+      {
+        "c": [
+          1520,
+          952
+        ],
+        "r": "content"
+      },
+      {
+        "c": [
+          1492,
+          203
+        ],
+        "r": "toolbar"
+      }
+    ],
+    "nodes": [
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "com.zui.calendar:id/action_bar_root"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "android:id/content"
+      },
+      {
+        "bounds": [
+          0,
+          107,
+          2985,
+          300
+        ],
+        "center": [
+          1492,
+          203
+        ],
+        "rid": "com.zui.calendar:id/toolbar"
+      },
+      {
+        "bounds": [
+          44,
+          115,
+          203,
+          291
+        ],
+        "center": [
+          123,
+          203
+        ],
+        "desc": "转到上一层级",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          203,
+          156,
+          533,
+          251
+        ],
+        "center": [
+          368,
+          203
+        ],
+        "rid": "com.zui.calendar:id/toolbar_title",
+        "text": "全部课程表"
+      },
+      {
+        "bounds": [
+          2688,
+          137,
+          2820,
+          269
+        ],
+        "center": [
+          2754,
+          203
+        ],
+        "rid": "com.zui.calendar:id/action_schedule",
+        "desc": "编辑",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          2820,
+          137,
+          2963,
+          269
+        ],
+        "center": [
+          2891,
+          203
+        ],
+        "rid": "com.zui.calendar:id/action_add_schedule",
+        "desc": "添加课程表",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          88,
+          300,
+          2952,
+          1871
+        ],
+        "center": [
+          1520,
+          1085
+        ],
+        "rid": "com.zui.calendar:id/recyclerView"
+      },
+      {
+        "bounds": [
+          88,
+          300,
+          2952,
+          483
+        ],
+        "center": [
+          1520,
+          391
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          143,
+          355,
+          293,
+          428
+        ],
+        "center": [
+          218,
+          391
+        ],
+        "rid": "com.zui.calendar:id/tv_schedule_name",
+        "text": "空课表"
+      },
+      {
+        "bounds": [
+          315,
+          355,
+          415,
+          428
+        ],
+        "center": [
+          365,
+          391
+        ],
+        "rid": "com.zui.calendar:id/tv_default_badge",
+        "text": "当前"
+      },
+      {
+        "bounds": [
+          2809,
+          359,
+          2897,
+          423
+        ],
+        "center": [
+          2853,
+          391
+        ],
+        "rid": "com.zui.calendar:id/tv_schedule_info",
+        "text": "设置"
+      },
+      {
+        "bounds": [
+          88,
+          524,
+          2952,
+          707
+        ],
+        "center": [
+          1520,
+          615
+        ],
+        "clickable": true
+      },
+      {
+        "bounds": [
+          143,
+          579,
+          393,
+          652
+        ],
+        "center": [
+          268,
+          615
+        ],
+        "rid": "com.zui.calendar:id/tv_schedule_name",
+        "text": "学生课程表"
+      },
+      {
+        "bounds": [
+          2809,
+          583,
+          2897,
+          647
+        ],
+        "center": [
+          2853,
+          615
+        ],
+        "rid": "com.zui.calendar:id/tv_schedule_info",
+        "text": "设置"
+      }
+    ],
+    "nodes_count": 15,
+    "nodes_mode": "full",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      3230
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "e184b95240804b4ab682c4e8e3d8c01b",
+    "measured_at": "2026-10-15T12:08:54.540",
+    "process_observed_ms": 13365.149,
+    "stages_ms": {
+      "device_import": 388.066,
+      "device_connect": 1136.67,
+      "permission": 5395.761,
+      "screenshot": 399.996,
+      "png_save": 131.211,
+      "ui_dump": 78.978,
+      "rotation": 215.715,
+      "xml_save": 6.484,
+      "foreground": 5340.968,
+      "meta_save": 7.462,
+      "screen_signature": 52.24,
+      "crash_detection": 128.698,
+      "event_write": 3.688,
+      "node_summary": 2.577,
+      "node_labels": 0.762,
+      "next_targets": 0.055,
+      "serialization": 0.368
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 6452
+  },
+  "response_bytes": 6452,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3230
+    ]
+  }
+}

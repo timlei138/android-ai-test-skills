@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T20:23:33",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.course.EditCourseActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1128,
+    "y": 589,
+    "via": "text=全选",
+    "why": "取消全选（验证一周不选）"
+  }
+}

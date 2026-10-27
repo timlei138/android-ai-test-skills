@@ -1,0 +1,344 @@
+{
+  "call_id": "7ee3ad788230422eb08f77a65c558f28",
+  "session_id": 475,
+  "tool": "act",
+  "started_at": "2026-10-26T21:02:58.895",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-26T21:03:04.050",
+  "wall_ms": 5153.977,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 2697,
+      "y": 371,
+      "via": "text=课程表",
+      "why": "步骤1-② 菜单选课程表"
+    },
+    "ts": "2026-10-26T21:03:03",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.display.TimetableActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "7ee3ad788230422eb08f77a65c558f28",
+    "timing": {
+      "call_id": "7ee3ad788230422eb08f77a65c558f28",
+      "measured_at": "2026-10-26T21:03:03.801",
+      "process_observed_ms": 4492.085,
+      "stages_ms": {
+        "device_import": 423.795,
+        "device_connect": 1102.911,
+        "action": 195.441,
+        "settle_wait": 600.497,
+        "permission": 934.47,
+        "screenshot": 247.582,
+        "png_save": 185.409,
+        "ui_dump": 65.59,
+        "rotation": 266.353,
+        "xml_save": 6.333,
+        "foreground": 369.583
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "desc=转到上一层级",
+      "rid=toolbar_title",
+      "text=课程表",
+      "rid=emptyView",
+      "text=还未添加课程表",
+      "rid=btnImportFromPhoto",
+      "text=拍照导入课程表",
+      "rid=btnImportFromGallery",
+      "text=从图库导入课程表",
+      "rid=btnCreateManually",
+      "text=手动创建课程表"
+    ],
+    "checkpoint": {
+      "checked": true,
+      "ok": true,
+      "matched": [
+        "activity=TimetableActivity"
+      ],
+      "missed": []
+    },
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "D:\\Project\\deepseek\\android-ai-test-skills\\storage\\evidence\\475\\step2664\\shot.png",
+      "xml": "D:\\Project\\deepseek\\android-ai-test-skills\\storage\\evidence\\475\\step2664\\dump.xml",
+      "meta": "D:\\Project\\deepseek\\android-ai-test-skills\\storage\\evidence\\475\\step2664\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1520,
+          952
+        ],
+        "t": "还未添加课程表",
+        "r": "action_bar_root"
+      },
+      {
+        "c": [
+          1520,
+          952
+        ],
+        "t": "还未添加课程表",
+        "r": "content"
+      },
+      {
+        "c": [
+          302,
+          203
+        ],
+        "t": "课程表",
+        "r": "toolbar_title"
+      },
+      {
+        "c": [
+          1520,
+          1365
+        ],
+        "t": "拍照导入课程表",
+        "r": "btnImportFromPhoto"
+      },
+      {
+        "c": [
+          1520,
+          1541
+        ],
+        "t": "从图库导入课程表",
+        "r": "btnImportFromGallery"
+      },
+      {
+        "c": [
+          1520,
+          1717
+        ],
+        "t": "手动创建课程表",
+        "r": "btnCreateManually"
+      },
+      {
+        "c": [
+          1520,
+          996
+        ],
+        "t": "还未添加课程表"
+      },
+      {
+        "c": [
+          123,
+          203
+        ],
+        "d": "转到上一层级"
+      },
+      {
+        "c": [
+          1492,
+          203
+        ],
+        "r": "toolbar"
+      },
+      {
+        "c": [
+          1520,
+          1085
+        ],
+        "r": "emptyView"
+      }
+    ],
+    "nodes": [
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "com.zui.calendar:id/action_bar_root"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "android:id/content"
+      },
+      {
+        "bounds": [
+          0,
+          107,
+          2985,
+          300
+        ],
+        "center": [
+          1492,
+          203
+        ],
+        "rid": "com.zui.calendar:id/toolbar"
+      },
+      {
+        "bounds": [
+          44,
+          115,
+          203,
+          291
+        ],
+        "center": [
+          123,
+          203
+        ],
+        "desc": "转到上一层级",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          203,
+          156,
+          401,
+          251
+        ],
+        "center": [
+          302,
+          203
+        ],
+        "rid": "com.zui.calendar:id/toolbar_title",
+        "text": "课程表",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          0,
+          300,
+          3040,
+          1871
+        ],
+        "center": [
+          1520,
+          1085
+        ],
+        "rid": "com.zui.calendar:id/emptyView"
+      },
+      {
+        "bounds": [
+          1345,
+          960,
+          1695,
+          1033
+        ],
+        "center": [
+          1520,
+          996
+        ],
+        "text": "还未添加课程表"
+      },
+      {
+        "bounds": [
+          1102,
+          1299,
+          1938,
+          1431
+        ],
+        "center": [
+          1520,
+          1365
+        ],
+        "rid": "com.zui.calendar:id/btnImportFromPhoto",
+        "text": "拍照导入课程表",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1102,
+          1475,
+          1938,
+          1607
+        ],
+        "center": [
+          1520,
+          1541
+        ],
+        "rid": "com.zui.calendar:id/btnImportFromGallery",
+        "text": "从图库导入课程表",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1102,
+          1651,
+          1938,
+          1783
+        ],
+        "center": [
+          1520,
+          1717
+        ],
+        "rid": "com.zui.calendar:id/btnCreateManually",
+        "text": "手动创建课程表",
+        "clickable": true
+      }
+    ],
+    "nodes_count": 10,
+    "nodes_mode": "full",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      3809
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "7ee3ad788230422eb08f77a65c558f28",
+    "measured_at": "2026-10-26T21:03:03.951",
+    "process_observed_ms": 4645.985,
+    "stages_ms": {
+      "device_import": 423.795,
+      "device_connect": 1102.911,
+      "action": 195.441,
+      "settle_wait": 600.497,
+      "permission": 934.47,
+      "screenshot": 247.582,
+      "png_save": 185.409,
+      "ui_dump": 65.59,
+      "rotation": 266.353,
+      "xml_save": 6.333,
+      "foreground": 369.583,
+      "meta_save": 6.101,
+      "crash_detection": 91.655,
+      "screen_signature": 43.894,
+      "event_write": 4.755,
+      "node_summary": 1.076,
+      "node_labels": 0.874,
+      "next_targets": 0.078,
+      "serialization": 0.481
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 5581
+  },
+  "response_bytes": 5581,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3809
+    ]
+  }
+}

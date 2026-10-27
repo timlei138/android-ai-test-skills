@@ -1,0 +1,155 @@
+{
+  "call_id": "42b04d82fd8e477b95e525bb285d09fe",
+  "session_id": 359,
+  "tool": "act",
+  "started_at": "2026-10-09T16:48:30.534",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T16:48:37.453",
+  "wall_ms": 6911.222,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 1887,
+      "y": 1092,
+      "via": "日滚轮下方一格",
+      "why": "日期+1"
+    },
+    "ts": "2026-10-09T16:48:37",
+    "package": "com.zui.calendar",
+    "activity": ".AllInOneActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "42b04d82fd8e477b95e525bb285d09fe",
+    "timing": {
+      "call_id": "42b04d82fd8e477b95e525bb285d09fe",
+      "measured_at": "2026-10-09T16:48:37.222",
+      "process_observed_ms": 4747.088,
+      "stages_ms": {
+        "device_import": 280.223,
+        "device_connect": 1134.877,
+        "action": 181.378,
+        "settle_wait": 600.339,
+        "permission": 1019.262,
+        "screenshot": 381.692,
+        "png_save": 267.698,
+        "ui_dump": 54.542,
+        "rotation": 287.08,
+        "xml_save": 4.947,
+        "foreground": 453.754
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=parentPanel",
+      "rid=customPanel",
+      "rid=custom",
+      "rid=title",
+      "text=2026年10月12日  周一",
+      "rid=datePicker",
+      "rid=parent",
+      "rid=selector_top_divider",
+      "rid=button_divider2",
+      "rid=left_button",
+      "text=取消",
+      "rid=right_button",
+      "text=确定"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\359\\step0548\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\359\\step0548\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\359\\step0548\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1244,
+          1276
+        ],
+        "t": "取消",
+        "r": "left_button"
+      },
+      {
+        "c": [
+          1795,
+          1276
+        ],
+        "t": "确定",
+        "r": "right_button"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          1244,
+          1276
+        ],
+        "t": "取消",
+        "r": "left_button"
+      },
+      {
+        "i": 1,
+        "c": [
+          1795,
+          1276
+        ],
+        "t": "确定",
+        "r": "right_button"
+      }
+    ],
+    "nodes_count": 2,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      1569
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "42b04d82fd8e477b95e525bb285d09fe",
+    "measured_at": "2026-10-09T16:48:37.364",
+    "process_observed_ms": 4888.025,
+    "stages_ms": {
+      "device_import": 280.223,
+      "device_connect": 1134.877,
+      "action": 181.378,
+      "settle_wait": 600.339,
+      "permission": 1019.262,
+      "screenshot": 381.692,
+      "png_save": 267.698,
+      "ui_dump": 54.542,
+      "rotation": 287.08,
+      "xml_save": 4.947,
+      "foreground": 453.754,
+      "meta_save": 5.961,
+      "crash_detection": 88.463,
+      "screen_signature": 36.242,
+      "event_write": 1.78,
+      "node_summary": 0.642,
+      "node_labels": 0.921,
+      "next_targets": 0.027,
+      "serialization": 0.227
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 2562
+  },
+  "response_bytes": 2562,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1569
+    ]
+  }
+}

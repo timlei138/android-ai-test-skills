@@ -1,0 +1,39 @@
+{
+  "ts": "2026-10-10T15:34:47",
+  "package": "com.zui.calendar",
+  "activity": ".newbuild.NewBuildActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "input",
+    "x": 2128,
+    "y": 469,
+    "text": "W18全天",
+    "mode": "overwrite",
+    "why": "title"
+  },
+  "call_id": "53b7adbfd1b24fbbb52f242daf064356",
+  "timing": {
+    "call_id": "53b7adbfd1b24fbbb52f242daf064356",
+    "measured_at": "2026-10-10T15:34:47.414",
+    "process_observed_ms": 5545.955,
+    "stages_ms": {
+      "device_import": 332.837,
+      "device_connect": 1052.897,
+      "action": 977.714,
+      "input_focus_wait": 300.41,
+      "settle_wait": 600.28,
+      "permission": 952.339,
+      "screenshot": 395.979,
+      "png_save": 145.54,
+      "ui_dump": 77.836,
+      "rotation": 234.016,
+      "xml_save": 17.332,
+      "foreground": 381.388
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

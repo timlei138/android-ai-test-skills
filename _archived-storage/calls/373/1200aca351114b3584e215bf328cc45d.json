@@ -1,0 +1,472 @@
+{
+  "call_id": "1200aca351114b3584e215bf328cc45d",
+  "session_id": 373,
+  "tool": "observe",
+  "started_at": "2026-10-09T19:21:14.459",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T19:21:19.819",
+  "wall_ms": 5350.372,
+  "result": {
+    "ok": true,
+    "ts": "2026-10-09T19:21:19",
+    "package": "com.zui.calendar",
+    "activity": ".agenda.NewBuildList",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "1200aca351114b3584e215bf328cc45d",
+    "timing": {
+      "call_id": "1200aca351114b3584e215bf328cc45d",
+      "measured_at": "2026-10-09T19:21:19.565",
+      "process_observed_ms": 3458.574,
+      "stages_ms": {
+        "device_import": 331.449,
+        "device_connect": 1089.833,
+        "permission": 884.036,
+        "screenshot": 292.705,
+        "png_save": 58.651,
+        "ui_dump": 72.346,
+        "rotation": 222.495,
+        "xml_save": 4.838,
+        "foreground": 432.249
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=build_list_content",
+      "rid=contentx",
+      "rid=search_view",
+      "rid=click_layout",
+      "rid=time1",
+      "text=2026年10月9日 16:11",
+      "rid=line",
+      "rid=title",
+      "text=对照提醒事件X",
+      "text=2026年10月9日 16:12",
+      "rid=time2",
+      "text=2026年10月9日 17:12",
+      "text=对照日程事件Y",
+      "rid=searchEditText",
+      "text=对照",
+      "rid=icon_search",
+      "rid=imageButtonClear",
+      "rid=cancel",
+      "text=取消"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\373\\step0911\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\373\\step0911\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\373\\step0911\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          1520,
+          203
+        ],
+        "t": "对照",
+        "r": "contentx"
+      },
+      {
+        "c": [
+          806,
+          441
+        ],
+        "t": "对照提醒事件X",
+        "r": "click_layout"
+      },
+      {
+        "c": [
+          385,
+          441
+        ],
+        "t": "2026年10月9日 16:11",
+        "r": "time1"
+      },
+      {
+        "c": [
+          638,
+          441
+        ],
+        "t": "2026年10月9日 16:11",
+        "r": "line"
+      },
+      {
+        "c": [
+          876,
+          440
+        ],
+        "t": "对照提醒事件X",
+        "r": "title"
+      },
+      {
+        "c": [
+          2233,
+          441
+        ],
+        "t": "对照日程事件Y",
+        "r": "click_layout"
+      },
+      {
+        "c": [
+          1816,
+          403
+        ],
+        "t": "2026年10月9日 16:12",
+        "r": "time1"
+      },
+      {
+        "c": [
+          1816,
+          479
+        ],
+        "t": "2026年10月9日 17:12",
+        "r": "time2"
+      },
+      {
+        "c": [
+          2075,
+          441
+        ],
+        "t": "2026年10月9日 16:12",
+        "r": "line"
+      },
+      {
+        "c": [
+          2313,
+          440
+        ],
+        "t": "对照日程事件Y",
+        "r": "title"
+      },
+      {
+        "c": [
+          1520,
+          203
+        ],
+        "t": "对照",
+        "r": "content"
+      },
+      {
+        "c": [
+          1456,
+          203
+        ],
+        "t": "对照",
+        "r": "searchEditText"
+      }
+    ],
+    "nodes": [
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "com.zui.calendar:id/action_bar_root"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          952
+        ],
+        "rid": "android:id/content"
+      },
+      {
+        "bounds": [
+          0,
+          107,
+          3040,
+          1904
+        ],
+        "center": [
+          1520,
+          1005
+        ],
+        "rid": "com.zui.calendar:id/build_list_content"
+      },
+      {
+        "bounds": [
+          0,
+          107,
+          3040,
+          300
+        ],
+        "center": [
+          1520,
+          203
+        ],
+        "rid": "com.zui.calendar:id/contentx"
+      },
+      {
+        "bounds": [
+          66,
+          341,
+          2919,
+          1904
+        ],
+        "center": [
+          1492,
+          1122
+        ],
+        "rid": "com.zui.calendar:id/search_view"
+      },
+      {
+        "bounds": [
+          121,
+          341,
+          1492,
+          541
+        ],
+        "center": [
+          806,
+          441
+        ],
+        "rid": "com.zui.calendar:id/click_layout",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          187,
+          403,
+          583,
+          479
+        ],
+        "center": [
+          385,
+          441
+        ],
+        "rid": "com.zui.calendar:id/time1",
+        "text": "2026年10月9日 16:11"
+      },
+      {
+        "bounds": [
+          638,
+          385,
+          639,
+          497
+        ],
+        "center": [
+          638,
+          441
+        ],
+        "rid": "com.zui.calendar:id/line"
+      },
+      {
+        "bounds": [
+          694,
+          401,
+          1059,
+          480
+        ],
+        "center": [
+          876,
+          440
+        ],
+        "rid": "com.zui.calendar:id/title",
+        "text": "对照提醒事件X"
+      },
+      {
+        "bounds": [
+          1547,
+          341,
+          2919,
+          541
+        ],
+        "center": [
+          2233,
+          441
+        ],
+        "rid": "com.zui.calendar:id/click_layout",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          1613,
+          365,
+          2020,
+          441
+        ],
+        "center": [
+          1816,
+          403
+        ],
+        "rid": "com.zui.calendar:id/time1",
+        "text": "2026年10月9日 16:12"
+      },
+      {
+        "bounds": [
+          1613,
+          441,
+          2019,
+          517
+        ],
+        "center": [
+          1816,
+          479
+        ],
+        "rid": "com.zui.calendar:id/time2",
+        "text": "2026年10月9日 17:12"
+      },
+      {
+        "bounds": [
+          2075,
+          385,
+          2076,
+          497
+        ],
+        "center": [
+          2075,
+          441
+        ],
+        "rid": "com.zui.calendar:id/line"
+      },
+      {
+        "bounds": [
+          2131,
+          401,
+          2496,
+          480
+        ],
+        "center": [
+          2313,
+          440
+        ],
+        "rid": "com.zui.calendar:id/title",
+        "text": "对照日程事件Y"
+      },
+      {
+        "bounds": [
+          0,
+          107,
+          3040,
+          300
+        ],
+        "center": [
+          1520,
+          203
+        ],
+        "rid": "com.zui.calendar:id/content"
+      },
+      {
+        "bounds": [
+          121,
+          154,
+          2792,
+          253
+        ],
+        "center": [
+          1456,
+          203
+        ],
+        "rid": "com.zui.calendar:id/searchEditText",
+        "text": "对照",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          146,
+          176,
+          201,
+          231
+        ],
+        "center": [
+          173,
+          203
+        ],
+        "rid": "com.zui.calendar:id/icon_search"
+      },
+      {
+        "bounds": [
+          2687,
+          151,
+          2792,
+          256
+        ],
+        "center": [
+          2739,
+          203
+        ],
+        "rid": "com.zui.calendar:id/imageButtonClear",
+        "clickable": true
+      },
+      {
+        "bounds": [
+          2792,
+          107,
+          3040,
+          300
+        ],
+        "center": [
+          2916,
+          203
+        ],
+        "rid": "com.zui.calendar:id/cancel",
+        "text": "取消",
+        "clickable": true
+      }
+    ],
+    "nodes_count": 19,
+    "nodes_mode": "full",
+    "hint": "定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。`next` 是精简可点清单；要按页面文字做断言时加 --full",
+    "event_ids": [
+      1933
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "1200aca351114b3584e215bf328cc45d",
+    "measured_at": "2026-10-09T19:21:19.729",
+    "process_observed_ms": 3621.869,
+    "stages_ms": {
+      "device_import": 331.449,
+      "device_connect": 1089.833,
+      "permission": 884.036,
+      "screenshot": 292.705,
+      "png_save": 58.651,
+      "ui_dump": 72.346,
+      "rotation": 222.495,
+      "xml_save": 4.838,
+      "foreground": 432.249,
+      "meta_save": 2.8,
+      "screen_signature": 26.498,
+      "crash_detection": 122.146,
+      "event_write": 1.23,
+      "node_summary": 0.885,
+      "node_labels": 0.639,
+      "next_targets": 0.063,
+      "serialization": 0.328
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 7414
+  },
+  "response_bytes": 7414,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      1933
+    ]
+  }
+}

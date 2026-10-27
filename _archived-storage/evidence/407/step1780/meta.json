@@ -1,0 +1,39 @@
+{
+  "ts": "2026-10-10T14:24:20",
+  "package": "com.zui.launcher",
+  "activity": ".drawer.NormalLauncher",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "input",
+    "x": 1432,
+    "y": 220,
+    "text": "日历",
+    "mode": "overwrite",
+    "why": "type-calendar"
+  },
+  "call_id": "b04af40110ff44fe87f32add6551e909",
+  "timing": {
+    "call_id": "b04af40110ff44fe87f32add6551e909",
+    "measured_at": "2026-10-10T14:24:20.354",
+    "process_observed_ms": 5752.216,
+    "stages_ms": {
+      "device_import": 321.427,
+      "device_connect": 1081.915,
+      "action": 1054.338,
+      "input_focus_wait": 300.565,
+      "settle_wait": 600.096,
+      "permission": 995.259,
+      "screenshot": 364.818,
+      "png_save": 266.923,
+      "ui_dump": 115.442,
+      "rotation": 213.478,
+      "xml_save": 6.66,
+      "foreground": 345.838
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

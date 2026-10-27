@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-10T10:43:29",
+  "package": "com.zui.calendar",
+  "activity": ".event.info.EventsInfoActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1405,
+    "via": "抢火车票设置",
+    "why": "train"
+  },
+  "call_id": "f95b681c679243a29fa548176354b0fd",
+  "timing": {
+    "call_id": "f95b681c679243a29fa548176354b0fd",
+    "measured_at": "2026-10-10T10:43:29.848",
+    "process_observed_ms": 4617.64,
+    "stages_ms": {
+      "device_import": 309.739,
+      "device_connect": 1163.213,
+      "action": 189.141,
+      "settle_wait": 600.292,
+      "permission": 1069.835,
+      "screenshot": 379.602,
+      "png_save": 91.859,
+      "ui_dump": 72.386,
+      "rotation": 264.77,
+      "xml_save": 2.776,
+      "foreground": 383.377
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

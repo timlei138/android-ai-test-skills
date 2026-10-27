@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-10T12:56:31",
+  "package": "com.zui.calendar",
+  "activity": ".settings.LenovoSettingsBackupActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 754,
+    "y": 1659,
+    "via": "一键备份 #1",
+    "why": "backup1"
+  },
+  "call_id": "7f2da2910adb4b00b1748ba7dbad75a4",
+  "timing": {
+    "call_id": "7f2da2910adb4b00b1748ba7dbad75a4",
+    "measured_at": "2026-10-10T12:56:31.370",
+    "process_observed_ms": 4808.559,
+    "stages_ms": {
+      "device_import": 318.781,
+      "device_connect": 1078.246,
+      "action": 222.418,
+      "settle_wait": 600.24,
+      "permission": 1120.266,
+      "screenshot": 384.233,
+      "png_save": 132.204,
+      "ui_dump": 67.766,
+      "rotation": 284.195,
+      "xml_save": 3.892,
+      "foreground": 519.52
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

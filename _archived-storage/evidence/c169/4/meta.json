@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T18:19:57",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.display.TimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1268,
+    "via": "text=知道了",
+    "why": "关提示框触发权限"
+  }
+}

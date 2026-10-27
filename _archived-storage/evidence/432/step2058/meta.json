@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-14T15:07:16",
+  "package": "com.zui.calendar",
+  "activity": ".reminder.EditCountDownActivity",
+  "rotation": 1,
+  "size": [
+    3840,
+    2560
+  ],
+  "action": {
+    "type": "tap",
+    "x": 3650,
+    "y": 185,
+    "via": "countdown_action_add",
+    "why": "创建倒数日以测有数据分支"
+  },
+  "call_id": "1a30d4f511674f1187ffeec5bfeed57a",
+  "timing": {
+    "call_id": "1a30d4f511674f1187ffeec5bfeed57a",
+    "measured_at": "2026-10-14T15:07:16.513",
+    "process_observed_ms": 13997.618,
+    "stages_ms": {
+      "device_import": 442.951,
+      "device_connect": 1075.491,
+      "action": 141.358,
+      "settle_wait": 600.078,
+      "permission": 5254.502,
+      "screenshot": 474.443,
+      "png_save": 296.232,
+      "ui_dump": 140.365,
+      "rotation": 188.312,
+      "xml_save": 5.362,
+      "foreground": 5272.367
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

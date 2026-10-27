@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T19:22:15",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.temp.TempConfirmTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2880,
+    "y": 203,
+    "via": "rid=btn_finish(完成)",
+    "why": "步骤7: 名称为空时点完成，看是否被拦截"
+  }
+}

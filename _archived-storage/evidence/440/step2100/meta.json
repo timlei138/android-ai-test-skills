@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-15T11:39:34",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.EditTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2891,
+    "y": 203,
+    "via": "rid=action_add_schedule",
+    "why": "用例185步骤2：点加号"
+  },
+  "call_id": "10f89e7e463e451a80707d24c618f3b1",
+  "timing": {
+    "call_id": "10f89e7e463e451a80707d24c618f3b1",
+    "measured_at": "2026-10-15T11:39:34.896",
+    "process_observed_ms": 14169.129,
+    "stages_ms": {
+      "device_import": 428.572,
+      "device_connect": 1205.147,
+      "action": 188.75,
+      "settle_wait": 600.516,
+      "permission": 5368.561,
+      "screenshot": 305.565,
+      "png_save": 230.104,
+      "ui_dump": 72.017,
+      "rotation": 285.269,
+      "xml_save": 4.633,
+      "foreground": 5389.712
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

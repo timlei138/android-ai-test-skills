@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T20:53:31",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimetableListActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 1520,
+    "y": 1585,
+    "via": "rid=btn_set_default",
+    "why": "步骤1/2: 设为当前课程表"
+  }
+}

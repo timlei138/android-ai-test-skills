@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T14:40:06",
+  "package": "com.zui.calendar",
+  "activity": ".AllInOneActivity",
+  "rotation": 1,
+  "size": [
+    3840,
+    2560
+  ],
+  "action": {
+    "type": "tap",
+    "x": 3653,
+    "y": 185,
+    "via": "rid=iv_more",
+    "why": "更多"
+  }
+}

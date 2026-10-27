@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-14T14:35:02",
+  "package": "com.zui.launcher",
+  "activity": ".settings.ZuiLauncherSettings",
+  "rotation": 1,
+  "size": [
+    3840,
+    2560
+  ],
+  "action": {
+    "type": "tap",
+    "x": 3657,
+    "y": 371,
+    "via": "android:id/switch_widget 负一屏首行",
+    "why": "打开负一屏开关"
+  },
+  "call_id": "4e4d9021185b4bfc87563ec62d9e7e47",
+  "timing": {
+    "call_id": "4e4d9021185b4bfc87563ec62d9e7e47",
+    "measured_at": "2026-10-14T14:35:02.635",
+    "process_observed_ms": 14116.162,
+    "stages_ms": {
+      "device_import": 418.4,
+      "device_connect": 1094.504,
+      "action": 147.335,
+      "settle_wait": 600.179,
+      "permission": 5301.82,
+      "screenshot": 470.094,
+      "png_save": 380.488,
+      "ui_dump": 98.086,
+      "rotation": 194.339,
+      "xml_save": 7.74,
+      "foreground": 5312.746
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "ts": "2026-10-09T11:04:30",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.management.TimeSlotSettingsActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "swipe",
+    "from": [
+      1520,
+      1400
+    ],
+    "to": [
+      1520,
+      500
+    ],
+    "dur_ms": 400,
+    "via": "scroll",
+    "why": "继续下滑找课程提醒时间"
+  },
+  "call_id": "151869fda97d41d88e3e11ede6cd05c4",
+  "timing": {
+    "call_id": "151869fda97d41d88e3e11ede6cd05c4",
+    "measured_at": "2026-10-09T11:04:30.888",
+    "process_observed_ms": 5496.994,
+    "stages_ms": {
+      "device_import": 301.479,
+      "device_connect": 1087.307,
+      "action": 1394.217,
+      "settle_wait": 600.271,
+      "permission": 986.729,
+      "screenshot": 313.312,
+      "png_save": 151.638,
+      "ui_dump": 83.999,
+      "rotation": 202.437,
+      "xml_save": 4.593,
+      "foreground": 294.728
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

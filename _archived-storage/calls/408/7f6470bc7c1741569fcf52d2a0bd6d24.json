@@ -1,0 +1,317 @@
+{
+  "call_id": "7f6470bc7c1741569fcf52d2a0bd6d24",
+  "session_id": 408,
+  "tool": "act",
+  "started_at": "2026-10-10T14:39:51.945",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T14:40:00.417",
+  "wall_ms": 8463.722,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "input",
+      "x": 2128,
+      "y": 1216,
+      "text": "第01段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第02段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第03段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第04段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第05段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第06段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第07段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第08段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第09段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第10段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第11段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第12段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第13段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第14段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第15段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第16段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第17段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第18段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第19段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第20段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第21段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第22段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第23段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第24段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第25段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第26段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第27段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第28段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第29段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第30段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. ",
+      "mode": "overwrite",
+      "why": "big-text-final"
+    },
+    "ts": "2026-10-10T14:40:00",
+    "package": "com.zui.calendar",
+    "activity": ".newbuild.NewBuildActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "7f6470bc7c1741569fcf52d2a0bd6d24",
+    "timing": {
+      "call_id": "7f6470bc7c1741569fcf52d2a0bd6d24",
+      "measured_at": "2026-10-10T14:40:00.157",
+      "process_observed_ms": 5859.443,
+      "stages_ms": {
+        "device_import": 318.523,
+        "device_connect": 1244.261,
+        "action": 1078.003,
+        "input_focus_wait": 300.104,
+        "settle_wait": 600.619,
+        "permission": 914.628,
+        "screenshot": 403.023,
+        "png_save": 201.079,
+        "ui_dump": 87.68,
+        "rotation": 246.532,
+        "xml_save": 3.868,
+        "foreground": 346.779
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "rid=backtext",
+      "rid=toolbar_title",
+      "text=新建事件",
+      "rid=action_menu_view",
+      "rid=save_view",
+      "text=完成",
+      "rid=categoryList",
+      "rid=categoryLayout",
+      "rid=categoryIcon",
+      "rid=categoryName",
+      "text=提醒",
+      "text=日程",
+      "text=课程",
+      "text=倒数日",
+      "text=生日",
+      "text=纪念日",
+      "rid=pager_container",
+      "rid=remember_il",
+      "rid=rememberEtDescription",
+      "text=第01段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第02段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第03段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第04段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第05段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第06段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第07段: 这是一段"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\408\\step1811\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\408\\step1811\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\408\\step1811\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          162,
+          203
+        ],
+        "t": "新建事件",
+        "r": "backtext"
+      },
+      {
+        "c": [
+          2847,
+          203
+        ],
+        "t": "完成",
+        "r": "save_view"
+      },
+      {
+        "c": [
+          2128,
+          1074
+        ],
+        "t": "第01段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第02段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第03段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第04段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第05段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第06段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第07段: 这是一段",
+        "r": "pager_container",
+        "s": true
+      },
+      {
+        "c": [
+          2128,
+          1033
+        ],
+        "t": "第01段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第02段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第03段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第04段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第05段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第06段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第07段: 这是一段",
+        "r": "rememberEtDescription"
+      },
+      {
+        "c": [
+          608,
+          472
+        ],
+        "t": "提醒"
+      },
+      {
+        "c": [
+          608,
+          651
+        ],
+        "t": "日程"
+      },
+      {
+        "c": [
+          608,
+          830
+        ],
+        "t": "课程"
+      },
+      {
+        "c": [
+          608,
+          1009
+        ],
+        "t": "倒数日"
+      },
+      {
+        "c": [
+          608,
+          1188
+        ],
+        "t": "生日"
+      },
+      {
+        "c": [
+          608,
+          1367
+        ],
+        "t": "纪念日"
+      },
+      {
+        "c": [
+          2128,
+          1074
+        ],
+        "t": "第01段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第02段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第03段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第04段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第05段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第06段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第07段: 这是一段",
+        "s": true
+      },
+      {
+        "c": [
+          2128,
+          1033
+        ],
+        "t": "第01段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第02段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第03段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第04段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第05段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第06段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第07段: 这是一段",
+        "s": true
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          162,
+          203
+        ],
+        "r": "backtext"
+      },
+      {
+        "i": 1,
+        "c": [
+          2847,
+          203
+        ],
+        "t": "完成",
+        "r": "save_view"
+      },
+      {
+        "i": 2,
+        "c": [
+          608,
+          472
+        ]
+      },
+      {
+        "i": 3,
+        "c": [
+          608,
+          651
+        ]
+      },
+      {
+        "i": 4,
+        "c": [
+          608,
+          830
+        ]
+      },
+      {
+        "i": 5,
+        "c": [
+          608,
+          1009
+        ]
+      },
+      {
+        "i": 6,
+        "c": [
+          608,
+          1188
+        ]
+      },
+      {
+        "i": 7,
+        "c": [
+          608,
+          1367
+        ]
+      },
+      {
+        "i": 8,
+        "c": [
+          2128,
+          1074
+        ],
+        "r": "pager_container",
+        "s": true
+      },
+      {
+        "i": 9,
+        "c": [
+          2128,
+          1074
+        ],
+        "s": true
+      },
+      {
+        "i": 10,
+        "c": [
+          2128,
+          1033
+        ],
+        "s": true
+      },
+      {
+        "i": 11,
+        "c": [
+          2128,
+          1033
+        ],
+        "t": "第01段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第02段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第03段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第04段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第05段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第06段: 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog. 这是一段用于验证日历备注大文本粘贴的长文本。W146 大量文字测试。The quick brown fox jumps over the lazy dog.  第07段: 这是一段",
+        "r": "rememberEtDescription"
+      }
+    ],
+    "nodes_count": 12,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2832
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "7f6470bc7c1741569fcf52d2a0bd6d24",
+    "measured_at": "2026-10-10T14:40:00.323",
+    "process_observed_ms": 6025.16,
+    "stages_ms": {
+      "device_import": 318.523,
+      "device_connect": 1244.261,
+      "action": 1078.003,
+      "input_focus_wait": 300.104,
+      "settle_wait": 600.619,
+      "permission": 914.628,
+      "screenshot": 403.023,
+      "png_save": 201.079,
+      "ui_dump": 87.68,
+      "rotation": 246.532,
+      "xml_save": 3.868,
+      "foreground": 346.779,
+      "meta_save": 4.673,
+      "crash_detection": 112.307,
+      "screen_signature": 38.892,
+      "event_write": 2.103,
+      "node_summary": 0.551,
+      "node_labels": 0.534,
+      "next_targets": 0.036,
+      "serialization": 0.205
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 23508
+  },
+  "response_bytes": 23508,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2832
+    ]
+  }
+}

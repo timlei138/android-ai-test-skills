@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T19:20:48",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.temp.TempConfirmTimetableActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 2810,
+    "y": 1432,
+    "via": "rid=switch_show_non_current_week",
+    "why": "步骤6: 点击显示非本周课程"
+  }
+}

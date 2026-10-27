@@ -1,0 +1,204 @@
+{
+  "call_id": "a68a4a2f0bf341e98b1a13cbef9e65f3",
+  "session_id": 381,
+  "tool": "act",
+  "started_at": "2026-10-09T20:33:55.326",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-09T20:34:01.660",
+  "wall_ms": 6328.228,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 921,
+      "y": 867,
+      "via": "sunday_title=星期日",
+      "why": "pick-sunday"
+    },
+    "ts": "2026-10-09T20:34:01",
+    "package": "com.zui.calendar",
+    "activity": ".dialog.WeekStartDayActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "a68a4a2f0bf341e98b1a13cbef9e65f3",
+    "timing": {
+      "call_id": "a68a4a2f0bf341e98b1a13cbef9e65f3",
+      "measured_at": "2026-10-09T20:34:01.413",
+      "process_observed_ms": 4431.133,
+      "stages_ms": {
+        "device_import": 287.843,
+        "device_connect": 1110.046,
+        "action": 210.636,
+        "settle_wait": 600.358,
+        "permission": 1003.969,
+        "screenshot": 294.629,
+        "png_save": 228.788,
+        "ui_dump": 52.854,
+        "rotation": 223.28,
+        "xml_save": 7.337,
+        "foreground": 328.996
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=content",
+      "rid=toolbar",
+      "desc=关闭",
+      "text=每周起始日",
+      "rid=contentPanel",
+      "rid=radiobutton_layout",
+      "rid=default_setting",
+      "rid=default_checkbox",
+      "rid=default_title",
+      "text=语言区域的默认设置",
+      "rid=start_saturday",
+      "rid=saturday_checkbox",
+      "rid=saturday_title",
+      "text=星期六",
+      "rid=start_sunday",
+      "rid=sunday_checkbox",
+      "rid=sunday_title",
+      "text=星期日",
+      "rid=start_monday",
+      "rid=monday_checkbox",
+      "rid=monday_title",
+      "text=星期一"
+    ],
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\381\\step1177\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\381\\step1177\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\381\\step1177\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          774,
+          371
+        ],
+        "t": "关闭"
+      },
+      {
+        "c": [
+          1520,
+          550
+        ],
+        "r": "default_setting"
+      },
+      {
+        "c": [
+          1520,
+          715
+        ],
+        "r": "start_saturday"
+      },
+      {
+        "c": [
+          1520,
+          867
+        ],
+        "r": "start_sunday"
+      },
+      {
+        "c": [
+          1520,
+          1005
+        ],
+        "r": "start_monday"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          774,
+          371
+        ],
+        "t": "关闭"
+      },
+      {
+        "i": 1,
+        "c": [
+          1520,
+          550
+        ],
+        "r": "default_setting"
+      },
+      {
+        "i": 2,
+        "c": [
+          1520,
+          715
+        ],
+        "r": "start_saturday"
+      },
+      {
+        "i": 3,
+        "c": [
+          1520,
+          867
+        ],
+        "r": "start_sunday"
+      },
+      {
+        "i": 4,
+        "c": [
+          1520,
+          1005
+        ],
+        "r": "start_monday"
+      }
+    ],
+    "nodes_count": 5,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      2199
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "a68a4a2f0bf341e98b1a13cbef9e65f3",
+    "measured_at": "2026-10-09T20:34:01.571",
+    "process_observed_ms": 4595.058,
+    "stages_ms": {
+      "device_import": 287.843,
+      "device_connect": 1110.046,
+      "action": 210.636,
+      "settle_wait": 600.358,
+      "permission": 1003.969,
+      "screenshot": 294.629,
+      "png_save": 228.788,
+      "ui_dump": 52.854,
+      "rotation": 223.28,
+      "xml_save": 7.337,
+      "foreground": 328.996,
+      "meta_save": 7.67,
+      "crash_detection": 107.972,
+      "screen_signature": 40.264,
+      "event_write": 1.688,
+      "node_summary": 0.397,
+      "node_labels": 0.351,
+      "next_targets": 0.019,
+      "serialization": 0.115
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 3285
+  },
+  "response_bytes": 3285,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2199
+    ]
+  }
+}

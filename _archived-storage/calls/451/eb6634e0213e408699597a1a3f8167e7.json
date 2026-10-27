@@ -1,0 +1,197 @@
+{
+  "call_id": "eb6634e0213e408699597a1a3f8167e7",
+  "session_id": 451,
+  "tool": "act",
+  "started_at": "2026-10-15T14:38:37.834",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-15T14:38:52.496",
+  "wall_ms": 14654.891,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 165,
+      "y": 811,
+      "via": "icon_thumbnail(第一张照片)",
+      "why": "选择照片验证可选"
+    },
+    "ts": "2026-10-15T14:38:52",
+    "package": "com.zui.calendar",
+    "activity": ".timetable.crop.CropImageActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "eb6634e0213e408699597a1a3f8167e7",
+    "timing": {
+      "call_id": "eb6634e0213e408699597a1a3f8167e7",
+      "measured_at": "2026-10-15T14:38:52.251",
+      "process_observed_ms": 14040.502,
+      "stages_ms": {
+        "device_import": 408.505,
+        "device_connect": 1169.778,
+        "action": 174.887,
+        "settle_wait": 600.488,
+        "permission": 5380.886,
+        "screenshot": 381.606,
+        "png_save": 207.172,
+        "ui_dump": 56.139,
+        "rotation": 215.991,
+        "xml_save": 2.51,
+        "foreground": 5309.449
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=topToolbar",
+      "rid=btnCancel",
+      "text=上一步",
+      "rid=tvTitle",
+      "text=裁剪",
+      "rid=btnDone",
+      "text=完成",
+      "rid=cropImageView",
+      "rid=bottomControlLayout",
+      "rid=btnRotateLeft",
+      "desc=右转",
+      "text=左转",
+      "rid=btnRotateRight",
+      "text=右转"
+    ],
+    "checkpoint": {
+      "checked": true,
+      "ok": true,
+      "matched": [
+        "activity=CropImageActivity"
+      ],
+      "missed": []
+    },
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\451\\step2396\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\451\\step2396\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\451\\step2396\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          154,
+          189
+        ],
+        "t": "上一步",
+        "r": "btnCancel"
+      },
+      {
+        "c": [
+          2908,
+          189
+        ],
+        "t": "完成",
+        "r": "btnDone"
+      },
+      {
+        "c": [
+          760,
+          1760
+        ],
+        "t": "左转",
+        "r": "btnRotateLeft"
+      },
+      {
+        "c": [
+          2280,
+          1760
+        ],
+        "t": "右转",
+        "r": "btnRotateRight"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          154,
+          189
+        ],
+        "t": "上一步",
+        "r": "btnCancel"
+      },
+      {
+        "i": 1,
+        "c": [
+          2908,
+          189
+        ],
+        "t": "完成",
+        "r": "btnDone"
+      },
+      {
+        "i": 2,
+        "c": [
+          760,
+          1760
+        ],
+        "r": "btnRotateLeft"
+      },
+      {
+        "i": 3,
+        "c": [
+          2280,
+          1760
+        ],
+        "r": "btnRotateRight"
+      }
+    ],
+    "nodes_count": 4,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "event_ids": [
+      3527
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "eb6634e0213e408699597a1a3f8167e7",
+    "measured_at": "2026-10-15T14:38:52.413",
+    "process_observed_ms": 14201.84,
+    "stages_ms": {
+      "device_import": 408.505,
+      "device_connect": 1169.778,
+      "action": 174.887,
+      "settle_wait": 600.488,
+      "permission": 5380.886,
+      "screenshot": 381.606,
+      "png_save": 207.172,
+      "ui_dump": 56.139,
+      "rotation": 215.991,
+      "xml_save": 2.51,
+      "foreground": 5309.449,
+      "meta_save": 6.946,
+      "crash_detection": 91.657,
+      "screen_signature": 49.887,
+      "event_write": 2.076,
+      "node_summary": 0.798,
+      "node_labels": 0.861,
+      "next_targets": 0.048,
+      "serialization": 0.159
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 3181
+  },
+  "response_bytes": 3181,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3527
+    ]
+  }
+}

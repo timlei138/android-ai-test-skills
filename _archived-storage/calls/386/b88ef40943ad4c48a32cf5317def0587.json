@@ -1,0 +1,72 @@
+{
+  "call_id": "b88ef40943ad4c48a32cf5317def0587",
+  "session_id": 386,
+  "tool": "read",
+  "started_at": "2026-10-10T11:15:05.280",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T11:15:19.544",
+  "wall_ms": 14256.125,
+  "result": {
+    "ok": true,
+    "image": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\386\\step1515\\shot.png",
+    "lines": [
+      {
+        "text": "2026年7月5日周日",
+        "score": 1.0,
+        "center": [
+          1517,
+          711
+        ],
+        "norm": [
+          0.499,
+          0.3734
+        ],
+        "bounds": [
+          1293,
+          686,
+          1742,
+          736
+        ]
+      }
+    ],
+    "hint": "center 可直接用于 act.py tap；toast 断言请在 act 后尽快 read（浮层会消失）",
+    "call_id": "b88ef40943ad4c48a32cf5317def0587",
+    "event_ids": [
+      2536
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "b88ef40943ad4c48a32cf5317def0587",
+    "measured_at": "2026-10-10T11:15:19.354",
+    "process_observed_ms": 12357.802,
+    "stages_ms": {
+      "device_import": 303.489,
+      "device_connect": 1118.193,
+      "ocr_import": 403.543,
+      "screenshot": 390.645,
+      "png_save": 87.811,
+      "ocr_initialize": 1064.573,
+      "ocr_inference": 8878.837,
+      "ocr_image_info": 0.545,
+      "ocr_result_conversion": 0.901,
+      "event_write": 4.648,
+      "serialization": 0.198
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 633
+  },
+  "response_bytes": 633,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2536
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-09T11:14:24",
+  "package": "com.zui.calendar",
+  "activity": ".timetable.crop.CropImageActivity",
+  "rotation": 1,
+  "size": [
+    3040,
+    1904
+  ],
+  "action": {
+    "type": "tap",
+    "x": 165,
+    "y": 811,
+    "via": "icon_thumbnail (学生课程表)",
+    "why": "选择学生课程表图片（预期解析成功，解析需联网约20s）"
+  },
+  "call_id": "3d8cbb059a444d2fa66094260369f60c",
+  "timing": {
+    "call_id": "3d8cbb059a444d2fa66094260369f60c",
+    "measured_at": "2026-10-09T11:14:24.756",
+    "process_observed_ms": 6965.334,
+    "stages_ms": {
+      "device_import": 288.972,
+      "device_connect": 1164.763,
+      "action": 190.329,
+      "settle_wait": 3000.281,
+      "permission": 945.848,
+      "screenshot": 362.744,
+      "png_save": 169.048,
+      "ui_dump": 128.806,
+      "rotation": 234.263,
+      "xml_save": 5.558,
+      "foreground": 376.054
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing"
+  }
+}

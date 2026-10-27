@@ -1,0 +1,362 @@
+{
+  "call_id": "cfb27c363dd249aeab535941171647f1",
+  "session_id": 387,
+  "tool": "act",
+  "started_at": "2026-10-10T11:23:07.206",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-10T11:23:14.075",
+  "wall_ms": 6858.186,
+  "result": {
+    "ok": true,
+    "action": {
+      "type": "tap",
+      "x": 2847,
+      "y": 203,
+      "via": "save_view=完成",
+      "why": "save"
+    },
+    "ts": "2026-10-10T11:23:13",
+    "package": "com.zui.calendar",
+    "activity": ".newbuild.NewBuildActivity",
+    "rotation": 1,
+    "size": [
+      3040,
+      1904
+    ],
+    "call_id": "cfb27c363dd249aeab535941171647f1",
+    "timing": {
+      "call_id": "cfb27c363dd249aeab535941171647f1",
+      "measured_at": "2026-10-10T11:23:13.829",
+      "process_observed_ms": 4536.995,
+      "stages_ms": {
+        "device_import": 360.436,
+        "device_connect": 1096.113,
+        "action": 195.188,
+        "settle_wait": 600.145,
+        "permission": 977.325,
+        "screenshot": 295.109,
+        "png_save": 185.176,
+        "ui_dump": 80.778,
+        "rotation": 211.114,
+        "xml_save": 4.926,
+        "foreground": 426.11
+      },
+      "scope": "since runtime import; startup and earlier imports require launcher timing"
+    },
+    "sig": [
+      "rid=action_bar_root",
+      "rid=content",
+      "rid=toolbar",
+      "rid=backtext",
+      "rid=toolbar_title",
+      "text=新建事件",
+      "rid=action_menu_view",
+      "rid=save_view",
+      "text=完成",
+      "rid=categoryList",
+      "rid=categoryLayout",
+      "rid=categoryIcon",
+      "rid=categoryName",
+      "text=提醒",
+      "text=日程",
+      "text=课程",
+      "text=倒数日",
+      "text=生日",
+      "text=纪念日",
+      "rid=pager_container",
+      "rid=reminder_title",
+      "text=请输入提醒",
+      "rid=eventTimeLayout",
+      "text=时间",
+      "rid=eventTimeTxt",
+      "text=2026年10月10日 周六 11:22",
+      "desc=开始日期",
+      "rid=reminder_custom_linearlayout",
+      "rid=reminderTimeLayout",
+      "rid=reminderTimeTxt",
+      "text=任务发生时",
+      "rid=reminderRepeatLayout",
+      "text=重复",
+      "rid=reminderRepeatTxt",
+      "text=不重复",
+      "rid=reminder_repeattype_arrow_custom",
+      "rid=reminderDescription",
+      "text=备注"
+    ],
+    "checkpoint": {
+      "checked": true,
+      "ok": false,
+      "matched": [],
+      "missed": [
+        "activity=AllInOneActivity（实际 .newbuild.NewBuildActivity）"
+      ]
+    },
+    "duration_scope": "core operation through capture/signature/crash check; excludes connection, event write and response",
+    "evidence": {
+      "png": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\387\\step1537\\shot.png",
+      "xml": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\387\\step1537\\dump.xml",
+      "meta": "C:\\Users\\leichao4\\.agents\\skills\\android-ai-test-skills\\storage\\evidence\\387\\step1537\\meta.json"
+    },
+    "next": [
+      {
+        "c": [
+          162,
+          203
+        ],
+        "t": "新建事件",
+        "r": "backtext"
+      },
+      {
+        "c": [
+          2847,
+          203
+        ],
+        "t": "完成",
+        "r": "save_view"
+      },
+      {
+        "c": [
+          2128,
+          469
+        ],
+        "t": "请输入提醒",
+        "r": "reminder_title"
+      },
+      {
+        "c": [
+          2128,
+          642
+        ],
+        "t": "2026年10月10日 周六 11:22",
+        "r": "eventTimeLayout"
+      },
+      {
+        "c": [
+          2128,
+          988
+        ],
+        "t": "不重复",
+        "r": "reminderRepeatLayout"
+      },
+      {
+        "c": [
+          2128,
+          1161
+        ],
+        "t": "备注",
+        "r": "reminderDescription"
+      },
+      {
+        "c": [
+          608,
+          472
+        ],
+        "t": "提醒"
+      },
+      {
+        "c": [
+          608,
+          651
+        ],
+        "t": "日程"
+      },
+      {
+        "c": [
+          608,
+          830
+        ],
+        "t": "课程"
+      },
+      {
+        "c": [
+          608,
+          1009
+        ],
+        "t": "倒数日"
+      },
+      {
+        "c": [
+          608,
+          1188
+        ],
+        "t": "生日"
+      },
+      {
+        "c": [
+          608,
+          1367
+        ],
+        "t": "纪念日"
+      }
+    ],
+    "nodes": [
+      {
+        "i": 0,
+        "c": [
+          162,
+          203
+        ],
+        "r": "backtext"
+      },
+      {
+        "i": 1,
+        "c": [
+          2847,
+          203
+        ],
+        "t": "完成",
+        "r": "save_view"
+      },
+      {
+        "i": 2,
+        "c": [
+          608,
+          472
+        ]
+      },
+      {
+        "i": 3,
+        "c": [
+          608,
+          651
+        ]
+      },
+      {
+        "i": 4,
+        "c": [
+          608,
+          830
+        ]
+      },
+      {
+        "i": 5,
+        "c": [
+          608,
+          1009
+        ]
+      },
+      {
+        "i": 6,
+        "c": [
+          608,
+          1188
+        ]
+      },
+      {
+        "i": 7,
+        "c": [
+          608,
+          1367
+        ]
+      },
+      {
+        "i": 8,
+        "c": [
+          2128,
+          1074
+        ],
+        "r": "pager_container",
+        "s": true
+      },
+      {
+        "i": 9,
+        "c": [
+          2128,
+          1074
+        ],
+        "s": true
+      },
+      {
+        "i": 10,
+        "c": [
+          2128,
+          469
+        ],
+        "t": "请输入提醒",
+        "r": "reminder_title"
+      },
+      {
+        "i": 11,
+        "c": [
+          2128,
+          642
+        ],
+        "r": "eventTimeLayout"
+      },
+      {
+        "i": 12,
+        "c": [
+          2128,
+          815
+        ],
+        "r": "reminderTimeLayout"
+      },
+      {
+        "i": 13,
+        "c": [
+          2128,
+          988
+        ],
+        "r": "reminderRepeatLayout"
+      },
+      {
+        "i": 14,
+        "c": [
+          2128,
+          1161
+        ],
+        "t": "备注",
+        "r": "reminderDescription"
+      }
+    ],
+    "nodes_count": 15,
+    "nodes_mode": "nav",
+    "hint": "下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；需要按页面文字断言时看 nodes（--full 才是全量）。toast 等浮层不在 nodes 里，用 read.py OCR",
+    "checkpoint_hint": "⚠️ 落点与预期不符：未命中 activity=AllInOneActivity（实际 .newbuild.NewBuildActivity）。先判断是「多余的临时弹窗」（不影响主流程 → 关掉继续）还是「用例要的东西不存在了」（主流程被改 → 停止并如实记录）。",
+    "event_ids": [
+      2558
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "cfb27c363dd249aeab535941171647f1",
+    "measured_at": "2026-10-10T11:23:13.972",
+    "process_observed_ms": 4685.867,
+    "stages_ms": {
+      "device_import": 360.436,
+      "device_connect": 1096.113,
+      "action": 195.188,
+      "settle_wait": 600.145,
+      "permission": 977.325,
+      "screenshot": 295.109,
+      "png_save": 185.176,
+      "ui_dump": 80.778,
+      "rotation": 211.114,
+      "xml_save": 4.926,
+      "foreground": 426.11,
+      "meta_save": 6.282,
+      "crash_detection": 97.556,
+      "screen_signature": 30.978,
+      "event_write": 3.918,
+      "node_summary": 0.922,
+      "node_labels": 0.833,
+      "next_targets": 0.064,
+      "serialization": 0.27
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 5868
+  },
+  "response_bytes": 5868,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      2558
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "call_id": "3300de02fa254030828ed6f1e77fa35f",
+  "session_id": 451,
+  "tool": "state",
+  "started_at": "2026-10-15T14:33:57.715",
+  "status": "ended",
+  "expects_event": true,
+  "structured_result_required": true,
+  "returncode": 0,
+  "ended_at": "2026-10-15T14:34:00.132",
+  "wall_ms": 2411.936,
+  "result": {
+    "ok": true,
+    "started": "com.zui.calendar",
+    "hint": "冷启动后旋转锁定可能被解锁，注意 rotation",
+    "call_id": "3300de02fa254030828ed6f1e77fa35f",
+    "event_ids": [
+      3513
+    ],
+    "execution_state": "executed"
+  },
+  "timing": {
+    "call_id": "3300de02fa254030828ed6f1e77fa35f",
+    "measured_at": "2026-10-15T14:34:00.092",
+    "process_observed_ms": 2014.261,
+    "stages_ms": {
+      "device_import": 396.301,
+      "device_connect": 1190.494,
+      "event_write": 2.657,
+      "serialization": 0.043
+    },
+    "scope": "since runtime import; startup and earlier imports require launcher timing",
+    "response_bytes": 234
+  },
+  "response_bytes": 234,
+  "audit": {
+    "complete": true,
+    "outcome": "succeeded",
+    "issues": [],
+    "executed": true,
+    "event_ids": [
+      3513
+    ]
+  }
+}
