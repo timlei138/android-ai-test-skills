@@ -85,4 +85,4 @@
 操作后怎么确认成功。用 **activity / rid / 文本** 判定，不用坐标。
 
 - 进入某界面 → 看 `activity` 字段
-- 保存成功 → 列表出现该条目，或 toast 文本（用 `read.py` OCR，toast 不在 UI 树里）
+- 保存成功 → 列表出现该条目，或 toast 文本（toast 怎么抓见 `_system.md`）

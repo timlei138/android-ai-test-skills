@@ -370,3 +370,17 @@
 - `图库导入流程` --[取消]--> `课程表页-空态`
 - `图库导入流程` --[btnCancel(上一步)]--> `课程表页-空态`
 - `课程表页-空态` --[btnCreateManually(手动创建课程表)]--> `课程表基本信息编辑页`
+- `菜单（弹层）` --[text=课程表]--> `课程表页-周视图`
+- `课程表页-周视图` --[rid=action_curriculum_table_settings]--> `全部课程表列表页`
+- `全部课程表列表页` --[rid=action_add_schedule]--> `课程表基本信息编辑页`
+- `课程表基本信息编辑页` --[desc=转到上一层级]--> `全部课程表列表页`
+- `图库导入流程` --[rid=btn_finish text=完成]--> `全部课程表列表页`
+- `图库导入流程` --[desc=拍摄于 2026年8月7日 上午11:46:18的照片]--> `.timetable.crop.CropImageActivity`
+- `图库导入流程` --[rid=curriculum_card_view text=语文]--> `添加 / 编辑课程页`
+- `添加 / 编辑课程页` --[desc=关闭]--> `图库导入流程`
+- `课程表页-周视图` --[rid=curriculum_card_view text=课程B]--> `课程列表弹层`
+- `课程列表弹层` --[rid=ivEdit desc=编辑]--> `添加 / 编辑课程页`
+- `.timetable.course.EditCourseActivity` --[rid=button1 text=删除]--> `课程表页-周视图`
+- `课程表页-周视图` --[rid=action_curriculum_table_settings desc=课程表设置]--> `全部课程表列表页`
+- `课程表页-周视图` --[rid=curriculum_card_view 语文(周一第1节)]--> `课程列表弹层`
+- `添加 / 编辑课程页` --[desc=关闭]--> `课程表页-周视图`

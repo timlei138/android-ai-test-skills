@@ -138,6 +138,20 @@ adb shell "dumpsys input_method | grep mInputShown"   # true = 键盘正在显�
   最终把设备留在"APP 已卸载"状态。带销毁性的卸载用例，兜底必须走
   「恢复预装应用」UI + 精确匹配校验。
 
+## Toast / 一闪而过的提示：等 1 秒，用 OCR 读
+
+**所有 App 的 toast 都这么抓，没有例外：**
+
+```
+android_act(action="tap", ...)     # 触发
+（等 1 秒）
+android_read()                     # 整屏 OCR，文本里有那一句就算过
+```
+
+OCR 读不清（字太小、被遮挡、背景花）→ `android_vision` 问一句。
+
+**不要用 UI 树判 toast，不要写像素脚本，不要翻 logcat。**
+
 ## 验证要点
 
 - 点击后弹窗应消失，界面回到原应用

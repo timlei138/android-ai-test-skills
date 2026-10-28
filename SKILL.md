@@ -5,6 +5,16 @@ description: Android 真机 GUI 测试。当用户给出测试用例（步骤+�
 
 # Android 测试工具集
 
+> **本文件是作业指导书（约 15k 字符）。**
+> 细节在 `docs/` 下，**需要时再读**：
+>
+> | 文件 | 里面有什么 |
+> |---|---|
+> | `docs/环境与工具.md` | 环境搭建 · 命令怎么写 · 每个工具的全部参数 |
+> | `docs/执行参考.md` | 批量走路径(act steps) · 复跑规格(case_spec) · 崩溃处理 · 报错分档 · 工具约定 |
+> | `docs/知识卡与路径图.md` | 两类资产怎么写 · 视觉通道（读 UI 树拿不到的文字）|
+> | `docs/history/` | 历史结论，新问题别从这里找 |
+
 ## 你的角色：执行测试的人
 
 **你是测试员，不是分析员。** 按用例规定的步骤操作，如实记录看到的结果。
@@ -22,6 +32,11 @@ description: Android 真机 GUI 测试。当用户给出测试用例（步骤+�
 - ❌ **不自己造场景/造数据**——设备上发生了什么就记什么
 - ❌ **不做多余动作**——用例没要求的操作一律不做，**收尾清理也不例外**（见下）
 - ❌ **不重复试探**——崩了就是崩了，不要为了"确认复现率"反复触发
+
+## 只管屏幕——硬件类预期记 BLOCKED
+
+看到硬件类预期（声音、连接、传感器、成像画质、性能指标）就记 BLOCKED，
+写明"超出工具层能力"。**不要用 logcat / dumpsys 硬凑证据。**
 
 记录里只写**事实**："打开即闪退，屏幕回到桌面，进不去界面"。
 不要写"因为 XX 异常导致 YY 越界"这类归因。
@@ -66,158 +81,6 @@ description: Android 真机 GUI 测试。当用户给出测试用例（步骤+�
 （如"现存 1 个课程表：测试课表A（当前）；日历有 1 个事件：测试会议"），
 下一条用例据此判断前提是否满足。**清理过就要在会话里记录在案**（清什么、为什么清、清之前是什么状态）。
 
-## 环境与工具参数
-
-**首次搭建**：`pwsh -File scripts/setup.ps1`（检查 adb/设备 → 建 venv 装依赖 → u2 init → 自检）
-**各工具的完整参数表** → 见 `docs/环境与工具参数.md`
-
-⚠️ **Python 需 3.10 ~ 3.12**（**有上限，不是 ≥3.10 都行**）：
-
-| 边界 | 原因 |
-|---|---|
-| ≥3.10 | `pillow 12` 要求 `>=3.10` |
-| **≤3.12** | **`rapidocr-onnxruntime` 要求 `<3.13`** —— 3.13 上 pip 直接报 "No matching distribution found"（最高只到 1.2.3） |
-
-`setup.ps1` 会自动挑出合格的解释器；机器上若只有 3.13，它会**列出被拒的解释器和原因**。
-指定解释器：`pwsh -File scripts/setup.ps1 -Python "C:\Python312\python.exe"`
-
-### 命令前缀（**用 env.py 报出来的解释器**）
-
-下面所有命令都写成 `python xxx.py` 的简写。**实际执行时用**：
-
-```powershell
-"<env.py 报的 python>" "<target>\tools\xxx.py"
-```
-
-**开工第一条命令就是 `env.py`**，它会告诉你：
-
-```
-★ 用这个解释器跑后面的所有命令：
-  D:\...\.venv\Scripts\python.exe        <- 就是它
-运行产物目录：
-  storage  = <target>\storage
-```
-
-拿到那个路径，**后面所有命令都用它**。别用 PATH 里的 `python` ——
-那是系统解释器，大概率没装 `uiautomator2`/`adbutils`，跑起来 ImportError
-（实测那台机器上 `python` 是 3.13.3，一个依赖都没有）。
-
-**为什么不在文档里写死解释器路径**：哪个 venv 装了依赖是**运行时状态**。
-本机是安装位置的 venv 有、target 的空；别人跑过 `install.ps1` 就反过来。
-让 `env.py` 报，换机器自动跟着对。
-
-多设备加 `--serial`；**所有公共参数写在子命令前后都可以**。
-
-### 命令写法：看 `session start` 返回的 `env`
-
-**不要假设平台，也不要自己去探测 —— 工具已经探好了。**
-
-`session.py start` 的返回里有一个 `env` 字段：
-
-```json
-{
-  "env": {
-    "platform": "win32",
-    "shell": "powershell",
-    "path_sep": "\\",
-    "tmp_dir": "C:\\Users\\xxx\\AppData\\Local\\Temp",
-    "hint": "当前是 Windows（PowerShell）。`ls -la` / `head` / `&&` / `2>/dev/null`
-             会失败 —— 用 `dir` / `Get-Content -TotalCount` / `;` / `2>$null`。
-             但 `adb shell \"...\"` 里的内容仍是 Android 的 Linux，照常用 grep。"
-  }
-}
-```
-
-**按 `shell` 决定后面所有命令的写法：**
-
-| `shell` | 怎么写 |
-|---|---|
-| `bash` / `zsh` | `ls -la`、`head -20`、`&&`、`2>/dev/null`、`/tmp` 随便用 |
-| `powershell` | 见下面那张对照表 |
-| `unknown` | 先用最简单的写法试一条，看它成不成，再决定 |
-
-**`tmp_dir` 也直接用它** —— 别写死 `/tmp` 或 `$env:TEMP`。
-
-> 工具脚本本身（`python tools/*.py`）是**跨平台**的，不用改写法：
-> `python tools/act.py tap --x 1 --y 2` 在哪个系统上都一样。
-> 需要适配的只有**辅助命令**（列目录、看文件、过滤输出）。
->
-> ⚠️ 但**解释器**要挑对：用 `<target>\.venv\Scripts\python.exe`，
-> 不是 PATH 里的 `python`（那上面没装依赖）。
-
-### `shell` 是 powershell 时
-
-Windows 的 PowerShell 5.1 缺一些 bash 惯用工具：
-
-| bash 习惯 | PowerShell 替代 |
-|---|---|
-| `ls -la dir` | `Get-ChildItem dir` / `dir dir`（别名不认 `-la`）|
-| `head -20 f` | `Get-Content f -TotalCount 20` |
-| `tail -50 f` | `Get-Content f -Tail 50` |
-| `grep -r x .` | `Select-String -Path * -Pattern "x"` |
-| `cmd1 && cmd2` | `cmd1; cmd2`，或 `if ($?) { }` |
-| `cmd 2>/dev/null` | `cmd 2>$null` |
-| `cmd \| head` | `cmd \| Select-Object -First 20` |
-| `sed -n '1,20p' f` | `Get-Content f -TotalCount 20` |
-| `which x` | `Get-Command x` |
-| `/tmp/x` | `$env:TEMP\x` |
-| `export A=1` | `$env:A = "1"` |
-
-**但以 `env.shell` 为准，别看到 "win32" 就一律换掉** ——
-有些 Windows 环境装了 Git Bash 或 WSL，`ls -la` 反而能用。
-`detect_shell()` 已经替你判过：它先看 `SHELL` 环境变量里有没有 bash，
-有就报 `bash`（哪怕 `platform` 是 win32）。
-
-### 唯一不需要看 `env` 的例外
-
-`adb shell "..."` **里面的内容永远是 Android 的 Linux**，与宿主平台无关：
-
-```bash
-# ✅ 一定对（不管你在 Windows 还是 Linux 上跑）
-adb -s <serial> shell "dumpsys window | grep mCurrentFocus"
-
-# ❌ 这个 grep 在宿主上跑，要看探测结果
-adb devices | grep 51e8
-```
-
-记法：**引号里给手机跑的永远是 Linux；引号外给宿主的，看探测结果。**
-
-### 动作清单（act.py 的 8 个子命令）
-
-**先看这张表，别自己造参数名。** 参数是**子命令级**的，不是全局的 ——
-`tap` 有 `--via` 但 `back` 没有，套错会报
-
-```
-usage error; device untouched
-```
-
-（这个错**没碰设备**，重发即可，但白跑一轮。）
-
-| 子命令 | 关键参数 | 用途 |
-|---|---|---|
-| `tap` | `--x --y` · `--via rid=xxx` · `--repeat N --gap 毫秒` · `--watch` | 点击。`--repeat` 用于"连点 ±1"这类，**别自己循环** |
-| `longclick` | `--x --y` · `--via` · `--watch` | 长按（编辑菜单、拖拽前的抓手） |
-| `input` | `--x --y` · `--text` · `--append` · `--no-click` | 填字。默认先点输入框再打；`--no-click` 是"已经聚焦了" |
-| `swipe` | `--from x,y --to x,y --dur 毫秒` · `--watch` | 滑动。**滚动列表用它** |
-| `back` | 只有 `--why` | 系统返回。**退出当前页最可靠**，优先于找那个返回按钮 |
-| `home` | 只有 `--why` | 回桌面 |
-| `key` | `--code N` | 其他键（音量、电源…），`N` 是 Android keycode |
-| `steps` | `--from --to --dry-run --max-hops --resume-from` | 按路径图批量走已知步骤 |
-
-**`--watch`（tap/longclick/swipe 有）**：动作后**等指定控件出现**再返回，
-超时用 `--watch-timeout`。用在"点了之后要等加载"的场景，
-比"点了再 observe 一次"省一个往返。
-
-公共参数（每个都有）：`--name`（证据名）`--why`（理由，会进时间轴）
-`--expect`（检查点）`--settle`（稳定窗口）`--perm-action`
-
-> ⚠️ **`back` / `home` / `key` 不接受 `--via --x --y`** —— 它们不点屏幕。
-> 实测有人按 `tap` 的格式传 `--via`，直接 usage error。
-
-> ⚠️ **滚动不要用 `tap` 硬点列表项**，用 `swipe`；
-> 但**拨滚轮类控件**（日期/时间选择器）别用 `swipe` —— 有惯性会过冲，
-> 用 `tap --repeat N`.
-
 ## 最小工作流
 
 ```powershell
@@ -255,10 +118,31 @@ python session.py finish  --status FAIL --summary "<结论 + 设备当前状态>
 
 - **中文长文本用 `@文件` 传参**（`--input @case.txt`，UTF-8）
 - finding 的 expect/actual 必须是**具体判据**（dump 字段值 / OCR 文本），不能只写"正常"
-- PASS/FAIL/WARN finding 必须用 `--event-id` 绑定本会话实际证据，ID 从工具返回的 `event_ids` 选择；多个证据重复传该参数，不默认选最近事件。
+- PASS/FAIL finding 必须用 `--event-id` 绑定本会话实际证据，ID 从工具返回的 `event_ids` 选择；多个证据重复传该参数，不默认选最近事件。
 - **判据以用例指定的界面为准**：用例说"在月视图/周视图界面观察"，就必须真去那些界面看。
   数据库查询（如 `content query`）只能作**辅助旁证**，不能替代界面观察得出的结论；
   两者不一致时（界面没有但库里有，或反之）要在 actual 里**写明这个矛盾**。
+
+#### ⭐ 多条断言一次写完（不要一条一条调）
+
+**几条预期就写一个 JSON，一次提交**：
+
+```powershell
+$j = @'
+[
+  {"status":"PASS","expect":"预期1 打开课程表页面","actual":"activity=TimetableActivity","event_id":[13]},
+  {"status":"FAIL","expect":"预期2 顶部有「添加课程」引导","actual":"79 个节点 + 整屏 OCR 都没有该文案","event_id":[15,16]}
+]
+'@
+Set-Content -Path "<target>\storage\tmp\facts.json" -Value $j -Encoding utf8
+& "<python>" "<target>\tools\session.py" findings-batch --file "<target>\storage\tmp\facts.json"
+```
+
+**为什么**：实测 176 那轮逐条调了 9 次 `finding`，每次间隔约 6 秒
+（AI 思考 + 进程冷启动），**光记断言就 53 秒**。一次写完省掉这个开销。
+
+**`event_id` 必须是本会话真事件**（从 `android_observe` / `android_act` 返回的
+`event_ids` 里拿），拿错了整批会被拒。
 
 ### ⚠️ 一批数据一次造完，再逐条操作
 
@@ -286,25 +170,6 @@ N 次点按在**一个进程内**完成：
 - ❌ 不要用外层 shell 循环包 N 次 `run.py`：每次冷启动 Python 3-6 秒，极易撞命令超时；
   而**超时会让动作"执行了但没记账"**，会话随即被判 `recording incomplete` 而作废
 - ❌ 拨滚轮也别用 `swipe`：有惯性会过冲，且每次都要一次工具往返
-
-### ⚠️ 工具报错分两档：只有"可能已执行"的才作废会话
-
-判据**不是**"有没有报错"，而是**这次调用有没有碰过设备**：
-
-| 档位 | 典型形态 | 怎么认 | 处置 |
-|---|---|---|---|
-| **未执行**<br>（确定没碰设备） | 参数写错、选择器用错<br>（argparse exit 2） | 返回 `usage error; device untouched`，<br>`executed: false` | **改对参数直接重试**，会话不受影响 |
-| **可能已执行** | `recording_failed`、`audit_failed`、<br>无结构化结果但已采到 timing | `recording_errors/` 有 marker，<br>或 `executed` 非 false | **禁止重放**。保存证据，<br>记 ERROR/BLOCKED 收尾 |
-
-```powershell
-# 会话被锁时的报错长这样：
-#   Session N has incomplete recording. Resolve it and finish ERROR/BLOCKED; do not replay actions.
-# 先查清是哪一档，再决定"重试"还是"收尾"：
-python audit.py --session-id <N>     # 看 failed_attempts[].issues / executed
-```
-
-> ⚠️ **不确定就按"可能已执行"处理**（保守方向）。只有工具明确回报
-> `device untouched` / `executed: false` 时才可以重试。
 
 ### ⚠️ `act.py` 只按坐标点击，没有 text/desc 选择器
 
@@ -404,65 +269,6 @@ python act.py tap --x 1520 --y 1717 --via "rid=btnCreateManually" \
 `assets/knowledge/paths/<pkg>.md`，换设备、换人、换会话才用得上。
 写进对话里的东西，下个会话就没了。
 
-### ⚠️ 已知路径用 `act steps` 批量走，不要逐步"看一眼想一下"
-
-**第一次**走某条路径要逐步探索（顺便把边采进路径图）。
-**之后**再走同一条路（第二轮、或同事拿到同一份 SKILL）—— 用 `act steps` 一次走完。
-
-```powershell
-python act.py steps --from "日历首页" --to "课程表基本信息编辑页" --dry-run   # 先看计划
-python act.py steps --from "日历首页" --to "课程表基本信息编辑页"             # 真跑
-python act.py steps --from "日历首页" --to "课程表基本信息编辑页" --resume-from 3  # 失败后续跑
-```
-
-**为什么快**：会话时长的大头是两次调用之间的判断（**实测占 58~64%**）。
-批量走时这些判断一次做完，`device_connect` 也只付一次：
-
-| | 逐步 3 步 | `act steps` |
-|---|---|---|
-| 调用次数 | 3 | **1** |
-| 固定开销 | ~7.2s | **1.1s** |
-| 判断时间 | ~30s | **0** |
-| 合计 | ~37s | **7.6s** |
-
-**跨设备安全**：计划里**只存锚点**（rid/desc/text），坐标**每次现场派生**。
-`--dry-run` 的输出可以直接检查这一点。
-
-> ⚠️ **一个弹框的价值要一次性榨干。** 既然已经打开了，就**在同一轮里**把
-> "默认值 / 值域两端 / 确定生效 / 取消不修改"全测完再退 ——
-> **不要**为每个小点重开一遍弹框（每次重开 = 2-3 次调用 + 一次重新定位）。
->
-> ⚠️ **`--expect` 几乎不额外耗时**（实测带 11.1s vs 不带 13.1s；命中后反而省掉一次
-> `observe` 确认）。所以**别为了提速去掉 `--expect`** —— 该省的是**调用次数**，不是判据。
->
-> ⚠️ 也别走另一个极端：`act steps` 只适合**已经跑熟**的往返路径；
-> 探索新页面**仍然要**逐步走并采点，跑完**立刻把路径固化进路径图**。
-
-> **⚠️ 换设备 / 换版本时，路径图的"锚点"要重新采，不能直接信**
->
-> 路径图存 `rid/desc/text` 不存坐标 → 换分辨率**不用改图**，坐标每次现场派生。
-> 但这些**会**随设备/版本变，换机后第一轮要留意：
->
-> | 会变的 | 例子（真实踩到） |
-> |---|---|
-> | **控件 rid 本身** | 图里记 `rid=layout_time_settings`，换版本可能改名 |
-> | **同一控件的多态** | `android:id/button1` 在 A 页是"确定"、B 页是"删除" |
-> | **入口去向** | 图里写"这行 → 编辑页"，换了版本可能直接跳别的页 |
-> | **弹框按钮 rid** | 日期框是 `left_button`/`right_button`，总周数是 `button1`/`button2` |
->
-> 所以**换设备后的第一轮 = 重新探路**：照旧逐步走、带 `--expect`，
-> 检查点会当场报哪条边对不上（它报**事实**，不猜）。
-> 别直接 `act steps` 一把梭 —— 检查点能拦住错误落点，
-> 但你会把时间花在"为什么每步都 miss"上，先探一轮更快。
-> 对不上的边用 `session.py paths` + `paths-apply` 修正 —— 图越跑越准，不是一次写死。
-
-**四条纪律**：
-
-- **先从起点出发**：工具先认"在不在起点"，不在就明确报错（同 activity 的空态/周视图靠 `rid`/`text` 区分）
-- **每步仍落证据**：批量**不降低取证标准**，每步有自己的事件和截图，finding 照常 `--event-id` 绑定
-- **失败即停**：停在真实位置，报告第几步、期望什么、实际什么
-- **路径图没这条边 → 先手工跑**：`steps` 只走**已采到**的边；没边就逐步来，跑完用 `session.py paths` + `paths-apply` 补进图
-
 ### ⚠️ 开场三步：读前提 → 定位 → 决定起点
 
 **每条用例开始时，先「定位」，不要条件反射地从首页重来。**
@@ -548,62 +354,6 @@ python act.py steps --from "日历首页" --to "课程表基本信息编辑页" 
   "tip": "执行前先定位：路径图是节点图（节点=落脚点，边=认什么锚点→去哪）"
 }
 ```
-
-### 📋 复跑先读 `case_spec`：这条用例的规格与坑
-
-**只要这条用例跑过一次并沉淀了规格，`start` 返回里就会多一个 `case_spec`**：
-
-```json
-"case_spec": {
-  "yaml": "assets/cases/<应用>/….yaml",  "md": "assets/cases/<应用>/….md",
-  "title": "...", "steps": 4,
-  "step_index": [
-    {"step": "s1", "desc": "点周视图的空白小节，进入新建课程页", "pitfalls": 2,
-     "landing": {"activity": "...EditCourseActivity",
-                 "node_text": {"rid": "toolbar_title", "equals": "新建课程"}}},
-    ...],
-  "last": {"session": 448, "status": "BLOCKED"},
-  "tip": "复跑先读这份规格…别从零重探 —— 首轮踩过的坑都在这里。",
-  "resume_tip": "起点不一定在第一步…拿当前屏幕比对各步 landing，从上一步的下一步接续。"
-}
-```
-
-**🔴 拿到就先去读那个 YAML（或渲染好的 MD，更易读）**，别急着 observe。
-它里面有首轮实测沉淀的：每步的**入口判据**、**那一步专属的坑**、以及真实坐标。
-
-```
-start --case N
-  ├─ case_spec     → 本用例的步骤 + 每步的坑 + 落点判据   ← 主路径，先读
-  └─ knowledge_hint→ 知识卡（页面维度）/ 路径图（认路）
-```
-
-**起点不一定在第一步。** 复跑时设备可能停在链路中间 —— 拿当前屏幕比对
-`step_index` 里各步的 `landing`，对上哪一步就说明已完成到那里，**从下一步接续**。
-若某步 `landing` 与当前屏幕冲突，是**前置条件不满足**（按该步 `on_fail` 处理），
-**不要跳步**。
-
-> ⚠️ 没有 `case_spec` 属正常（首次跑这条用例，或还没沉淀规格），
-> 按常规流程从零执行即可 —— 跑完记得把坑写进 YAML。
-
-**路径图是一张有穷的节点图** —— 节点 = 落脚点，边 = 「认什么锚点 → 去哪个节点」。
-`nodes` 就是**节点索引**（本 App 约 13 个，可穷举）。用法：
-
-```
-1. 认自己在哪  → 对照 nodes，看 activity + **屏幕上有什么锚点**
-2. 检索该节点  → grep 路径图里 `## <节点名>` 那一节
-3. 找出边      → 表里「→ 去向」就是要去的节点名
-4. 点过去      → 按锚点走定位降级链：rid → rid+text → text/desc → 现场坐标
-```
-
-```
-✅ nodes 里有「课程表页-空态」→ grep 该节 → 点 btnImportFromGallery
-❌ 从首页开始逐层瞎点试探
-```
-
-> ⚠️ **同一个 activity 可能对应多个节点**（如 `TimetableActivity` 既是
-> 「课程表页-空态」又是「课程表页-周视图」）→ **靠锚点区分，不能靠 activity**。
-
-> `nodes`/`sections` 是**标题索引**，拿标题去卡里检索，**只读命中的 1~3 节**，不整卡读。
 
 ## 执行节奏（省时间、别丢弹窗）
 
@@ -774,55 +524,6 @@ python act.py --serial <s> tap --x ... --why "允许分支"
 2. **第二轮必须先 `revoke`**：权限已授予时系统**不会再弹窗**，不撤销就会卡住。
 3. **第二轮记得清掉 deny 意图**（`perm-intent --clear`），否则默认同意会被覆盖。
 
-## 崩溃：一次即 BLOCKED，工具层已硬性拦截
-
-**被测/关联包只要崩过一次，立刻停止后续步骤并 finish BLOCKED。**
-
-- 偶发崩溃与必现崩溃在"已经崩过"这件事上没有区别——**继续跑等于把后续步骤
-  建立在不可信的环境上**，得到的"通过"没有意义
-- **崩了就是崩了**，不要为了"确认是不是必现"反复重启重试
-- **无关包（`other`）崩溃不阻断**，只在记录里说明
-
-**这不是纪律，是工具行为**：崩溃被检测到的瞬间，工具自动把会话置为**终态**，
-之后你**发不出任何观测/动作命令**（退出码 3）：
-
-```json
-{
-  "ok": false, "terminated": true, "session_id": 21,
-  "error": "会话 #21 已终止，拒绝执行 act tap",
-  "reason": "被测包 com.zui.calendar 发生CRASH（已取证 crash.log）→ 立即停止后续步骤…",
-  "hint": "…不要做多余的事。请记 BLOCKED finding 并 finish --status BLOCKED 收尾。"
-}
-```
-
-**看到 `terminated: true` 就不要重试、不要换个参数再发一遍**。此时只做两件事：
-
-```powershell
-python session.py finding --status BLOCKED --expect "<用例的预期>" --actual "打开就闪退，屏幕回到桌面，进不去界面"
-python session.py finish  --status BLOCKED --summary "App 打开即闪退，用例未执行；证据 <crash.log 路径>"
-```
-
-> **只记现象，不记归因**：写"打开就闪退、回到桌面、进不去"就够了。
-> **不要**去读日志分析异常类型、调用栈、是哪行代码越界——那是开发的活。
-> `crash.log` 作为证据路径附上即可，内容不用你解读。
-
-**取证复核例外**：`read.py --image <已有截图>`、`vision.py --image <已有截图>` 和
-`logcat.py crash` 放行；state 改状态操作、logcat clear/setup 仍被拦截。
-**确需继续**必须先解除终态且给出理由：`session.py resume --id 21 --note "理由"`
-（不带 `--note` 会被拒绝，且不会清除终态）。
-
-### 退出码
-
-| 码 | 含义 | 该怎么办 |
-|---|---|---|
-| `0` | 正常执行 | 看 JSON 结果继续 |
-| `1` | 执行失败（设备未连、参数错等） | 先排环境，别硬重试 |
-| `3` | **会话已终止，被硬性拦截** | 立即 finish BLOCKED，**不要重试** |
-
-- `observe` 也检测崩溃（不只是 `act`）：App 启动即崩时往往只会反复 observe
-  （还没机会 act），检测挂在 act 上就永远抓不到。
-- `finish` 返回 `crash_events` 计数；因崩溃终止而结论不是 BLOCKED 时拒绝提交。
-
 ## 遇阻问人（硬性纪律）
 
 同一目的 **2 次不收敛**、或遇到看不明白的画面 → **停下问人，禁止硬试**：
@@ -838,15 +539,17 @@ python session.py resume --id <N> --note "用户答复：入口在'更多'里"
 
 ## Session 判定规则（结论只在 finish 时写）
 
-`running / paused / waiting` 是**中间态**，不是结论；结论 ∈ PASS / FAIL / WARN / BLOCKED / ERROR：
+`running / paused / waiting` 是**中间态**，不是结论；结论只有四种：
 
 | 情形 | 结论 |
 |---|---|
-| 全部断言通过 | PASS |
-| 有断言 FAIL（有 dump/OCR 证据） | FAIL |
+| 全部预期都验到且符合 | **PASS** |
+| **任何一条预期不符**（有 dump/OCR/截图证据） | **FAIL** |
 | 前置不满足 / 被测或关联包崩溃(ANR) / 控件找不到且人确认无法继续 / 用户手动终止 | **BLOCKED** |
-| 通过但有值得记录的事项 | WARN |
-| 工具层/环境异常导致会话未完成执行（断连等） | ERROR |
+| 工具层/环境异常导致会话未完成执行（断连等） | **ERROR** |
+
+**没有 WARN 这个中间态。** 不符合就是 FAIL，不要用 WARN 回避判定。
+"部分符合"也是 FAIL —— 在 actual 里写清哪条符合、哪条不符即可。
 
 `finish` 在提交前校验：无断言、PASS 与失败/阻塞断言矛盾、缺证据、记录不完整等情况会返回失败（退出码 1），结论与用例统计不提交，当前会话保留。
 修正断言或结论后再收尾；已提交会话不能重复 finish。`self_check` 保留为提交后的附加警告（如路径草稿采集失败），不是提交校验的替代。
@@ -866,7 +569,7 @@ python session.py resume --id <N> --note "用户答复：入口在'更多'里"
 ```
 
 启动器在启动工具前记录调用，结束后对账；缺段样本不能作为完整基线。完整记录的拒绝/失败尝试单列 `failed_attempts`，不得当作成功执行；`audit.ok` 仅表示记录完整性。直接调用仍可执行，但没有独立调用清单，不能据此声称基线完整。
-observe/act/read 返回 `call_id`、`event_ids` 与执行状态；计时默认后台落盘，不增加正常返回。详细参数与计时范围见 [环境与工具参数](docs/环境与工具参数.md)。
+observe/act/read 返回 `call_id`、`event_ids` 与执行状态；计时默认后台落盘，不增加正常返回。详细参数与计时范围见 [环境与工具](docs/环境与工具.md)。
 
 ### ⚠️ 用例里的预期，**一条没验证到就不能判 PASS**
 
@@ -881,48 +584,55 @@ observe/act/read 返回 `call_id`、`event_ids` 与执行状态；计时默认�
 
 **"没验到"和"验到了且通过"是两回事** —— 前者一律不算通过。
 
-## 工具使用约定
+## 收尾时：这轮踩的坑要不要写进知识卡
 
-- **证据链是工具强制的**：observe/act 每次调用自动归档
-  `storage/record/<uuid>/evidence/<name>/{shot.png, dump.xml, meta.json}`，记录里引用这些路径即可
-- **坐标现场推导**：act 的 x/y 从**本次**返回的 `next` 里取，别复用旧坐标
-  （换设备/换方向就失效）
-- **定位顺序铁律**：`rid` > `rid`+`text` > `text`/`desc` > 坐标。
-  **坐标是最后手段，不是备选方案。**
-  - **同机同用例坐标照样会漂**：实测同一台设备、同一条用例，
-    `llCourseTime` 一次记在 y=965、复跑实测 y=1022；
-    同一个 `button1` 在「课程时间」弹框 y=1367、在「上课周数」弹框 y=1573——
-    **差 200px 足以点到隔壁控件**。
-  - ⇒ **用例沉淀里不要写 `coords_hint` 这种"实测坐标值"**：
-    它既不权威（会变），又极易被当成权威照抄。
-    （真实事故：抄了 YAML 里一个坐标去点 `llCourseTime`，
-    实际点到 `llCourseWeeks`，开错弹框、白扔调用量。）
-  - **只有一种情况可以用坐标**：元素**既无 rid 也无 text/desc**（自绘控件、
-    空白格子）。这时也要写成**规则**（如"5 列 × 2 行，x = 起点 + 间距×i"）
-    并**每次从 dump 的 bounds 现算**，而不是记死值。
+**知识卡是给下一个跑同 App 的 AI 看的。** 只记两样东西：
 
-- **换设备后路径图要重验** → 见上面「已知路径用 `act steps` 批量走」一节的换机说明
-- **同 rid 多态要看文字**：一个 rid 可能对应多个含义（如 `android:id/button1` =
-  删除/完成/确定；`action_schedule` = 编辑/取消）→ **必须按 `t` 判断**。
-  详见路径图开篇「同 rid 多态」
-- **点无文字的多态锚点后必须回读状态**：`checkbox_select` / `icon_thumbnail` 这类
-  没有文字的锚点，「点中」只能靠状态确认（如勾选的 `checked`）——
-  **点完立刻读一次状态，不能假设点中了**（点空会导致后续步骤白跑）
-- **判页面切换**看 `activity` 字段，别用文字存在性（菜单项与目标页标题可能同名）
-- **设备没连上/工具报错**：stderr 有原因，先排环境，别硬重试
-- **别手工删 `storage/record/<uuid>/evidence/` 下的目录**：数据库事件仍引用那些图，
-  删了记录页会全是空白。要清走 `cleanup.py`（它先查引用，被引用会拒绝）
+- **操作经验** —— 怎么找到、怎么操作才有效
+- **观察事实** —— 实际是什么样（不带好坏判断）
 
-## 深入阅读（需要时再读）
+### 流程
 
-| 文件 | 什么时候读 |
-|---|---|
-| `scripts/setup.ps1` | 首次搭建环境（一键：adb/设备检查 → venv → 依赖 → u2 init → 自检） |
-| `docs/环境与工具参数.md` | 查某个工具的参数 / 环境细节 |
-| `docs/知识卡与路径图.md` | 查卡、写卡、路径图模型 |
-| `docs/视觉通道.md` | 需要工具级视觉断言（无对话场景） |
-| `assets/knowledge/_system.md` | 前台包名不在任何 App 卡时（系统界面兜底） |
+```
+① 有值得记的吗？没踩新坑、没发现卡里写错 → 直接 finish，不用管
+② 有 → android_read_file(card="<包名>")  读整张卡
+③ AI 自己对比：这条卡里是不是已经有了（同义/改写也算有）
+     有 → 跳过，不要提
+④ 只把「确实没有的」提上去 —— **一次调用提交全部，不要逐条调**：
+     session.py kb-propose --card <包名> \
+       --fact "..." --fact "..." --fact "..." \
+       --evidence 16 --evidence 17
+```
 
-> ⚠️ 改过 `scripts/*.ps1` 后跑 `pwsh -File scripts/check_bom.ps1`：
-> Windows PowerShell 5.1 读无 BOM 的 `.ps1` 会按 GBK 解析，中文/emoji 会直接语法崩溃；
-> 多数编辑工具重写文件时会丢 BOM（`-Fix` 可自动补回）。
+**`--fact` 可以重复传。** 实测 176 那轮逐条调了 4 次 `kb-propose`
+（每次约 6 秒），合并成 1 次省 18 秒。
+
+**第 ③ 步必须你来做** —— 「这条卡里有没有」是语义判断，
+工具只能做完全匹配，同一件事换个说法它就认不出来了。
+
+### 什么算「值得记」
+
+```
+✅ 卡里写的和实际不符（发现卡错了）
+✅ 卡里没提，但我踩了坑
+✅ 卡里没提的行为规律
+
+❌ 正常走通的流程（卡里已经说了）
+❌ 用例特定的数据（"测试课表176"、"第9周"）
+❌ 坐标 / 像素 / bounds（换机型就废）
+❌ "会话473 实测"这种（会话号对下次没用）
+❌ 该怎么判 PASS/FAIL（判定权在执行者手上）
+```
+
+**最后三条工具会主动拦下来并告诉你为什么。**
+
+### 人确认
+
+草稿在 `storage/pending_kb.md`。**主 Agent 会把它报给用户，由用户决定：**
+
+```powershell
+session.py kb-list                  # 看有哪些
+session.py kb-apply --only 1        # 写入第 1 条
+session.py kb-reject                # 全部丢弃
+```
+
