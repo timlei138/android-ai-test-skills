@@ -404,13 +404,29 @@ def knowledge_hint(package: str | None, shown: bool = False,
                 cross[other] = f"assets/knowledge/{other}.md"
 
     out: dict = {
-        "card": f"assets/knowledge/{package}.md" if card.is_file() else None,
+        # ★ 直接给「怎么调」，不给文件路径。
+        #
+        #   2026-10-28 实测：原来这里是 `"card": "assets/knowledge/<包名>.md"`
+        #   （一个文件路径）。AI 看到路径就用 `android_read_file(path=...)`
+        #   整份读卡 —— 一轮读了 12 次，把整卡和整路径卡各读好几遍。
+        #   而 `card=<包名>` 模式能一次搜两卡、还能按节取，快得多。
+        #
+        #   所以：字段名改成 `package` + 给出两个现成的调用式，
+        #   别让 AI 自己把路径反推成参数。
+        "package": package if card.is_file() else None,
+        "how_to_read": (
+            f'android_read_file(card="{package}", query="<这条用例要干什么>")'
+            '  —— 一次同时搜知识卡+路径卡，返回命中章节+摘要'
+            if card.is_file() else None),
+        "how_to_read_section": (
+            f'android_read_file(card="{package}", section="A", section="B")'
+            '  —— 按节读，可重复传多个 section，一次读完所有要看的节'
+            if card.is_file() else None),
         "sections": sections,
         "tip": ("**执行前先定位**：路径图是节点图（节点=落脚点，边=认什么锚点→去哪）。"
                 "先认自己在哪个节点（看 activity + 屏幕上有什么），再检索该节点的出边。"
                 "知识卡是坑与行为规律（按交互类型词检索命中标题，只读对应小节）。"
-                "**动手前先在这张卡里 grep 本用例的关键词**（界面名/控件名/功能词），"
-                "已有坐标和坑通常就在卡里，别重新探索。"),
+                "**用 card= 参数读，不要用 path= 整份读。**"),
         "system_card": "assets/knowledge/_system.md",
     }
     relevant = _sections_matching(sections, screen)

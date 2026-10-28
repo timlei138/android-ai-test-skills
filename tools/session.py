@@ -727,6 +727,10 @@ def main() -> None:
     s.add_argument("--only", default=None,
                    help="只应用草稿里的第几条（如 1,3）；缺省=全部")
     s.add_argument("--package", default=None, help="目标包名（缺省取草稿里的）")
+    # --id 只为兼容：草稿里本来就带会话号，收下但不用。
+    # 实测 AI 以为跟 `paths` 一样要给 --id，白报错一次 + 探路一次（约 8 秒）。
+    s.add_argument("--id", type=int, default=None,
+                   help="（兼容用，可忽略）草稿里已带会话号，不需要指定")
 
     # ── 知识卡回写 ──────────────────────────────────────────────────
     #
@@ -736,9 +740,14 @@ def main() -> None:
                        help="提交本轮总结的知识条目 → 草稿（AI 判重后调用）")
     s.add_argument("--card", required=True,
                    help="包名，如 com.zui.calendar（决定写进哪张卡）")
-    s.add_argument("--fact", action="append", required=True,
+    s.add_argument("--fact", action="append", default=None,
                    help="一条事实，可重复传多次。只写观察到的现象/操作经验，"
                         "不写坐标、会话号、该怎么判 PASS/FAIL")
+    # ★ 也接受 JSON 文件：多条事实用命令行传要反复转义引号，
+    #   实测 AI 宁可拆两次调用也不愿写长命令行。给个文件入口。
+    s.add_argument("--file", default=None,
+                   help="JSON 文件：字符串数组，或 [{fact, evidence:[..]}]。"
+                        "比多条 --fact 好写（不用转义引号）")
     s.add_argument("--evidence", type=int, action="append", default=[],
                    help="佐证事件 ID，可重复")
     s.add_argument("--id", type=int, default=None, help="关联会话（缺省当前）")
@@ -1114,10 +1123,32 @@ def main() -> None:
             only=getattr(args, "only", None),
             package=getattr(args, "package", None)), ensure_ascii=False))
     elif args.cmd == "kb-propose":
+        # 事实来源：--fact（可重复）/ --file（JSON，好写长文本）二选一或并存
+        _facts: list[str] = list(args.fact or [])
+        _ev: list[int] = list(args.evidence or [])
+        if args.file:
+            try:
+                raw = Path(maybe_file(args.file)).read_text(encoding="utf-8-sig")
+                payload = json.loads(raw)
+            except (OSError, ValueError) as exc:
+                raise SystemExit(f"读不了事实文件：{exc}")
+            if not isinstance(payload, list):
+                raise SystemExit("事实文件要是数组")
+            for item in payload:
+                if isinstance(item, str):
+                    _facts.append(item)
+                elif isinstance(item, dict) and item.get("fact"):
+                    _facts.append(str(item["fact"]))
+                    for e in (item.get("evidence") or []):
+                        _ev.append(int(e))
+                else:
+                    raise SystemExit("数组项要是字符串或 {fact, evidence}")
+        if not _facts:
+            raise SystemExit("需要 --fact <一条> 或 --file <json>")
         print(json.dumps(kb_propose(
             card=args.card,
-            facts=args.fact,
-            evidence=args.evidence or [],
+            facts=_facts,
+            evidence=_ev,
             id=args.id), ensure_ascii=False))
     elif args.cmd == "kb-apply":
         print(json.dumps(kb_apply(only=args.only, card=args.card),
