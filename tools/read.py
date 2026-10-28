@@ -73,7 +73,7 @@ def main() -> None:
             _OCR_NEW = False
         except ImportError:
             fail("缺依赖：pip install rapidocr "
-                 "（或 pwsh -File scripts/install.ps1 一键装）")
+                 "（或 pwsh -File scripts/setup.ps1 一键装）")
 
     if args.image:
         img_path = Path(args.image)

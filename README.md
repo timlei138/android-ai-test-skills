@@ -205,12 +205,13 @@ Set-Content -Path .\case168.txt -Value "步骤1: ... 预期1: ..." -Encoding utf
 python webui.py                      # http://127.0.0.1:9810 查看时间线/证据/知识库
 ```
 
-数据库 `storage/sessions.db` 三张表：`sessions`（会话）/ `events`（工具调用事件流，
-自动写入）/ `findings`（断言结论），另有用例表和断言证据关联表。界面按"会话 → 时间线 → 截图证据"组织，断言可跳转关联事件。
+数据库在 `storage/record/<uuid>/db.sqlite3`（每次运行一个库）：
+`sessions`（会话）/ `events`（工具调用事件流，自动写入）/ `findings`（断言结论），
+另有用例表和断言证据关联表。界面扫全部运行库聚合展示，按"会话 → 时间线 → 截图证据"组织。
 
-### 可信记录与性能基准
+### 可信记录
 
-PASS/FAIL/WARN 断言必须显式绑定本会话证据：`session.py finding --event-id <ID> ...`；
+PASS/FAIL 断言必须显式绑定本会话证据：`session.py finding --event-id <ID> ...`；
 多个证据重复传 `--event-id`，ID 来自工具返回的 `event_ids`。收尾在校验后事务提交，
 拒绝时不更新结论与用例统计。记录失败会明确报错，动作可能已经执行，禁止直接重放。
 

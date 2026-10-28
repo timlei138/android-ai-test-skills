@@ -5,7 +5,9 @@
   events    统一事件流：observe/act/read 每次工具调用自动落一条（append-only）
   findings  断言/结论（从事件流独立出来，方便聚合统计）
 
-零依赖（标准库 sqlite3）。库位置：<skill根>/storage/sessions.db。
+零依赖（标准库 sqlite3）。
+库位置：`storage/record/<uuid>/db.sqlite3` —— **每次运行一个库，互不隔离不干扰**。
+没有运行上下文时 `get_db()` 会明确报错（不会静默落到某个空库）。
 """
 from __future__ import annotations
 
@@ -29,15 +31,9 @@ def _resolve_db_path() -> Path:
 
     ## 没有 record 上下文怎么办
 
-    **明确报错**，不静默落空库。
-
-    这里曾经有兜底：找不到 record 就打开 `storage/record/webui.db`
-    （号称"聚合库"）。但那个库从来没人写入 —— 它永远是 0 行。
-    后果是：`session finish` 解绑记录后再调工具，会在**空库**里查，
-    报「会话 #1 不存在」，看起来像 bug，其实是查错了库。
-
-    2026-10-28 把兜底删了：没有上下文就直说，别猜。
-    需要上一次收尾的运行时，调用方自己用 `last_record_dir()` 指定。
+    **明确报错**，不静默落空库 —— 在空库里查会报「会话不存在」，
+    看起来像 bug，实际是查错了地方。需要上一次收尾的运行时，
+    调用方自己用 `last_record_dir()` 指定。
     """
     rec = current_record_dir()
     if rec is not None:
@@ -49,8 +45,7 @@ def _resolve_db_path() -> Path:
         return last / "db.sqlite3"
     raise RuntimeError(
         "没有进行中的测试会话。要么先 `session.py start`，"
-        "要么用明确指向某次运行的命令（如 `case save --last`）。\n"
-        "（以前这里会静默打开一个空的聚合库，导致「会话不存在」的假报错，已移除）")
+        "要么用明确指向某次运行的命令（如 `case save --last`）。")
 
 
 def _current_file() -> Path:
@@ -65,22 +60,18 @@ def _current_file() -> Path:
     return STORAGE_DIR / "current_session"
 
 
-# ⚠️ 不能在模块级解析路径。
-#
-# 2026-10-28：原来这里是 `DB_PATH = _resolve_db_path()`，模块一 import
-# 就定死路径。删掉 webui.db 兜底后，没有 record 上下文时会直接抛
-# RuntimeError —— 于是 `import db` 本身就崩，连报错信息都看不到。
-#
-# 现在改成**用到时才解析**（get_db() / SessionDB 内部调 _resolve_db_path）。
-# 保留这个名字只为兼容旧引用，值是 None 表示"还没解析"。
+# ⚠️ 不能在模块级解析路径 —— `import db` 那一刻还没有 record 上下文，
+# 会直接抛 RuntimeError，连报错信息都看不到。用到时才解析
+# （get_db() / SessionDB 内部调 _resolve_db_path）。
+# 这个名字只为兼容旧引用，值是 None 表示"还没解析"。
 DB_PATH: Path | None = None
-CURRENT_FILE = _current_file()   # 仅为兼容旧引用；内部一律用 _current_file()，它会跟着 record 走
+CURRENT_FILE = _current_file()   # 仅为兼容旧引用；内部一律用 _current_file()
 
-# 结论只有这五种。**没有 WARN**（2026-10-28 去掉的）。
+# 结论只有四种：PASS / FAIL / BLOCKED / ERROR。
 #
-# 为什么去掉：WARN 是个含糊的中间态，实际用起来变成"我不敢判 FAIL 就写 WARN"。
-# 用例预期是有明确对照的 —— 符合就 PASS，不符合就 FAIL，
-# 环境/前置问题就 BLOCKED，工具异常就 ERROR。没有第五种。
+# 没有 WARN —— 它是个含糊的中间态，实际用起来变成"不敢判 FAIL 就写 WARN"。
+# 用例预期是有明确对照的：符合就 PASS，不符合就 FAIL，
+# 环境/前置问题就 BLOCKED，工具异常就 ERROR。
 #
 # 旧数据里可能还有 WARN 的历史记录，读的时候按 FAIL 处理。
 STATUSES = ("PASS", "FAIL", "BLOCKED", "ERROR")
@@ -171,17 +162,11 @@ class SessionDB:
         # ★ 必须**调用时**才解析路径，不能用 `path: Path = DB_PATH`。
         #
         #   默认参数在**函数定义时**求值 —— 也就是模块 import 那一刻。
-        #   而 `session.py start` 的流程是：
+        #   而 `session.py start` 的流程是先 import、再设环境变量、最后才
+        #   get_db()。如果路径在 import 时就定死，库会建到当时那个位置去，
+        #   新建的 record/<uuid>/ 目录里就只剩几个空子目录。
         #
-        #     from db import ...        ← 这一刻 DB_PATH 已定（那时还没 record 目录）
-        #     parse_args()
-        #     os.environ["ANDROID_TEST_RECORD"] = ...   ← 才设环境变量
-        #     get_db()                  ← 太晚了
-        #
-        #   实测后果：record/<uuid>/ 目录建出来了，但 db.sqlite3 跑到
-        #   老的 storage/sessions.db 去了 —— 目录里只有 4 个空子目录。
-        #
-        #   改成 None 默认值 + 调用时解析，环境变量就能生效。
+        #   所以：None 默认值 + 调用时解析，环境变量才能生效。
         self.path = str(path if path is not None else _resolve_db_path())
         self._local = threading.local()
 

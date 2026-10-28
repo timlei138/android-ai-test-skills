@@ -113,8 +113,8 @@ STORAGE_DIR = _resolve_storage_root()
 #     tmp/                       ← Agent 的临时文件（探针、一次性脚本、草稿）
 #
 # 为什么 record/ 下面按 uuid 分：
-#   原来所有运行共用一个 `storage/sessions.db`（7.6MB）+ 全局 evidence/（8513 文件）。
-#   跑多了会互相污染：清理一次影响全部历史，查"这次到底点了什么"要按 session_id 过滤。
+#   所有运行共用一个库 + 一个全局 evidence/ 的话，跑多了会互相污染：
+#   清理一次影响全部历史，查"这次到底点了什么"还要按 session_id 过滤。
 #   改成一次运行一个目录后，删一次 = 删一个 uuid 目录，不影响别的。
 #
 # 为什么 assets 和 storage 分开：
@@ -295,15 +295,14 @@ def pin_record(d: Path) -> None:
 def unpin_record() -> None:
     """会话结束后清掉指针（不然下一次会误接到旧目录）。
 
-    ★ 2026-10-27：**同时留下 `.last` 存档**。
+    ★ **同时留下 `.last` 存档。**
 
       为什么：`session finish` 之后调用 `case save` 必失败 ——
         finish -> unpin_record() -> `.current` 没了
         case save 是独立进程 -> current_record_dir() 返回 None
-        -> get_db() 落到空的 record/webui.db
-        -> get_session(1) 查不到 -> "会话 #1 不存在"
+        -> 没有上下文，查不到那个会话 -> "会话不存在"
 
-      实测后果（2026-10-27 跑完 15 条）：**14 条用例一条都没写进用例库**，
+      实测后果：一批用例跑完后，**很多条一条都没写进用例库**，
       因为子 Agent 都在 finish 之后才想到入库。
 
       `.last` 只是"上一段运行在哪"，不参与任何默认路径计算

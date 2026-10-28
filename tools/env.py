@@ -75,7 +75,7 @@ def main() -> None:
             #
             #   不能写死在 skill 里，因为"哪个 venv 装了依赖"是运行时状态：
             #     本机：安装位置的 venv 有依赖，target 的是空的
-            #     别人：可能反过来（跑了 install.ps1 之后）
+            #     别人：可能反过来（自己装过依赖之后）
             #
             #   所以由这里报出来，AI 拿到什么就用什么 —— 换机器自动跟着变。
             "python": sys.executable,
@@ -108,7 +108,7 @@ def main() -> None:
     print(f"  {sys.executable}")
     deps = _deps_ok()
     if deps != "ok":
-        print(f"  ⚠️ 但它{deps} —— 先跑 install.ps1 装依赖")
+        print(f"  ⚠️ 但它{deps} —— 先跑 pwsh -File scripts/setup.ps1 装依赖")
     print()
     print("运行产物目录（来源：%s）：" % src)
     print(f"  storage  = {STORAGE_DIR}")

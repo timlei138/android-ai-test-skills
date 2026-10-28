@@ -55,19 +55,18 @@ SPEC_NAME_RE = re.compile(r"^[\w\u4e00-\u9fff.\-（）()]+$")
 # 运行记录：跨多个 uuid 库聚合
 # ══════════════════════════════════════════════════════════════════════
 #
-# ## 为什么要这一层（用户反馈："跑完了但是没有记录"）
+# ## 这一层干什么
 #
-# 现在一次运行 = 一个独立目录：
+# 一次运行 = 一个独立目录：
 #
 #     storage/record/
-#     ├── webui.db              <- 旧聚合库（已经不用了，里面是空的）
 #     ├── 6f11becbfd41/
 #     │   └── db.sqlite3        <- 这次运行的库（1 session / 6 events / 3 findings）
 #     └── a2a5fce9c8f4/
 #         └── db.sqlite3        <- 另一次
 #
-# 旧的 webui.py 只读 `storage/record/webui.db` —— 而数据在各自的 uuid 库里，
-# 所以页面上一条记录都没有。**数据在，但没接上。**
+# 本模块负责**扫全部 uuid 库并聚合**，页面才看得到跨运行的历史和统计。
+# 只读某一个固定库的话，页面上一条记录都不会有 —— 数据在，但没接上。
 #
 # ## 为什么不合并成一个库（方案 B）
 #
@@ -89,17 +88,13 @@ SPEC_NAME_RE = re.compile(r"^[\w\u4e00-\u9fff.\-（）()]+$")
 # 例：
 #     "6f11becbfd41:1"    第 6f11becbfd41 次运行的第 1 个会话
 #
-# 旧的纯数字 id（"12"）仍然接受 —— 那是 webui.db 时代留下的链接。
+# 纯数字 id（"12"）也接受：解析不出 uuid，属于不存在的入口。
 
 RUN_DB_GLOB = "*/db.sqlite3"
 
 
 def _record_dbs() -> list[tuple[str, Path]]:
-    """所有 uuid 运行库：[(uuid, db 路径)]，按目录修改时间从新到旧。
-
-    **只扫 record/<uuid>/db.sqlite3。** 旧聚合库 `record/webui.db` 已废弃
-    （2026-10-28 删掉）—— 它从来没被写入过，永远是 0 行。
-    """
+    """所有 uuid 运行库：[(uuid, db 路径)]，按目录修改时间从新到旧。"""
     out: list[tuple[str, Path]] = []
     if not RECORD_DIR.is_dir():
         return out
@@ -125,7 +120,7 @@ def _split_sid(sid: str) -> tuple[str, int | None]:
 
     返回 (uuid, local_id)：
       · "6f11:1"  -> ("6f11", 1)
-      · "12"      -> ("", 12)         旧链接，在 webui.db 里查
+      · "12"      -> ("", 12)         解析不出 uuid（不存在的入口）
       · 解析不了 -> ("", None)
     """
     sid = str(sid or "").strip()

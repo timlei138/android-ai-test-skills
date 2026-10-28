@@ -547,17 +547,13 @@ def run_case_cmd(db, args) -> None:
         print(json.dumps({"ok": ok}, ensure_ascii=False))
     elif args.ccmd == "save":
         # ══════════════════════════════════════════════════════════
-        # ★ 2026-10-27：finish 之后入库必失败，这里专门兜住
+        # ★ finish 之后入库：当前库查不到就自动去 `.last` 找
         #
-        #   原来只查当前库：
-        #       s = db.get_session(args.session)
-        #       if not s: raise SystemExit("会话 #N 不存在")
+        #   `finish` 会调 unpin_record() 删掉 `.current` 指针，
+        #   于是独立进程启动时 current_record_dir() 返回 None，
+        #   直接查就报"会话不存在" —— 而会话其实在上一次收尾的运行里。
         #
-        #   但 `finish` 会调 unpin_record() 删掉 `.current` 指针，
-        #   于是这条独立进程启动时 current_record_dir() 返回 None，
-        #   get_db() 落到空的 record/webui.db —— 会话当然查不到。
-        #
-        #   实测后果：跑完 15 条用例，**14 条一条都没进用例库**，
+        #   实测后果：一批用例跑完，很多条一条都没进用例库，
         #   因为子 Agent 都是 finish 之后才想到 case save。
         #
         #   修法：当前库查不到就自动去「上一次收尾的运行」(`.last`) 找。
