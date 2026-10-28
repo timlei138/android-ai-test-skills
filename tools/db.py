@@ -503,6 +503,18 @@ class SessionDB:
         except sqlite3.Error:
             return 0
 
+    def list_events(self, session_id: int) -> list[dict]:
+        """某会话的全部事件（按 seq 升序）。给导出台账/步骤序列用。"""
+        try:
+            rows = self._conn().execute(
+                "SELECT seq, kind, tool, detail, data_json"
+                " FROM events WHERE session_id=? ORDER BY seq",
+                (session_id,)).fetchall()
+        except sqlite3.Error:
+            return []
+        return [{"seq": r[0], "kind": r[1], "tool": r[2],
+                 "detail": r[3], "data_json": r[4]} for r in rows]
+
     def efficiency_stats(self, session_id: int) -> dict:
         """操作效率自查（finish 时提示，防止"跑得很脏"却无人察觉）。
 

@@ -24,8 +24,8 @@ from db import (  # noqa: I001
     set_current,
 )
 from runtime import (
-    KNOWLEDGE_DIR, PATHS_DIR, STORAGE_DIR, current_record_dir, detect_shell,
-    last_record_dir, new_record_dir, pin_record, unpin_record,
+    CASES_DIR, KNOWLEDGE_DIR, PATHS_DIR, STORAGE_DIR, current_record_dir,
+    detect_shell, last_record_dir, new_record_dir, pin_record, unpin_record,
 )
 
 # Windows 控制台默认 GBK，中文/特殊符号会炸 → 全部 CLI 输出强制 UTF-8
@@ -408,6 +408,145 @@ def kb_list() -> dict:
     return {"ok": True, "card": pkg, "pending": len(items),
             "items": [{"n": it["n"], "fact": it["fact"],
                        "evidence": it["evidence"]} for it in items]}
+
+
+def export_steps(db, session_id: int) -> str | None:
+    """把本轮「能复用的跳转步骤」导成 steps.yaml，返回写到的路径。
+
+    ## 存什么
+
+    只存**用例步骤**里那些「锚点明确 + 落点可验」的动作：
+
+        steps:
+          - n: 1
+            via: rid=btnCreateManually
+            why: 用例步骤2：点击手动创建课程表
+            expect: activity=.timetable.management.EditTimetableActivity
+
+    ## 落点怎么来
+
+    优先用 AI 写的 `expect`；**没有就退而用点击后的前台 activity**。
+
+    实测（2026-10-28）：AI 大多数点击都不写 `--expect`，
+    176 那轮 25 个 act 里 expect 全空。但每个 act 事件都带 `activity`
+    （点击后的前台页面）—— 用它当落点，可用率从 0% 涨到 60%+。
+
+    **只收「activity 变了」的**：没变说明是本页内动作（开/关弹窗），
+    不是跳转，自动点的意义不大。
+
+    ## 不存什么
+
+    1. **前置准备** —— `why` 里含「前置 / 准备」字样的。
+       同一份用例每次前置可能完全不同（这轮要删课表、下轮不用）。
+    2. **带坐标的 via** —— 换机型就废，且这种多半要 AI 现场判断。
+    3. **非 tap**（input / swipe 需要额外参数）。
+    4. **没有可用落点的**（既没 expect 也没 activity 变化）。
+
+    ## 为什么只存「跳转」不存判定
+
+    跳转是纯机械的（点 A 到 B），代码能做；判定要理解用例，必须 AI 做。
+    """
+    row = db.get_session(session_id) or {}
+    pkg = (row.get("package") or "").strip()
+    if not pkg:
+        return None
+
+    rows = db.list_events(session_id) or []
+    steps: list[dict] = []
+
+    # 起始页面：取第一条带 activity 的事件（通常是开头那次 observe）。
+    # 不用 None 起手 —— 否则第一个 act 的 after 和 None 一比必定"变了"，
+    # 会把「本页内动作」误判成跳转（实测 rid=iv_more 就这么被误收过）。
+    prev_activity: str | None = None
+    for ev in rows:
+        try:
+            d0 = json.loads(ev.get("data_json") or "{}")
+        except ValueError:
+            continue
+        a0 = str(d0.get("activity") or "").strip()
+        if a0:
+            prev_activity = a0
+            break
+
+    for ev in rows:
+        if ev.get("kind") != "act":
+            continue
+        try:
+            data = json.loads(ev.get("data_json") or "{}")
+        except ValueError:
+            continue
+        act = data.get("action") or {}
+        via = str(act.get("via") or "").strip()
+        expect = str(act.get("expect") or "").strip()
+        why = str(act.get("why") or "").strip()
+        after = str(data.get("activity") or "").strip()
+
+        # ① 前置不要（用例原文里没写、AI 自己补的准备工作）
+        if any(k in why for k in ("前置", "准备", "prep")):
+            prev_activity = after or prev_activity
+            continue
+        # ② 只收 tap
+        if act.get("type") != "tap":
+            prev_activity = after or prev_activity
+            continue
+        # ③ 坐标不要
+        if not via or "(" in via or "[" in via:
+            prev_activity = after or prev_activity
+            continue
+        # ④ 必须有明确锚点
+        if "rid=" not in via and "text=" not in via and "desc=" not in via:
+            prev_activity = after or prev_activity
+            continue
+
+        # ⑤ 落点：expect 优先；没有就看 activity 有没有变
+        landing = expect
+        if not landing:
+            if after and after != prev_activity:
+                landing = f"activity={after}"
+        prev_activity = after or prev_activity
+
+        if not landing:
+            continue
+
+        steps.append({"n": len(steps) + 1, "why": why[:60],
+                      "via": via, "expect": landing})
+
+    if not steps:
+        return None
+
+    # 用例编号：从标题里抠（如「联想日历_176 ...」→ 176）
+    title = str(row.get("title") or "")
+    m = re.search(r"[_\-](\d{2,4})(?!\d)", title) or \
+        re.search(r"(\d{2,4})", title)
+    num = m.group(1) if m else "unknown"
+    out_dir = CASES_DIR / pkg
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out = out_dir / f"{pkg}_{num}.steps.yaml"
+
+    lines = [
+        f"# 自动导出：{pkg}_{num} 的可复用跳转步骤",
+        "#",
+        "# 只含「锚点明确 + 落点可验 + 非前置」的 tap。",
+        "# 前置条件、造数据、判定都不在这里 —— 那些每次都不一样。",
+        "#",
+        "# 用法：照着点即可。每步点之前验 expect，不命中就停、交回 AI。",
+        "# 注意：这是**上一次**的实测路径，不是唯一正确路径。",
+        f"case: {pkg}_{num}",
+        f"source_run: {Path(str(db.path)).parent.name}",
+        f"last_run: {row.get('started_at') or ''}",
+        f"verdict: {row.get('status') or ''}",
+        f"step_count: {len(steps)}",
+        "steps:",
+    ]
+    for s in steps:
+        lines += [
+            f"  - n: {s['n']}",
+            f"    why: {s['why']}",
+            f"    via: {s['via']}",
+            f"    expect: {s['expect']}",
+        ]
+    out.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return f"assets/cases/{pkg}/{out.name}"
 
 
 def collect_paths(db, session_id: int) -> str | None:
@@ -1063,6 +1202,14 @@ def main() -> None:
             except Exception as e:  # noqa: BLE001
                 self_check.append(f"⚠️ 路径采集失败：{e}")
 
+        # 导出「可复用的跳转步骤」（只含锚点明确+落点可验+非前置的 tap）。
+        # 下次跑同一条用例时可以直接照着点这几步，不用 AI 每步重新找控件。
+        steps_note = None
+        try:
+            steps_note = export_steps(db, sid)
+        except Exception as e:  # noqa: BLE001
+            self_check.append(f"⚠️ 步骤导出失败：{e}")
+
         out = {"ok": ok, "session_id": sid, "crash_events": crash_n,
                "findings": stats, "self_check": self_check,
                "case_hint": case_hint,
@@ -1074,6 +1221,12 @@ def main() -> None:
             out["paths_collected"] = path_note
             out["note"] = ("已采集路径边到 assets/knowledge/paths/<包名>.md"
                            "（落脚点 + 锚点 + 去向；下次操作可直接查，不用探索）")
+        if steps_note:
+            out["steps_exported"] = steps_note
+            out["steps_note"] = (
+                "已把本轮「锚点明确+落点可验」的跳转步骤导出。"
+                "下次跑同一条用例可以直接照着点这几步，"
+                "前置条件/造数据/判定不在里面（那些每次不一样）。")
         emit(True, out)
         # ★ 会话收尾 -> 清掉"当前 record"指针。
         #
