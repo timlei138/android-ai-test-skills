@@ -72,7 +72,14 @@ def _current_file() -> Path:
 DB_PATH = _resolve_db_path()
 CURRENT_FILE = _current_file()   # 仅为兼容旧引用；内部一律用 _current_file()，它会跟着 record 走
 
-STATUSES = ("PASS", "FAIL", "WARN", "BLOCKED", "ERROR")
+# 结论只有这五种。**没有 WARN**（2026-10-28 去掉的）。
+#
+# 为什么去掉：WARN 是个含糊的中间态，实际用起来变成"我不敢判 FAIL 就写 WARN"。
+# 用例预期是有明确对照的 —— 符合就 PASS，不符合就 FAIL，
+# 环境/前置问题就 BLOCKED，工具异常就 ERROR。没有第五种。
+#
+# 旧数据里可能还有 WARN 的历史记录，读的时候按 FAIL 处理。
+STATUSES = ("PASS", "FAIL", "BLOCKED", "ERROR")
 # 会话中间态：不是结论，不计入通过率统计；必须以 pause 保持或 finish 收尾
 INTERIM = ("running", "paused", "waiting")
 
@@ -249,7 +256,7 @@ class SessionDB:
         ids = list(dict.fromkeys(([event_id] if event_id is not None else []) + (event_ids or [])))
         if not actual.strip():
             raise ValueError("Finding actual observation/reason is required")
-        if status in ("PASS", "FAIL", "WARN") and (not ids or not expect.strip()):
+        if status in ("PASS", "FAIL") and (not ids or not expect.strip()):
             raise ValueError("Verified findings require an expectation and explicit evidence events")
         conn = self._conn()
         with conn:
@@ -292,18 +299,19 @@ class SessionDB:
             statuses = {finding["status"] for finding in findings}
             if row["terminated"] and status != "BLOCKED":
                 raise ValueError("Terminated sessions must finish BLOCKED")
-            if status in ("PASS", "WARN"):
-                allowed = {"PASS"} if status == "PASS" else {"PASS", "WARN"}
-                if not findings or not statuses <= allowed:
-                    raise ValueError("PASS/WARN requires verified, non-blocked findings with no failures")
+            if status == "PASS":
+                # PASS 只允许 PASS findings —— 一条 FAIL 都不能有
+                if not findings or not statuses <= {"PASS"}:
+                    raise ValueError(
+                        "PASS requires all findings PASS (no FAIL, no BLOCKED)")
             if status == "FAIL" and "FAIL" not in statuses:
                 raise ValueError("FAIL requires a FAIL finding")
             if status in ("BLOCKED", "ERROR") and not summary.strip():
                 raise ValueError("BLOCKED/ERROR requires a reason in summary")
             if status not in ("ERROR", "BLOCKED") and recording_issues(Path(self.path).parent, session_id):
                 raise ValueError("Recording/ledger is incomplete; finish ERROR/BLOCKED with a reason")
-            for finding in findings if status in ("PASS", "FAIL", "WARN") else []:
-                if finding["status"] not in ("PASS", "FAIL", "WARN"):
+            for finding in findings if status in ("PASS", "FAIL") else []:
+                if finding["status"] not in ("PASS", "FAIL"):
                     continue
                 ids = [r[0] for r in conn.execute(
                     "SELECT event_id FROM finding_events WHERE finding_id=?", (finding["id"],))]
@@ -609,6 +617,7 @@ class SessionDB:
             " SUM(CASE WHEN c.last_status='PASS' THEN 1 ELSE 0 END) AS pass,"
             " SUM(CASE WHEN c.last_status='FAIL' THEN 1 ELSE 0 END) AS fail,"
             " SUM(CASE WHEN c.last_status='BLOCKED' THEN 1 ELSE 0 END) AS blocked,"
+            # warn: 只为统计老数据（2026-10-28 之前跑过的会话）。新会话不会再产生 WARN。
             " SUM(CASE WHEN c.last_status='WARN' THEN 1 ELSE 0 END) AS warn,"
             " SUM(CASE WHEN c.last_status='ERROR' THEN 1 ELSE 0 END) AS error,"
             " SUM(CASE WHEN c.last_status IS NULL THEN 1 ELSE 0 END) AS never_run"
@@ -807,6 +816,7 @@ class SessionDB:
                 " SUM(CASE WHEN last_status='PASS' THEN 1 ELSE 0 END) AS pass,"
                 " SUM(CASE WHEN last_status='FAIL' THEN 1 ELSE 0 END) AS fail,"
                 " SUM(CASE WHEN last_status='BLOCKED' THEN 1 ELSE 0 END) AS blocked,"
+                # warn: 只统计老数据（2026-10-28 前）。新会话不再产生 WARN。
                 " SUM(CASE WHEN last_status='WARN' THEN 1 ELSE 0 END) AS warn,"
                 " SUM(CASE WHEN last_status='ERROR' THEN 1 ELSE 0 END) AS error,"
                 " SUM(CASE WHEN last_status IS NULL THEN 1 ELSE 0 END) AS never_run"

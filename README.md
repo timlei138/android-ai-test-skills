@@ -109,11 +109,39 @@ adb devices -l                                   # 确认设备在线且已授�
 .venv\Scripts\python.exe tools\observe.py --name smoke/first
 ```
 
-## 可选：起测试台
+---
+
+# 起测试台（WebUI）
 
 ```powershell
-.venv\Scripts\python.exe webui.py     # http://127.0.0.1:9810
+cd /d D:\dsh\android-ai-test
+python webui.py --port 9810
 ```
+
+打开 http://127.0.0.1:9810 。**Ctrl+C 停止。**
+
+**不需要 `.venv`** —— `webui.py` 只用标准库（`http.server` / `sqlite3` /
+`json` / `pathlib`），任意 Python 都能跑。实测系统自带的 3.13.3 直接跑通。
+
+## 它显示什么数据
+
+读**这个工具层自己**的：
+
+```
+storage\record\<uuid>\     每次运行的记录（会话、事件、断言、证据）
+assets\cases\<应用>\       用例列表
+assets\knowledge\          知识卡
+```
+
+在哪个目录起，就看哪份数据。
+
+## 端口被占
+
+```powershell
+Get-NetTCPConnection -LocalPort 9810 -State Listen | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }
+```
+
+或者换端口：`python webui.py --port 9811`
 
 ---
 
@@ -123,6 +151,17 @@ adb devices -l                                   # 确认设备在线且已授�
 
 ```
 「跑 168。步骤 1... 2... 预期 1... 2...」
+```
+
+**注意 PowerShell 活动代码页是 936 时**：用例原文里的中文长文本**别直接
+放在命令行参数里** —— argparse 会把它拆开。先写进 UTF-8 文件，再用
+`--input @文件` 传入：
+
+```powershell
+# 写文件
+Set-Content -Path .\case168.txt -Value "步骤1: ... 预期1: ..." -Encoding utf8
+# 传文件
+.venv\Scripts\python.exe tools\session.py start --title "168" --input "@.\case168.txt"
 ```
 
 **AI 会先做什么**：跑 `tools/env.py` 拿到「该用哪个解释器」和「产物落哪」，
@@ -163,7 +202,7 @@ adb devices -l                                   # 确认设备在线且已授�
 .venv\Scripts\python tools\session.py finding --status PASS --event-id <证据事件ID> --expect "<预期>" --actual "<实际>"
 # 每条预期分别记录 finding，全部实际通过后收尾
 .venv\Scripts\python tools\session.py finish --status PASS --summary "全过"
-.venv\Scripts\python webui.py        # http://127.0.0.1:8900 查看时间线/证据/知识库
+python webui.py                      # http://127.0.0.1:9810 查看时间线/证据/知识库
 ```
 
 数据库 `storage/sessions.db` 三张表：`sessions`（会话）/ `events`（工具调用事件流，
@@ -177,7 +216,7 @@ PASS/FAIL/WARN 断言必须显式绑定本会话证据：`session.py finding --e
 
 基准用 `tools\run.py act ...` 等方式替代直接调用，再用
 `tools\audit.py --session-id <ID>` 对账。详细使用、计时范围与隔离方式见
-[环境与工具参数](docs/环境与工具参数.md)。这些是可信记录与测量基础设施，
+[环境与工具](docs/环境与工具.md)。这些是可信记录与测量基础设施，
 尚未据此完成真机基线或证明提速收益。
 调用失败与记录完整性分别报告：`audit.ok` 只表示完整性，拒绝/失败尝试单列；
 计时默认后台落盘，正常返回不展开。逐步动作接口保留，finding 证据绑定和 finish 硬校验为有意收紧的约束。

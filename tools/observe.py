@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import argparse
 
-from common import (add_common_args, backfill_package, capture, connect, emit,
+from common import (add_common_args, apply_stdin_args, backfill_package, capture, connect, emit,
                     evidence_paths, fail, guard_terminated, log_auto, next_targets, labeled_nodes, npm_identity,
                     rel, summarize_xml)
 import time
@@ -27,6 +27,7 @@ except Exception:  # noqa: BLE001  common 不可用时不要因此崩掉
 def main() -> None:
     p = argparse.ArgumentParser(description="observe：dump + 截图 + 前台状态")
     add_common_args(p)
+    apply_stdin_args()   # 支持 --stdin-json（参数走 stdin，避开 Windows 引号问题）
     args = p.parse_args()
 
     guard_terminated("observe")   # 会话已因崩溃终止 → 拒绝执行
@@ -143,6 +144,11 @@ def main() -> None:
         "hint": ("定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。"
                  "`next` 是精简可点清单；要按页面文字做断言时加 --full"),
     }
+    # ★ 2026-10-28：sig / timing 从返回里去掉，保留落盘（同 act.py 的理由）。
+    #   observe 里 timing 由 capture() 注入到 info，sig 在 L69 加进 info，
+    #   两者都已随 log_auto 落库，这里只是不再回传给 AI。
+    payload.pop("sig", None)
+    payload.pop("timing", None)
     if k_hint:
         payload["knowledge_hint"] = k_hint
     if alert:

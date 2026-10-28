@@ -19,10 +19,13 @@ from pathlib import Path
 
 from common import case_spec_hint, emit, knowledge_hint
 import sqlite3
-from db import ROOT, STATUSES, clear_current, current_session, get_db, set_current
+from db import (  # noqa: I001
+    ROOT, STATUSES, SessionDB, clear_current, current_session, get_db,
+    set_current,
+)
 from runtime import (
-    STORAGE_DIR, current_record_dir, detect_shell, new_record_dir,
-    pin_record, unpin_record,
+    KNOWLEDGE_DIR, PATHS_DIR, STORAGE_DIR, current_record_dir, detect_shell,
+    last_record_dir, new_record_dir, pin_record, unpin_record,
 )
 
 # Windows 控制台默认 GBK，中文/特殊符号会炸 → 全部 CLI 输出强制 UTF-8
@@ -170,6 +173,243 @@ def apply_pending_paths(only: str | None = None,
             "path": f"assets/knowledge/paths/{pkg}.md"}
 
 
+# ══════════════════════════════════════════════════════════════════════
+# 知识卡回写：AI 判重，Python 只存草稿
+# ══════════════════════════════════════════════════════════════════════
+#
+# ## 为什么判重交给 AI
+#
+# 「这条事实卡里有没有」是语义问题。Python 只能做完全匹配，
+# 而知识卡里同一件事常有多种说法：
+#
+#     卡里写：「点空格后出现 iv_add_hint」
+#     本轮事实：「点一下格子才长出加号浮标」
+#     → 说的是同一件事，字符串匹配不出来，AI 一眼就知道
+#
+# 所以流程是：
+#
+#     子 Agent 读卡 → 自己判断哪些是真新的 → 只把新的提过来
+#     Python 收到后：查格式违规 → 存草稿
+#     人在主 Agent 里看一眼 → kb-apply / kb-reject
+#
+# ## Python 只拦「格式违规」
+#
+# 这几类能机械判，不用麻烦 AI：
+#   · 坐标 / 像素（换机型就废）
+#   · 会话号（"会话473 实测" 这种）
+#   · 直接下判定（"应判 FAIL"、"别判 PASS"）
+#
+# ## 草稿格式
+#
+#     storage/pending_kb.md
+#
+#     # 知识卡更新建议（N 条待确认）
+#     card: `com.zui.calendar`
+#     1. 事实内容
+#        evidence: 16,17
+#     2. ...
+
+_KB_DRAFT = STORAGE_DIR / "pending_kb.md"
+
+# 格式违规：机械可判，不需要 AI 参与
+#
+# ⚠️ 2026-10-28 踩过：最初只写 `b\s*=\s*\[`，结果
+#    `bounds=[44,344][2996,517]` 漏了过去（"bounds" 结尾是 s 不是等号）。
+#    现在同时覆盖 `b=` / `bounds=` 两种写法；中心坐标 (1520,430) 也一并拦。
+_KB_VIOLATIONS: list[tuple[str, str, str]] = [
+    (r"(?:bounds|\bb)\s*=\s*\[\s*\d+\s*,\s*\d+\s*\]",
+     "含 bounds 数值", "坐标换机型就失效，改写成「界面里的什么位置」"),
+    (r"\(\s*\d{3,}\s*,\s*\d{3,}\s*\)",
+     "含坐标点", "坐标换机型就失效，改成按 rid / 文字定位"),
+    (r"\d+\s*px(?!\w)",
+     "含像素值", "像素换机型就失效"),
+    (r"\by\s*[=≈]\s*\d{3,}",
+     "含 y 坐标", "坐标换机型就失效"),
+    (r"\bx\s*[≈=]\s*\d{3,}",
+     "含 x 坐标", "坐标换机型就失效"),
+    (r"会话\s*#?\s*\d{2,}",
+     "含会话号", "去掉会话号，只留规律"),
+    (r"实测[:：]\s*\d+\s*个用例",
+     "含某次执行统计", "只写规律，不写某次跑了几条"),
+    (r"应判|判\s*(PASS|FAIL)|不算验证到|否则.{0,6}(误判|FAIL)",
+     "含判定结论", "知识卡只写现象，判定留给执行者拿用例对照"),
+]
+
+
+def _kb_check(fact: str) -> tuple[bool, str, str]:
+    """检查一条事实有没有格式违规。返回 (通过, 问题, 改写建议)。"""
+    for rx, issue, hint in _KB_VIOLATIONS:
+        if re.search(rx, fact):
+            return False, issue, hint
+    if len(fact.strip()) < 8:
+        return False, "太短，说明不了什么", "写清观察到的完整现象"
+    return True, "", ""
+
+
+def _kb_parse(text: str) -> tuple[str | None, list[dict]]:
+    """解析草稿。返回 (包名, [{n, fact, evidence}])。"""
+    card = None
+    m = re.search(r"^card:\s*`([^`]+)`", text, re.M)
+    if m:
+        card = m.group(1)
+    items: list[dict] = []
+    cur: dict | None = None
+    for ln in text.splitlines():
+        m2 = re.match(r"^(\d+)\.\s+(.*)$", ln)
+        if m2:
+            if cur:
+                items.append(cur)
+            cur = {"n": int(m2.group(1)), "fact": m2.group(2).strip(),
+                   "evidence": []}
+            continue
+        m3 = re.match(r"^\s+evidence:\s*(.*)$", ln)
+        if m3 and cur is not None:
+            cur["evidence"] = [x.strip() for x in m3.group(1).split(",")
+                               if x.strip()]
+    if cur:
+        items.append(cur)
+    return card, items
+
+
+def _kb_write(card: str, items: list[dict]) -> None:
+    """把草稿写回 pending_kb.md（items 为空就删文件）。"""
+    if not items:
+        if _KB_DRAFT.is_file():
+            _KB_DRAFT.unlink()
+        return
+    head = [f"# 知识卡更新建议（{len(items)} 条待确认）", "",
+            f"card: `{card}`", "",
+            "> 确认后执行 `python tools/session.py kb-apply`",
+            "> 全部丢弃执行 `python tools/session.py kb-reject`", ""]
+    body: list[str] = []
+    for i, it in enumerate(items, 1):
+        body.append(f"{i}. {it['fact']}")
+        if it.get("evidence"):
+            body.append(f"   evidence: {', '.join(str(x) for x in it['evidence'])}")
+        body.append("")
+    _KB_DRAFT.write_text("\n".join(head + body), encoding="utf-8")
+
+
+def kb_propose(card: str, facts: list[str], evidence: list[int],
+               id: int | None = None) -> dict:
+    """提交本轮总结的事实 → 草稿。**不判重**（判重由 AI 读卡自己做）。"""
+    accepted: list[dict] = []
+    rejected: list[dict] = []
+
+    for f in facts:
+        ok, issue, hint = _kb_check(f)
+        if ok:
+            accepted.append({"fact": f.strip(), "evidence": list(evidence)})
+        else:
+            rejected.append({"fact": f[:80], "issue": issue, "hint": hint})
+
+    if not accepted:
+        return {"ok": False, "accepted": 0, "rejected": len(rejected),
+                "errors": rejected,
+                "hint": "全部被格式检查拦下。知识卡只写现象和操作经验，"
+                        "不写坐标/会话号/判定结论。"}
+
+    # 合并进已有草稿（可能之前已经提过别的）
+    pkg = card
+    existing: list[dict] = []
+    if _KB_DRAFT.is_file():
+        old_card, old_items = _kb_parse(_KB_DRAFT.read_text(encoding="utf-8"))
+        if old_card:
+            pkg = old_card
+        existing = old_items
+
+    # 完全相同的文字就不重复进草稿
+    seen = {it["fact"] for it in existing}
+    added = [it for it in accepted if it["fact"] not in seen]
+
+    _kb_write(pkg, existing + added)
+
+    return {"ok": True, "card": pkg,
+            "accepted": len(added),
+            "skipped_same_text": len(accepted) - len(added),
+            "rejected": len(rejected),
+            "errors": rejected,
+            "total_pending": len(existing) + len(added),
+            "path": "storage/pending_kb.md",
+            "hint": ("已记为草稿，等人在主 Agent 里确认。"
+                     if added else "和已有草稿文字相同，没重复添加。")}
+
+
+def kb_apply(only: str | None = None, card: str | None = None) -> dict:
+    """把草稿写入知识卡（人确认后执行）。"""
+    if not _KB_DRAFT.is_file():
+        return {"ok": False, "error": "没有待确认草稿"}
+
+    pkg, items = _kb_parse(_KB_DRAFT.read_text(encoding="utf-8"))
+    pkg = card or pkg
+    if not pkg:
+        return {"ok": False, "error": "草稿里没有 card 包名"}
+
+    target = KNOWLEDGE_DIR / f"{pkg}.md"
+    if not target.is_file():
+        return {"ok": False,
+                "error": f"知识卡不存在：assets/knowledge/{pkg}.md"}
+
+    picks: set[int] = set()
+    if only:
+        for p in only.split(","):
+            p = p.strip()
+            if p.isdigit():
+                picks.add(int(p))
+
+    chosen = [it for it in items if not picks or it["n"] in picks]
+    if not chosen:
+        return {"ok": False, "error": "没有选中任何条目"}
+
+    text = target.read_text(encoding="utf-8")
+    append = ["", "## 后续补充", ""]
+    for it in chosen:
+        append += [f"- {it['fact']}"]
+        if it.get("evidence"):
+            append += [f"  （证据事件 {', '.join(it['evidence'])}）"]
+    if "## 后续补充" not in text:
+        text = text.rstrip("\n") + "\n" + "\n".join(append) + "\n"
+    else:
+        text = text.rstrip("\n") + "\n" + "\n".join(append[2:]) + "\n"
+    target.write_text(text, encoding="utf-8")
+
+    rest = [it for it in items if it not in chosen]
+    _kb_write(pkg, rest)
+
+    return {"ok": True, "card": pkg,
+            "applied": len(chosen),
+            "remaining": len(rest),
+            "target": f"assets/knowledge/{pkg}.md",
+            "hint": ("已写入知识卡末尾「## 后续补充」。"
+                     "高频的可以手工挪进对应章节。")}
+
+
+def kb_reject(only: str | None = None) -> dict:
+    """丢弃草稿（可只丢几条）。"""
+    if not _KB_DRAFT.is_file():
+        return {"ok": False, "error": "没有待确认草稿"}
+    pkg, items = _kb_parse(_KB_DRAFT.read_text(encoding="utf-8"))
+    if not only:
+        _KB_DRAFT.unlink()
+        return {"ok": True, "dropped": len(items), "remaining": 0,
+                "hint": "草稿已清空"}
+    picks = {int(p.strip()) for p in only.split(",") if p.strip().isdigit()}
+    rest = [it for it in items if it["n"] not in picks]
+    _kb_write(pkg or "", rest)
+    return {"ok": True, "dropped": len(items) - len(rest),
+            "remaining": len(rest)}
+
+
+def kb_list() -> dict:
+    """查看待确认草稿。"""
+    if not _KB_DRAFT.is_file():
+        return {"ok": True, "pending": 0, "items": []}
+    pkg, items = _kb_parse(_KB_DRAFT.read_text(encoding="utf-8"))
+    return {"ok": True, "card": pkg, "pending": len(items),
+            "items": [{"n": it["n"], "fact": it["fact"],
+                       "evidence": it["evidence"]} for it in items]}
+
+
 def collect_paths(db, session_id: int) -> str | None:
     """采集本次会话的「路径边」，**生成待确认草稿**（不直接改路径图）。
 
@@ -306,36 +546,74 @@ def run_case_cmd(db, args) -> None:
                             args.package)
         print(json.dumps({"ok": ok}, ensure_ascii=False))
     elif args.ccmd == "save":
-        s = db.get_session(args.session)
+        # ══════════════════════════════════════════════════════════
+        # ★ 2026-10-27：finish 之后入库必失败，这里专门兜住
+        #
+        #   原来只查当前库：
+        #       s = db.get_session(args.session)
+        #       if not s: raise SystemExit("会话 #N 不存在")
+        #
+        #   但 `finish` 会调 unpin_record() 删掉 `.current` 指针，
+        #   于是这条独立进程启动时 current_record_dir() 返回 None，
+        #   get_db() 落到空的 record/webui.db —— 会话当然查不到。
+        #
+        #   实测后果：跑完 15 条用例，**14 条一条都没进用例库**，
+        #   因为子 Agent 都是 finish 之后才想到 case save。
+        #
+        #   修法：当前库查不到就自动去「上一次收尾的运行」(`.last`) 找。
+        #   加 `--last` 是显式写法，不加也自动兜（省得 AI 记这个坑）。
+        # ══════════════════════════════════════════════════════════
+        s = db.get_session(args.session) if not args.last else None
+        used_db = db
         if not s:
-            raise SystemExit(f"会话 #{args.session} 不存在")
+            rec_last = last_record_dir()
+            if rec_last is not None:
+                try:
+                    db_last = SessionDB((rec_last / "db.sqlite3"))
+                except Exception:  # noqa: BLE001
+                    db_last = None
+                if db_last is not None:
+                    s = db_last.get_session(args.session)
+                    if s:
+                        # 后续的 add_case / UPDATE 都要写回那个库
+                        used_db = db_last
+        if not s:
+            raise SystemExit(
+                f"会话 #{args.session} 不存在（当前库和历史运行都查了）\n"
+                f"  提示：确认会话号对不对 —— `session.py list` 查看；\n"
+                f"  如果是已收尾的运行，加 `--last` 或确认 "
+                f"{STORAGE_DIR / 'record' / '.last'} 存在")
         if not (s.get("user_input") or "").strip():
             raise SystemExit("该会话没有口述用例文本，无法提升")
         title = maybe_file(args.title) if args.title else (s.get("title") or f"会话{args.session}用例")
         if s.get("case_id"):
-            db.update_case(s["case_id"], title=title, user_input=s["user_input"])
+            used_db.update_case(s["case_id"], title=title, user_input=s["user_input"])
             cid = s["case_id"]
             action = "updated"
         else:
-            cid = db.add_case(title, s["user_input"], s.get("package"))
+            cid = used_db.add_case(title, s["user_input"], s.get("package"))
             action = "created"
         # ⚠️ 入库必须**顺手关联会话并计入统计**，否则用例库 run_count/last_status 永远是空的
         # （真实事故：170 BLOCKED 入库后 run=0 last=None，统计与实际脱节）。
         # 结果状态**不限于 PASS** —— FAIL / BLOCKED 同样是有效测试结果，必须计入。
         try:
-            conn = db._conn()
+            # ⚠️ 用 used_db，不是 db —— 会话可能是在 `.last` 那个历史库里找到的
+            conn = used_db._conn()
             conn.execute("UPDATE sessions SET case_id=? WHERE id=?", (cid, args.session))
             conn.execute(
                 "UPDATE cases SET last_session_id=?, last_status=?, last_run_at=?,"
                 " run_count=(SELECT COUNT(*) FROM sessions WHERE case_id=?), updated_at=?"
                 " WHERE id=?",
-                (args.session, s.get("status"), db._now(), cid, db._now(), cid))
+                (args.session, s.get("status"), used_db._now(), cid,
+                 used_db._now(), cid))
             conn.commit()
         except Exception as e:  # noqa: BLE001
             print(json.dumps({"ok": False, "error": f"关联失败: {e}"}, ensure_ascii=False))
             raise SystemExit(1)
         print(json.dumps({"ok": True, "case_id": cid, "action": action,
-                          "run_count": (db.get_case(cid) or {}).get("run_count"),
+                          # self.path 是字符串（db.py L174），要套 Path 才能取目录名
+                          "record": Path(str(used_db.path)).parent.name,
+                          "run_count": (used_db.get_case(cid) or {}).get("run_count"),
                           "last_status": s.get("status"),
                           "hint": "复跑：session.py start --case " + str(cid)},
                          ensure_ascii=False))
@@ -377,6 +655,25 @@ def main() -> None:
     s.add_argument("--id", type=int, default=None,
                    help="记录到指定会话（暂停/等待中的会话用 --id）")
 
+    # ★ 批量记断言：一次调用写多条
+    #
+    # 2026-10-28 实测：176 那轮记了 9 次 finding，每次间隔约 6 秒
+    # （AI 思考 + 进程冷启动），共 53 秒。合并成一次就没这个开销。
+    #
+    # 用法：给一个 JSON 文件，内容是数组：
+    #   [
+    #     {"status": "PASS", "expect": "预期1 ...", "actual": "...",
+    #      "event_id": [13]},
+    #     {"status": "FAIL", "expect": "预期2 ...", "actual": "...",
+    #      "event_id": [15, 16]}
+    #   ]
+    s = sub.add_parser("findings-batch",
+                       help="一次提交多条断言（给 JSON 文件）")
+    s.add_argument("--file", required=True,
+                   help="JSON 文件：数组，每项 {status, expect, actual, "
+                        "event_id:[..], note}")
+    s.add_argument("--id", type=int, default=None, help="指定会话（默认当前）")
+
     s = sub.add_parser("finish")
     s.add_argument("--status", required=True, choices=STATUSES)
     s.add_argument("--summary", default="")
@@ -412,6 +709,9 @@ def main() -> None:
     cv = csub.add_parser("save", help="把会话的口述用例提升为正式用例（首次跑新用例后用）")
     cv.add_argument("--session", type=int, required=True)
     cv.add_argument("--title", default=None, help="缺省沿用会话标题")
+    cv.add_argument("--last", action="store_true",
+                    help="在「上一次已收尾的运行」里找这个会话"
+                         "（finish 之后入库必须加，否则找不到库）")
 
     s = sub.add_parser("perm-intent",
                        help="声明/查看/清除权限响应意图（act/observe 遇到权限弹窗时按此自动响应）")
@@ -431,6 +731,32 @@ def main() -> None:
     s.add_argument("--only", default=None,
                    help="只应用草稿里的第几条（如 1,3）；缺省=全部")
     s.add_argument("--package", default=None, help="目标包名（缺省取草稿里的）")
+
+    # ── 知识卡回写 ──────────────────────────────────────────────────
+    #
+    # Python 只做机械的事：格式过滤、存草稿、写文件。
+    # **"卡里有没有这条" 是语义判断，交给 AI 自己读卡对比。**
+    s = sub.add_parser("kb-propose",
+                       help="提交本轮总结的知识条目 → 草稿（AI 判重后调用）")
+    s.add_argument("--card", required=True,
+                   help="包名，如 com.zui.calendar（决定写进哪张卡）")
+    s.add_argument("--fact", action="append", required=True,
+                   help="一条事实，可重复传多次。只写观察到的现象/操作经验，"
+                        "不写坐标、会话号、该怎么判 PASS/FAIL")
+    s.add_argument("--evidence", type=int, action="append", default=[],
+                   help="佐证事件 ID，可重复")
+    s.add_argument("--id", type=int, default=None, help="关联会话（缺省当前）")
+
+    s = sub.add_parser("kb-apply", help="把待确认草稿写入知识卡（人确认后执行）")
+    s.add_argument("--only", default=None,
+                   help="只应用第几条（如 1,3）；缺省=全部")
+    s.add_argument("--card", default=None, help="目标包名（缺省取草稿里的）")
+
+    s = sub.add_parser("kb-reject", help="丢弃待确认草稿")
+    s.add_argument("--only", default=None,
+                   help="只丢弃第几条；缺省=全部清空")
+
+    sub.add_parser("kb-list", help="查看待确认的知识草稿")
 
     sub.add_parser("list")
     sub.add_parser("current")
@@ -606,6 +932,43 @@ def main() -> None:
                              maybe_file(args.actual), maybe_file(args.note),
                              event_ids=args.event_id)
         emit(True, {"finding_id": fid, "evidence_event_ids": args.event_id})
+    elif args.cmd == "findings-batch":
+        # 一次写多条断言。任何一条不合法就整批不写（避免写一半）。
+        sid = args.id if getattr(args, "id", None) else current_session()
+        if not sid:
+            raise SystemExit("没有进行中的会话，先 session.py start（或用 --id 指定）")
+        try:
+            # ★ utf-8-sig：PowerShell 的 `Set-Content -Encoding utf8` 会写
+            #   BOM，直接 json.loads 会报 "Unexpected UTF-8 BOM"。
+            #   实测（2026-10-28）：AI 写断言文件必然用 Set-Content，必踩。
+            raw = Path(maybe_file(args.file)).read_text(encoding="utf-8-sig")
+            items = json.loads(raw)
+        except (OSError, ValueError) as exc:
+            raise SystemExit(f"读不了断言文件：{exc}")
+        if not isinstance(items, list) or not items:
+            raise SystemExit("文件内容要是非空数组")
+        # 先校验
+        for i, it in enumerate(items, 1):
+            if not isinstance(it, dict):
+                raise SystemExit(f"第 {i} 项不是对象")
+            st = it.get("status")
+            if st not in STATUSES:
+                raise SystemExit(
+                    f"第 {i} 项 status 不合法：{st!r}（可用 {'/'.join(STATUSES)}）")
+            if not it.get("expect"):
+                raise SystemExit(f"第 {i} 项缺 expect")
+        ids = []
+        for it in items:
+            ev = it.get("event_id") or it.get("event_ids") or []
+            if isinstance(ev, int):
+                ev = [ev]
+            ids.append([int(x) for x in ev])
+            fid = db.add_finding(sid, it["status"], it.get("expect", ""),
+                                 it.get("actual", ""), it.get("note", ""),
+                                 event_ids=ids[-1])
+            ids[-1] = fid
+        emit(True, {"count": len(items), "finding_ids": ids,
+                    "note": "批量写入完成"})
     elif args.cmd == "pause":
         sid = current_session()
         if not sid:
@@ -754,6 +1117,19 @@ def main() -> None:
         print(json.dumps(apply_pending_paths(
             only=getattr(args, "only", None),
             package=getattr(args, "package", None)), ensure_ascii=False))
+    elif args.cmd == "kb-propose":
+        print(json.dumps(kb_propose(
+            card=args.card,
+            facts=args.fact,
+            evidence=args.evidence or [],
+            id=args.id), ensure_ascii=False))
+    elif args.cmd == "kb-apply":
+        print(json.dumps(kb_apply(only=args.only, card=args.card),
+                         ensure_ascii=False))
+    elif args.cmd == "kb-reject":
+        print(json.dumps(kb_reject(only=args.only), ensure_ascii=False))
+    elif args.cmd == "kb-list":
+        print(json.dumps(kb_list(), ensure_ascii=False))
     elif args.cmd == "list":
         print(json.dumps(db.list_sessions(20), ensure_ascii=False, indent=2))
     elif args.cmd == "current":

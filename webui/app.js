@@ -57,13 +57,35 @@ function durationOf(s) {
   return (b - a) / 1000;
 }
 
-/* 状态中文标签（判定规则见 SKILL.md） */
+/* 状态中文标签（判定规则见 SKILL.md）
+   WARN 只为兼容老数据（2026-10-28 起不再产生新 WARN） */
 const statusCN = {
-  PASS: "通过", FAIL: "失败", WARN: "警告",
+  PASS: "通过", FAIL: "失败", WARN: "警告(旧)",
   BLOCKED: "阻断", ERROR: "错误",
   running: "执行中", paused: "已暂停", waiting: "等待答复",
 };
 const statusText = s => s ? (statusCN[s] || s) : "—";
+
+/* 会话 id 紧凑显示。
+   id 是 `<uuid>:<local_id>` 复合串（多库聚合后才有的），
+   列表里只显示 local_id，hover 时才给完整串。
+   2026-10-28：列表「#」列原本直接打 s.id，改多库后变成一长串，
+   用户反馈「之前是数字，现在不是了」。 */
+const sidShort = id => {
+  const s = String(id == null ? "" : id);
+  const i = s.lastIndexOf(":");
+  return i >= 0 ? s.slice(i + 1) : s;
+};
+
+/* 用例编号：id 形如 `com.zui.calendar_167`，列表里只显示 167。
+   与后端 _case_number() 用同一套提取规则（末尾的 2-4 位数字）。 */
+const caseNum = c => {
+  if (c && c.number != null && String(c.number).trim() !== "") {
+    return String(c.number);
+  }
+  const m = String((c && c.id) || "").match(/[_\-](\d{2,4})(?!\d)/);
+  return m ? m[1] : String((c && c.id) || "—");
+};
 
 /* 模块名（包名）友好化 */
 const pkgShort = p => {
@@ -342,7 +364,7 @@ async function viewSessions() {
       </div>
       ${sessions.map(s => `
         <div class="lt-row${s.kind === "diag" ? " diag" : ""}" data-id="${s.id}">
-          <span class="c-id">${s.id}</span>
+          <span class="c-id" title="${esc(s.id)}">${esc(sidShort(s.id))}</span>
           <span class="c-title">
             ${s.kind === "diag" ? '<span class="tag-diag">验证</span>' : ""}
             <a class="row-link" data-id="${s.id}">${esc(s.title || `会话 #${s.id}`)}</a>
@@ -687,7 +709,7 @@ async function viewCaseLib() {
       </div>
       ${shown.map(c => `
         <div class="lt-row" data-id="${c.id}">
-          <span class="c-id">${c.id}</span>
+          <span class="c-id" title="${esc(c.id)}">${esc(caseNum(c))}</span>
           <span class="c-title"><a class="row-link" data-id="${c.id}">${esc(c.title || "(无标题)")}</a></span>
           <span class="c-pkg" title="${esc(c.package || "")}">${esc(pkgShort(grpOf(c)))}</span>
           <span class="c-status">${statusChip(c.last_status) || "<span class='muted'>未执行</span>"}</span>

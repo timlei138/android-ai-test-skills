@@ -278,6 +278,9 @@ def detect_shell() -> dict:
 #    后续进程启动时读它。
 
 _CURRENT_POINTER = STORAGE_DIR / "record" / ".current"
+# 上一次已收尾的运行目录。finish 时由 unpin_record() 写入，
+# 供"会话结束后才入库"（case save）这类操作定位到正确的库。
+_LAST_POINTER = STORAGE_DIR / "record" / ".last"
 
 
 def pin_record(d: Path) -> None:
@@ -290,12 +293,48 @@ def pin_record(d: Path) -> None:
 
 
 def unpin_record() -> None:
-    """会话结束后清掉指针（不然下一次会误接到旧目录）。"""
+    """会话结束后清掉指针（不然下一次会误接到旧目录）。
+
+    ★ 2026-10-27：**同时留下 `.last` 存档**。
+
+      为什么：`session finish` 之后调用 `case save` 必失败 ——
+        finish -> unpin_record() -> `.current` 没了
+        case save 是独立进程 -> current_record_dir() 返回 None
+        -> get_db() 落到空的 record/webui.db
+        -> get_session(1) 查不到 -> "会话 #1 不存在"
+
+      实测后果（2026-10-27 跑完 15 条）：**14 条用例一条都没写进用例库**，
+      因为子 Agent 都在 finish 之后才想到入库。
+
+      `.last` 只是"上一段运行在哪"，不参与任何默认路径计算
+      （否则又会污染下一次运行）。只给 `case save --last` 这种显式用法读。
+    """
     try:
+        # 先存档，再删指针 —— 顺序反了就丢信息
+        try:
+            txt = _CURRENT_POINTER.read_text(encoding="utf-8").strip()
+            if txt:
+                _LAST_POINTER.write_text(txt, encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            pass
         _CURRENT_POINTER.unlink(missing_ok=True)
     except OSError:
         pass
     os.environ.pop("ANDROID_TEST_RECORD", None)
+
+
+def last_record_dir() -> Path | None:
+    """上一次已收尾的运行目录（`.last`）。给 finish 之后的 case save 用。"""
+    try:
+        txt = _LAST_POINTER.read_text(encoding="utf-8").strip()
+    except (OSError, UnicodeDecodeError):
+        return None
+    if not txt:
+        return None
+    p = Path(txt).resolve()
+    if (p / "db.sqlite3").is_file():
+        return p
+    return None
 
 
 def _pinned_record() -> Path | None:

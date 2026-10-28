@@ -20,7 +20,7 @@
   按知识卡经验加大，而不是靠反复 observe 轮询堆证据。
 """
 from __future__ import annotations
-from runtime import execution
+from runtime import PATHS_DIR, execution
 
 import argparse
 import sys
@@ -28,7 +28,7 @@ import time
 from datetime import datetime
 from runtime import timed_call
 
-from common import (add_common_args, add_common_args_all_subcommands, capture,
+from common import (add_common_args, add_common_args_all_subcommands, apply_stdin_args, capture,
                     next_targets, labeled_nodes, npm_identity,
                     connect, emit, evidence_paths, fail, guard_terminated,
                     log_auto, rel, summarize_xml, ROOT)
@@ -495,6 +495,7 @@ def main() -> None:
     # 让 --serial/--dir/--name 在子命令前后都能写（两种位置解析后合并）
     add_common_args_all_subcommands(p)
     _reject_selector_misuse(p)
+    apply_stdin_args()   # 支持 --stdin-json（参数走 stdin，避开 Windows 引号问题）
     args = p.parse_args()
     guard_terminated(f"act {args.action}")   # 会话已因崩溃终止 → 拒绝执行
     if args.action == "steps":
@@ -722,6 +723,26 @@ def main() -> None:
                  "需要按页面文字断言时看 nodes（--full 才是全量）。"
                  "toast 等浮层不在 nodes 里，用 read.py OCR"),
     }
+    # ★ 2026-10-28：`sig` 和 `timing` 从**返回**里去掉，但**保留落盘**。
+    #
+    #   为什么去掉：这两个字段 AI 一次都没用过。
+    #     · sig     —— 屏幕身份签名，工具内部用于 checkpoint 判定 / 浮层检测，
+    #                  以及 session.py 事后采集路径图。都在工具侧消费完。
+    #     · timing  —— 各阶段耗时（device_connect / permission / action ...），
+    #                  给 audit.py 对账和离线性能分析看。
+    #   实测它们每轮约 1,340 字符，占工具返回总量的 40%。
+    #
+    #   为什么删了不影响功能：
+    #     · 落库走 log_auto(..., info, ...) —— 用的是上面的 info 变量，
+    #       在弹掉之前就已经写进去了；meta.json 也是 capture() 里单独写的。
+    #     · checkpoint.evaluate() / detect_transient() 用的是局部变量 _sig。
+    #     · session.py 路径采集读的是 events.data_json（已落库的那份）。
+    #     · webui / app.js 完全不读这两个字段。
+    #
+    #   ⚠️ 以后再加字段时注意：**落库用的 info 和返回用的 payload 是两份**，
+    #      往 info 里加东西会同时进这两处；只想落库就加在 info、再从这里弹掉。
+    payload.pop("sig", None)
+    payload.pop("timing", None)
     if perm_inline:
         payload["perm_intent_set"] = perm_inline
         detail = (f"[意图:{perm_inline['action']}"

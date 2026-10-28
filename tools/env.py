@@ -116,6 +116,33 @@ def main() -> None:
     print(f"  tmp      = {TMP_DIR}")
     print(f"  knowledge= {KNOWLEDGE_DIR}")
     print()
+
+    # ── 工具目录 + 开会话模板 ────────────────────────────────────
+    #
+    # ★ 2026-10-28 加的：实测 176 那轮为了"工具在哪、怎么开会话"花了
+    #   30~46 秒（3 次 Get-ChildItem + 1 次 pwd + 试 session.py --help）。
+    #   这些都写在这里，省掉那几步探路。
+    #
+    # ⚠️ 不能用 Path(__file__).resolve() —— 它会**解开 junction**：
+    #   skill 装在 ~/.agents/skills/android-gui-test，
+    #   是个指向源码 D:\Project\...\android-ai-test-skills 的链接。
+    #   resolve() 之后报的是源码路径，而 AI 该用的是工作区那份
+    #   （有 .venv、有 storage）。所以优先用工作区根目录。
+    here = Path(__file__).parent          # 不 resolve，保留 junction 路径
+    ws_root = STORAGE_DIR.parent          # <target>（storage 的上一级）
+    tools_dir = ws_root / "tools"
+    if not (tools_dir / "session.py").is_file():
+        tools_dir = here                  # 回退：用脚本所在目录
+    py = sys.executable
+    print("★ 工具目录（不用再找）：")
+    print(f"  tools    = {tools_dir}")
+    print(f"  target   = {ws_root}")
+    print()
+    print("★ 开会话（唯一必须用 bash 的命令）：")
+    print(f'  & "{py}" "{tools_dir}\\session.py" start '
+          f'--title "<标题>" --input "@<用例文件>" --package <包名>')
+    print("  中文长文本先写 UTF-8 文件再传 @文件；别直接放命令行")
+    print()
     print("⚠️ 如果你在**受限沙箱**里跑（只能写某个 workspace），")
     print("   而这个 storage 不在可写范围内，先设环境变量再调工具：")
     print()

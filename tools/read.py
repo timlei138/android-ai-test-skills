@@ -11,7 +11,7 @@ from runtime import execution
 import argparse
 from pathlib import Path
 
-from common import (connect, emit, evidence_paths, fail, guard_terminated,
+from common import (apply_stdin_args, connect, emit, evidence_paths, fail, guard_terminated,
                     log_auto, rel)
 import time
 from datetime import datetime
@@ -36,6 +36,7 @@ def main() -> None:
     p.add_argument("--name", default=None, help="证据名，如 case172/step03")
     p.add_argument("--image", default=None, help="已有截图路径；缺省则现场截图")
     p.add_argument("--region", default=None, help="x1,y1,x2,y2（截图坐标系）")
+    apply_stdin_args()   # 支持 --stdin-json（参数走 stdin，避开 Windows 引号问题）
     args = p.parse_args()
     execution("not_executed")
 
@@ -57,17 +58,19 @@ def main() -> None:
             #
             #   旧：rapidocr-onnxruntime（模块名 rapidocr_onnxruntime）
             #       它停更在 1.2.3，元数据写死 requires_python="<3.13"，
-            #       在 Python 3.13 上根本装不了 —— 这也是 setup.ps1 当年
-            #       把上限卡在 3.12 的原因。
+            #       在 Python 3.13 上根本装不了 —— 当时 setup.ps1 因此
+            #       把解释器上限卡在 3.12（**那个上限现在已取消**）。
             #
             #   新：rapidocr（3.x，模块名 rapidocr），原生支持 3.13。
-            #       同一套 API：`RapidOCR()` 构造 + `ocr(path)` 调用。
+            #       但**返回类型变了**，见下面 ocr_call 的注释。
             #
             #   先试新包名，再退回旧包名 —— 两种环境都能跑。
             from rapidocr import RapidOCR
+            _OCR_NEW = True
     except ImportError:
         try:
             from rapidocr_onnxruntime import RapidOCR   # 旧环境兜底
+            _OCR_NEW = False
         except ImportError:
             fail("缺依赖：pip install rapidocr "
                  "（或 pwsh -File scripts/install.ps1 一键装）")
@@ -88,20 +91,102 @@ def main() -> None:
 
     ocr = timed_call("ocr_initialize", RapidOCR)
     execution("may_have_executed")
-    result, _ = timed_call("ocr_inference", ocr, str(img_path))
+
+    # ══════════════════════════════════════════════════════════════
+    # ★ 2026-10-27：OCR 返回结构变了，这里有一段血泪
+    #
+    #   旧包 rapidocr_onnxruntime 的 ocr(path) 返回 **元组**：
+    #       (result, elapse)
+    #       result = [[box, text, score], ...]     box 是 4 个点
+    #
+    #   新包 rapidocr 3.x 返回 **对象** RapidOCROutput：
+    #       res.boxes   # [[[x,y],...], ...]
+    #       res.txts    # ('Hello 123',)
+    #       res.scores  # (0.99932,)
+    #   它**不可迭代**，按元组解包直接抛：
+    #       TypeError: cannot unpack non-iterable RapidOCROutput object
+    #
+    #   实测后果（2026-10-27 15 条用例）：14 条几乎都要读数，
+    #   全都撞这个 TypeError，子 Agent 只能自己在 storage/tmp/ 里
+    #   写临时 OCR 脚本绕过 —— 工具层的核心能力等于不可用。
+    #
+    #   所以这里**两种返回都认**，不靠包名猜，直接看结构。
+    # ══════════════════════════════════════════════════════════════
+    raw = timed_call("ocr_inference", ocr, str(img_path))
     execution("executed")
+
+    triples: list[tuple] = []      # 统一成 (box, text, score)
+    if isinstance(raw, tuple) and len(raw) == 2:
+        # 旧包：(result, elapse)
+        for item in (raw[0] or []):
+            if isinstance(item, (list, tuple)) and len(item) >= 3:
+                triples.append((item[0], item[1], item[2]))
+    else:
+        # 新包：RapidOCROutput 对象（或任何带 boxes/txts/scores 的东西）
+        #
+        # ⚠️ 这里**不能用 `getattr(...) or []`** —— boxes 是 numpy 数组，
+        #    对它做真值判断会抛：
+        #      ValueError: The truth value of an array with more than one
+        #                  element is ambiguous.
+        #    用 `is None` 判断才是安全的。
+        boxes = getattr(raw, "boxes", None)
+        txts = getattr(raw, "txts", None)
+        scores = getattr(raw, "scores", None)
+        if boxes is None:
+            boxes = []
+        if txts is None:
+            txts = []
+        if scores is None:
+            scores = []
+        for box, text, score in zip(boxes, txts, scores):
+            triples.append((box, text, score))
+
     lines = []
     from PIL import Image
     with stage("ocr_image_info"):
         with Image.open(img_path) as source:
             img_w, img_h = source.size
     conversion_started = time.perf_counter()
-    for box, text, score in (result or []):
-        xs = [pt[0] for pt in box]
-        ys = [pt[1] for pt in box]
-        cx, cy = int(sum(xs) / 4), int(sum(ys) / 4)
+    for box, text, score in triples:
+        # ⚠️ box 的三种形态都要认（都是实测见过的）：
+        #   ① 新包：numpy 数组，shape=(4,2)  -> [[x,y],[x,y],[x,y],[x,y]]
+        #   ② 旧包：list of list of list      -> [[[x,y],...]]
+        #   ③ 旧包偶尔：扁平 8 个数            -> [x1,y1,x2,y2,x3,y3,x4,y4]
+        #
+        # 第一版用 `isinstance(pts[0], (list, tuple))` 判断，
+        # 对 numpy 数组恒为 False（元素是 np.ndarray，不是 list），
+        # 于是错误地走进"扁平化"分支，抛：
+        #   TypeError: only 0-dimensional arrays can be converted to Python scalars
+        # 所以**不猜类型，直接尝试按点对解析**：能取出 x,y 就用，取不出再扁平化。
+        def _points(b) -> list[tuple[float, float]]:
+            out: list[tuple[float, float]] = []
+            try:
+                for item in b:
+                    try:
+                        out.append((float(item[0]), float(item[1])))
+                    except (TypeError, IndexError, ValueError):
+                        out = []
+                        break
+            except TypeError:
+                out = []
+            if out:
+                return out
+            # 扁平形态：[x1,y1,x2,y2,...]
+            try:
+                flat = [float(v) for v in b]
+            except (TypeError, ValueError):
+                return []
+            return [(flat[i], flat[i + 1])
+                    for i in range(0, len(flat) - 1, 2)]
+
+        pts = _points(box)
+        if len(pts) < 2:
+            continue
+        xs = [p[0] for p in pts]
+        ys = [p[1] for p in pts]
+        cx, cy = int(sum(xs) / len(xs)), int(sum(ys) / len(ys))
         lines.append({
-            "text": text,
+            "text": str(text),
             "score": round(float(score), 3),
             "center": [cx, cy],
             "norm": [round(cx / img_w, 4), round(cy / img_h, 4)],  # 屏宽高百分比，跨设备可移植

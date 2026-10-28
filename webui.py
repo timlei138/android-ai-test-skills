@@ -19,7 +19,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "tools"))
-from db import get_db  # noqa: E402
+from db import SessionDB, get_db  # noqa: E402
 from runtime import KNOWLEDGE_DIR, RECORD_DIR, STORAGE_DIR  # noqa: E402
 
 # ★ UTF-8 兜底：Windows 控制台默认 GBK，启动日志里 print 一个 ⚠️ 就崩。
@@ -51,6 +51,241 @@ CASES_DIR = ROOT / "assets" / "cases"
 SPEC_NAME_RE = re.compile(r"^[\w\u4e00-\u9fff.\-（）()]+$")
 
 
+# ══════════════════════════════════════════════════════════════════════
+# 运行记录：跨多个 uuid 库聚合
+# ══════════════════════════════════════════════════════════════════════
+#
+# ## 为什么要这一层（用户反馈："跑完了但是没有记录"）
+#
+# 现在一次运行 = 一个独立目录：
+#
+#     storage/record/
+#     ├── webui.db              <- 旧聚合库（已经不用了，里面是空的）
+#     ├── 6f11becbfd41/
+#     │   └── db.sqlite3        <- 这次运行的库（1 session / 6 events / 3 findings）
+#     └── a2a5fce9c8f4/
+#         └── db.sqlite3        <- 另一次
+#
+# 旧的 webui.py 只读 `storage/record/webui.db` —— 而数据在各自的 uuid 库里，
+# 所以页面上一条记录都没有。**数据在，但没接上。**
+#
+# ## 为什么不合并成一个库（方案 B）
+#
+# 用户选了 C："最干净"。一次运行一个库，天然隔离：
+#   · 删一次运行 = 删一个目录，不影响别人
+#   · 两个会话同时跑不会互相锁库
+#   合并回去就把这些好处丢了。
+#
+# ## 所以：每个请求临时扫一遍 uuid 库，拼成列表
+#
+# 代价是每次请求多开几个 sqlite 连接。运行记录数量在几十个量级，
+# 每个库只有一张小表，实测可以接受。
+#
+# ## 会话 id 怎么做到全局唯一
+#
+# 各个库的 `sessions.id` 都从 1 开始，直接合并会撞。
+# 用 `<uuid>:<local_id>` 做复合 id，前端当字符串用，不用改。
+#
+# 例：
+#     "6f11becbfd41:1"    第 6f11becbfd41 次运行的第 1 个会话
+#
+# 旧的纯数字 id（"12"）仍然接受 —— 那是 webui.db 时代留下的链接。
+
+RUN_DB_GLOB = "*/db.sqlite3"
+
+
+def _record_dbs() -> list[tuple[str, Path]]:
+    """所有 uuid 运行库：[(uuid, db 路径)]，按目录修改时间从新到旧。
+
+    也把旧的聚合库 `webui.db` 带上（如果它里面有数据），
+    这样历史记录不会因为切换方案而消失。
+    """
+    out: list[tuple[str, Path]] = []
+    if not RECORD_DIR.is_dir():
+        return out
+
+    for d in RECORD_DIR.iterdir():
+        if not d.is_dir():
+            continue
+        db = d / "db.sqlite3"
+        if db.is_file():
+            out.append((d.name, db))
+
+    # 旧的聚合库：uuid 记作 "webui"（前端只当字符串用）
+    legacy = RECORD_DIR / "webui.db"
+    if legacy.is_file():
+        out.append(("webui", legacy))
+
+    def _mtime(item: tuple[str, Path]) -> float:
+        try:
+            return item[1].stat().st_mtime
+        except OSError:
+            return 0.0
+
+    return sorted(out, key=_mtime, reverse=True)
+
+
+def _split_sid(sid: str) -> tuple[str, int | None]:
+    """把 `<uuid>:<local_id>` 拆开。纯数字 -> (uuid 为空, id)。
+
+    返回 (uuid, local_id)：
+      · "6f11:1"  -> ("6f11", 1)
+      · "12"      -> ("", 12)         旧链接，在 webui.db 里查
+      · 解析不了 -> ("", None)
+    """
+    sid = str(sid or "").strip()
+    if ":" in sid:
+        head, _, tail = sid.rpartition(":")
+        if tail.isdigit():
+            return head, int(tail)
+        return "", None
+    return ("", int(sid)) if sid.isdigit() else ("", None)
+
+
+def _uuid_of(sid: str) -> str:
+    """从复合 id 里取 uuid 部分。纯数字时按旧库处理。"""
+    head, _ = _split_sid(sid)
+    return head or "webui"
+
+
+def _open_db(uuid: str) -> SessionDB | None:
+    """按 uuid 打开对应的运行库。打不开返回 None（不该让整页崩）。"""
+    if uuid == "webui":
+        path = RECORD_DIR / "webui.db"
+    else:
+        path = RECORD_DIR / uuid / "db.sqlite3"
+    if not path.is_file():
+        return None
+    try:
+        return SessionDB(path)
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def all_sessions(include: tuple[str, ...] | None = None,
+                 kind: str | None = "test") -> list[dict]:
+    """跨所有运行库聚合会话列表。
+
+    每个 session 的 `id` 改写成 `<uuid>:<local_id>`，并带上 `run_id`
+    方便前端显示"哪一次运行"。
+    """
+    out: list[dict] = []
+    for uuid, _path in _record_dbs():
+        db = _open_db(uuid)
+        if db is None:
+            continue
+        try:
+            rows = db.list_sessions(include=include, kind=kind, limit=500)
+        except Exception:  # noqa: BLE001
+            continue
+        finally:
+            pass
+        for r in rows:
+            r = dict(r)
+            r["local_id"] = r.get("id")
+            r["id"] = f"{uuid}:{r.get('id')}"
+            r["run_id"] = uuid
+            out.append(r)
+
+    # 按开始时间倒序（新在前）；没有时间的排后面
+    out.sort(key=lambda r: str(r.get("started_at") or ""), reverse=True)
+    return out
+
+
+def session_detail(sid: str, include_events: bool = True) -> dict | None:
+    """取单个会话详情（含 events / findings）。sid 可以是复合 id 或旧数字。"""
+    uuid = _uuid_of(sid)
+    _h, local_id = _split_sid(sid)
+    if local_id is None:
+        return None
+    db = _open_db(uuid)
+    if db is None:
+        return None
+    try:
+        s = db.get_session(local_id)
+    except Exception:  # noqa: BLE001
+        return None
+    if not s:
+        return None
+    s = dict(s)
+    s["local_id"] = s.get("id")
+    s["id"] = f"{uuid}:{s.get('id')}"
+    s["run_id"] = uuid
+    return s
+
+
+def session_stats_all() -> dict:
+    """全部运行的结论统计（测试记录页顶部那几个数字）。
+
+    ⚠️ `db.session_stats()` 的字段名是 `pass_n` / `fail_n` / `blocked_n` /
+       `running_n` / `paused_n`（带 `_n` 后缀），不是 PASS/FAIL。
+       第一版按 PASS/FAIL 取，结果 total 对、各状态全是 0 —— 页面看着像
+       "有记录但统计坏了"。这里把两种写法都认一遍。
+    """
+    # WARN 只是**历史数据的展示位**（2026-10-28 起不再产生新 WARN）。
+    # 新会话只有 PASS / FAIL / BLOCKED / ERROR 四种结论。
+    agg = {"PASS": 0, "FAIL": 0, "BLOCKED": 0, "PAUSED": 0,
+           "WARN": 0, "ERROR": 0, "RUNNING": 0, "total": 0}
+    # db 字段 -> 我们的键
+    KEYMAP = {
+        "pass_n": "PASS", "fail_n": "FAIL", "blocked_n": "BLOCKED",
+        "running_n": "RUNNING", "paused_n": "PAUSED",
+        # 万一哪天 db 改了名，这样也不用改这里
+        "pass": "PASS", "fail": "FAIL", "blocked": "BLOCKED",
+        "running": "RUNNING", "paused": "PAUSED",
+        "warn": "WARN", "error": "ERROR",
+    }
+    for uuid, _p in _record_dbs():
+        db = _open_db(uuid)
+        if db is None:
+            continue
+        try:
+            st = db.session_stats() or {}
+        except Exception:  # noqa: BLE001
+            continue
+        agg["total"] += int(st.get("total") or 0)
+        for src, dst in KEYMAP.items():
+            agg[dst] += int(st.get(src) or 0)
+    return agg
+
+
+def session_kind_counts_all() -> dict:
+    out: dict[str, int] = {}
+    for uuid, _p in _record_dbs():
+        db = _open_db(uuid)
+        if db is None:
+            continue
+        try:
+            k = db.session_kind_counts()
+        except Exception:  # noqa: BLE001
+            continue
+        for key, n in (k or {}).items():
+            out[key] = out.get(key, 0) + int(n or 0)
+    return out
+
+
+def run_stats_all(days: int = 3) -> list[dict]:
+    """最近 N 天每天的执行情况（仪表盘柱状图），跨所有运行库合并同一天。"""
+    merged: dict[str, dict] = {}
+    for uuid, _p in _record_dbs():
+        db = _open_db(uuid)
+        if db is None:
+            continue
+        try:
+            rows = db.run_stats(days)
+        except Exception:  # noqa: BLE001
+            continue
+        for r in rows or []:
+            day = str(r.get("day") or "")
+            if not day:
+                continue
+            m = merged.setdefault(day, {"day": day, "total": 0, "pass": 0,
+                                        "fail": 0, "blocked": 0})
+            for k in ("total", "pass", "fail", "blocked"):
+                m[k] += int(r.get(k) or 0)
+    return sorted(merged.values(), key=lambda x: x["day"])
+
+
 def _find_spec(title: str, suffix: str) -> Path | None:
     """按名字在 assets/cases/**/ 下找文件。
 
@@ -64,6 +299,208 @@ def _find_spec(title: str, suffix: str) -> Path | None:
         if fp.is_file():
             return fp
     return None
+
+
+# 用例编号：`com.zui.calendar_168` -> "168"，`联想日历_168 课程表` -> "168"
+#
+# 前后各加一个约束，两个方向都有实际反例：
+#   前面 `[_\-]`   防止把 `com.zui.calendar` 里没有的数字算进来；
+#                  也防止 `abc1234` 这种没有分隔符的串被误当编号
+#   后面 `(?!\d)`  防止 `1680` 被切出 `168`（那样 168 和 1680 会串）
+#
+# ⚠️ 这个正则和 tools/session.py 里"提示用 --case 复用"的那个必须一致。
+CASE_NUM_RE = re.compile(r"[_\-](\d{2,4})(?!\d)")
+
+
+def _case_number(text: str) -> str | None:
+    """从用例文件名或会话标题里抽用例编号。
+
+    用例在文件里叫 `com.zui.calendar_168`，会话标题叫
+    `联想日历_168 课程表-从图库导入` —— 两边唯一稳定的共同点就是 168。
+    dashboard 要靠它把"跑过的记录"对到"用例"上。
+    """
+    m = CASE_NUM_RE.search(str(text or ""))
+    return m.group(1) if m else None
+
+
+def _scan_case_files() -> list[dict]:
+    """把 `assets/cases/<应用>/` 下的用例文件列成「用例库」的条目。
+
+    ## 为什么不再从数据库读（2026-10-27 用户反馈）
+
+    「webui里面case的用例库是空的。应该拿去assets里面的case目录下面找。」
+
+    用例的**唯一真相是文件**，数据库只是"跑过的痕迹"：
+      · 用户/AI 加一条用例 —— 就是放一个 .md 或 .yaml 文件
+      · 数据库的 cases 表只有"跑过且回写过"的才有记录
+
+    旧实现 `/api/cases` 走 `db.list_cases()`，表空 -> 用例库空，
+    但 assets/cases 下明明有 15 个文件。**asset 在、交付面没有。**
+
+    ## 同一条用例的 .md 和 .yaml 怎么合并
+
+    文件名相同、扩展名不同 = 同一条用例：
+      · `.md`   人写的原文（一定有）
+      · `.yaml` 跑过之后沉淀的结构化描述（可能有）
+    一条用例只出一行，`has_yaml` 标记有没有结构化描述。
+
+    ## 运行统计从哪来：按**用例编号**关联
+
+    用例在文件里（`com.zui.calendar_168`），会话在数据库里
+    （`联想日历_168 课程表-从图库导入`），两边名字对不上。
+    唯一的共同点是**编号 168**。
+
+    所以要分别从两边抽编号再配对：
+
+        文件名  com.zui.calendar_168            -> 168
+        会话标题 联想日历_168 课程表-从图库导入   -> 168      ✅ 配上
+
+    编号从哪来：`[_\\-](\\d{2,4})(?!\\d)`。
+      · 前面的 `[_\\-]` 防止把 "calendar" 里的数字（没有）或
+        长数字串的后四位误当成编号
+      · 后面的 `(?!\\d)` 防止 1680 被切出 168
+
+    ⚠️ 这个匹配规则和 `tools/session.py start` 里"提示用 --case 复用"
+       用的是同一个正则 —— 两处必须一致，否则统计和复用判断会打架。
+    """
+    if not CASES_DIR.is_dir():
+        return []
+
+    # (应用目录, 标题) -> 该标题下的文件
+    found: dict[tuple[str, str], dict[str, Path]] = {}
+    for fp in sorted(CASES_DIR.rglob("*")):
+        if not fp.is_file() or fp.suffix.lower() not in (".md", ".yaml"):
+            continue
+        # 应用目录名 = 相对 CASES_DIR 的第一段
+        try:
+            rel = fp.relative_to(CASES_DIR)
+        except ValueError:
+            continue
+        app = rel.parts[0] if len(rel.parts) > 1 else ""
+        stem = fp.stem
+        found.setdefault((app, stem), {})[fp.suffix.lower()] = fp
+
+    # ── 扫所有运行库，按用例编号汇总 ──────────────────────────────
+    #
+    # 一次遍历拿全：编号 -> {run_count, last_status, last_run_at,
+    #                        last_session_id, last_run_id}
+    # 不逐条用例查库，避免 15 条用例开 15 × N 个连接。
+    by_num: dict[str, dict] = {}
+    for uuid, _path in _record_dbs():
+        db = _open_db(uuid)
+        if db is None:
+            continue
+        try:
+            rows = db._conn().execute(
+                "SELECT id, title, status, started_at, finished_at, case_id"
+                " FROM sessions WHERE title IS NOT NULL"
+                " ORDER BY started_at").fetchall()
+        except Exception:  # noqa: BLE001
+            continue
+        for r in rows:
+            num = _case_number(str(r["title"] or ""))
+            if not num:
+                continue
+            slot = by_num.setdefault(num, {"run_count": 0})
+            slot["run_count"] += 1
+            # rows 按 started_at 升序遍历，最后写入的就是最近一次
+            slot["last_status"] = r["status"]
+            slot["last_run_at"] = r["started_at"]
+            slot["last_session_id"] = f"{uuid}:{r['id']}"
+            slot["last_run_id"] = uuid
+
+    items: list[dict] = []
+    for (app, stem), files in sorted(
+            found.items(), key=lambda kv: (kv[0][0], kv[0][1])):
+        num = _case_number(stem)
+        st = by_num.get(num or "", {})
+        # id 用标题（前端只用它做 key / 路由），不用数据库自增 id
+        items.append({
+            "id": stem,
+            "title": stem,
+            "package": app,
+            "case_number": num,
+            "has_md": ".md" in files,
+            "has_yaml": ".yaml" in files,
+            "run_count": st.get("run_count") or 0,
+            "last_status": st.get("last_status"),
+            "last_run_at": st.get("last_run_at"),
+            "last_session_id": st.get("last_session_id"),
+        })
+    return items
+
+
+def _case_detail(item: dict) -> dict:
+    """单条用例详情：列表字段 + 用例原文。
+
+    原文优先读 `.md`（人写的），没有 `.md` 就渲 `.yaml` 的 text。
+    前端「用例原文」那个页签直接显示 `input` 字段。
+    """
+    out = dict(item)
+    text = ""
+    md = _find_spec(item["title"], ".md")
+    if md is not None:
+        try:
+            text = md.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            text = ""
+    if not text:
+        yml = _find_spec(item["title"], ".yaml")
+        if yml is not None:
+            try:
+                text = yml.read_text(encoding="utf-8", errors="replace")
+            except OSError:
+                text = ""
+    out["input"] = text
+    return out
+
+
+def _module_stats() -> list[dict]:
+    """按应用（包名）聚合用例数与结论分布 —— 供 `/api/modules` 和仪表盘用。
+
+    和 `_scan_case_files()` 同源：从 assets/cases 的文件算，不从 cases 表。
+    """
+    items = _scan_case_files()
+    agg: dict[str, dict] = {}
+    for it in items:
+        pkg = it.get("package") or "未识别"
+        a = agg.setdefault(pkg, {
+            "package": pkg, "total": 0, "pass": 0, "fail": 0,
+            "blocked": 0, "warn": 0, "error": 0, "never_run": 0,
+        })
+        a["total"] += 1
+        st = it.get("last_status")
+        if not st:
+            a["never_run"] += 1
+        elif st in ("PASS", "FAIL", "BLOCKED", "WARN", "ERROR"):
+            a[st.lower()] += 1
+        else:
+            a["never_run"] += 1
+    return sorted(agg.values(), key=lambda x: x["package"])
+
+
+def _case_overview() -> dict:
+    """仪表盘顶部的用例总数 + 结论分布 —— 也从文件算。
+
+    用户反馈：「仪表盘用例显示 0」。
+
+    原因和用例库一样：`/api/dashboard` 用的是 `db.case_overview()`，
+    它 `COUNT(*) FROM cases` —— 表空就是 0，而 assets/cases 下有 15 个文件。
+    """
+    items = _scan_case_files()
+    ov = {
+        "total": len(items),
+        "pass": 0, "fail": 0, "blocked": 0, "warn": 0, "error": 0,
+        "never_run": 0,
+    }
+    for it in items:
+        st = it.get("last_status")
+        key = (st or "").lower()
+        if key in ("pass", "fail", "blocked", "warn", "error"):
+            ov[key] += 1
+        else:
+            ov["never_run"] += 1
+    return ov
 
 # ── 视觉模型配置（OpenAI 兼容多模态通道，vision.py 消费）────────────
 VISION_KEYS = ("base_url", "model", "api_key")
@@ -179,7 +616,7 @@ class Handler(BaseHTTPRequestHandler):
             return self._json({"error": "not found"}, 404)
         self._send(200, fp.read_bytes(), MIME.get(fp.suffix, "application/octet-stream"))
 
-    def _replay(self, sid: int):
+    def _replay(self, sid):
         """回放数据：把会话里有截图的事件串成"帧"。
 
         每帧 = {evidence(图片), x/y(点击坐标，仅动作有), size(原图尺寸),
@@ -189,7 +626,7 @@ class Handler(BaseHTTPRequestHandler):
         size，前端用 `left = x/size_w*100%` 定位 —— 这样图片无论被 CSS
         缩放成多大，圆点都不会偏。
         """
-        s = get_db().get_session(sid)
+        s = session_detail(sid)
         if not s:
             return self._json({"error": "not found"}, 404)
 
@@ -271,13 +708,13 @@ class Handler(BaseHTTPRequestHandler):
             # 口径一致，否则"显示全部"会漏出 mock 而计数里又没有它。
             qs = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
             show_all = qs.get("all", ["0"])[0] in ("1", "true")
-            db = get_db()
-            sessions = db.list_sessions(
+            # ★ 跨所有 uuid 运行库聚合（一次运行一个库，见文件头注释）
+            sessions = all_sessions(
                 include=("test", "diag") if show_all else None,
                 kind=None if show_all else "test")
             return self._json({"sessions": sessions,
-                               "stats": db.session_stats(),
-                               "kinds": db.session_kind_counts()})
+                               "stats": session_stats_all(),
+                               "kinds": session_kind_counts_all()})
 
         if path == "/api/vision":
             conf = _load_vision()
@@ -285,30 +722,49 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(conf)
 
         if path == "/api/modules":
-            return self._json({"modules": get_db().module_stats()})
+            # ★ 模块分组也从文件算（和用例库同源）
+            #
+            #   原来走 `db.module_stats()`，它只看 cases 表 —— 表空就没有分组，
+            #   前端顶部的"全部 / com.zui.calendar 15"标签栏整条消失。
+            return self._json({"modules": _module_stats()})
 
         if path == "/api/dashboard":
-            db = get_db()
-            return self._json({"overview": db.case_overview(),
-                               "modules": db.module_stats(),
-                               "recent": db.run_stats(3),
-                               "sessions": db.session_stats()})
+            # ★ overview/modules 从文件算；recent/sessions 从所有 uuid 库聚合
+            return self._json({"overview": _case_overview(),
+                               "modules": _module_stats(),
+                               "recent": run_stats_all(3),
+                               "sessions": session_stats_all()})
 
         if path == "/api/cases":
-            return self._json({"items": get_db().list_cases()})
+            # ★ 用例库 = `assets/cases/` 下的文件，不是数据库
+            #
+            #   用户反馈：「webui里面case的用例库是空的。
+            #              应该拿去assets里面的case目录下面找。」
+            #   数据库只是"跑过的痕迹"，文件才是用例本身。
+            return self._json({"items": _scan_case_files()})
 
-        m = re.match(r"^/api/cases/(\d+)$", path)
+        m = re.match(r"^/api/cases/([^/]+)$", path)
         if m:
-            c = get_db().get_case(int(m.group(1)))
-            return self._json(c if c else {"error": "not found"}, 200 if c else 404)
+            # id 现在是标题（文件名 stem），不再是数据库自增 id。
+            # 先在文件里找；找不到再退回数据库（兼容旧的数字 id 链接）。
+            key = urllib.parse.unquote(m.group(1))
+            for item in _scan_case_files():
+                if str(item["id"]) == key or item["title"] == key:
+                    return self._json(_case_detail(item))
+            if key.isdigit():
+                c = get_db().get_case(int(key))
+                if c:
+                    return self._json(c)
+            return self._json({"error": "not found"}, 404)
 
-        m = re.match(r"^/api/sessions/(\d+)/replay$", path)
+        # session id 现在是 `<uuid>:<local_id>`（也接受旧的纯数字）
+        m = re.match(r"^/api/sessions/([^/]+)/replay$", path)
         if m:
-            return self._replay(int(m.group(1)))
+            return self._replay(urllib.parse.unquote(m.group(1)))
 
-        m = re.match(r"^/api/sessions/(\d+)$", path)
+        m = re.match(r"^/api/sessions/([^/]+)$", path)
         if m:
-            s = get_db().get_session(int(m.group(1)))
+            s = session_detail(urllib.parse.unquote(m.group(1)))
             return self._json(s if s else {"error": "not found"},
                               200 if s else 404)
 
@@ -412,14 +868,19 @@ class Handler(BaseHTTPRequestHandler):
             ok = get_db().set_case_kind(int(m.group(1)), str(data.get("kind") or ""))
             return self._json({"ok": ok}, 200 if ok else 400)
 
-        m = re.match(r"^/api/sessions/(\d+)/kind$", path)
+        # ⚠️ session id 是 `<uuid>:<local_id>` 复合串（含冒号），
+        #    原来写成 (\d+) 只匹配纯数字，导致带 uuid 的 id 全部 404
+        #    —— 这就是「删除功能失效」的原因（2026-10-28 修）。
+        m = re.match(r"^/api/sessions/([^/]+)/kind$", path)
         if m:
+            _uuid, sid = _split_sid(urllib.parse.unquote(m.group(1)))
+            _db = _open_db(_uuid) or get_db()
             length = int(self.headers.get("Content-Length") or 0)
             try:
                 data = json.loads(self.rfile.read(length).decode("utf-8"))
             except ValueError:
                 return self._json({"error": "bad body"}, 400)
-            ok = get_db().set_session_kind(int(m.group(1)), str(data.get("kind") or ""))
+            ok = _db.set_session_kind(sid, str(data.get("kind") or ""))
             return self._json({"ok": ok}, 200 if ok else 400)
 
         if path == "/api/cases":
@@ -488,11 +949,14 @@ class Handler(BaseHTTPRequestHandler):
             # 级联删除：用例 + 全部历史测试记录（数据库与磁盘证据）+ 程序化描述文件。
             # 不可恢复，前端已做二次确认。
             return self._json(get_db().delete_case_cascade(int(m.group(1))))
-        m = re.match(r"^/api/sessions/(\d+)$", path)
+        m = re.match(r"^/api/sessions/([^/]+)$", path)
         if m:
             # 默认连带删除磁盘证据；?evidence=0 只删库记录
             keep_ev = qs.get("evidence", ["1"])[0] in ("0", "false")
-            r = get_db().delete_session(int(m.group(1)), remove_evidence=not keep_ev)
+            # ⚠️ id 是 `<uuid>:<local_id>`，要拆开去对应的运行库里删
+            _uuid, sid = _split_sid(urllib.parse.unquote(m.group(1)))
+            _db = _open_db(_uuid) or get_db()
+            r = _db.delete_session(sid, remove_evidence=not keep_ev)
             return self._json(r, 200 if r.get("ok") else 404)
         return self._json({"error": "not found"}, 404)
 

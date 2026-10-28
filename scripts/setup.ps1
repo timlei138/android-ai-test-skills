@@ -281,7 +281,8 @@ if ($ok) {
     Write-Host ' 常用命令（在项目目录下执行）:' -ForegroundColor DarkGray
     Write-Host '   .\.venv\Scripts\python tools\session.py start --title "..." --input @case.txt' -ForegroundColor Gray
     Write-Host '   .\.venv\Scripts\python tools\observe.py --serial <设备号>' -ForegroundColor Gray
-    Write-Host '   .\.venv\Scripts\python webui.py            # 测试台 http://127.0.0.1:9810' -ForegroundColor Gray
+    # 测试台只用标准库，不需要 venv 里的依赖 —— 任意 python 都能跑
+    Write-Host '   python webui.py                            # 测试台 http://127.0.0.1:9810' -ForegroundColor Gray
     Write-Host ''
     Write-Host ' 回归测试:' -ForegroundColor DarkGray
     Write-Host '   .\.venv\Scripts\python tests\test_crash_pipeline.py' -ForegroundColor Gray

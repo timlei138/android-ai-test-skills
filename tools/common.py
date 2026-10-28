@@ -39,6 +39,54 @@ def ensure_utf8_stdio() -> None:
 ensure_utf8_stdio()
 
 
+def apply_stdin_args() -> None:
+    """支持 `--stdin-json`：从 stdin 读参数，绕开命令行引号问题。
+
+    ## 为什么需要（2026-10-28 实测）
+
+    `android_read_file(section='坑-删除全部课程表后的两种"空"')` 报
+    `usage: read_file.py`。查下来是**参数里带双引号**时：
+
+        node 侧用 POSIX 规则把 " 转义成 \\"
+        Windows cmd 不认这个转义，把引号当字符串结束符
+        -> Python 收到 `"坑-...的两种\\"` 被拆成两段 -> argparse 报错
+
+    改 `""` 双写也不对（cmd 会把两个引号都当字面量）。
+
+    ## 做法
+
+    参数走 stdin 的 JSON，命令行只留脚本路径：
+
+        python read_file.py --stdin-json
+        stdin: {"args": ["--path", "...", "--section", "坑-...的两种\\"空\\""]}
+
+    这样空格、引号、`&`、`|`、`%`、中文、emoji 全部安全 ——
+    它们根本没进入命令行解析。
+
+    ## 调用方式
+
+    在每个脚本的 `main()` 里，`parse_args()` 之前调一次：
+
+        from common import apply_stdin_args
+        apply_stdin_args()
+        args = p.parse_args()
+
+    它只在检测到 `--stdin-json` 时才动 sys.argv，其他情况完全不干预
+    （所以手工跑 `python act.py tap --x 1 --y 2` 照旧）。
+    """
+    if "--stdin-json" not in sys.argv:
+        return
+    import json as _json
+    try:
+        raw = sys.stdin.read()
+        payload = _json.loads(raw) if raw.strip() else {}
+    except (OSError, ValueError):
+        return
+    argv = payload.get("args") or []
+    # 保留脚本名，把 JSON 里的参数当成命令行
+    sys.argv = [sys.argv[0]] + [str(x) for x in argv]
+
+
 def _adb(*args: str, timeout: float = 20.0) -> tuple[int, str]:
     """调一次 adb，返回 (returncode, 合并输出)。
 
@@ -1050,7 +1098,19 @@ def emit(ok: bool, payload: dict) -> None:
     result = {"ok": ok, **payload, "call_id": CALL_ID,
               "event_ids": list(EVENT_IDS), "execution_state": runtime.EXECUTION_STATE}
     with stage("serialization"):
-        text = json.dumps(result, ensure_ascii=False, indent=2)
+        # ★ 2026-10-28：**紧凑输出，不要 indent=2**。
+        #
+        #   原来 `indent=2` 是为了人眼好看，但它占了一半体积：
+        #       实测一条 act 返回 2,739 字符，其中 1,335 是缩进空格（49%）
+        #       73 轮的用例累计浪费约 9.7 万字符
+        #
+        #   AI 读紧凑 JSON 没有问题（它本来就在解析 token，空白无信息量），
+        #   而人要看的时候有两条路：
+        #     · meta.json（capture 里写，仍是 indent=2）
+        #     · webui 页面（自己排版）
+        #   所以这里紧凑化，不影响任何人工排查。
+        text = json.dumps(result, ensure_ascii=False,
+                          separators=(",", ":"))
     timing = {**timing_snapshot(), "response_bytes": len((text + "\n").encode("utf-8"))}
     timing_file = os.environ.get("ANDROID_TEST_TIMING_FILE")
     if timing_file:

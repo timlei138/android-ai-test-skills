@@ -253,7 +253,10 @@ def lock_code(dest: Path) -> tuple[int, int]:
 
 
 def unlock_code(dest: Path) -> int:
-    """取掉只读（--force 覆盖前要用）。"""
+    """取掉只读（--force 覆盖前要用）。
+
+    只解锁代码文件，和 lock_code 对称。
+    """
     n = 0
     for p in list(dest.rglob("*.py")) + list(dest.rglob("*.ps1")):
         try:

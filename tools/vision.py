@@ -16,7 +16,7 @@ import sys
 import urllib.request
 from pathlib import Path
 
-from common import emit, fail
+from common import apply_stdin_args, emit, fail
 from runtime import STORAGE_DIR
 
 try:
@@ -29,7 +29,17 @@ def main() -> None:
     p = argparse.ArgumentParser(description="vision：视觉模型问图（OpenAI 兼容）")
     p.add_argument("--image", required=True, help="图片路径（png/jpg）")
     p.add_argument("--prompt", required=True, help="问题/断言指令")
-    p.add_argument("--max-tokens", type=int, default=500)
+    # ★ 2026-10-28：默认从 500 提到 2000。
+    #
+    #   实测：deepseek-flash 的 reasoning 开销很大。max_tokens=500 时
+    #   completion_tokens=500 **全部**是 reasoning_tokens，正文是空字符串：
+    #       {"ok":true,"text":"","usage":{"completion_tokens":500,
+    #        "completion_tokens_details":{"reasoning_tokens":500}}}
+    #   看起来"调用成功"，实际什么都没答 —— 比报错更坑。
+    #
+    #   提到 2000 后正常返回（reasoning 858 + 正文 2）。
+    p.add_argument("--max-tokens", type=int, default=2000)
+    apply_stdin_args()   # 支持 --stdin-json（插件统一走 stdin 传参）
     args = p.parse_args()
 
     conf_fp = STORAGE_DIR / "vision.json"
@@ -75,7 +85,23 @@ def main() -> None:
         text = resp["choices"][0]["message"]["content"]
     except (KeyError, IndexError, TypeError):
         fail(f"响应格式异常: {json.dumps(resp, ensure_ascii=False)[:300]}")
-    emit(True, {"text": text, "usage": resp.get("usage"),
+
+    # ★ 空回答必须当成失败，不能报 ok:true。
+    #
+    #   实测（2026-10-28）：max_tokens 太小时 reasoning 吃光预算，
+    #   返回 text="" 且 ok:true。AI 看到 ok 就以为"模型说没有"，
+    #   把"模型没答"误当成"画面里没有"—— 这是会直接导致误判的。
+    usage = resp.get("usage") or {}
+    if not (text or "").strip():
+        reasoning = (usage.get("completion_tokens_details") or {}).get(
+            "reasoning_tokens")
+        fail(
+            "视觉模型返回了空回答"
+            + (f"（{reasoning} token 全花在 reasoning 上）" if reasoning else "")
+            + "。加大 --max-tokens 重试（如 3000），"
+              "或把问题问得更短更具体。**不要把空回答当成「画面里没有」**")
+
+    emit(True, {"text": text, "usage": usage,
                 "hint": "视觉模型输出是辅助判据，PASS/FAIL 结论仍需结合 dump/OCR 证据"})
 
 
