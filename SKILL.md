@@ -343,17 +343,55 @@ python act.py tap --x 1520 --y 1717 --via "rid=btnCreateManually" \
 
 ### ⚠️ 先读卡：路径图告诉你「在哪找」，知识卡告诉你「有什么坑」
 
-`session.py start` 的返回里会带 **`knowledge_hint`**（只在会话开头给一次）：
+`session.py start` 的返回里有 **`knowledge_hint`**（只给一次）：
 
 ```json
 "knowledge_hint": {
-  "path_map": "assets/knowledge/paths/com.zui.calendar.md",
-  "nodes": ["日历首页", "菜单（弹层）", "课程表页-空态", "课程表页-周视图", ...],
-  "card": "assets/knowledge/com.zui.calendar.md",
-  "sections": ["坑-图库导入解析", "坑-必填校验（与规格不符）", ...],
-  "tip": "执行前先定位：路径图是节点图（节点=落脚点，边=认什么锚点→去哪）"
+  "package": "com.zui.calendar",
+  "how_to_read": "android_read_file(card=\"com.zui.calendar\", query=\"<用例要干什么>\")",
+  "how_to_read_section": "android_read_file(card=\"com.zui.calendar\", section=\"A\", section=\"B\")",
+  "sections": ["课程表空状态", "设置页很长…", ...],
+  "system_card": "assets/knowledge/_system.md"
 }
 ```
+
+**照 `how_to_read` 那个式子调就行。** 它一次同时搜知识卡+路径卡，
+返回命中章节 + 摘要。
+
+**要看具体某几节，用 `how_to_read_section`，`section` 可以重复传多个** ——
+一次读完所有要看的节，别一节一次调（每节一次约 3 秒）。
+
+⚠️ **不要用 `path=` 整份读卡**（`android_read_file(path="assets/knowledge/...md")`）——
+整卡 2 万字，读两次就把上下文挤满了。
+
+### 上次走过的跳转步骤（`last_steps`）
+
+跑过的用例，`finish` 时会自动导出 `assets/cases/<包名>/<包名>_<编号>.steps.yaml`。
+下次 `start` 同一条用例，返回里会带 `last_steps`：
+
+```json
+"last_steps": {
+  "last_run": "2026-10-28T20:44:56",
+  "verdict": "FAIL",
+  "step_count": 11,
+  "steps": [
+    {"via": "rid=iv_more", "expect": "rid=item_title", "in_page": true},
+    {"via": "text=课程表", "expect": "activity=.timetable.display.TimetableActivity"},
+    {"via": "rid=btnCreateManually", "expect": "activity=.timetable.management.EditTimetableActivity"}
+  ],
+  "truncated": true
+}
+```
+
+**这是「上次怎么走的」，可以照着走省时间** —— 但记住三条：
+
+```
+① 它只是**参考**，不是唯一正确路径。前置不同，起点可能就不一样
+② 某步点不到 / 落点不符 → **立刻自己接管**，不要硬照抄
+③ 完整内容（11 步）用 android_read_file 读 file 字段
+```
+
+**`in_page: true` 的步骤不跳页**（开/关弹层、切 tab），验 `expect` 看节点出现没即可。
 
 ## 执行节奏（省时间、别丢弹窗）
 

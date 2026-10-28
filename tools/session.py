@@ -17,7 +17,7 @@ import re
 import sys
 from pathlib import Path
 
-from common import case_spec_hint, emit, knowledge_hint
+from common import case_spec_hint, emit, knowledge_hint, steps_hint
 import sqlite3
 from db import (  # noqa: I001
     ROOT, STATUSES, SessionDB, clear_current, current_session, get_db,
@@ -458,6 +458,7 @@ def export_steps(db, session_id: int) -> str | None:
     # 不用 None 起手 —— 否则第一个 act 的 after 和 None 一比必定"变了"，
     # 会把「本页内动作」误判成跳转（实测 rid=iv_more 就这么被误收过）。
     prev_activity: str | None = None
+    prev_sig: set[str] = set()
     for ev in rows:
         try:
             d0 = json.loads(ev.get("data_json") or "{}")
@@ -466,10 +467,22 @@ def export_steps(db, session_id: int) -> str | None:
         a0 = str(d0.get("activity") or "").strip()
         if a0:
             prev_activity = a0
+            prev_sig = set(d0.get("sig") or [])
             break
 
     for ev in rows:
         if ev.get("kind") != "act":
+            # 非 act（observe/read）也要更新基线，否则差分跨了中间那步会失真
+            try:
+                dn = json.loads(ev.get("data_json") or "{}")
+            except ValueError:
+                continue
+            an = str(dn.get("activity") or "").strip()
+            if an:
+                prev_activity = an
+            sn = set(dn.get("sig") or [])
+            if sn:
+                prev_sig = sn
             continue
         try:
             data = json.loads(ev.get("data_json") or "{}")
@@ -480,41 +493,108 @@ def export_steps(db, session_id: int) -> str | None:
         expect = str(act.get("expect") or "").strip()
         why = str(act.get("why") or "").strip()
         after = str(data.get("activity") or "").strip()
+        after_sig = set(data.get("sig") or [])
 
         # ① 前置不要（用例原文里没写、AI 自己补的准备工作）
         if any(k in why for k in ("前置", "准备", "prep")):
             prev_activity = after or prev_activity
+            prev_sig = after_sig or prev_sig
             continue
         # ② 只收 tap
         if act.get("type") != "tap":
             prev_activity = after or prev_activity
+            prev_sig = after_sig or prev_sig
             continue
         # ③ 坐标不要
         if not via or "(" in via or "[" in via:
             prev_activity = after or prev_activity
+            prev_sig = after_sig or prev_sig
             continue
-        # ④ 必须有明确锚点
-        if "rid=" not in via and "text=" not in via and "desc=" not in via:
+        # ④ 必须有明确锚点，并且锚点本身要**干净**
+        #
+        #    via 常混着人话，比如 `rid=cv_empty_content 第1节 周一格`。
+        #    这种不能直接用于执行：`rid=cv_empty_content` 有 14 个格子，
+        #    光凭 rid 不知道点哪个。所以只收**纯锚点**：
+        #      · 只有 key=value，多个用逗号或空格分隔，每段都带 =
+        #      · 带中文描述 / 括号 / 坐标的一律丢
+        anchor_parts = [p for p in via.replace(",", " ").split() if p]
+        if not anchor_parts:
             prev_activity = after or prev_activity
+            prev_sig = after_sig or prev_sig
             continue
+        if not all("=" in p for p in anchor_parts):
+            prev_activity = after or prev_activity
+            prev_sig = after_sig or prev_sig
+            continue
+        if any(kv.startswith(("t=", "c=")) or "=" not in kv
+               for kv in anchor_parts):
+            prev_activity = after or prev_activity
+            prev_sig = after_sig or prev_sig
+            continue
+        clean_via = ",".join(anchor_parts)
 
-        # ⑤ 落点：expect 优先；没有就看 activity 有没有变
+        # ⑤ 落点，三级优先：
+        #    ① AI 写的 expect
+        #    ② activity 变了 → activity=xxx（真跳转）
+        #    ③ activity 没变但 sig 有新增 → 用新增节点当落点（页内动作）
+        #
+        #    第 ③ 条是 2026-10-28 补的。实测缺失它会导致漏掉必需的一步：
+        #      rid=iv_more（打开「更多」菜单）不跳页，activity 不变，
+        #      于是被当成"页内无效动作"丢掉 —— 而下一步「选课程表」
+        #      恰恰依赖菜单已经打开。丢了它，下次执行第一步就点不到。
+        #
+        #    sig 是「点击后屏幕上可见的节点集合」（已去重）。
+        #    和上一事件的 sig 做差，就知道这一步让什么新东西出现了。
         landing = expect
+        in_page = False
         if not landing:
             if after and after != prev_activity:
                 landing = f"activity={after}"
+            else:
+                new_nodes = after_sig - prev_sig
+                # 优先 rid（比 text 稳），其次 desc
+                rids = sorted(n for n in new_nodes if str(n).startswith("rid="))
+                descs = sorted(n for n in new_nodes
+                               if str(n).startswith("desc="))
+                if rids:
+                    landing = rids[0]
+                    in_page = True
+                elif descs:
+                    landing = descs[0]
+                    in_page = True
+
         prev_activity = after or prev_activity
+        prev_sig = after_sig or prev_sig
 
         if not landing:
             continue
 
-        steps.append({"n": len(steps) + 1, "why": why[:60],
-                      "via": via, "expect": landing})
+        item = {"n": 0, "why": why[:60], "via": clean_via, "expect": landing}
+        if in_page:
+            item["in_page"] = True
+        steps.append(item)
 
     if not steps:
         return None
 
-    # 用例编号：从标题里抠（如「联想日历_176 ...」→ 176）
+    # ★ 去重：同一对 (via, expect) 只留**最后**一次。
+    #
+    #   为什么会有重复：AI 可能为了做前置先走一遍、正式执行再走一遍。
+    #   实测（2026-10-28 20:44 那轮）：
+    #     seq3  why=步骤1：菜单里选择课程表        ← 其实是为了删课表
+    #     seq12 why=步骤1：选择课程表，预期1 ...   ← 这才是正式的
+    #   两步的 (via, expect) 完全一样。
+    #
+    #   保留最后一次：后面的那次是"正式执行"，前面的多半是踩点/前置。
+    seen: dict[tuple[str, str], int] = {}
+    for i, s in enumerate(steps):
+        seen[(s["via"], s["expect"])] = i
+    steps = [s for i, s in enumerate(steps)
+             if seen[(s["via"], s["expect"])] == i]
+    for i, s in enumerate(steps, 1):
+        s["n"] = i
+
+    # 变量：用例编号
     title = str(row.get("title") or "")
     m = re.search(r"[_\-](\d{2,4})(?!\d)", title) or \
         re.search(r"(\d{2,4})", title)
@@ -545,6 +625,10 @@ def export_steps(db, session_id: int) -> str | None:
             f"    via: {s['via']}",
             f"    expect: {s['expect']}",
         ]
+        if s.get("in_page"):
+            # 不跳页的动作（开/关弹层、切 tab）。expect 验「新节点出现了没」，
+            # 不用等 activity 变化。
+            lines.append("    in_page: true")
     out.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return f"assets/cases/{pkg}/{out.name}"
 
@@ -1051,6 +1135,16 @@ def main() -> None:
         spec = case_spec_hint(args.case_id)
         if spec:
             out["case_spec"] = spec
+        # 上次走过的跳转步骤：纯参考，不自动执行。
+        # 每次跑同一条用例，AI 都要重新摸「更多按钮在哪、菜单里哪个是课程表」——
+        # 这些是机械跳转，finish 时已经导出到 steps.yaml，开场给它看。
+        try:
+            steps = steps_hint(args.package or (case["package"] if case else None),
+                               _title)
+            if steps:
+                out["last_steps"] = steps
+        except Exception as e:  # noqa: BLE001
+            out.setdefault("warnings", []).append(f"步骤提示读取失败：{e}")
         # 用例库关联提醒：**当场提示**才有用（finish 时才提示＝会话已结束，等于没用）
         if existing_case:
             out["case_exists"] = {

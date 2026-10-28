@@ -13,7 +13,7 @@ import runtime
 from datetime import datetime
 from pathlib import Path
 from runtime import (
-    CALL_ID, EVENT_IDS, KNOWLEDGE_DIR, PATHS_DIR, STORAGE_DIR,
+    CALL_ID, CASES_DIR, EVENT_IDS, KNOWLEDGE_DIR, PATHS_DIR, STORAGE_DIR,
     recording_issues, stage, timed, timing_snapshot,
 )
 
@@ -575,6 +575,89 @@ def case_spec_hint(case_id: int | None) -> dict | None:
                 "准备完再按 `step_index` 顺序执行 s1→s2→…。"),
         }
     return None
+
+
+def steps_hint(package: str | None, title: str | None) -> dict | None:
+    """告诉 AI「这条用例上次走过的跳转步骤」，给它参考。
+
+    ## 为什么需要
+
+    每次跑同一条用例，AI 都要重新摸「更多按钮在哪、菜单里哪个是课程表」。
+    这些是纯机械的跳转，`session finish` 已经自动导出到
+    `assets/cases/<包名>/<包名>_<编号>.steps.yaml`，但**开场没人告诉 AI 它存在**。
+
+    ## 只作参考，不自动执行
+
+    返回的是「上一次的实测路径」，不是唯一正确路径：
+      · 前置不同 → 起点可能不一样
+      · 版本变化 → 某步可能失效
+
+    所以只给清单 + 一句提醒，让 AI 自己决定照不照着走。
+    **它要是照着点失败了，会自己接管** —— 这比代码硬走安全。
+
+    ## 返回 None 的情况
+
+    没有包名 / 没标题 / 还没跑过这条用例 / 文件坏了 —— 都正常，调用方别报错。
+    """
+    if not package or not title:
+        return None
+    m = re.search(r"[_\-](\d{2,4})(?!\d)", title) or re.search(r"(\d{2,4})", title)
+    if not m:
+        return None
+    num = m.group(1)
+    f = CASES_DIR / package / f"{package}_{num}.steps.yaml"
+    if not f.is_file():
+        return None
+    try:
+        raw = f.read_text(encoding="utf-8")
+    except OSError:
+        return None
+
+    # 轻量解析：不引 yaml（这个文件格式是我们自己写的，很规整）
+    steps: list[dict] = []
+    meta: dict[str, str] = {}
+    cur: dict | None = None
+    for ln in raw.splitlines():
+        s = ln.strip()
+        if not s or s.startswith("#"):
+            continue
+        if s.startswith("- n:"):
+            if cur:
+                steps.append(cur)
+            cur = {"n": s.split(":", 1)[1].strip()}
+            continue
+        if cur is not None and ":" in s:
+            k, v = s.split(":", 1)
+            cur[k.strip()] = v.strip()
+            continue
+        if ":" in s:
+            k, v = s.split(":", 1)
+            meta[k.strip()] = v.strip()
+    if cur:
+        steps.append(cur)
+    if not steps:
+        return None
+
+    # 只给前 8 步 —— 够看清路线，又不挤占上下文
+    brief = []
+    for st in steps[:8]:
+        item = {"via": st.get("via"), "expect": st.get("expect")}
+        if st.get("in_page", "").lower() == "true":
+            item["in_page"] = True
+        brief.append(item)
+
+    return {
+        "file": f"assets/cases/{package}/{f.name}",
+        "last_run": meta.get("last_run"),
+        "verdict": meta.get("verdict"),
+        "step_count": meta.get("step_count") or len(steps),
+        "steps": brief,
+        "truncated": len(steps) > 8,
+        "tip": ("这是**上一次**的实测跳转路径，可照着走能省找控件的时间。"
+                "但它不是唯一正确路径：前置不同起点可能不一样、版本变化某步可能失效。"
+                "**照着点失败就自己接管**，不要硬走。"
+                "完整内容用 android_read_file 读 file。"),
+    }
 
 
 def auto_name() -> str:
