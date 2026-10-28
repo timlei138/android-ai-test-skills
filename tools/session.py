@@ -410,6 +410,52 @@ def kb_list() -> dict:
                        "evidence": it["evidence"]} for it in items]}
 
 
+# 「弹窗标题」类 rid：出现即说明某个弹层打开了，是最可靠的页内落点。
+#
+# 2026-10-28 实测为什么需要它：
+#   开「上课时间」弹窗后，sig 新增里有 content/parentPanel/customPanel/...
+#   还有 button1（确定）。按字母序取第一个 rid 会拿到 `rid=button1` ——
+#   而**几乎每个弹窗都有 button1**。下次执行时只要屏幕上还有任意 button1，
+#   校验就误判成"弹窗开了"，然后点下一步全错。
+#
+#   同一轮里三个弹窗的独特标题 rid 分别是不 npTitle / dialog_title / alertTitle，
+#   所以按优先级挑，挑到哪个都能唯一指认"哪个弹窗开了"。
+_MODAL_TITLE_RIDS = (
+    "npTitle", "dialog_title", "alertTitle", "title_template",
+    "curriculum_guide_title",
+)
+
+
+def _pick_landing(new_nodes: set[str]) -> str | None:
+    """从「点击后新增的节点」里挑一个最可靠的当落点。
+
+    优先级：
+      ① 弹窗标题类 rid（npTitle / dialog_title / alertTitle ...）—— 唯一指认某个弹层
+      ② 普通 rid
+      ③ desc
+      （text 一律不选：改个文案就废）
+
+    返回形如 `rid=npTitle`，挑不出就 None。
+    """
+    rids = [str(n) for n in new_nodes if str(n).startswith("rid=")]
+    # ① 弹窗标题
+    for want in _MODAL_TITLE_RIDS:
+        for r in rids:
+            if r[4:] == want:
+                return r
+    # ② 普通 rid：排除那些"几乎每个页面都有"的通用容器
+    generic = {"rid=content", "rid=parentPanel", "rid=customPanel",
+               "rid=custom", "rid=divider", "rid=buttonPanel",
+               "rid=button_divider", "rid=button1", "rid=button2",
+               "rid=empty", "rid=topPanel"}
+    specific = sorted(r for r in rids if r not in generic)
+    if specific:
+        return specific[0]
+    # ③ desc
+    descs = sorted(str(n) for n in new_nodes if str(n).startswith("desc="))
+    return descs[0] if descs else None
+
+
 def export_steps(db, session_id: int) -> str | None:
     """把本轮「能复用的跳转步骤」导成 steps.yaml，返回写到的路径。
 
@@ -552,15 +598,8 @@ def export_steps(db, session_id: int) -> str | None:
                 landing = f"activity={after}"
             else:
                 new_nodes = after_sig - prev_sig
-                # 优先 rid（比 text 稳），其次 desc
-                rids = sorted(n for n in new_nodes if str(n).startswith("rid="))
-                descs = sorted(n for n in new_nodes
-                               if str(n).startswith("desc="))
-                if rids:
-                    landing = rids[0]
-                    in_page = True
-                elif descs:
-                    landing = descs[0]
+                landing = _pick_landing(new_nodes)
+                if landing:
                     in_page = True
 
         prev_activity = after or prev_activity
@@ -569,7 +608,8 @@ def export_steps(db, session_id: int) -> str | None:
         if not landing:
             continue
 
-        item = {"n": 0, "why": why[:60], "via": clean_via, "expect": landing}
+        item = {"n": 0, "why": why[:60], "via": clean_via, "expect": landing,
+                "from_activity": prev_activity}
         if in_page:
             item["in_page"] = True
         steps.append(item)
@@ -594,6 +634,19 @@ def export_steps(db, session_id: int) -> str | None:
     for i, s in enumerate(steps, 1):
         s["n"] = i
 
+    # 起点校验：第一步点击前在哪。
+    #
+    # ⚠️ 为什么必须记：steps 第 1 步（如 rid=iv_more）只在**日历首页**存在。
+    #   如果下次起点在别的页面，这一步要么找不到（好，会停），
+    #   要么**别的页面恰好也有同名 rid** → 点错地方 → 后 8 步全错。
+    #   所以记下起点 activity，执行前先验。
+    start_from = None
+    for s in steps:
+        fa = (s.get("from_activity") or "").strip()
+        if fa:
+            start_from = fa
+            break
+
     # 变量：用例编号
     title = str(row.get("title") or "")
     m = re.search(r"[_\-](\d{2,4})(?!\d)", title) or \
@@ -602,6 +655,24 @@ def export_steps(db, session_id: int) -> str | None:
     out_dir = CASES_DIR / pkg
     out_dir.mkdir(parents=True, exist_ok=True)
     out = out_dir / f"{pkg}_{num}.steps.yaml"
+
+    # ★ 别用残缺的结果盖掉好路径。
+    #
+    #   实测（2026-10-28）：某轮中途崩了只走了 3 步，导出把上一份 11 步的
+    #   覆盖掉 —— 好路径就这么丢了，下次反而更慢。
+    #
+    #   规则：旧文件存在且「步数 >= 新的」→ 不覆盖，只记一条提示。
+    #   （步数少了多半是这轮没走全，不是路径变短了。）
+    if out.is_file():
+        try:
+            old = out.read_text(encoding="utf-8")
+            om = re.search(r"^step_count:\s*(\d+)", old, re.M)
+            old_n = int(om.group(1)) if om else 0
+        except (OSError, ValueError):
+            old_n = 0
+        if old_n > len(steps):
+            return (f"assets/cases/{pkg}/{out.name}"
+                    f"（保留旧的 {old_n} 步，本轮只导出 {len(steps)} 步，疑似没走全）")
 
     lines = [
         f"# 自动导出：{pkg}_{num} 的可复用跳转步骤",
@@ -616,8 +687,11 @@ def export_steps(db, session_id: int) -> str | None:
         f"last_run: {row.get('started_at') or ''}",
         f"verdict: {row.get('status') or ''}",
         f"step_count: {len(steps)}",
-        "steps:",
     ]
+    lines.append("steps:")
+    # 起点：第 1 步之前得在哪个页面。执行前先验它，不然可能点错地方。
+    if start_from:
+        lines[-1:-1] = [f"start_from: activity={start_from}"]
     for s in steps:
         lines += [
             f"  - n: {s['n']}",
@@ -1298,9 +1372,17 @@ def main() -> None:
 
         # 导出「可复用的跳转步骤」（只含锚点明确+落点可验+非前置的 tap）。
         # 下次跑同一条用例时可以直接照着点这几步，不用 AI 每步重新找控件。
+        #
+        # ⚠️ diag（验证/调试）会话不导出。
+        #   自检会话的标题常常也带用例编号（如"联想日历_176 步骤提示验证"），
+        #   导出会覆盖掉真实运行的 steps.yaml —— 实测踩过一次。
         steps_note = None
         try:
-            steps_note = export_steps(db, sid)
+            _kind = str((db.get_session(sid) or {}).get("kind") or "test")
+            if _kind == "diag":
+                steps_note = "（diag 会话，跳过步骤导出）"
+            else:
+                steps_note = export_steps(db, sid)
         except Exception as e:  # noqa: BLE001
             self_check.append(f"⚠️ 步骤导出失败：{e}")
 
