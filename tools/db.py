@@ -23,38 +23,34 @@ ROOT = Path(__file__).resolve().parent.parent
 def _resolve_db_path() -> Path:
     """库放哪？
 
-    ## 三个位置，看语境
+    ## 唯一位置：storage/record/<uuid>/db.sqlite3
 
-      ① 有 record 上下文（会话进行中）：
-             storage/record/<uuid>/db.sqlite3     该次的库，互不干扰
+    每次运行一个独立库，互不干扰。
 
-      ② 没有 record 上下文（webui / 探针 / 统计）：
-             storage/record/webui.db              **聚合库**
+    ## 没有 record 上下文怎么办
 
-    ## 为什么要一个聚合库
+    **明确报错**，不静默落空库。
 
-    用户要求：「record 里面包含 webui 相关的数据库。和每次的记录。」
+    这里曾经有兜底：找不到 record 就打开 `storage/record/webui.db`
+    （号称"聚合库"）。但那个库从来没人写入 —— 它永远是 0 行。
+    后果是：`session finish` 解绑记录后再调工具，会在**空库**里查，
+    报「会话 #1 不存在」，看起来像 bug，其实是查错了库。
 
-    webui 要显示"一共跑过多少次、通过率多少"，这必须跨所有运行统计。
-    如果只读某个 uuid 目录的库，那只能看到一次 —— 而每次运行的库是隔离的。
-
-    所以：**每次运行写自己的 db.sqlite3，同时留一个 webui.db 做聚合**。
-    现在先用"没有 record 时就打开 webui.db"这个简单做法 ——
-    跑完一条用例后由 `session.py finish` 把结论同步进去。
-
-    ## 兜底
-
-    老版本留下的 `storage/sessions.db` 只在它还存在时用（历史数据）。
-    新环境不会再有那个文件。
+    2026-10-28 把兜底删了：没有上下文就直说，别猜。
+    需要上一次收尾的运行时，调用方自己用 `last_record_dir()` 指定。
     """
     rec = current_record_dir()
     if rec is not None:
         return rec / "db.sqlite3"
-    # 聚合库：webui 和统计脚本读这个
-    legacy = STORAGE_DIR / "sessions.db"
-    if legacy.is_file():
-        return legacy
-    return STORAGE_DIR / "record" / "webui.db"
+    from runtime import last_record_dir
+    last = last_record_dir()
+    if last is not None:
+        # 上一次收尾的运行 —— 允许读它（`case save --last` 就靠这条路径）
+        return last / "db.sqlite3"
+    raise RuntimeError(
+        "没有进行中的测试会话。要么先 `session.py start`，"
+        "要么用明确指向某次运行的命令（如 `case save --last`）。\n"
+        "（以前这里会静默打开一个空的聚合库，导致「会话不存在」的假报错，已移除）")
 
 
 def _current_file() -> Path:
@@ -69,7 +65,15 @@ def _current_file() -> Path:
     return STORAGE_DIR / "current_session"
 
 
-DB_PATH = _resolve_db_path()
+# ⚠️ 不能在模块级解析路径。
+#
+# 2026-10-28：原来这里是 `DB_PATH = _resolve_db_path()`，模块一 import
+# 就定死路径。删掉 webui.db 兜底后，没有 record 上下文时会直接抛
+# RuntimeError —— 于是 `import db` 本身就崩，连报错信息都看不到。
+#
+# 现在改成**用到时才解析**（get_db() / SessionDB 内部调 _resolve_db_path）。
+# 保留这个名字只为兼容旧引用，值是 None 表示"还没解析"。
+DB_PATH: Path | None = None
 CURRENT_FILE = _current_file()   # 仅为兼容旧引用；内部一律用 _current_file()，它会跟着 record 走
 
 # 结论只有这五种。**没有 WARN**（2026-10-28 去掉的）。

@@ -729,7 +729,7 @@ def main() -> None:
     #     · sig     —— 屏幕身份签名，工具内部用于 checkpoint 判定 / 浮层检测，
     #                  以及 session.py 事后采集路径图。都在工具侧消费完。
     #     · timing  —— 各阶段耗时（device_connect / permission / action ...），
-    #                  给 audit.py 对账和离线性能分析看。
+    #                  落盘供离线性能分析（总耗时看 events.duration_ms）。
     #   实测它们每轮约 1,340 字符，占工具返回总量的 40%。
     #
     #   为什么删了不影响功能：

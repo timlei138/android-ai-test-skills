@@ -556,20 +556,16 @@ python session.py resume --id <N> --note "用户答复：入口在'更多'里"
 若提示结论已提交但当前指针清理失败，不重复 finish；保留该警告并处理指针。
 工具只检查已记录断言的一致性与证据引用，不保证自然语言用例所有预期已覆盖，仍须逐条实际验证。
 
-### 基准采集：独立启动器与计时
+### 计时怎么看
 
-正式耗时基准统一通过 `tools\run.py` 调用工具，例如：
+每个工具执行完会把自己的耗时写进数据库的 `events.duration_ms`：
 
 ```powershell
-.venv\Scripts\python tools\run.py session start --title "基准" --input "<用例>" --package com.app
-.venv\Scripts\python tools\run.py act tap --x 540 --y 1200 --why "点保存"
-.venv\Scripts\python tools\run.py session finding --status PASS --event-id <ID> --expect "<预期>" --actual "<实际>"
-.venv\Scripts\python tools\run.py session finish --status PASS --summary "<结论>" --no-paths
-.venv\Scripts\python tools\audit.py --session-id <会话ID>
+sqlite3 "<target>\storage\record\<uuid>\db.sqlite3" "select sum(duration_ms) from events"
 ```
 
-启动器在启动工具前记录调用，结束后对账；缺段样本不能作为完整基线。完整记录的拒绝/失败尝试单列 `failed_attempts`，不得当作成功执行；`audit.ok` 仅表示记录完整性。直接调用仍可执行，但没有独立调用清单，不能据此声称基线完整。
-observe/act/read 返回 `call_id`、`event_ids` 与执行状态；计时默认后台落盘，不增加正常返回。详细参数与计时范围见 [环境与工具](docs/环境与工具.md)。
+或者看 webui 的记录详情页，那里有逐事件耗时。
+详细字段解释见 [环境与工具](docs/环境与工具.md)。
 
 ### ⚠️ 用例里的预期，**一条没验证到就不能判 PASS**
 

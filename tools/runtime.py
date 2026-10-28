@@ -324,9 +324,15 @@ def unpin_record() -> None:
 
 
 def last_record_dir() -> Path | None:
-    """上一次已收尾的运行目录（`.last`）。给 finish 之后的 case save 用。"""
+    """上一次已收尾的运行目录（`.last`）。给 finish 之后的 case save 用。
+
+    ⚠️ 读的时候用 `utf-8-sig`：PowerShell 的 `Set-Content -Encoding utf8`
+    会写 BOM，带 BOM 的路径字符串拼不出有效目录，`Path()` 会静默失败。
+    （2026-10-28 实测踩过一次 —— 手工修指针时用 Set-Content 覆盖了文件，
+     之后 `case save --last` 就找不到上一次的库了。）
+    """
     try:
-        txt = _LAST_POINTER.read_text(encoding="utf-8").strip()
+        txt = _LAST_POINTER.read_text(encoding="utf-8-sig").strip()
     except (OSError, UnicodeDecodeError):
         return None
     if not txt:
@@ -339,7 +345,8 @@ def last_record_dir() -> Path | None:
 
 def _pinned_record() -> Path | None:
     try:
-        txt = _CURRENT_POINTER.read_text(encoding="utf-8").strip()
+        # utf-8-sig 同 last_record_dir()：防外部工具写 BOM 后路径解析失败
+        txt = _CURRENT_POINTER.read_text(encoding="utf-8-sig").strip()
     except (OSError, UnicodeDecodeError):
         return None
     if not txt:

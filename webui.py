@@ -97,8 +97,8 @@ RUN_DB_GLOB = "*/db.sqlite3"
 def _record_dbs() -> list[tuple[str, Path]]:
     """所有 uuid 运行库：[(uuid, db 路径)]，按目录修改时间从新到旧。
 
-    也把旧的聚合库 `webui.db` 带上（如果它里面有数据），
-    这样历史记录不会因为切换方案而消失。
+    **只扫 record/<uuid>/db.sqlite3。** 旧聚合库 `record/webui.db` 已废弃
+    （2026-10-28 删掉）—— 它从来没被写入过，永远是 0 行。
     """
     out: list[tuple[str, Path]] = []
     if not RECORD_DIR.is_dir():
@@ -110,11 +110,6 @@ def _record_dbs() -> list[tuple[str, Path]]:
         db = d / "db.sqlite3"
         if db.is_file():
             out.append((d.name, db))
-
-    # 旧的聚合库：uuid 记作 "webui"（前端只当字符串用）
-    legacy = RECORD_DIR / "webui.db"
-    if legacy.is_file():
-        out.append(("webui", legacy))
 
     def _mtime(item: tuple[str, Path]) -> float:
         try:
@@ -149,11 +144,14 @@ def _uuid_of(sid: str) -> str:
 
 
 def _open_db(uuid: str) -> SessionDB | None:
-    """按 uuid 打开对应的运行库。打不开返回 None（不该让整页崩）。"""
-    if uuid == "webui":
-        path = RECORD_DIR / "webui.db"
-    else:
-        path = RECORD_DIR / uuid / "db.sqlite3"
+    """按 uuid 打开对应的运行库。打不开返回 None（不该让整页崩）。
+
+    **不再支持 "webui" 这个旧聚合库**（2026-10-28 删）——
+    它从来没被写入过。传 "webui" 进来只会拿到 None。
+    """
+    if not uuid or uuid == "webui":
+        return None
+    path = RECORD_DIR / uuid / "db.sqlite3"
     if not path.is_file():
         return None
     try:
