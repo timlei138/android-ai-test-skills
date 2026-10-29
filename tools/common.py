@@ -416,7 +416,8 @@ def knowledge_hint(package: str | None, shown: bool = False,
         "package": package if card.is_file() else None,
         "how_to_read": (
             f'android_read_file(card="{package}", query="<这条用例要干什么>")'
-            '  —— 一次同时搜知识卡+路径卡，返回命中章节+摘要'
+            '  —— 一次同时搜知识卡+路径卡，每个 match 的 body 就是该节全文，'
+            '看完直接用，别把同一节再读一遍'
             if card.is_file() else None),
         "how_to_read_section": (
             f'android_read_file(card="{package}", section="A", section="B")'
