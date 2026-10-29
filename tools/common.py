@@ -106,102 +106,77 @@ def _adb(*args: str, timeout: float = 20.0) -> tuple[int, str]:
     return proc.returncode, ((proc.stdout or "") + (proc.stderr or "")).strip()
 
 
-def _device_online(serial: str | None, *, wait: float = 0.0) -> bool:
-    """adb 视角下这台设备是否 device 态（离线/未授权都算不可用）。
-
-    ⚠️ `wait` 不能省：`adb reconnect` **立即返回**，但设备在随后的短暂窗口里
-    会从列表消失（实测：reconnect 后立刻查可能看不到，1 秒后稳定出现）。
-    不带等待地判一次，会把"正在重连"误判成"设备掉线"，进而错误升级到
-    kill-server —— 那会打断同机其他会话正在用的设备。故这里轮询到期限为止。
-    """
-    deadline = time.monotonic() + max(wait, 0.0)
-    while True:
-        code, out = _adb("devices")
-        if code == 0:
-            for line in out.splitlines()[1:]:
-                parts = line.split()
-                if len(parts) >= 2 and parts[1] == "device":
-                    if serial is None or parts[0] == serial:
-                        return True
-        if time.monotonic() >= deadline:
-            return False
-        time.sleep(0.4)
-
-
-def recover_adb(serial: str | None) -> dict:
-    """一次 ADB 链路恢复尝试，返回做了什么、成没成（供返回体与证据留痕）。
-
-    ⚠️ 真实教训（会话 #404）：设备掉线后只重试 `u2.connect()` 是没用的 ——
-    adb server 侧的连接已经坏了，必须先把链路修回来。当时 `adb reconnect`
-    与 `kill-server` 都试过仍无法恢复，最终靠重新插拔，整条用例作废。
-
-    分级刻意保守，**kill-server 是最后手段**：
-      1. 设备不在线 → 先 `reconnect` 并给它一个恢复窗口，仍不在线才如实
-         报"需重新插拔/确认授权"，不 kill-server（会打断别的会话）。
-      2. 设备本来在线但连不上（server 半死）→ `reconnect` + 恢复窗口，
-         仍不在线才升级到 `kill-server` + 重新拉起。
-    """
-    steps: list[str] = []
-    was_online = _device_online(serial)
-
-    code, _ = _adb("reconnect")
-    steps.append(f"adb reconnect -> rc={code}")
-    # 给 reconnect 一个恢复窗口再判，避免把瞬态消失当成掉线
-    if _device_online(serial, wait=3.0):
-        steps.append("reconnect 后设备已在线")
-        return {"recovered": True, "steps": steps}
-
-    if not was_online:
-        # 本来就不在线：再 reconnect 一次也没意义，如实报，不动 adb server
-        steps.append("设备始终不在线：可能需重新插拔/确认 USB 授权")
-        return {"recovered": False, "steps": steps}
-
-    # 只有"本来在线、reconnect 后掉线"才升级到重启 server（最后手段）
-    code, _ = _adb("kill-server")
-    steps.append(f"adb kill-server -> rc={code}")
-    code, _ = _adb("devices")
-    steps.append(f"adb devices(重启 server) -> rc={code}")
-    recovered = _device_online(serial, wait=5.0)
-    steps.append(f"重启 server 后在线={recovered}")
-    return {"recovered": recovered, "steps": steps}
-
-
 def _u2_connect(serial: str | None):
     import uiautomator2 as _u2
     return _u2.connect(serial) if serial else _u2.connect()
 
 
+_ADB_SERVER_HINT = (
+    "adb server 没在运行（WinError 10061）。\n"
+    "处置：在 bash 里跑一次 `adb devices`，看到 `<serial>  device` 后"
+    "重试本工具**一次**。\n"
+    "不要查 USB / 授权 / ANDROID_HOME / 环境变量 —— 设备是好的，"
+    "缺的只是 adb server。"
+)
+
+
+def _adb_server_alive(host: str = "127.0.0.1", port: int = 5037,
+                      timeout: float = 0.1) -> bool:
+    """探一下 5037 有没有在监听。~0ms，不起进程、不碰 adb。
+
+    ⚠️ 为什么需要（2026-10-29 实测）：
+      裸 `u2.connect()` 在 server 没运行时**要 14.6 秒**才抛 10061
+      （uiautomator2 内部重试）。而真正的原因一句"server 没在跑"就说清了。
+      先探一下，把 14.6 秒降到 0.1 秒，且提示准确。
+    """
+    import socket
+    try:
+        with socket.create_connection((host, port), timeout=timeout):
+            return True
+    except OSError:
+        return False
+
+
 def connect(serial: str | None):
     """延迟导入 uiautomator2：无依赖环境也能 --help / 查看用法。
 
-    ⚠️ 连接失败会自动尝试一次 ADB 链路恢复再重连（见 recover_adb）。
-    只重试 **连接** 本身：连接失败意味着还没碰过设备，重试不会造成"动作已执行
-    但没记账"的悬空记录，与会话作废纪律不冲突。设备动作永不自动重放。
+    ## 为什么这里**不再自动恢复 ADB**（2026-10-29 改）
+
+    旧实现在首连失败时跑 `recover_adb`：`adb reconnect` + 轮询 3 秒，
+    实测 **44 秒**，而且**原理上不可能成功** —— 沙箱下 Python 进程对
+    `%TEMP%` 只读，而 adb daemon 启动要在 `%TEMP%` 建 `adb.log`：
+
+        F adb: main.cpp:52 cannot open ...\\Temp\\adb.log: Permission denied
+        * failed to start daemon
+        → 5037 没监听 → 所有连接 WinError 10061
+
+    也就是说：**从 Python 里根本拉不起 adb daemon**，反复重试只是空转，
+    还会把已经好的 daemon 一起搅乱（176 那轮为此白烧 176 秒、占 31%）。
+
+    adb 是系统工具，**该由 shell 拉**：bash 里跑一次 `adb devices` 就够了
+    （pwsh 能写 %TEMP%，所以它起得来）。工具层只负责"连不上就说清楚"，
+    由 AI 去 shell 修一次再重试 —— 不在工具里做恢复。
     """
     try:
         with stage("device_import"):
             import uiautomator2 as _u2  # noqa: F401
     except ImportError:
         fail("缺依赖：先建环境 pip install -r requirements.txt")
+
+    with stage("adb_probe"):
+        if not _adb_server_alive():
+            fail(_ADB_SERVER_HINT)
+
     with stage("device_connect"):
         try:
             return _u2_connect(serial)
-        except Exception as first:  # noqa: BLE001
-            _first_error = first
-    # ── 恢复路径：只在首连失败时进入 ──
-    with stage("adb_recover"):
-        recovery = recover_adb(serial)
-    if recovery.get("recovered"):
-        with stage("device_connect"):
-            try:
-                return _u2_connect(serial)
-            except Exception as second:  # noqa: BLE001
-                fail(f"设备连接失败，ADB 恢复后重连仍失败：{second}\n"
-                     f"恢复过程：{'；'.join(recovery.get('steps', []))}")
-    fail(f"设备连接失败：{_first_error}\n"
-         f"ADB 恢复未成功：{'；'.join(recovery.get('steps', []))}\n"
-         f"{recovery.get('detail', '')}\n"
-         "提示：确认设备已插入并授权（adb devices 显示 device）")
+        except Exception as error:  # noqa: BLE001
+            text = str(error)
+            if "10061" in text or "积极拒绝" in text or "refused" in text:
+                fail(_ADB_SERVER_HINT)
+            fail(f"设备连接失败：{error}\n"
+                 "处置：在 bash 里跑 `adb devices` 确认设备是 `device` 态；"
+                 "仍不行就停下问人。")
 
 
 def try_connect(serial: str | None):
