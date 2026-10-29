@@ -371,24 +371,27 @@ python act.py tap --x 1520 --y 1717 --via "rid=btnCreateManually" \
 
 ```json
 "last_steps": {
-  "last_run": "2026-10-28T20:44:56",
+  "last_run": "2026-10-29T10:01:59",
   "verdict": "FAIL",
-  "step_count": 11,
+  "step_count": 8,
+  "start_from": "activity=.AllInOneActivity",
   "steps": [
     {"via": "rid=iv_more", "expect": "rid=item_title", "in_page": true},
     {"via": "text=课程表", "expect": "activity=.timetable.display.TimetableActivity"},
     {"via": "rid=btnCreateManually", "expect": "activity=.timetable.management.EditTimetableActivity"}
   ],
-  "truncated": true
+  "truncated": false
 }
 ```
 
-**这是「上次怎么走的」，可以照着走省时间** —— 但记住三条：
+**这是「上次怎么走的」，可以照着走省时间** —— 但记住四条：
 
 ```
-① 它只是**参考**，不是唯一正确路径。前置不同，起点可能就不一样
-② 某步点不到 / 落点不符 → **立刻自己接管**，不要硬照抄
-③ 完整内容（11 步）用 android_read_file 读 file 字段
+① 先看 start_from：这 8 步要求你先在 .AllInOneActivity。
+   当前不在那儿 → **先自己走到那儿**，再开始照抄。别硬套
+② 它只是**参考**，不是唯一正确路径
+③ 某步点不到 / 落点不符 → **立刻自己接管**，不要硬照抄
+④ 完整内容用 android_read_file 读 file 字段
 ```
 
 **`in_page: true` 的步骤不跳页**（开/关弹层、切 tab），验 `expect` 看节点出现没即可。

@@ -142,6 +142,34 @@ def _preview(lines: list[str], start: int, end: int,
     return " / ".join(out)[:160]
 
 
+# query 模式下每节给多少字全文。
+#
+# ⚠️ 2026-10-29 改：原来 query 只给 _preview 的 160 字摘要，实测导致
+#    AI 拿到摘要后**又用 path=+section 把同样的节重读一遍**拿全文。
+#    176 那轮 10 次 read_file 里，5 次读的正是 query 已给过摘要的节。
+#
+#    实测数据（com.zui.calendar，8 个命中）：
+#      摘要合计 972 字 → 全文合计 3,563 字
+#      而 AI 为了拿全文额外花了 5 次往返、3,991 字符
+#    所以直接给全文：一次 4,363 字，比"2,746 + 3,991"少 2,374 字，
+#    还省 5 次往返（每次约 3 秒工具 + 2 秒思考）。
+#
+#    设上限是因为个别长节可能上千字，8 节全给就爆了。
+MODAL_FULL_CAP = 1200
+
+
+def _section_body(lines: list[str], start: int, end: int,
+                  cap: int = MODAL_FULL_CAP) -> tuple[str, bool]:
+    """取该节全文（去掉标题行）。返回 (正文, 是否被截断)。"""
+    body = "\n".join(lines[start:end]).strip()
+    # 去掉第一行的标题（标题已单独返回，正文里不用重复）
+    if body.startswith("#"):
+        body = "\n".join(body.splitlines()[1:]).strip()
+    if len(body) > cap:
+        return body[:cap], True
+    return body, False
+
+
 def _score_sections(lines: list[str], sections: list[dict],
                     tokens: set[str]) -> list[dict]:
     """给每节打分。标题命中权重 5，正文命中权重 1，按长度归一。"""
@@ -292,10 +320,15 @@ def _search_one(filepath: Path, query: str | None,
         scored = _score_sections(lines, sections, toks)
         if scored:
             top = scored[:per_file]
-            return {**base, "mode": "query", "matches": [
-                {**m, "preview": _preview(lines,
-                                          m["start"] - 1, m["end"])}
-                for m in top]}
+            hits = []
+            for m in top:
+                body, cut = _section_body(lines, m["start"] - 1, m["end"])
+                item = {"title": m["title"], "score": m["score"],
+                        "body": body}
+                if cut:
+                    item["truncated"] = True
+                hits.append(item)
+            return {**base, "mode": "query", "matches": hits}
         return {**base, "mode": "query", "matches": []}
 
     return {**base, "mode": "toc", "toc": _toc(lines, sections, 40)}
@@ -333,8 +366,17 @@ def _card_mode(pkg: str, query: str | None, section: str | None,
     for r in results:
         n = len(r.get("matches") or []) or len(r.get("toc") or [])
         summary.append(f"{r['source']}({r['name']}): {n} 项")
-    out["hint"] = ("；".join(summary)
-                   + "。要读某一节全文，用 --path 指定文件 + --section")
+    # ⚠️ 别教 --path。实测教了之后 AI 就一路 path=+section 单节读，
+    #    一轮读了 9 次。card= 能一次搜两张卡、section 还能重复传多节。
+    if query:
+        out["hint"] = ("；".join(summary)
+                       + f"。上面每个 match 的 body 已是小节全文，"
+                         f"不用再读一遍。需要别的节就用 "
+                         f'--card {pkg} --section <节名>（section 可重复传多个）')
+    else:
+        out["hint"] = ("；".join(summary)
+                       + f"。要读某一节，用 --card {pkg} --section <节名>"
+                         "（section 可重复传多个，一次读完所有要看的节）")
     return out
 
 
@@ -425,7 +467,7 @@ def main() -> int:
                             "title": m.get("title"), "score": m.get("score")})
                         parts.append(
                             f"【{label}】{m.get('title')}\n"
-                            f"{m.get('preview', '')}")
+                            f"{m.get('body') or m.get('preview') or ''}")
             merged["content"] = "\n\n" + ("\n" + "─" * 56 + "\n").join(parts)
             hits_asked = {f["asked"] for f in merged["found"]}
             missed = [s for s in secs if s and s not in hits_asked]

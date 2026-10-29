@@ -651,11 +651,16 @@ def steps_hint(package: str | None, title: str | None) -> dict | None:
         "last_run": meta.get("last_run"),
         "verdict": meta.get("verdict"),
         "step_count": meta.get("step_count") or len(steps),
+        # 起点条件：第 1 步之前得在哪个页面。
+        # ⚠️ 2026-10-29 补齐：原来这字段只写进 steps.yaml，没放进返回 ——
+        #    AI 拿到 8 步却不知道"这 8 步要求你先在日历首页"，
+        #    起点不对时可能点错地方还不自知。
+        "start_from": meta.get("start_from"),
         "steps": brief,
         "truncated": len(steps) > 8,
         "tip": ("这是**上一次**的实测跳转路径，可照着走能省找控件的时间。"
-                "但它不是唯一正确路径：前置不同起点可能不一样、版本变化某步可能失效。"
-                "**照着点失败就自己接管**，不要硬走。"
+                "但它不是唯一正确路径：**先看 start_from，当前不在那个页面就先自己走到那儿**；"
+                "版本变化某步也可能失效。照着点失败就自己接管，不要硬走。"
                 "完整内容用 android_read_file 读 file。"),
     }
 
