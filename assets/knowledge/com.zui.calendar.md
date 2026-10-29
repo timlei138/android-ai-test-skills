@@ -34,7 +34,7 @@
 | 全部课程表列表页 | `.timetable.management.TimetableListActivity` | 周视图 → 顶栏 `action_curriculum_table_settings`（文案「课程表设置」）。**进课程表不会直接到列表页** |
 | 课程表基本信息编辑页 | `.timetable.management.EditTimetableActivity` | 空状态 `btnCreateManually`；或列表页 `action_add_schedule` |
 | 课程时间设置页 | `.timetable.management.TimeSlotSettingsActivity` | 编辑页「课程时间设置」行 `layout_time_settings`（**不是** `layout_time_slot_settings`） |
-| 添加/编辑课程页 | `.timetable.course.EditCourseActivity` | 周视图点格子 → `iv_add_hint` |
+| 添加/编辑课程弹窗 | `.timetable.course.EditCourseActivity` | 周视图点格子 → `iv_add_hint`；**视觉是浮层弹窗**（圆角卡片压在周视图上，背景压暗） |
 | 图库导入确认页 | `.timetable.temp.TempConfirmTimetableActivity` | 图库导入流程末段 |
 | 识别结果页 | `.timetable.temp.TempTimetableActivity` | 图库导入解析完 |
 | 备份与恢复 | `.settings.LenovoSettingsBackupActivity` | 主页 `iv_more` →「设置」→ 滚动到底 |
@@ -559,9 +559,14 @@
 - 结构 = viewPager + 表头周几（`tv_monday…tv_friday` + `_date`）+
   recyclerView 网格（`tv_section` 节号 + `tv_time`）
 
-## 添加/编辑课程页 `EditCourseActivity`
+## 添加/编辑课程 **弹窗**（`EditCourseActivity`，浮层形态）
 
-「新建课程」与「编辑课程」是**同一个页面**：
+⚠️ **形态要点（别判错）：** 实现是 `EditCourseActivity`，但**视觉上是浮层弹窗** ——
+圆角卡片压在周视图上、背景压暗、下面的课表还在、关闭后回到原处。
+dump 里**没有** `Dialog` 字样，activity 名也不带 Dialog，**但这就是弹窗**。
+用例说「弹出编辑弹窗」时按浮层判，不要按 activity 名判成"整页"。
+
+「新建课程」与「编辑课程」是**同一个弹窗**：
 
 - 字段 rid：课程名 `etCourseName`（必填）/ 教室 `etClassroom` / 备注(老师) `etTeacher`；
   课程时间 `llCourseTime` / `tvCourseTime`（默认"第1节"）；上课周数 `llCourseWeeks` /

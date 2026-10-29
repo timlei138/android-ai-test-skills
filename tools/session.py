@@ -675,6 +675,19 @@ def export_steps(db, session_id: int) -> str | None:
                 if landing:
                     in_page = True
 
+        # ★ from_activity 必须是「动作之前」的页面，所以在更新 prev_* 之前取。
+        #
+        #   2026-10-29 实测踩到：更新语句写在 item 构造之前，
+        #   于是 from_activity 记成了「点完之后在哪」。导出结果自相矛盾：
+        #
+        #     start_from: activity=.timetable.display.TimetableActivity
+        #     - n: 1  via: text=课程表
+        #       expect: activity=.timetable.display.TimetableActivity
+        #     （从课程表页出发，点「课程表」，又到课程表页）
+        #
+        #   之前没暴露是因为第一步往往是不跳页的页内动作（如 iv_more
+        #   开菜单），前后 activity 相同，取错也看不出来。
+        from_activity = prev_activity
         prev_activity = after or prev_activity
         prev_sig = after_sig or prev_sig
 
@@ -682,7 +695,7 @@ def export_steps(db, session_id: int) -> str | None:
             continue
 
         item = {"n": 0, "why": why[:60], "via": clean_via, "expect": landing,
-                "from_activity": prev_activity}
+                "from_activity": from_activity}
         if in_page:
             item["in_page"] = True
         steps.append(item)
@@ -729,13 +742,20 @@ def export_steps(db, session_id: int) -> str | None:
     out_dir.mkdir(parents=True, exist_ok=True)
     out = out_dir / f"{pkg}_{num}.steps.yaml"
 
-    # ★ 别用残缺的结果盖掉好路径。
+    # ★ 步数变少时**照样覆盖**，只在返回里告警。
     #
-    #   实测（2026-10-28）：某轮中途崩了只走了 3 步，导出把上一份 11 步的
-    #   覆盖掉 —— 好路径就这么丢了，下次反而更慢。
+    #   2026-10-29 改。原来是「旧的步数多就不覆盖」，本意是别让一轮没走全
+    #   冲掉好路径。但它分不清「旧的坏」和「旧的好」，一旦写坏就永久锁死：
     #
-    #   规则：旧文件存在且「步数 >= 新的」→ 不覆盖，只记一条提示。
-    #   （步数少了多半是这轮没走全，不是路径变短了。）
+    #     ae0aa1d82d21 导出 17 步（当时过滤有 bug，混了坐标/通用 rid/验证绕路）
+    #     → 修好过滤
+    #     → 70816c138fad 正确导出 5 步
+    #     → 5 < 17 被拒 → 坏文件一直留着
+    #     → start 的 last_steps 每次都喂给 AI 那份坏的（含改设备数据的步骤）
+    #
+    #   坏文件的害处（AI 照错路径走、改坏设备数据）远大于一次覆盖错；
+    #   而且文件里带 source_run，随时能追回是哪一轮写的。
+    drop_note = ""
     if out.is_file():
         try:
             old = out.read_text(encoding="utf-8")
@@ -744,8 +764,9 @@ def export_steps(db, session_id: int) -> str | None:
         except (OSError, ValueError):
             old_n = 0
         if old_n > len(steps):
-            return (f"assets/cases/{pkg}/{out.name}"
-                    f"（保留旧的 {old_n} 步，本轮只导出 {len(steps)} 步，疑似没走全）")
+            drop_note = (f"（已覆盖：步数 {old_n} → {len(steps)}，比上次少 "
+                         f"{old_n - len(steps)} 步。如果不是路径变短，"
+                         f"回看这轮是否没走全）")
 
     lines = [
         f"# 自动导出：{pkg}_{num} 的可复用跳转步骤",
@@ -777,7 +798,7 @@ def export_steps(db, session_id: int) -> str | None:
             # 不用等 activity 变化。
             lines.append("    in_page: true")
     out.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    return f"assets/cases/{pkg}/{out.name}"
+    return f"assets/cases/{pkg}/{out.name}{drop_note}"
 
 
 def collect_paths(db, session_id: int) -> str | None:

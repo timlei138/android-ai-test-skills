@@ -274,6 +274,38 @@ class SessionDB:
         if not path.is_file():
             raise ValueError(f"Event {event_id} evidence is missing: {path}")
 
+    # summary 里出现的统计数字，必须和库里的断言统计一致。
+    #
+    # ⚠️ 为什么需要（2026-10-29 实测）：
+    #   176 那轮 summary 写着「12 条预期中 8 PASS / 4 FAIL」，
+    #   而 findings 表里实际是 **9 PASS / 3 FAIL**。
+    #
+    #   本项目的分工是「代码管纪律，AI 管语义」。数一数 findings 表
+    #   是**确定且唯一**的结果，却让 AI 手写 —— 必然出错，而且错了没人发现。
+    #   结论数字是读报告的人看到的第一条信息，错了会带偏后续所有判断。
+    #
+    # 只校验形如「8 PASS」「4 FAIL」这种显式计数；不碰自然语言描述。
+    _COUNT_STATUSES = ("PASS", "FAIL", "BLOCKED")
+
+    def _check_summary_counts(self, summary: str, findings: list) -> None:
+        import re as _re
+        if not summary.strip():
+            return
+        actual: dict[str, int] = {}
+        for finding in findings:
+            st = finding["status"]
+            actual[st] = actual.get(st, 0) + 1
+        for word in self._COUNT_STATUSES:
+            for match in _re.finditer(rf"(\d+)\s*{word}\b", summary):
+                claimed = int(match.group(1))
+                real = actual.get(word, 0)
+                if claimed != real:
+                    raise ValueError(
+                        f"summary 里写的是「{claimed} {word}」，"
+                        f"但断言实际是 {real} 条 {word}"
+                        f"（共 {len(findings)} 条断言）。"
+                        f"结论里的统计数字必须和断言一致。")
+
     def finish_session(self, session_id: int, status: str, summary: str = "",
                        package: str | None = None) -> bool:
         if status not in STATUSES:
@@ -297,6 +329,7 @@ class SessionDB:
                 raise ValueError("FAIL requires a FAIL finding")
             if status in ("BLOCKED", "ERROR") and not summary.strip():
                 raise ValueError("BLOCKED/ERROR requires a reason in summary")
+            self._check_summary_counts(summary, findings)
             if status not in ("ERROR", "BLOCKED") and recording_issues(Path(self.path).parent, session_id):
                 raise ValueError("Recording/ledger is incomplete; finish ERROR/BLOCKED with a reason")
             for finding in findings if status in ("PASS", "FAIL") else []:

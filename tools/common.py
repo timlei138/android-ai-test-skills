@@ -39,6 +39,54 @@ def ensure_utf8_stdio() -> None:
 ensure_utf8_stdio()
 
 
+def payload_to_argv(payload: dict | None) -> list[str]:
+    """把 stdin JSON 归一成 argparse 能吃的参数列表。
+
+    两种写法都认：
+
+        {"args": ["--card", "com.x", "--query", "y"]}      ← 标准
+        {"card": "com.x", "query": "y"}                    ← 扁平
+
+    ⚠️ 为什么要兼容扁平写法（2026-10-29 实测）：
+      176 那轮 AI 连续 4 次调 android_read_file 报
+      「需要 --path <文件> 或 --card <包名>」—— 它按直觉传了扁平字段，
+      而解析只认 args，于是当成空参数。白花约 12 秒 + 4 次思考。
+
+      这份约定只写在 docstring 里、SKILL 没教，AI 猜不到。既然 --stdin-json
+      本来就是为了绕开参数传递的坑，那就做到底：怎么写都能用。
+
+    映射规则：key -> --key（下划线换短横线）
+      True          -> 只给开关            {"full": true}   -> --full
+      False / None  -> 忽略（不传空值）
+      list          -> 重复给参数          {"section": ["a","b"]} -> --section a --section b
+      其它          -> --key value
+    """
+    payload = payload or {}
+    argv = payload.get("args")
+    if argv:
+        return [str(x) for x in argv]
+    derived: list[str] = []
+    for key, val in payload.items():
+        if key == "args":
+            continue
+        flag = "--" + str(key).strip().replace("_", "-")
+        if val is False or val is None:
+            continue
+        if val is True:
+            derived.append(flag)
+        elif isinstance(val, (list, tuple)):
+            for item in val:
+                if item is None or item is False:
+                    continue
+                if item is True:
+                    derived.append(flag)
+                else:
+                    derived.extend([flag, str(item)])
+        else:
+            derived.extend([flag, str(val)])
+    return derived
+
+
 def apply_stdin_args() -> None:
     """支持 `--stdin-json`：从 stdin 读参数，绕开命令行引号问题。
 
@@ -82,9 +130,9 @@ def apply_stdin_args() -> None:
         payload = _json.loads(raw) if raw.strip() else {}
     except (OSError, ValueError):
         return
-    argv = payload.get("args") or []
+    argv = payload_to_argv(payload)
     # 保留脚本名，把 JSON 里的参数当成命令行
-    sys.argv = [sys.argv[0]] + [str(x) for x in argv]
+    sys.argv = [sys.argv[0]] + argv
 
 
 def _adb(*args: str, timeout: float = 20.0) -> tuple[int, str]:

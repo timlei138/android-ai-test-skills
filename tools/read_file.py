@@ -44,6 +44,11 @@ import re
 import sys
 from pathlib import Path
 
+# stdin JSON 归一（标准 {"args": [...]} 和扁平字段都认）。
+# 放这里做同一份实现，别在 main() 里再抄一遍 —— 抄出来的那份必然只支持
+# 一种写法，而 AI 猜不到该用哪种。
+from common import payload_to_argv
+
 # ── UTF-8 兜底 ────────────────────────────────────────────────────
 for _s in (sys.stdout, sys.stderr):
     try:
@@ -413,9 +418,9 @@ def main() -> int:
                               "error": f"stdin JSON 解析失败: {exc}"},
                              ensure_ascii=False))
             return 2
-        argv = payload.get("args") or []
+        argv = payload_to_argv(payload)
         # 把 JSON 里的参数还原成 argparse 认的形式
-        sys.argv = ["read_file.py"] + [str(x) for x in argv]
+        sys.argv = ["read_file.py"] + argv
         args = ap.parse_args()
 
     # ★ 卡片模式优先：一次搜两张卡，按来源标注
