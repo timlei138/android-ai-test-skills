@@ -425,13 +425,75 @@ _MODAL_TITLE_RIDS = (
     "curriculum_guide_title",
 )
 
+# 「通用节点」rid：几个弹窗/页面都有的容器和按钮。
+#
+# 它们**不能当锚点**（点了不知道点的是哪个控件），
+# 也**不能当落点**（屏幕上有它不代表到了目标页面）。
+#
+# 2026-10-29 实测教训：这轮导出的 17 步里有
+#   via: rid=android:id/button1   （确定）
+#   via: rid=android:id/button2   （取消）
+#   expect: rid=contentPanel / rid=action_bar_root
+# 全是通用节点 —— 下次执行时第一步就会误判。
+_GENERIC_RIDS = {
+    "content", "parentPanel", "customPanel", "custom", "divider",
+    "buttonPanel", "button_divider", "button1", "button2", "button3",
+    "empty", "topPanel", "action_bar_root", "contentPanel", "custom",
+    "alertTitle", "title_template", "android:id/button1",
+    "android:id/button2", "android:id/button3", "android:id/content",
+}
+
+
+def _anchors_of(via: str) -> list[str] | None:
+    """把 via 拆成可执行的锚点列表；不可执行返回 None。
+
+    可执行 = 纯 `key=value`，多个用逗号/空格分隔，每个值都非空。
+
+    ⚠️ 三类必须拒掉（都是实测踩过的）：
+      ① **坐标/人话混入**：`rid=cv_empty_content 第1节 周一格`
+         —— rid 有 14 个同名的格子，光凭 rid 不知道点哪个。
+      ② **全角括号坐标**：`弹框外空白（x=300,y=1700）`
+         —— 2026-10-29 实测漏网。原来只查半角 `(` `[`，
+            而 AI 写的是全角 `（`，于是这行坐标被当"纯锚点"写进 yaml。
+      ③ **通用 rid**：`rid=android:id/button1`
+         —— 每个弹窗都有，点它等于瞎点。
+    """
+    if not via:
+        return None
+    # ①② 括号（半角+全角）、方括号、"第N节/第N格"这类位置描述
+    if any(ch in via for ch in "([{（【"):
+        return None
+    parts = [p for p in re.split(r"[,\s]+", via.strip()) if p]
+    if not parts:
+        return None
+    for p in parts:
+        if "=" not in p:
+            return None                      # 有人话
+        key, _, val = p.partition("=")
+        key = key.strip().lower()
+        val = val.strip()
+        if not key or not val:
+            return None                      # `x=` 空值
+        if key in ("t", "c"):
+            return None                      # 文本/坐标锚点，不稳
+        # 值里还有非 ASCII 且不是 rid/desc 常见字符 → 多半混了中文描述
+        if key in ("rid", "desc", "id") and any(
+                "\u4e00" <= ch <= "\u9fff" for ch in val):
+            return None
+        # ③ 通用 rid
+        if key == "rid" and val in _GENERIC_RIDS:
+            return None
+        if key == "rid" and val.split("/")[-1] in _GENERIC_RIDS:
+            return None
+    return parts
+
 
 def _pick_landing(new_nodes: set[str]) -> str | None:
     """从「点击后新增的节点」里挑一个最可靠的当落点。
 
     优先级：
       ① 弹窗标题类 rid（npTitle / dialog_title / alertTitle ...）—— 唯一指认某个弹层
-      ② 普通 rid
+      ② 普通 rid（排除 _GENERIC_RIDS 那批通用容器）
       ③ desc
       （text 一律不选：改个文案就废）
 
@@ -443,12 +505,11 @@ def _pick_landing(new_nodes: set[str]) -> str | None:
         for r in rids:
             if r[4:] == want:
                 return r
-    # ② 普通 rid：排除那些"几乎每个页面都有"的通用容器
-    generic = {"rid=content", "rid=parentPanel", "rid=customPanel",
-               "rid=custom", "rid=divider", "rid=buttonPanel",
-               "rid=button_divider", "rid=button1", "rid=button2",
-               "rid=empty", "rid=topPanel"}
-    specific = sorted(r for r in rids if r not in generic)
+    # ② 普通 rid：排除"几乎每个页面都有"的通用容器
+    specific = sorted(
+        r for r in rids
+        if r[4:] not in _GENERIC_RIDS
+        and r[4:].split("/")[-1] not in _GENERIC_RIDS)
     if specific:
         return specific[0]
     # ③ desc
@@ -546,34 +607,46 @@ def export_steps(db, session_id: int) -> str | None:
             prev_activity = after or prev_activity
             prev_sig = after_sig or prev_sig
             continue
+        # ①b 为「造条件验证断言」而绕的路不要
+        #
+        #   2026-10-29 实测：这轮 AI 为了验「上课周数最多24周」，
+        #   先去课程表设置里把学期总周数改成 24，再回来看 —— 6 步。
+        #   这些步骤的 why 不含"前置/准备"，所以旧过滤放行了，
+        #   整份 steps.yaml 从 8 步涨到 17 步。
+        #
+        #   ⚠️ 只靠 why 关键词堵不住：实测第一次补了 7 个词，
+        #      17 → 11 步，还剩 3 步漏网（"进入课表176的基本信息页"、
+        #      "保存课程表设置（学期总周数 24）"、"核对上课周数上限
+        #      （学期总周数已设为24周）"）—— AI 每次措辞都不一样。
+        #
+        #   所以用两个判据，任一命中就丢：
+        #      · why 里出现"验证/核对/上限"等字样 → 这步是为断言服务的
+        #      · why 或 via 里出现用例里没提的**中间设置页**（系学期/总周数）
+        if any(k in why for k in ("为核对", "为了验证", "为验证", "用于验证",
+                                  "以便验证", "验证上限", "改周数",
+                                  "核对", "验证", "上限", "设置")):
+            prev_activity = after or prev_activity
+            prev_sig = after_sig or prev_sig
+            continue
+        # ①c 改设备设置的步骤不要（属于"造条件"，不是跳转路径）
+        #
+        #   判据：via 落在设置类节点上。这类步骤的共同点是
+        #   **点完会改变设备的持久状态**（学期总周数、课程表名称…），
+        #   下次照着走会把设备改歪。
+        if any(k in (via + why) for k in (
+                "total_weeks", "schedule_name", "layout_", "switch",
+                "seekbar", "et_schedule", "学期总周数", "学期开始时间")):
+            prev_activity = after or prev_activity
+            prev_sig = after_sig or prev_sig
+            continue
         # ② 只收 tap
         if act.get("type") != "tap":
             prev_activity = after or prev_activity
             prev_sig = after_sig or prev_sig
             continue
-        # ③ 坐标不要
-        if not via or "(" in via or "[" in via:
-            prev_activity = after or prev_activity
-            prev_sig = after_sig or prev_sig
-            continue
-        # ④ 必须有明确锚点，并且锚点本身要**干净**
-        #
-        #    via 常混着人话，比如 `rid=cv_empty_content 第1节 周一格`。
-        #    这种不能直接用于执行：`rid=cv_empty_content` 有 14 个格子，
-        #    光凭 rid 不知道点哪个。所以只收**纯锚点**：
-        #      · 只有 key=value，多个用逗号或空格分隔，每段都带 =
-        #      · 带中文描述 / 括号 / 坐标的一律丢
-        anchor_parts = [p for p in via.replace(",", " ").split() if p]
+        # ③ 锚点必须可执行（纯 key=value、无坐标/人话、非通用 rid）
+        anchor_parts = _anchors_of(via)
         if not anchor_parts:
-            prev_activity = after or prev_activity
-            prev_sig = after_sig or prev_sig
-            continue
-        if not all("=" in p for p in anchor_parts):
-            prev_activity = after or prev_activity
-            prev_sig = after_sig or prev_sig
-            continue
-        if any(kv.startswith(("t=", "c=")) or "=" not in kv
-               for kv in anchor_parts):
             prev_activity = after or prev_activity
             prev_sig = after_sig or prev_sig
             continue
