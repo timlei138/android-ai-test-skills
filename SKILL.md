@@ -99,29 +99,6 @@ python session.py finish  --status FAIL --summary "<结论 + 设备当前状态>
 > `--summary` 里**必须带上设备当前停留的状态**（现存几个课程表/事件、停在哪个页面），
 > 这是给下一条用例的交接信息 —— 跑完**不做任何清理**，见「只做用例要求的事」。
 
-### ⚠️ 工具报「设备连接失败 / WinError 10061」时怎么办
-
-**不要查 USB、授权、ANDROID_HOME、环境变量、进程列表 —— 设备是好的。**
-
-报 10061 只有一个意思：**adb server 没在运行**。
-
-按顺序做，**每个错误只修一次**：
-
-```powershell
-# 1. 在 bash 里跑这一条 —— 它会把 adb server 拉活
-adb devices
-
-# 2. 必须看到 "<serial>	device"
-# 3. 重试刚才那个工具调用一次
-# 4. 还失败 → 停下问人，不要再试
-```
-
-**为什么是 bash 而不是工具层：** 工具层（Python）在沙箱下**写不了 `%TEMP%`**，
-而 adb daemon 启动要在 `%TEMP%` 建 `adb.log`，所以从 Python 里怎么试都起不来
-（会报 `cannot open ...adb.log: Permission denied`）。bash 是 pwsh，能写，所以能起来。
-
-**所以：工具层不做恢复，只负责"连不上就说清楚"；修一次交给 bash。**
-
 ### ⚠️ finding **按用例的「预期」逐条记**，不要写成一坨
 
 用例写了几条预期，就记几条 finding —— 每条带自己的结论和证据：

@@ -159,12 +159,69 @@ def _u2_connect(serial: str | None):
     return _u2.connect(serial) if serial else _u2.connect()
 
 
+def _dir_writable(path: str | None) -> bool:
+    """真写一个文件再删，别只信 ACL 查询。"""
+    import os as _os
+    if not path or not _os.path.isdir(path):
+        return False
+    probe = _os.path.join(path, f".dsh_probe_{_os.getpid()}")
+    try:
+        with open(probe, "w", encoding="utf-8") as handle:
+            handle.write("x")
+        _os.remove(probe)
+        return True
+    except OSError:
+        return False
+
+
+def ensure_writable_temp() -> str | None:
+    """确保 TEMP 可写；不可写就指到工作区内的目录。返回换到的路径（没换返回 None）。
+
+    ⚠️ 为什么需要（2026-10-29 实测，这是 adb 反复报 10061 的真根因）：
+
+      adb daemon 启动时要在 `%TEMP%` 建 `adb.log`。沙箱下 **Python 进程
+      对 `%TEMP%` 只读**，于是：
+
+          F adb: main.cpp:52 cannot open ...\\Temp\\adb.log: Permission denied
+          * failed to start daemon
+          → 5037 不监听 → 之后所有连接 WinError 10061
+
+      而 `pwsh` 能写，所以 `adb devices` 在 bash 里跑就正常 —— 这解释了
+      为什么"人工敲一次就好、工具调就不行"。
+
+    ## 为什么是换 TEMP，而不是自己起 server
+
+      adbutils 的 `_safe_connect()` **本来就自带 `adb start-server`**
+      （见 .venv/Lib/site-packages/adbutils/_adb.py:69）。那是被大量项目
+      验证过的机制，不该由我们重写或拦掉。
+
+      实测（清空 daemon 后）：给 Python 一个可写的 TEMP，
+      `u2.connect()` 自己就把 daemon 拉起来了、5037 正常监听、
+      adb.log 落在新目录 —— **库的功能完全正常，缺的只是权限。**
+
+      所以这里只补权限，不碰 adb 策略：能写就不动，写不了才换。
+      正常机器上（Python 能写 %TEMP%）这个函数什么都不做。
+    """
+    import os as _os
+    cur = _os.environ.get("TEMP") or _os.environ.get("TMP")
+    if _dir_writable(cur):
+        return None
+    target = STORAGE_DIR / "tmp" / "_adb"
+    try:
+        target.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        return None
+    # TEMP 和 TMP 都改 —— adb 两个都看，只改一个可能不生效
+    _os.environ["TEMP"] = str(target)
+    _os.environ["TMP"] = str(target)
+    return str(target)
+
+
 _ADB_SERVER_HINT = (
-    "adb server 没在运行（WinError 10061）。\n"
-    "处置：在 bash 里跑一次 `adb devices`，看到 `<serial>  device` 后"
-    "重试本工具**一次**。\n"
-    "不要查 USB / 授权 / ANDROID_HOME / 环境变量 —— 设备是好的，"
-    "缺的只是 adb server。"
+    "adb server 连不上（WinError 10061）。\n"
+    "处置：先重试一次本工具（工具会自己把 server 拉起来）。\n"
+    "仍不行就在 bash 里跑一次 `adb devices`，确认能看到 "
+    "`<serial>	device`，然后停下问人。"
 )
 
 
@@ -188,22 +245,22 @@ def _adb_server_alive(host: str = "127.0.0.1", port: int = 5037,
 def connect(serial: str | None):
     """延迟导入 uiautomator2：无依赖环境也能 --help / 查看用法。
 
-    ## 为什么这里**不再自动恢复 ADB**（2026-10-29 改）
+    ## 这里不做自己的 ADB 恢复逻辑（2026-10-29 定稿）
 
-    旧实现在首连失败时跑 `recover_adb`：`adb reconnect` + 轮询 3 秒，
-    实测 **44 秒**，而且**原理上不可能成功** —— 沙箱下 Python 进程对
-    `%TEMP%` 只读，而 adb daemon 启动要在 `%TEMP%` 建 `adb.log`：
+    adbutils 的 `_safe_connect()` **自带 `adb start-server`**
+    （.venv/Lib/site-packages/adbutils/_adb.py:69），那是被大量项目验证过的
+    机制。我们**不重写、也不拦它** —— 旧版的 `recover_adb`
+    （`adb reconnect` + 轮询 3 秒）实测白烧 44 秒，已删。
 
-        F adb: main.cpp:52 cannot open ...\\Temp\\adb.log: Permission denied
-        * failed to start daemon
-        → 5037 没监听 → 所有连接 WinError 10061
+    工具层只做两件库管不到的事：
 
-    也就是说：**从 Python 里根本拉不起 adb daemon**，反复重试只是空转，
-    还会把已经好的 daemon 一起搅乱（176 那轮为此白烧 176 秒、占 31%）。
+      ① **探测 5037（100ms）**：server 没跑时裸 connect 要 14.6 秒才抛 10061，
+         先探一下就能立刻说清原因。
+      ② **保证 TEMP 可写**（见 `ensure_writable_temp`）：这是本机 adb 反复
+         报 10061 的真根因 —— daemon 要写 `%TEMP%\\adb.log`，而沙箱下
+         Python 对 `%TEMP%` 只读。补上权限后，库自己的 start-server 就能工作。
 
-    adb 是系统工具，**该由 shell 拉**：bash 里跑一次 `adb devices` 就够了
-    （pwsh 能写 %TEMP%，所以它起得来）。工具层只负责"连不上就说清楚"，
-    由 AI 去 shell 修一次再重试 —— 不在工具里做恢复。
+    也就是说：**真正把 server 拉起来的是 adbutils，我们只负责给它能干活的环境。**
     """
     try:
         with stage("device_import"):
@@ -213,7 +270,9 @@ def connect(serial: str | None):
 
     with stage("adb_probe"):
         if not _adb_server_alive():
-            fail(_ADB_SERVER_HINT)
+            # server 没跑。先确保 TEMP 可写（否则库起 daemon 也会失败），
+            # 再交给 adbutils 的 start-server —— 它会自己拉起来。
+            ensure_writable_temp()
 
     with stage("device_connect"):
         try:
