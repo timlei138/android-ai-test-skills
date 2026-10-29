@@ -59,15 +59,15 @@ description: Android 真机 GUI 测试。当用户给出测试用例（步骤+�
 
 | 情况 | 做不做 | 例 |
 |---|---|---|
-| 用例前置/步骤**明确要求**清理 | ✅ **必须清**，不能省 | 「首次启动/清除应用数据」「清除日历的数据」「卸载后重装」 |
-| 用例**没提**清理 | ❌ **什么都不做** | 跑完留着一堆测试事件、测试课表 —— 原样留着 |
+| 用例前置/步骤**明确要求**清理 | ✅ **必须清**，不能省 | 「首次启动/清除应用数据」「清除某 App 的数据」「卸载后重装」 |
+| 用例**没提**清理 | ❌ **什么都不做** | 跑完留着一堆测试数据 —— 原样留着 |
 
-**"清理"的范围也跟着用例走**：用例只说清日历数据，就别顺手把课表也删了；
-用例只说卸载日历，就别去动别的应用。**要求多少就做多少，不多不少。**
+**"清理"的范围也跟着用例走**：用例只说清 A 数据，就别顺手把 B 也删了；
+用例只说卸载某个 App，就别去动别的应用。**要求多少就做多少，不多不少。**
 
 > ⚠️ 最常犯的错是**把这条读反**：以为"任何时候都不清理"。
 > 不是的 —— 用例要求清就必须清，否则**前置不满足，这条用例根本没在测它要测的东西**
-> （比如「一键恢复」的前置是"清除日历的数据"，你不清就恢复，测的是什么？）。
+> （比如「一键恢复」的前置是"清除某 App 的数据"，你不清就恢复，测的是什么？）。
 > 反过来，用例没要求却自作主张清，同样是错的。
 >
 > 拿不准用例算不算"要求了" → **先问人**，别自己决定。
@@ -78,7 +78,7 @@ description: Android 真机 GUI 测试。当用户给出测试用例（步骤+�
 > - **任何时候**：拿不准要不要动 → **先问人**，别自己决定
 
 **要做的是"交接"，不是"打扫"**：在 `finish --summary` 里写清**设备当前停留的状态**
-（如"现存 1 个课程表：测试课表A（当前）；日历有 1 个事件：测试会议"），
+（如"现存 1 个 A 类条目：xxx（当前）；B 类有 2 条：yyy、zzz"），
 下一条用例据此判断前提是否满足。**清理过就要在会话里记录在案**（清什么、为什么清、清之前是什么状态）。
 
 ## 最小工作流
@@ -88,7 +88,7 @@ description: Android 真机 GUI 测试。当用户给出测试用例（步骤+�
 python session.py start --case 1 --device <serial> --package com.app
 
 # ② 执行：act 每次自动回传动作后的画面（截图 + dump + nodes）
-python act.py --serial <s> tap --x 540 --y 1200 --via "rid=xxx" --why "点保存"
+python act.py --serial <s> tap --x <x> --y <y> --via "rid=<目标 rid>" --why "点保存"
 
 # ③ 记断言 + 收尾（**按预期逐条记**，见下）
 python session.py finding --status PASS --event-id <证据事件ID> --expect "<预期1>" --actual "<实际看到的>"
@@ -96,7 +96,7 @@ python session.py finding --status FAIL --event-id <证据事件ID> --expect "<�
 python session.py finish  --status FAIL --summary "<结论 + 设备当前状态>"
 ```
 
-> `--summary` 里**必须带上设备当前停留的状态**（现存几个课程表/事件、停在哪个页面），
+> `--summary` 里**必须带上设备当前停留的状态**（现存几条数据、停在哪个页面），
 > 这是给下一条用例的交接信息 —— 跑完**不做任何清理**，见「只做用例要求的事」。
 
 ### ⚠️ finding **按用例的「预期」逐条记**，不要写成一坨
@@ -105,9 +105,9 @@ python session.py finish  --status FAIL --summary "<结论 + 设备当前状态>
 
 ```
 ✅ 5 条预期 → 5 条 finding
-   [PASS] 预期1 名称可编辑且最多20字符
+   [PASS] 预期1 名称可编辑且最多 20 字符
    [PASS] 预期2 点击后调用系统日期弹框
-   [PASS] 预期3 当前周数默认第4周、可修改
+   [PASS] 预期3 默认值与用例写的一致、可修改
    [PASS] 预期4 两个开关可操作
    [FAIL] 预期5 必填为空时完成按钮置灰   ← 一眼看出哪条挂了
 
@@ -130,27 +130,27 @@ python session.py finish  --status FAIL --summary "<结论 + 设备当前状态>
 ```powershell
 $j = @'
 [
-  {"status":"PASS","expect":"预期1 打开课程表页面","actual":"activity=TimetableActivity","event_id":[13]},
-  {"status":"FAIL","expect":"预期2 顶部有「添加课程」引导","actual":"79 个节点 + 整屏 OCR 都没有该文案","event_id":[15,16]}
+  {"status":"PASS","expect":"预期1 <预期原文>","actual":"activity=<实际页>","event_id":[13]},
+  {"status":"FAIL","expect":"预期2 <预期原文>","actual":"<N> 个节点 + 整屏 OCR 都没有该文案","event_id":[15,16]}
 ]
 '@
 Set-Content -Path "<target>\storage\tmp\facts.json" -Value $j -Encoding utf8
 & "<python>" "<target>\tools\session.py" findings-batch --file "<target>\storage\tmp\facts.json"
 ```
 
-**为什么**：实测 176 那轮逐条调了 9 次 `finding`，每次间隔约 6 秒
-（AI 思考 + 进程冷启动），**光记断言就 53 秒**。一次写完省掉这个开销。
+**为什么**：逐条调 `finding` 时，每次都要 AI 思考 + 进程冷启动（约 6 秒一条），
+一条 9 个断言的用例**光记断言就要 50 秒以上**。一次写完省掉这个开销。
 
 **`event_id` 必须是本会话真事件**（从 `android_observe` / `android_act` 返回的
 `event_ids` 里拿），拿错了整批会被拒。
 
 ### ⚠️ 一批数据一次造完，再逐条操作
 
-用例写"创建事件（提醒、日程、课程、倒数日、生日纪念日），设置提醒"这类**枚举型步骤**时：
+用例写"创建各类条目（A 类型、B 类型、C 类型…），设置 X"这类**枚举型步骤**时：
 
 ```
-✅ 一次性把这 5 个事件都建好 → 只挑 1 个做后续动作（滑动通知、延迟提醒…）
-❌ 建提醒 → 测完 → 再建日程 → 测完 → …   （N 倍耗时，且没必要）
+✅ 一次性把这 5 个条目都建好 → 只挑 1 个做后续动作（滑动通知、延迟提醒…）
+❌ 建 A → 测完 → 再建 B → 测完 → …   （N 倍耗时，且没必要）
 ```
 
 用例关心的是**后面那个动作**（通知行为），不是"每类都单独跑一遍"。
@@ -162,8 +162,8 @@ Set-Content -Path "<target>\storage\tmp\facts.json" -Value $j -Encoding utf8
 N 次点按在**一个进程内**完成：
 
 ```
-✅ act tap --x 1887 --y 1092 --repeat 6          # 一次调用点 6 格
-❌ for i in 1..6 { run.py act tap --x 1887 --y 1092 }   # 6 次冷启动 → 超时 → 会话作废
+✅ act tap --x <x> --y <y> --repeat 6          # 一次调用点 6 格
+❌ for i in 1..6 { run.py act tap --x <x> --y <y> }   # 6 次冷启动 → 超时 → 会话作废
 ```
 
 - 点按滚轮选中行的**上一格/下一格**即 ±1，**点几次就是几格**，不需要点一次观察一次
@@ -177,7 +177,7 @@ N 次点按在**一个进程内**完成：
 
 ```powershell
 python observe.py                                  # ← 先看，拿 next[].c
-python act.py tap --x 1520 --y 1521 --via "rid=timetable_guide_button" --why "..."
+python act.py tap --x <x> --y <y> --via "rid=<目标 rid>" --why "..."
 ```
 
 **为什么**：`t`（text）定位在**同 rid 多态**时不可靠（一个 `android:id/button1`
@@ -191,7 +191,7 @@ python act.py tap --x 1520 --y 1521 --via "rid=timetable_guide_button" --why "..
 要清空一个输入框，**一次调用**就够：
 
 ```bash
-python act.py input --x 1520 --y 375 --text= --via "rid=et_schedule_name" --why "清空名称"
+python act.py input --x <x> --y <y> --text= --via "rid=<输入框 rid>" --why "清空"
 ```
 
 **必须写成 `--text=`（等号形式）**。写成 `--text ""` 在 PowerShell 里
@@ -210,23 +210,23 @@ python act.py input --x 1520 --y 375 --text= --via "rid=et_schedule_name" --why 
 
 ```powershell
 # 有 activity 变化 → 用 activity 名（首选）
-python act.py tap --x 2697 --y 371 --via "menu 课程表" --why "进课程表" \
-  --expect "activity=TimetableActivity"
+python act.py tap --x <x> --y <y> --via "text=<入口名>" --why "进<页面>" \
+  --expect "activity=<目标页 Activity>"
 
-# 同一个 activity 的形态变化（空态 / 周视图）→ 用 rid 区分
-python act.py tap --x 1520 --y 1717 --via "rid=btnCreateManually" \
-  --expect "rid=et_schedule_name"
+# 同一个 activity 的形态变化（空态 / 有内容）→ 用 rid 区分
+python act.py tap --x <x> --y <y> --via "rid=<按钮 rid>" \
+  --expect "rid=<落点 rid>"
 
 # 多个条件 = AND（逗号）；任一 = OR（竖线）
---expect "activity=EditTimetableActivity,rid=et_schedule_name"
---expect "activity=TimetableActivity|EditTimetableActivity"
+--expect "activity=<页A>,rid=<元素 rid>"
+--expect "activity=<页A>|activity=<页B>"
 ```
 
 返回里多了 `checkpoint`：
 
 ```json
 "checkpoint": {"checked": true, "ok": false,
-               "missed": ["activity=EditTimetableActivity（实际 .timetable.display.TimetableActivity）"]}
+               "missed": ["activity=<期望页>（实际 <实际页>）"]}
 ```
 
 **未命中怎么办 —— 按「是不是用例要的东西」分两档**：
@@ -284,8 +284,8 @@ python act.py tap --x 1520 --y 1717 --via "rid=btnCreateManually" \
 ```
 
 > ⚠️ **当前状态已满足前提时，直接开始 —— 这是最容易白走的地方。**
-> 实测：185 结束时停在「全部课程表列表页」，186 的前提正是"有多个课程表"
-> （需要的就是列表页），我却先「回周视图 → 再进列表页」，白走 2 步。
+> 实测：上一条用例结束时正停在「某个列表页」，下一条的前提正是"有多个条目"
+> （需要的就是那个列表页），却先「退回主视图 → 再进列表页」，白走 2 步。
 
 **前提 ≠ 从首页开始的理由**，前提只是"要摆好的状态"。摆好后从**步骤1**开始。
 
@@ -299,11 +299,11 @@ python act.py tap --x 1520 --y 1717 --via "rid=btnCreateManually" \
   → 才 state.py clear（一次性引导弹窗只有清数据才会再出现，冷启动不行）
 
 否则 → 按前提**定向准备**，不要用清数据代替：
-  「无课程表」  → 删掉现有课表
-  「已有课表」  → 建一个
-  「多个课表」  → 建 ≥2 个
-  「未授予X权限」→ 只 revoke 那一个权限
-  「已进入某页」→ **如果现在就在那页，直接用；不在就走最短路径过去**
+  「无<某类数据>」   → 删掉现有的
+  「已有<某条数据>」 → 建一条
+  「多条<某类数据>」 → 建 ≥2 条
+  「未授予 X 权限」  → 只 revoke 那一个权限
+  「已进入某页」     → **如果现在就在那页，直接用；不在就走最短路径过去**
 ```
 
 > ⚠️ 上面这些是**跑之前**为满足**用例前提**而做的调整，和「只做用例要求的事」不冲突：
@@ -325,8 +325,8 @@ python act.py tap --x 1520 --y 1717 --via "rid=btnCreateManually" \
   → 这些是**设备级共享状态**，不还原会污染别人的测试。
 
 不需要还原（跑完什么都不做）：
-  ❌ App 内的业务数据（课表、课程、事件、备忘录……）
-  ❌ App 内的设置项（时长、节数、开关……）
+  ❌ App 内的业务数据（列表条目、记录、文档……）
+  ❌ App 内的设置项（各项参数、开关……）
   ❌ App 内的登录态、列表内容
   → 这些是**本 App 私有状态**，用例怎么用是它自己的事；
     下一条用例若在意，应由**它自己的前置**去准备（见上「定向准备」）。
@@ -347,10 +347,10 @@ python act.py tap --x 1520 --y 1717 --via "rid=btnCreateManually" \
 
 ```json
 "knowledge_hint": {
-  "package": "com.zui.calendar",
-  "how_to_read": "android_read_file(card=\"com.zui.calendar\", query=\"<用例要干什么>\")",
-  "how_to_read_section": "android_read_file(card=\"com.zui.calendar\", section=\"A\", section=\"B\")",
-  "sections": ["课程表空状态", "设置页很长…", ...],
+  "package": "<被测包名>",
+  "how_to_read": "android_read_file(card=\"<包名>\", query=\"<用例要干什么>\")",
+  "how_to_read_section": "android_read_file(card=\"<包名>\", section=\"A\", section=\"B\")",
+  "sections": ["<小节1>", "<小节2>", ...],
   "system_card": "assets/knowledge/_system.md"
 }
 ```
@@ -372,14 +372,14 @@ python act.py tap --x 1520 --y 1717 --via "rid=btnCreateManually" \
 
 ```json
 "last_steps": {
-  "last_run": "2026-10-29T10:01:59",
-  "verdict": "FAIL",
+  "last_run": "<上次开始时间>",
+  "verdict": "<上次结论>",
   "step_count": 8,
-  "start_from": "activity=.AllInOneActivity",
+  "start_from": "activity=<起点 Activity>",
   "steps": [
-    {"via": "rid=iv_more", "expect": "rid=item_title", "in_page": true},
-    {"via": "text=课程表", "expect": "activity=.timetable.display.TimetableActivity"},
-    {"via": "rid=btnCreateManually", "expect": "activity=.timetable.management.EditTimetableActivity"}
+    {"via": "rid=<入口 rid>", "expect": "rid=<落点 rid>", "in_page": true},
+    {"via": "text=<菜单项>", "expect": "activity=<目标页>"},
+    {"via": "rid=<按钮 rid>", "expect": "activity=<目标页>"}
   ],
   "truncated": false
 }
@@ -406,23 +406,23 @@ python act.py tap --x 1520 --y 1717 --via "rid=btnCreateManually" \
 这条放在最前面，是因为它是这类用例最贵的浪费点。
 
 ```
-实测（2026-10-29，176 那轮，一个 run 里）：
+❌ 典型的浪费（真实发生过）
 
-  13:36:11  observe  ← 这一屏同时能看到「没有加号」和「顶部没有添加课程引导」
-  13:36:32  去点格子了
+  某一屏  →  同时能看到两三条预期的答案
+  但当时只判了一条，就去做下一步了
   ...
-  13:39:45  read 扫顶栏 0,100,3040,300   ← 回来看
-  13:41:07  read 扫全屏                 ← 又看
-  13:42:33  read 扫顶栏 0,100,3040,500   ← 又看
-  13:42:42  read 扫 600,180,2450,420     ← 又看
-  13:46:57  read 扫全屏                 ← 还在看
+  几分钟后  回头扫顶栏     ← 想确认 A
+  又一会儿  回头扫全屏     ← 还是 A
+  再一会儿  回头扫局部     ← 又是 A
+  最后      再扫一遍全屏   ← 仍然 A
 
-  同一件事复验 5 次、跨 10 分钟。而答案是 13:36:11 那一屏就给了。
+  同一件事复验 4~5 次、跨十分钟。
+  而答案在最初那一屏就已经完整给出了。
 ```
 
 #### 规则一：静态可见的，看到就判
 
-一屏上能"看见"的东西 —— 文案、图标、按钮、字段在不在、有没有加号 ——
+一屏上能"看见"的东西 —— 文案、图标、按钮、字段在不在、某个标志有没有 ——
 **当次返回就判掉，记成 finding，然后走下一步。**
 
 判的时候问自己一句：**这屏上关于这条用例，我还能看到什么没判的？**
@@ -435,17 +435,18 @@ python act.py tap --x 1520 --y 1717 --via "rid=btnCreateManually" \
 **那就当场点开、当场看、当场判，然后继续。不要"先点开确认能打开、回头再来验内容"。**
 
 ```
-实测（同一轮，预期5「可以调整字段包括」）：
+❌ 典型的浪费（真实发生过）
 
-  ✅ 应该这样
-     tap rid=llCourseWeeks → 弹出「上课周数」→ 当场看：快捷项 全选/单周/双周、
-                             周次 chip 1~20 全选 → 记断言 → 取消 → 下一个字段
+  点开某字段的弹层  →  why=查看「字段X」
+  20 秒后 点「取消」 →  why=取消弹层        ← 开了就关，内容根本没验
 
-  ❌ 实际这样
-     #24 tap rid=llCourseWeeks   why=查看「上课周数」字段
-     #25 tap rid=button2         why=取消周数弹层        ← 开了 20 秒就关，内容没验
-     ... 35 分钟后 ...
-     #35 跑去「课程表设置」改成学期总周数 24          ← 单独跑一趟验「24 上限」
+  ...几十分钟后...
+
+  跑进设置页  →  改了某个全局配置  →  拨滚轮  →  再取消  →  退回
+  （就为了验「字段X 的上限」——本来弹层里当场就能看到）
+
+✅ 正确
+  点开弹层 → 看清里面所有选项/条目 → 记断言 → 取消 → 下一个字段
 ```
 
 **一条「弹窗里有哪些字段可调整」的预期，就在那个弹窗里一次性验完 ——
@@ -457,12 +458,16 @@ python act.py tap --x 1520 --y 1717 --via "rid=btnCreateManually" \
 「更正 finding#N」即可，**不要新增一条"更正断言"来重复占位**。
 
 ```
-实测代价：176 那轮先合并判了 PASS，觉得不对又拆出一条 FAIL，
-又补一条【记录更正】说明 —— 3 条断言说同一件事，为此多花 10 分钟反复核验。
+❌ 典型的浪费（真实发生过）
+
+  第一次：把含两件事的一条预期合成一条，判了 PASS
+  第二次：觉得不对，拆出来又记一条 FAIL
+  第三次：再补一条「【记录更正】前面作废」的说明
+
+  三条断言说同一件事，还为此反复核验了十分钟。
 
 根子在「一条预期含多件事」：
-  「进入空白日历，顶部标题提示"添加课程"引导，
-    不添加课程右上角"完成"按钮也可以点击保存空课程表」
+  用例写「进入某页，顶部有引导文案，且不操作也能保存」
   这是一条预期、两件事。看清一次，但**要记成两条 finding** ——
   合成一条判 PASS 会把不符的那半藏起来。
 ```
@@ -503,6 +508,10 @@ act …
 > ② 上一步返回的 `next`/`nodes` 里**找不到**目标（可能需滚动/换页）
 >
 > **自查**：一条用例跑完，**observe 次数应明显少于 act 次数**（0 也正常）。
+>
+> ⚠️ **但这不等于"少看屏幕"**：判断靠的是每次调用返回里的 `nodes`/`next`/截图，
+> 该看清的当次就看清楚（见上面「一次看全，判完就走」）。
+> 省的是**重复往返**，不是省「看一眼」。
 >
 > ✅ **现在 `session finish` 会自动算这几项并写进 `self_check`**，不用自己数：
 > observe/act 比、**swipe 次数**、检查点未命中次数。
@@ -587,7 +596,7 @@ act …
 授权只是通往功能的前置。**不用声明，直接执行动作即可**：
 
 ```powershell
-python act.py --serial <s> tap --x ... --via "rid=btnImportFromGallery" --why "从图库导入"
+python act.py --serial <s> tap --x <x> --y <y> --via "rid=<入口 rid>" --why "点某入口"
 # → 权限弹窗自动点「全部允许」，无需任何额外参数
 ```
 
@@ -694,33 +703,33 @@ sqlite3 "<target>\storage\record\<uuid>\db.sqlite3" "select sum(duration_ms) fro
 用例常这么写：
 
 ```
-上课周数（如第1～20周，最多24周）
-课程背景色（10种）
-上课时间（第x～x节）
+<某字段>（如 1～20，最多 24）
+<某字段>（共 10 种）
+<某字段>（第 x～x 项）
 ```
 
 **括号里的内容是帮你看懂这个字段的说明，不是一条独立预期。**
 
-「（最多24周）」的意思是：这个字段的取值范围上限由学期总周数决定。
-**你不需要为了确认"上限是 24"去改学期总周数。** 那是改设备配置，
+例如「（最多 24）」的意思是：这个字段的取值范围上限由某个全局配置决定。
+**你不需要为了确认"上限是 24"跑去改那个全局配置。** 那是改设备状态，
 不是这条用例要测的行为，而且改完还得改回来。
 
 ```
 ✅ 正确
-   点开「上课周数」→ 看到快捷项 全选/单周/双周、周次 chip 1~20 →
-   记断言「字段可调整，当前 1～20 周（上限随学期总周数）」→ 取消 → 下一个字段
+   点开该字段的弹层 → 看到里面所有可选项 → 记断言
+   「字段可调整，当前取值范围 X（上限随某全局配置）」→ 取消 → 下一个字段
 
 ❌ 实测发生过两次
-   点开看一眼 → 取消 → 20 秒后跑去课程表设置 → 改学期总周数 →
-   拨滚轮到 24 → 回绕到 1 → 取消 → 退回周视图 → 再点开弹窗
-   多花 12 个动作、53 秒工具时间，AI 为此纠结了近 300 秒
+   点开看一眼 → 取消 → 跑进设置页 → 改全局配置 → 拨滚轮到上限 →
+   回绕 → 取消 → 退回 → 再点开弹层
+   多花十来个动作、几十秒工具时间，AI 为此纠结更久
 ```
 
 **判据一句话：括号里的东西，需不需要改设备状态才能看到？**
 - 需要 → 那是环境配置，不在本用例范围。在 `actual` 里写「已知规格，未单独验证」即可。
 - 不需要 → 当场看，当场判。
 
-> 这条不是"禁止边界验证"。真想测边界（比如"总周数能不能设到 30"），
+> 这条不是"禁止边界验证"。真想测边界（比如"这个配置能不能设到 30"），
 > 那应该是**另一条用例**，用例号不同。本条只验它写的那些点。
 
 ### ⚠️ 用例里的预期，**一条没验证到就不能判 PASS**
@@ -746,17 +755,16 @@ sqlite3 "<target>\storage\record\<uuid>\db.sqlite3" "select sum(duration_ms) fro
    · 截图上层是浮起来的卡片（圆角、有阴影/边框）
    · 背景页面还在，被压暗/变灰了
    · 下面的页面没有跳走，关闭后回到原处
-   · 即使它是 EditXxxActivity（Activity 用对话框样式画出来就是这样）
+   · 即使它的 activity 名是 XxxActivity —— Activity 用对话框样式画出来就是这样
 
 ❌ 别再这样判
-   "dump 里没有 Dialog 字样"           → 不代表不是弹窗
-   "activity 名是 EditCourseActivity"  → 不代表是整页
-   "知识卡里叫它『某页』"               → 只是叫法，不是形态结论
+   "dump 里没有 Dialog 字样"      → 不代表不是弹窗
+   "activity 名是 XxxActivity"    → 不代表是整页
+   "知识卡里叫它『某页』"           → 只是叫法，不是形态结论
 ```
 
-**实测代价（2026-10-29，联想日历_176 预期5）：**
-用例写「弹出编辑弹窗进行编辑」，实际就是圆角浮层压在周视图上，
-但 AI 因为 activity 是 `EditCourseActivity`、知识卡里也写作「添加/编辑课程**页**」，
+**实测代价：** 某轮用例写「弹出编辑弹窗进行编辑」，实际就是圆角浮层压在原页面上，
+但 AI 因为 activity 名是 `XxxActivity`、知识卡里也写作「某某**页**」，
 就判了「非弹窗形态 → FAIL」。**这是假失败。**
 
 **判据：看截图说话。** 层浮在原页面上 = 弹窗；整页替换 = 页面。
@@ -782,8 +790,8 @@ sqlite3 "<target>\storage\record\<uuid>\db.sqlite3" "select sum(duration_ms) fro
        --evidence 16 --evidence 17
 ```
 
-**`--fact` 可以重复传。** 实测 176 那轮逐条调了 4 次 `kb-propose`
-（每次约 6 秒），合并成 1 次省 18 秒。
+**`--fact` 可以重复传。** 逐条调的话每次约 6 秒（进程冷启动），
+合并成 1 次能省十几秒。
 
 **第 ③ 步必须你来做** —— 「这条卡里有没有」是语义判断，
 工具只能做完全匹配，同一件事换个说法它就认不出来了。
@@ -796,7 +804,7 @@ sqlite3 "<target>\storage\record\<uuid>\db.sqlite3" "select sum(duration_ms) fro
 ✅ 卡里没提的行为规律
 
 ❌ 正常走通的流程（卡里已经说了）
-❌ 用例特定的数据（"测试课表176"、"第9周"）
+❌ 用例特定的数据（"测试A1"、"第9周"）
 ❌ 坐标 / 像素 / bounds（换机型就废）
 ❌ "会话473 实测"这种（会话号对下次没用）
 ❌ 该怎么判 PASS/FAIL（判定权在执行者手上）
