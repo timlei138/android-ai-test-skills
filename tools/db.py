@@ -75,7 +75,11 @@ CURRENT_FILE = _current_file()   # 仅为兼容旧引用；内部一律用 _curr
 #
 # 旧数据里可能还有 WARN 的历史记录，读的时候按 FAIL 处理。
 STATUSES = ("PASS", "FAIL", "BLOCKED", "ERROR")
-# 会话中间态：不是结论，不计入通过率统计；必须以 pause 保持或 finish 收尾
+# 会话中间态：不是结论，不计入通过率统计；必须以 finish 收尾。
+#
+# ⚠️ 2026-10-30 去掉 paused / waiting：批量跑时停下来等人会把整批卡死，
+#    卡住的记 BLOCKED 往下走即可。旧库里若还有这两种状态的历史记录，
+#    仍按中间态读（保留在 INTERIM 里兼容），但新代码不再产生它们。
 INTERIM = ("running", "paused", "waiting")
 
 _SCHEMA = """
@@ -506,7 +510,7 @@ class SessionDB:
             return []
 
     def set_session_status(self, session_id: int, status: str) -> bool:
-        """中间态切换（paused/waiting/running）。结论态必须走 finish_session。"""
+        """中间态切换（现在只剩 running）。结论态必须走 finish_session。"""
         if status not in INTERIM:
             return False
         try:

@@ -1328,8 +1328,8 @@ def guard_terminated(tool: str) -> None:
     只发 `terminate` 信号靠 AI 自觉是不够的——AI 可能仍去截图/点击，
     产生不可信数据和无谓动作。故在工具入口硬拦。
 
-    放行方式：session.py resume --id <N>（人工确认后清除终态）。
-    未开会话（无 current）时不拦，保持工具可独立使用。
+    放行方式：session.py resume --id <N> --note "<为什么还能继续>"
+    （人工确认是偶发、或已恢复前置后才用）。未开会话时不拦。
     """
     try:
         runtime.execution("not_executed")
@@ -1351,8 +1351,8 @@ def guard_terminated(tool: str) -> None:
         "error": f"会话 #{sid} 已终止，拒绝执行 {tool}",
         "reason": reason,
         "hint": ("被测/关联包已崩溃/ANR —— 本 case 到此结束，不要做多余的事。"
-                 "请记 BLOCKED finding 并 finish --status BLOCKED 收尾。"
-                 f"确需继续请先 session.py resume --id {sid}（并说明理由）"),
+                 "请记 BLOCKED finding 并 finish --status BLOCKED 收尾，"
+                 "然后继续下一条用例。"),
     })
     sys.exit(3)  # 独立退出码，便于调用方区分"被拦截"与"执行失败"
 

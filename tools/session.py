@@ -1070,14 +1070,9 @@ def main() -> None:
     s.add_argument("--id", type=int, default=None,
                    help="收尾指定会话（暂停/等待中的会话已解绑，须用 --id）")
 
-    s = sub.add_parser("pause", help="遇阻暂停或向用户提问（中间态，记录保留可续跑）")
-    s.add_argument("--reason", required=True, help="为什么停：卡在哪、试过什么")
-    s.add_argument("--ask", action="store_true",
-                   help="同时向用户提问（状态=waiting 而非 paused）")
-
-    s = sub.add_parser("resume", help="恢复暂停/等待中的会话")
+    s = sub.add_parser("resume", help="崩溃终止后人工确认继续（清除终态）")
     s.add_argument("--id", type=int, required=True)
-    s.add_argument("--note", default="", help="用户的答复或恢复原因，随事件入库")
+    s.add_argument("--note", default="", help="恢复原因，随事件入库")
 
     c = sub.add_parser("case", help="正式用例库：口述用例的沉淀与复用")
     csub = c.add_subparsers(dest="ccmd", required=True)
@@ -1375,22 +1370,14 @@ def main() -> None:
             ids[-1] = fid
         emit(True, {"count": len(items), "finding_ids": ids,
                     "note": "批量写入完成"})
-    elif args.cmd == "pause":
-        sid = current_session()
-        if not sid:
-            raise SystemExit("没有进行中的会话")
-        status = "waiting" if args.ask else "paused"
-        db.set_session_status(sid, status)
-        db.log_event(sid, "ask" if args.ask else "pause",
-                     f"session {'ask' if args.ask else 'pause'}",
-                     maybe_file(args.reason))
-        clear_current(sid)
-        print(json.dumps({"ok": True, "session_id": sid, "status": status,
-                          "note": ("把问题抛给用户，答复后用 resume --id 恢复"
-                                   if args.ask else "已暂停；resume 续跑或 finish 收尾")},
-                         ensure_ascii=False))
     elif args.cmd == "resume":
-        # resume 也用于"崩溃终止后人工确认继续"：必须清除终态，否则工具仍拒绝执行。
+        # 用途只剩一个：**崩溃终止后人工确认继续**（清除终态，否则工具仍拒绝执行）。
+        #
+        # ⚠️ 2026-10-30 删掉了 `pause` / `--ask` 命令。
+        #    原因：批量跑用例时停下来等人会把整批卡死。卡住的记 BLOCKED 往下走，
+        #    最后由人统一看报告。工具层不需要"暂停等人"这个状态。
+        #    用户手动终止时人也做不了什么（代码层面无事可做），直接 finish 收尾即可。
+        #
         # ⚠️ 顺序要紧：先校验理由，**通过后才清终态**。
         # 曾经先 clear 再校验，导致"无理由被拒"的那次调用已把终态抹掉，
         # 第二次不带理由的 resume 反而放行（真实 bug）。
