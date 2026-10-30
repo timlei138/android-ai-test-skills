@@ -444,13 +444,23 @@
 4. 执行"结束进程"等操作，然后等到点
 ```
 
-**⭐ 「提醒生效了没有」的判据：看通知栏，不是查 alarm 列表**
+**⭐ 「提醒生效了没有」的判据：看通知栏**
+
+**最简单的方法 —— 直接把通知栏拉下来看：**
 
 ```powershell
-# 有通知就会打出来；没打出来就是没有
-adb shell "dumpsys notification --noredact" | Select-String "android.title"
+# 1. 拉下通知栏
+python tools/act.py swipe --from <屏幕上方> --to <屏幕下方>
+# 2. observe 看屏幕上有没有那条日程通知（截图/OCR 都能看到标题）
+```
 
-# 只看日历的提醒
+**这也是用户实际做的动作** —— 提醒来了，就是通知栏里多一条。
+
+**要看结构化数据时（不用拉通知栏）：**
+
+```powershell
+adb shell "dumpsys notification --noredact" | Select-String "android.title"
+# 只看日历的
 adb shell "dumpsys notification --noredact" | Select-String "android.title=.*日程"
 ```
 
