@@ -1016,6 +1016,8 @@ def main() -> None:
     s.add_argument("--case", type=int, default=None, dest="case_id",
                    help="引用用例库：自动带出标题与用例文本，无需重复输入")
     s.add_argument("--device", default=None)
+    s.add_argument("--force", action="store_true",
+                   help="即使已有运行中的会话也强行新建（默认拒绝，防孤儿会话）")
     s.add_argument("--diag", action="store_true",
                    help="标记为验证/调试会话：不进「测试记录」库、不计入仪表盘成功率。"
                         "用于工具自检、探针验证等非正式测试的跑动")
@@ -1178,16 +1180,30 @@ def main() -> None:
     # ══════════════════════════════════════════════════════════════
     if args.cmd == "start":
         _case = None
+        _case_from_file = None
         if args.case_id:
             _db0 = get_db()
             _case = _db0.get_case(args.case_id)
             if not _case:
+                # 用例库里没有就找 assets/cases/ 下的文件（与下面正式解析同一套规则）
+                _want = str(args.case_id)
+                for _fp in (CASES_DIR.rglob("*.md") if CASES_DIR.is_dir() else []):
+                    _m2 = re.search(r"[_\-](\d+)$", _fp.stem)
+                    if _m2 and _m2.group(1) == _want:
+                        _case_from_file = _fp
+                        break
+            if not _case and _case_from_file is None:
                 raise SystemExit(
-                    f"用例 #{args.case_id} 不存在，session.py case list 查看")
+                    f"用例 #{args.case_id} 不存在：用例库里没有，"
+                    f"assets/cases/ 下也找不到编号 {args.case_id} 的 .md 文件")
         _title = maybe_file(args.title) if args.title else (
-            _case["title"] if _case else None)
+            (_case["title"] if _case else (
+                _case_from_file.read_text(encoding="utf-8", errors="replace")
+                .splitlines()[0].lstrip("# ").strip() if _case_from_file else None)))
         _input = maybe_file(args.input) if args.input else (
-            _case["input"] if _case else None)
+            _case["input"] if _case else (
+                _case_from_file.read_text(encoding="utf-8", errors="replace")
+                if _case_from_file else None))
         if not _title or not _input:
             raise SystemExit(
                 "需要 --case <id>（复用库中用例）或 --title/--input（新用例，"
@@ -1207,14 +1223,77 @@ def main() -> None:
     db = get_db()
 
     if args.cmd == "start":
+        # ⚠️ 防重复 start（2026-11-02 新增）。
+        #
+        #    真实事故（10-31 跑 46）：同一目录下建了两个会话 ——
+        #      session 1  跑 4 个事件后就被抛弃 → 永远停在 running
+        #      session 2  235 个事件 / 32 分钟
+        #    旧 session 成了孤儿，既没结论也没人管，污染统计。
+        #
+        #    根因：`start` 只在「没有 record 目录」时才新建目录，
+        #    但**每次都无条件新建 session** 并覆盖 current 指针。
+        #
+        #    处置：发现还有 running 会话就停下，并给两条明确出路 ——
+        #    不要静默新建，也不要硬拦（AI 可能确实需要重开）。
+        if not args.force:
+            _cur = current_session()
+            if _cur:
+                try:
+                    _s = db.get_session(_cur)
+                except Exception:  # noqa: BLE001
+                    _s = None
+                if _s and str(_s.get("status")) == "running":
+                    _nev = len(_s.get("events") or [])
+                    _age = str(_s.get("started_at") or "")[:19]
+                    raise SystemExit(
+                        f"已有运行中的会话 #{_cur}「{_s.get('title') or ''}」\n"
+                        f"  开始 {_age}    已记 {_nev} 个事件\n"
+                        f"\n"
+                        f"  继续跑 → 直接用现有会话，不要再 start\n"
+                        f"\n"
+                        f"  确实要重来（title 写错等），先收尾：\n"
+                        f"    session.py finish --status BLOCKED --summary \"重开\"\n"
+                        f"  或者放弃：\n"
+                        f"    session.py abandon --id {_cur} --reason \"重开\"\n"
+                        f"\n"
+                        f"  （确定不要这条检查时加 --force）")
+
         case = db.get_case(args.case_id) if args.case_id else None
+        # ⚠️ cases 表为空时退回**找用例文件**（2026-11-02 新增）。
+        #
+        #    真实踩过：跑 176 时 AI 按直觉写 `start --case 176`，
+        #    报「用例 #176 不存在」—— 因为单库化迁移只带了有记录的老库，
+        #    cases 表本来就没数据。但 `assets/cases/com.zui.calendar_176.md`
+        #    一直在，AI 只好改用 --title + --input 重来一遍，白花一轮。
+        #
+        #    用例的唯一真相是**文件**（和 webui 一致），库里那张表只是"跑过的痕迹"。
+        #    所以：表里找不到就去 assets/cases/<应用>/ 下按编号找，找到就读原文。
+        _case_file = None
         if args.case_id and not case:
-            raise SystemExit(f"用例 #{args.case_id} 不存在，session.py case list 查看")
-        title = maybe_file(args.title) if args.title else (case["title"] if case else None)
-        user_input = maybe_file(args.input) if args.input else (case["input"] if case else None)
+            _want = str(args.case_id)
+            for _fp in (CASES_DIR.rglob("*.md") if CASES_DIR.is_dir() else []):
+                # 文件名形如 com.zui.calendar_176.md / 联想日历_176.md
+                _m = re.search(r"[_\-](\d+)$", _fp.stem)
+                if _m and _m.group(1) == _want:
+                    _case_file = _fp
+                    break
+            if _case_file is None:
+                raise SystemExit(
+                    f"用例 #{args.case_id} 不存在：\n"
+                    f"  · 用例库里没有（`session.py case list` 查看）\n"
+                    f"  · assets/cases/ 下也找不到编号 {args.case_id} 的 .md 文件\n"
+                    f"请检查编号，或改用 --title/--input 直接描述")
+        if _case_file is not None:
+            # 文件头是 `# com.zui.calendar_176` 这种标题行，正文才是用例
+            _raw = _case_file.read_text(encoding="utf-8", errors="replace")
+            title = _raw.splitlines()[0].lstrip("# ").strip() if _raw else None
+            user_input = _raw
+        else:
+            title = maybe_file(args.title) if args.title else (case["title"] if case else None)
+            user_input = maybe_file(args.input) if args.input else (case["input"] if case else None)
         if not title or not user_input:
-            raise SystemExit("需要 --case <id>（复用库中用例）或 --title/--input（新用例，"
-                             "中文长文本用 @文件）")
+            raise SystemExit("需要 --case <id>（复用用例库或 assets/cases 下的用例文件）"
+                             "或 --title/--input（新用例，中文长文本用 @文件）")
         # ⚠️ 用例库里已有同一条用例时**当场提示用 --case 复用**：
         # 早先只在 finish 时提示"尚未进入用例库"，那时会话已结束、提示等于没用
         # （真实事故：168/169/170 三条都建成了游离会话，用例库统计全不对）。
