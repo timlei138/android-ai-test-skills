@@ -44,6 +44,7 @@ def main() -> None:
 
     # 权限弹窗：按会话级意图自动响应（在截图前处理，弹窗约 6s 会自行消失）
     perm_result = None
+    _perm_steps: list[str] = []
 
     def _snap_perm_dialog(pinfo) -> None:
         """权限框出现时留一步证据 —— 和 act 里同一个做法。
@@ -60,6 +61,7 @@ def main() -> None:
                 "permission_buttons": [b["text"] for b in
                                        ((pinfo or {}).get("buttons") or [])],
             })
+            _perm_steps.append(_p.parent.name)
         except Exception:  # noqa: BLE001
             pass
 
@@ -84,6 +86,10 @@ def main() -> None:
         clk = ", ".join(c["text"] for c in perm_result.get("clicks") or [])
         detail += (f" · 权限弹窗({perm_result.get('activity')})"
                    + (f" 已自动点击: {clk}" if clk else " 未点击"))
+        # 把「生成了哪几个权限 step」告诉 AI —— 见 act.py 里同一处的说明
+        if _perm_steps:
+            perm_result["evidence_steps"] = list(_perm_steps)
+            detail += f" · 已存权限步 {', '.join(_perm_steps)}"
     # 和 act 一样带**屏幕身份签名** —— 自动整理路径边时要靠它判"这一步在哪个节点"。
     # ⚠️ observe 也必须带：会话开头往往先 observe（还没有 act），
     # 若它没签名，第一条边的前溯就落空，源节点只能退回裸 activity（真实缺陷）。

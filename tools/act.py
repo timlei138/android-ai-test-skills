@@ -656,6 +656,15 @@ def main() -> None:
             detail += f" 未匹配可点按钮，可见: {perm_result.get('buttons')}"
         else:
             detail += " 未点击"
+        # ⚠️ 把「生成了哪几个权限 step」告诉 AI（2026-11-02）。
+        #
+        #    真实踩过：跑 168 时工具在后台存了 step0001-step0006 六个权限步，
+        #    但返回里只有 dialog_count=5，AI 不知道这些证据存在，
+        #    summary 里写成「没有留下独立 act 步骤」—— 记账和事实不符。
+        #    报出来之后 AI 能在 summary 里写准，也知道去哪查。
+        if _perm_steps:
+            perm_result["evidence_steps"] = list(_perm_steps)
+            detail += f" · 已存权限步 {', '.join(_perm_steps)}"
 
     try:
         info = capture(d, png, xml, meta,

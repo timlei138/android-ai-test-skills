@@ -847,7 +847,12 @@ def auto_name() -> str:
                 os.unlink(lock)
             except OSError:
                 pass
-    return f"{sid}/step{n:04d}"
+    # 2 位补零：step01 / step02 …… step99；超过 99 自然变成 step100。
+    #
+    # ⚠️ 原来是 4 位（step0001），但 AI 自己传的 --name 都是 `case168/step01`
+    #    这种 2 位风格。两种编号混在一个目录里时按字符排序会错乱
+    #    （"step0001" < "step00"），翻记录看不出先后。统一成 2 位。
+    return f"{sid}/step{n:02d}"
 
 
 def evidence_paths(base_dir: str | None, name: str | None) -> tuple[Path, Path, Path]:
