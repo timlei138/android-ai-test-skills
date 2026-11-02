@@ -94,34 +94,28 @@ RUN_DB_GLOB = "*/db.sqlite3"
 
 
 def _record_dbs() -> list[tuple[str, Path]]:
-    """所有 uuid 运行库：[(uuid, db 路径)]，按目录修改时间从新到旧。"""
-    out: list[tuple[str, Path]] = []
-    if not RECORD_DIR.is_dir():
-        return out
+    """**已废弃**：单库化后不再扫目录（2026-11-02）。
 
-    for d in RECORD_DIR.iterdir():
-        if not d.is_dir():
-            continue
-        db = d / "db.sqlite3"
-        if db.is_file():
-            out.append((d.name, db))
+    保留这个函数只为了让旧代码不炸 —— 它现在永远返回空列表。
+    所有调用点都应改成直接 `get_db()`。
 
-    def _mtime(item: tuple[str, Path]) -> float:
-        try:
-            return item[1].stat().st_mtime
-        except OSError:
-            return 0.0
-
-    return sorted(out, key=_mtime, reverse=True)
+    ⚠️ 为什么要留这么个空壳：这个模块 900 多行，一次全改容易漏。
+         留个空实现，漏掉的调用点会「安静地返回 0 条」而不是抛异常，
+         我在下面逐个替换后用测试兜住。全部替换完这个函数就可以删。
+    """
+    return []
 
 
 def _split_sid(sid: str) -> tuple[str, int | None]:
-    """把 `<uuid>:<local_id>` 拆开。纯数字 -> (uuid 为空, id)。
+    """把 `<run_id>:<local_id>` 拆开。纯数字 -> (run_id 为空, id)。
 
-    返回 (uuid, local_id)：
-      · "6f11:1"  -> ("6f11", 1)
-      · "12"      -> ("", 12)         解析不出 uuid（不存在的入口）
-      · 解析不了 -> ("", None)
+    ⚠️ 单库化后 id 不再需要复合前缀（会话 id 全局唯一），
+       但前端和旧链接还在传 `<uuid>:<n>` 格式，所以继续兼容。
+
+    返回 (run_id, local_id)：
+      · "6ea8445e-...:1"  -> ("6ea8445e-...", 1)
+      · "12"             -> ("", 12)         直接是全局 session id
+      · 解析不了          -> ("", None)
     """
     sid = str(sid or "").strip()
     if ":" in sid:
@@ -133,65 +127,52 @@ def _split_sid(sid: str) -> tuple[str, int | None]:
 
 
 def _uuid_of(sid: str) -> str:
-    """从复合 id 里取 uuid 部分。纯数字时按旧库处理。"""
+    """从复合 id 里取 run_id 部分。单库后仅用于展示/过滤，不用于定位库。"""
     head, _ = _split_sid(sid)
-    return head or "webui"
+    return head or ""
 
 
-def _open_db(uuid: str) -> SessionDB | None:
-    """按 uuid 打开对应的运行库。打不开返回 None（不该让整页崩）。
+def _open_db(uuid: str = "") -> SessionDB | None:
+    """拿数据库连接。**单库化后永远返回同一个库**，参数只为兼容旧调用。
 
-    **不再支持 "webui" 这个旧聚合库**（2026-10-28 删）——
-    它从来没被写入过。传 "webui" 进来只会拿到 None。
+    打不开返回 None（不该让整页崩）。
     """
-    if not uuid or uuid == "webui":
-        return None
-    path = RECORD_DIR / uuid / "db.sqlite3"
-    if not path.is_file():
-        return None
     try:
-        return SessionDB(path)
+        return get_db()
     except Exception:  # noqa: BLE001
         return None
 
 
 def all_sessions(include: tuple[str, ...] | None = None,
                  kind: str | None = "test") -> list[dict]:
-    """跨所有运行库聚合会话列表。
+    """全部会话列表（单库直查，不再跨库合并）。
 
-    每个 session 的 `id` 改写成 `<uuid>:<local_id>`，并带上 `run_id`
-    方便前端显示"哪一次运行"。
+    每个 session 的 `id` 保持全局数字 id；`run_id` 从库里读，
+    前端仍可用 `<run_id>:<id>` 复合形式（`_split_sid` 兼容）。
     """
-    out: list[dict] = []
-    for uuid, _path in _record_dbs():
-        db = _open_db(uuid)
-        if db is None:
-            continue
-        try:
-            rows = db.list_sessions(include=include, kind=kind, limit=500)
-        except Exception:  # noqa: BLE001
-            continue
-        finally:
-            pass
-        for r in rows:
-            r = dict(r)
-            r["local_id"] = r.get("id")
-            r["id"] = f"{uuid}:{r.get('id')}"
-            r["run_id"] = uuid
-            out.append(r)
-
-    # 按开始时间倒序（新在前）；没有时间的排后面
+    db = _open_db()
+    if db is None:
+        return []
+    try:
+        rows = db.list_sessions(include=include, kind=kind, limit=2000)
+    except Exception:  # noqa: BLE001
+        return []
+    out = []
+    for r in rows:
+        r = dict(r)
+        r["local_id"] = r.get("id")
+        r["run_id"] = r.get("run_id") or ""
+        out.append(r)
     out.sort(key=lambda r: str(r.get("started_at") or ""), reverse=True)
     return out
 
 
 def session_detail(sid: str, include_events: bool = True) -> dict | None:
-    """取单个会话详情（含 events / findings）。sid 可以是复合 id 或旧数字。"""
-    uuid = _uuid_of(sid)
-    _h, local_id = _split_sid(sid)
+    """取单个会话详情（含 events / findings）。sid 可以是复合 id 或纯数字。"""
+    _rid, local_id = _split_sid(sid)
     if local_id is None:
         return None
-    db = _open_db(uuid)
+    db = _open_db()
     if db is None:
         return None
     try:
@@ -202,8 +183,7 @@ def session_detail(sid: str, include_events: bool = True) -> dict | None:
         return None
     s = dict(s)
     s["local_id"] = s.get("id")
-    s["id"] = f"{uuid}:{s.get('id')}"
-    s["run_id"] = uuid
+    s["run_id"] = s.get("run_id") or _rid or ""
     return s
 
 
@@ -219,64 +199,46 @@ def session_stats_all() -> dict:
     # 新会话只有 PASS / FAIL / BLOCKED / ERROR 四种结论。
     agg = {"PASS": 0, "FAIL": 0, "BLOCKED": 0, "PAUSED": 0,
            "WARN": 0, "ERROR": 0, "RUNNING": 0, "total": 0}
-    # db 字段 -> 我们的键
     KEYMAP = {
         "pass_n": "PASS", "fail_n": "FAIL", "blocked_n": "BLOCKED",
         "running_n": "RUNNING", "paused_n": "PAUSED",
-        # 万一哪天 db 改了名，这样也不用改这里
         "pass": "PASS", "fail": "FAIL", "blocked": "BLOCKED",
         "running": "RUNNING", "paused": "PAUSED",
         "warn": "WARN", "error": "ERROR",
     }
-    for uuid, _p in _record_dbs():
-        db = _open_db(uuid)
-        if db is None:
-            continue
-        try:
-            st = db.session_stats() or {}
-        except Exception:  # noqa: BLE001
-            continue
-        agg["total"] += int(st.get("total") or 0)
-        for src, dst in KEYMAP.items():
-            agg[dst] += int(st.get(src) or 0)
+    db = _open_db()
+    if db is None:
+        return agg
+    try:
+        st = db.session_stats() or {}
+    except Exception:  # noqa: BLE001
+        return agg
+    agg["total"] += int(st.get("total") or 0)
+    for src, dst in KEYMAP.items():
+        agg[dst] += int(st.get(src) or 0)
     return agg
 
 
 def session_kind_counts_all() -> dict:
-    out: dict[str, int] = {}
-    for uuid, _p in _record_dbs():
-        db = _open_db(uuid)
-        if db is None:
-            continue
-        try:
-            k = db.session_kind_counts()
-        except Exception:  # noqa: BLE001
-            continue
-        for key, n in (k or {}).items():
-            out[key] = out.get(key, 0) + int(n or 0)
-    return out
+    db = _open_db()
+    if db is None:
+        return {}
+    try:
+        k = db.session_kind_counts()
+    except Exception:  # noqa: BLE001
+        return {}
+    return {key: int(n or 0) for key, n in (k or {}).items()}
 
 
 def run_stats_all(days: int = 3) -> list[dict]:
-    """最近 N 天每天的执行情况（仪表盘柱状图），跨所有运行库合并同一天。"""
-    merged: dict[str, dict] = {}
-    for uuid, _p in _record_dbs():
-        db = _open_db(uuid)
-        if db is None:
-            continue
-        try:
-            rows = db.run_stats(days)
-        except Exception:  # noqa: BLE001
-            continue
-        for r in rows or []:
-            day = str(r.get("day") or "")
-            if not day:
-                continue
-            m = merged.setdefault(day, {"day": day, "total": 0, "pass": 0,
-                                        "fail": 0, "blocked": 0})
-            for k in ("total", "pass", "fail", "blocked"):
-                m[k] += int(r.get(k) or 0)
-    return sorted(merged.values(), key=lambda x: x["day"])
+    """最近 N 天每天的执行情况（仪表盘柱状图）。"""
+    db = _open_db()
+    if db is None:
+        return []
+    try:
+        return db.run_stats(days) or []
+    except Exception:  # noqa: BLE001
+        return []
 
 
 def _find_spec(title: str, suffix: str) -> Path | None:
@@ -361,6 +323,10 @@ def _scan_case_files() -> list[dict]:
 
     # (应用目录, 标题) -> 该标题下的文件
     found: dict[tuple[str, str], dict[str, Path]] = {}
+    # ⚠️ `other/` 是**归档目录**，里面的用例不属于当前用例集（2026-10-31 建）。
+    #    不排除的话它会当成一个「应用名=other」的包混进用例库，
+    #    把 64 条用例显示成 73 条。
+    SKIP_DIRS = {"other"}
     for fp in sorted(CASES_DIR.rglob("*")):
         if not fp.is_file() or fp.suffix.lower() not in (".md", ".yaml"):
             continue
@@ -370,26 +336,45 @@ def _scan_case_files() -> list[dict]:
         except ValueError:
             continue
         app = rel.parts[0] if len(rel.parts) > 1 else ""
+        if app in SKIP_DIRS:
+            continue
+        # ⚠️ `.steps.yaml` 是 finish 时导出的**跳转步骤副产物**，不是用例。
+        #
+        #    2026-10-30 用户反馈：「yaml 结尾的不算 case。web 要过滤了」
+        #
+        #    原来直接用 fp.stem，`com.zui.calendar_176.steps.yaml` 的 stem 是
+        #    `com.zui.calendar_176.steps`，于是用例库把 63 条用例显示成 105 条
+        #    —— 多出的 42 条全是 steps 副产物，和主用例重复。
+        #
+        #    归到主用例上：stem 去掉 `.steps` 后缀，作为该用例的"有跳转步骤"标记。
         stem = fp.stem
-        found.setdefault((app, stem), {})[fp.suffix.lower()] = fp
+        is_steps = stem.endswith(".steps")
+        if is_steps:
+            stem = stem[: -len(".steps")]
+        slot = found.setdefault((app, stem), {})
+        if is_steps:
+            slot["steps"] = fp
+        else:
+            slot[fp.suffix.lower()] = fp
 
     # ── 扫所有运行库，按用例编号汇总 ──────────────────────────────
     #
     # 一次遍历拿全：编号 -> {run_count, last_status, last_run_at,
     #                        last_session_id, last_run_id}
     # 不逐条用例查库，避免 15 条用例开 15 × N 个连接。
+    #
+    # ⚠️ 单库化后这一段从「扫 138 个库」变成「一次查询」——
+    #    原来这里是个 for 循环套 138 次连接，现在是一次 SELECT。
     by_num: dict[str, dict] = {}
-    for uuid, _path in _record_dbs():
-        db = _open_db(uuid)
-        if db is None:
-            continue
+    db = _open_db()
+    if db is not None:
         try:
             rows = db._conn().execute(
-                "SELECT id, title, status, started_at, finished_at, case_id"
+                "SELECT id, run_id, title, status, started_at"
                 " FROM sessions WHERE title IS NOT NULL"
                 " ORDER BY started_at").fetchall()
         except Exception:  # noqa: BLE001
-            continue
+            rows = []
         for r in rows:
             num = _case_number(str(r["title"] or ""))
             if not num:
@@ -399,12 +384,17 @@ def _scan_case_files() -> list[dict]:
             # rows 按 started_at 升序遍历，最后写入的就是最近一次
             slot["last_status"] = r["status"]
             slot["last_run_at"] = r["started_at"]
-            slot["last_session_id"] = f"{uuid}:{r['id']}"
-            slot["last_run_id"] = uuid
+            slot["last_session_id"] = r["id"]
+            slot["last_run_id"] = r["run_id"] or ""
 
     items: list[dict] = []
     for (app, stem), files in sorted(
             found.items(), key=lambda kv: (kv[0][0], kv[0][1])):
+        # ⚠️ 只有 `.steps.yaml` 而没有 `.md`/`.yaml` 的，是**孤立的导产物**
+        #    （2026-11-02 实测：`_06`/`_07`/`_10` 只有 steps，主文件早被删了）。
+        #    用例原文都没有，列出来只会在用例库里多 3 个点进去空白的条目。
+        if not (".md" in files or ".yaml" in files):
+            continue
         num = _case_number(stem)
         st = by_num.get(num or "", {})
         # id 用标题（前端只用它做 key / 路由），不用数据库自增 id
@@ -415,6 +405,8 @@ def _scan_case_files() -> list[dict]:
             "case_number": num,
             "has_md": ".md" in files,
             "has_yaml": ".yaml" in files,
+            # `.steps.yaml` = 跑过之后导出的跳转步骤，算附属产物，不是独立用例
+            "has_steps": "steps" in files,
             "run_count": st.get("run_count") or 0,
             "last_status": st.get("last_status"),
             "last_run_at": st.get("last_run_at"),

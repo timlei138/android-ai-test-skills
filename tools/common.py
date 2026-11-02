@@ -14,7 +14,7 @@ from datetime import datetime
 from pathlib import Path
 from runtime import (
     CALL_ID, CASES_DIR, EVENT_IDS, KNOWLEDGE_DIR, PATHS_DIR, STORAGE_DIR,
-    recording_issues, stage, timed, timing_snapshot,
+    current_record_dir, recording_issues, stage, timed, timing_snapshot,
 )
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -425,6 +425,44 @@ def _scan_sections(card: Path) -> tuple[list[str], list[str]]:
     return allsec, top
 
 
+_SYSTEM_CARD = "assets/knowledge/_system.md"
+
+
+def _system_card_hint() -> dict:
+    """兜底卡（跨 App 的系统行为）的索引。
+
+    ⚠️ 为什么不能只给一个路径字符串（2026-10-30 实测）：
+      原来 `system_card` 的返回值就是 `"assets/knowledge/_system.md"` 一句话，
+      **没有目录**。AI 看到的是一个路径，不知道里面有什么，于是从不主动读。
+
+      后果：卡里写了「系统设置里应用通知有两个层级，别选错」，
+      而跑 87 那轮时 AI 完全没看这张卡，自己摸索着把「通知类别」改成静音
+      （应该关应用级总开关），还判错了结论。
+
+      对比：本包的知识卡有 `sections` 目录，AI 看到标题就知道该读哪节。
+      兜底卡同样需要。19 个小节标题约 400 字符，一次性给，比 AI 摸黑试探便宜得多。
+
+    返回 {"path", "how_to_read", "sections", "tip"}；
+    卡不存在时退化成只给路径。
+    """
+    card = KNOWLEDGE_DIR / "_system.md"
+    if not card.is_file():
+        return {"path": _SYSTEM_CARD}
+    try:
+        sections, _top = _scan_sections(card)
+    except OSError:
+        return {"path": _SYSTEM_CARD}
+    return {
+        "path": _SYSTEM_CARD,
+        "how_to_read": 'android_read_file(card="_system", query="<你的场景>")'
+                       '  —— 每个 match 的 body 就是该节全文',
+        "sections": sections,
+        "tip": ("**跨 App 的系统行为都在这里**（权限弹窗 / 通知开关 / BACK 键 / "
+                "预装应用卸载 / Toast 抓取）。命中你的场景就去读对应节，"
+                "别自己摸索 —— 系统界面的层级和文案所有 App 都一样。"),
+    }
+
+
 def knowledge_hint(package: str | None, shown: bool = False,
                    screen: str | None = None) -> dict | None:
     """知识卡浮现：告诉 AI"这个包有卡、卡里有哪些小节"。
@@ -467,9 +505,9 @@ def knowledge_hint(package: str | None, shown: bool = False,
     if not card.is_file() and not path_nodes:
         return {
             "card": None,
-            "system_card": "assets/knowledge/_system.md",
+            "system_card": _system_card_hint(),
             "tip": ("本包暂无专属知识卡。系统界面（权限弹窗/系统对话框/预装应用"
-                    "卸载恢复）看 assets/knowledge/_system.md"),
+                    "卸载恢复/通知开关）看 system_card"),
         }
     sections: list[str] = []
     if card.is_file():
@@ -510,7 +548,7 @@ def knowledge_hint(package: str | None, shown: bool = False,
                 "先认自己在哪个节点（看 activity + 屏幕上有什么），再检索该节点的出边。"
                 "知识卡是坑与行为规律（按交互类型词检索命中标题，只读对应小节）。"
                 "**用 card= 参数读，不要用 path= 整份读。**"),
-        "system_card": "assets/knowledge/_system.md",
+        "system_card": _system_card_hint(),
     }
     relevant = _sections_matching(sections, screen)
     if relevant:
@@ -800,9 +838,36 @@ def auto_name() -> str:
 
 
 def evidence_paths(base_dir: str | None, name: str | None) -> tuple[Path, Path, Path]:
+    """证据落盘路径 (shot.png, dump.xml, meta.json)。
+
+    ## 默认落点：本次运行的目录，不是全局大锅饭
+
+    ⚠️ 2026-11-02 修正（用户反馈）：
+
+      原来不传 base_dir 时一律落 `storage/evidence/<name>/`，
+      于是**一次运行的证据没有归属**：
+        · `storage/evidence/case46/` 下混了 337 个 step —— 那是多轮运行叠加的
+        · `storage/evidence/176/` 这种纯数字目录 —— auto_name() 用 session id 命名的
+        · 想删某次运行的证据无从下手（不知道哪些是它的）
+        · 2.7 GB 只增不减
+
+      现在：有当前运行目录时落 `run_history/<uuid>/evidence/<name>/`，
+      删一次运行 = 删一个 uuid 目录，干净。
+
+      没有运行目录（工具被单独调用、没开会话）时仍退到
+      `storage/evidence/<name>/`，保证工具可独立使用。
+
+    ## name 由调用方给
+
+      传了就按传的；没传走 auto_name()，生成 `<session_id>/stepNNNN`。
+    """
     if not name:
         name = auto_name()
-    d = Path(base_dir) if base_dir else DEFAULT_EVIDENCE_DIR
+    if base_dir:
+        d = Path(base_dir)
+    else:
+        run = current_record_dir()
+        d = (run / "evidence") if run else DEFAULT_EVIDENCE_DIR
     d = d / name
     d.mkdir(parents=True, exist_ok=True)
     return d / "shot.png", d / "dump.xml", d / "meta.json"
@@ -892,7 +957,46 @@ def _rotation(d: "u2.Device", shot=None) -> int:
     return -1
 
 
-def _dump_hierarchy(d, xml: Path) -> tuple[str, int]:
+def _dump_with_timeout(d, timeout: float) -> str:
+    """在**独立线程**里跑 dump_hierarchy，超时就抛。
+
+    ⚠️ 为什么必须从外面再包一层（langgraph-poc 已实测，2026-10-31 移植）：
+
+      uiautomator2 内部是**无限重试**：
+        _do_dump_hierarchy (uiautomator2/__init__.py:136)
+        __retry_internal (retry/api.py:35)          ← 无上限
+        dump_hierarchy (uiautomator2/__init__.py:120)
+
+      jsonrpc 自己有 HTTP 超时，但 retry 装饰器把超时当"可重试"继续打，
+      所以**在调用内部加超时没用**，只能在最外面加一道硬墙。
+
+      实测卡死：用例跑到 s3 的第一次观察就停住 —— 进程活着、设备停在原页不动、
+      日志不再增长，看起来像"一直在点完成"，实际是**一次都没点**，全卡在观察里。
+
+    用 daemon 线程 + join(timeout)：超时后线程被丢弃（daemon 不阻塞退出），
+    主线程抛 TimeoutError 交给上层处理，进程不会挂死。
+    """
+    import threading
+    result: dict = {}
+
+    def work() -> None:
+        try:
+            result["xml"] = d.dump_hierarchy()
+        except BaseException as exc:  # noqa: BLE001
+            result["err"] = exc
+
+    th = threading.Thread(target=work, daemon=True, name="dump_hierarchy")
+    th.start()
+    th.join(timeout)
+    if th.is_alive():
+        raise TimeoutError(
+            f"dump_hierarchy 超过 {timeout:.0f}s 未返回（uiautomator2 在无限重试）")
+    if "err" in result:
+        raise result["err"]
+    return str(result.get("xml") or "")
+
+
+def _dump_hierarchy(d, xml: Path, timeout: float = 20.0) -> tuple[str, int]:
     """dump 一次 UI 树；撞上 uiautomator 会话冲突时清理残留并重试一次。
 
     ⚠️ 真实教训（2026-10-10 下午，连续 6 条会话作废）：
@@ -909,12 +1013,18 @@ def _dump_hierarchy(d, xml: Path) -> tuple[str, int]:
     （不同于 tap/input —— 那些永不重放）。故：残留进程清掉 → 重 dump 一次。
 
     清残留只动 uiautomator 进程，不 kill-server、不碰应用进程。
+
+    ⚠️ 另加**超时硬墙**（见 _dump_with_timeout）：u2 内部无限重试会卡死会话。
+    超时不重试 —— 卡 20 秒还没结果说明 u2 已经在死循环里，再试只会更慢，
+    直接抛给上层按"观测失败"处理。
     """
     attempts = 2
     last_error: Exception | None = None
     for attempt in range(1, attempts + 1):
         try:
-            return d.dump_hierarchy(), attempt
+            return _dump_with_timeout(d, timeout), attempt
+        except TimeoutError:
+            raise                      # 超时不重试，直接抛
         except Exception as error:  # noqa: BLE001
             last_error = error
             if attempt == attempts:
@@ -927,6 +1037,69 @@ def _dump_hierarchy(d, xml: Path) -> tuple[str, int]:
                 _adb("shell", "pkill", "-f", "com.github.uiautomator")
                 time.sleep(1.0)
     raise last_error if last_error else RuntimeError("dump_hierarchy failed")
+
+
+_TOP_ACTIVITY_RE = r"ActivityRecord\{[^}]*\s+u\d+\s+([\w.]+)/([\w.$]+)[^}]*\}"
+
+
+def foreground_of(d) -> dict:
+    """当前前台应用 {package, activity}。**不用 u2 的 app_current。**
+
+    ## 两个必须绕开它的理由（langgraph-poc 已实测，2026-10-31 移植）
+
+    ### ① 页面过渡期它会返回**旧页面**
+
+      176 的 s5：点周视图空格子，界面 1.1 秒后才跳到 EditCourseActivity，
+      而点击后立刻读 app_current 拿到的还是 TimetableActivity ——
+      记账 changed=False、模型以为没反应、换格子再点，
+      **连点 15 格全判无效**，最后 BLOCKED。同一坐标手动点能进。
+
+      26/46 那条 235 个事件的运行也是这个形态：
+        「第2次点新建（第1次未跳转）」「重建日程事件（上次未保存）」
+      —— 全是「读前台读早了 → 以为没跳转 → 重做」。
+
+    ### ② 本机型它慢 43 倍
+
+      `dumpsys window windows` 在本 ROM **没有 mCurrentFocus 输出**，
+      于是 adbutils 退到 `dumpsys activity top`（2506 行 / 5.4 秒）。
+      实测：u2.app_current 5388ms，下面这条 125ms。
+
+    ## 三级回退（和 AiAgentTest 一致）
+
+      ① `topResumedActivity=ActivityRecord{... u0 pkg/.Act ...}`  最精准
+      ② `mResumedActivity: ActivityRecord{...}`                  老 ROM
+      ③ `ResumedActivity: ActivityRecord{...}`                   定制 ROM
+
+    activity 统一补全成全名（dumpsys 里常写 `.foo.BarActivity` 省略包名）。
+
+    拿不到返回 {}，让上层按"不知道当前在哪"处理，而不是停摆。
+    """
+    import re as _re
+    try:
+        out = d.shell("dumpsys activity activities")
+    except Exception:  # noqa: BLE001
+        return {}
+    # ⚠️ u2 的 shell() 返回 ShellResponse 对象，不是 str。
+    #    只判 isinstance(out, str) 会永远 False → 静默返回 {} → 表现为"读不到前台"，
+    #    比报错更难查。两种形态都收。
+    text = getattr(out, "output", None)
+    if text is None and isinstance(out, str):
+        text = out
+    if not isinstance(text, str):
+        return {}
+    for pat in (r"topResumedActivity=" + _TOP_ACTIVITY_RE,
+                r"mResumedActivity:\s*" + _TOP_ACTIVITY_RE,
+                r"ResumedActivity:\s*" + _TOP_ACTIVITY_RE):
+        m = _re.search(pat, text)
+        if not m:
+            continue
+        pkg, act = m.group(1), m.group(2)
+        if act.startswith("."):
+            act = pkg + act
+        elif "." not in act:
+            act = f"{pkg}.{act}"
+        return {"package": pkg, "activity": act}
+    return {}
 
 
 def capture(d: "u2.Device", png: Path, xml: Path, meta: Path,
@@ -947,7 +1120,8 @@ def capture(d: "u2.Device", png: Path, xml: Path, meta: Path,
     with stage("xml_save"):
         xml.write_text(xml_text, encoding="utf-8")
     with stage("foreground"):
-        cur = d.app_current() or {}
+        # 走 dumpsys，不走 u2.app_current —— 见 foreground_of 的说明
+        cur = foreground_of(d)
     info = {
         "ts": datetime.now().isoformat(timespec="seconds"),
         "package": cur.get("package"),

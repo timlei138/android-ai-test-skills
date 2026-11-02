@@ -1,4 +1,4 @@
-"""测试会话 SQLite 持久化（v2：围绕 AI 会话，不围绕脚本）。
+"""测试会话 SQLite 持久化（v3：单库 + run_id 隔离）。
 
 三张表：
   sessions  一次测试会话（用户口述用例 + 结论）
@@ -6,8 +6,42 @@
   findings  断言/结论（从事件流独立出来，方便聚合统计）
 
 零依赖（标准库 sqlite3）。
-库位置：`storage/record/<uuid>/db.sqlite3` —— **每次运行一个库，互不隔离不干扰**。
-没有运行上下文时 `get_db()` 会明确报错（不会静默落到某个空库）。
+
+## 库位置：`storage/test.db` —— **所有运行共用一个库**
+
+⚠️ 2026-11-02 从「每次运行一个库」改成单库。
+
+### 为什么要改
+
+  原来 `storage/record/<uuid>/db.sqlite3`，一次运行一个库。跑了 138 次之后：
+
+    · WebUI 每次刷新要**打开 138 个库**再合并 —— 实测 2994ms
+    · 用例详情页要逐库查 —— 实测 5757ms
+    · 前端「看看这条用例历次结果」根本做不了（跨库没法 join）
+
+### 怎么隔离
+
+  不再靠「文件隔离」，靠 `sessions.run_id` 字段隔离：
+
+    sessions 表  run_id  <- 这次运行的 uuid（带 `-` 的标准 UUID v4）
+    events 表    通过 session_id 关联到 sessions，自然带上 run_id
+    findings 表  同上
+
+  跨运行查询变成一句 SQL：
+
+    SELECT * FROM sessions WHERE run_id = '2b818755-fc18-454c-96c1-ea1ca0444902'
+    SELECT s.run_id, s.status FROM sessions s WHERE s.title LIKE '%176%'
+
+### 运行目录还在
+
+  `storage/run_history/<uuid>/` 仍然建，但**只放证据和计时**，不再放 db.sqlite3：
+
+    run_history/<uuid>/
+        evidence/           <- 每次运行的截图（2026-11-02 起归到这里）
+        timing/ calls/ recording_errors/
+        （没有 db.sqlite3）
+
+  这样「一次运行 = 一个目录」的直觉还在，删一次运行 = 删目录 + 删库里对应行。
 """
 from __future__ import annotations
 
@@ -21,42 +55,30 @@ from runtime import CALL_ID, STORAGE_DIR, current_record_dir, recording_issues
 
 ROOT = Path(__file__).resolve().parent.parent
 
+# 全局唯一数据库
+DB_FILE = STORAGE_DIR / "test.db"
+
 
 def _resolve_db_path() -> Path:
-    """库放哪？
+    """库放哪？固定是 `storage/test.db`，与运行上下文无关。
 
-    ## 唯一位置：storage/record/<uuid>/db.sqlite3
+    ⚠️ 与旧版的关键差异：**不再依赖 current_record_dir()**。
 
-    每次运行一个独立库，互不干扰。
+      旧版没有运行上下文就报错（「没有进行中的测试会话」），
+      因为不知道读哪个库。单库后这个问题消失了 —— 库永远只有一个，
+      哪个都能查。所以 WebUI、导出脚本、统计工具都可以直接 get_db()。
 
-    ## 没有 record 上下文怎么办
-
-    **明确报错**，不静默落空库 —— 在空库里查会报「会话不存在」，
-    看起来像 bug，实际是查错了地方。需要上一次收尾的运行时，
-    调用方自己用 `last_record_dir()` 指定。
+      run_id 只用于**写入时归属**（session start 时确定），不参与定位库。
     """
-    rec = current_record_dir()
-    if rec is not None:
-        return rec / "db.sqlite3"
-    from runtime import last_record_dir
-    last = last_record_dir()
-    if last is not None:
-        # 上一次收尾的运行 —— 允许读它（`case save --last` 就靠这条路径）
-        return last / "db.sqlite3"
-    raise RuntimeError(
-        "没有进行中的测试会话。要么先 `session.py start`，"
-        "要么用明确指向某次运行的命令（如 `case save --last`）。")
+    return DB_FILE
 
 
 def _current_file() -> Path:
     """'当前会话号' 记在哪。
 
-    跟着库走 —— 库按 record 分了，指针也得跟着分，
-    否则 A 运行的指针会指到 B 运行的库里去。
+    单库后不再跟着 record 目录走 —— 固定放 storage/ 下。
+    多个运行同时跑是不允许的（设备只有一台），所以一个全局指针够用。
     """
-    rec = current_record_dir()
-    if rec is not None:
-        return rec / "current_session"
     return STORAGE_DIR / "current_session"
 
 
@@ -85,6 +107,7 @@ INTERIM = ("running", "paused", "waiting")
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS sessions(
   id INTEGER PRIMARY KEY AUTOINCREMENT,
+  run_id TEXT,
   title TEXT,
   user_input TEXT,
   package TEXT,
@@ -194,13 +217,18 @@ class SessionDB:
                          "ALTER TABLE sessions ADD COLUMN perm_intent_perm TEXT",
                          "ALTER TABLE sessions ADD COLUMN perm_intent_at TEXT",
                          "ALTER TABLE sessions ADD COLUMN knowledge_shown INTEGER DEFAULT 0",
-                         "ALTER TABLE events ADD COLUMN call_id TEXT"):
+                         "ALTER TABLE events ADD COLUMN call_id TEXT",
+                         # 单库化的关键列：这次运行属于哪个 uuid
+                         "ALTER TABLE sessions ADD COLUMN run_id TEXT"):
                 try:
                     conn.execute(stmt)
                 except sqlite3.OperationalError:
                     pass
             conn.commit()
             conn.execute("CREATE INDEX IF NOT EXISTS idx_events_call ON events(call_id)")
+            # run_id 是单库的主查询维度（前端按 run 筛、按 run 删）
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_sessions_run ON sessions(run_id)")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_sessions_started ON sessions(started_at)")
             conn.commit()
             self._local.conn = conn
         return self._local.conn
@@ -212,13 +240,22 @@ class SessionDB:
 
     # ── 写 ──────────────────────────────────────────────────────
     def start_session(self, title: str, user_input: str, device: str | None = None,
-                      case_id: int | None = None, kind: str = "test") -> int:
+                      case_id: int | None = None, kind: str = "test",
+                      run_id: str | None = None) -> int:
+        """开一个会话。run_id 不传时自动取当前运行目录名。
+
+        run_id 是单库的主隔离维度：同一个 uuid 下的会话（正常只有一个，
+        但重复 start 会产生多个）都能靠它聚起来。
+        """
         if kind not in SESSION_KINDS:
             kind = "test"
+        if run_id is None:
+            rec = current_record_dir()
+            run_id = rec.name if rec is not None else None
         cur = self._conn().execute(
-            "INSERT INTO sessions (title, user_input, device, case_id, kind, started_at)"
-            " VALUES (?,?,?,?,?,?)",
-            (title, user_input, device, case_id, kind, self._now()))
+            "INSERT INTO sessions (run_id, title, user_input, device, case_id,"
+            " kind, started_at) VALUES (?,?,?,?,?,?,?)",
+            (run_id, title, user_input, device, case_id, kind, self._now()))
         self._conn().commit()
         return cur.lastrowid
 
@@ -951,6 +988,50 @@ class SessionDB:
             if finding["event_id"] is not None and finding["event_id"] not in finding["event_ids"]:
                 finding["event_ids"].insert(0, finding["event_id"])
         return s
+
+    # ── 单库化后新增：按 run_id 查询 ─────────────────────────────
+    def sessions_of_run(self, run_id: str) -> list[dict]:
+        """某次运行（uuid）下的全部会话。
+
+        正常只有一个；重复 start 会产生多个（2026-10-31 跑 46 就撞见过）。
+        """
+        return [dict(r) for r in self._conn().execute(
+            "SELECT * FROM sessions WHERE run_id=? ORDER BY id", (run_id,))]
+
+    def list_runs(self, limit: int = 200) -> list[dict]:
+        """运行列表（按 run_id 聚合），新的在前。
+
+        单库化让这件事变成一句 GROUP BY —— 以前要开 138 个库才能算出来。
+        """
+        rows = self._conn().execute(
+            "SELECT run_id,"
+            " COUNT(*) AS session_count,"
+            " MIN(started_at) AS started_at,"
+            " MAX(COALESCE(finished_at, started_at)) AS ended_at,"
+            " GROUP_CONCAT(DISTINCT title) AS titles,"
+            " GROUP_CONCAT(DISTINCT status) AS statuses"
+            " FROM sessions WHERE run_id IS NOT NULL AND run_id != ''"
+            " GROUP BY run_id ORDER BY MIN(started_at) DESC LIMIT ?",
+            (limit,)).fetchall()
+        out = [dict(r) for r in rows]
+        for r in out:
+            # 库里有多个会话时取「有结论的那个」当代表状态
+            sts = (r.get("statuses") or "").split(",")
+            for pref in ("PASS", "FAIL", "BLOCKED", "ERROR"):
+                if pref in sts:
+                    r["status"] = pref
+                    break
+            else:
+                r["status"] = sts[0] if sts else "running"
+            r["title"] = (r.get("titles") or "").split(",")[0]
+        return out
+
+    def stats_by_run(self) -> dict:
+        """按 run 维度的总量（供仪表盘）。"""
+        row = self._conn().execute(
+            "SELECT COUNT(DISTINCT run_id) AS runs, COUNT(*) AS sessions"
+            " FROM sessions WHERE run_id IS NOT NULL AND run_id != ''").fetchone()
+        return {"runs": row[0], "sessions": row[1]}
 
     def session_stats(self) -> dict:
         """正式测试记录的结论统计（kind='test'，验证/调试会话不计入）。"""

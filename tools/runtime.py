@@ -133,7 +133,16 @@ CASES_DIR = ASSETS_DIR / "cases"
 KNOWLEDGE_DIR = Path(os.environ.get(
     "ANDROID_TEST_KNOWLEDGE", str(ASSETS_DIR / "knowledge"))).resolve()
 PATHS_DIR = KNOWLEDGE_DIR / "paths"
-RECORD_DIR = STORAGE_DIR / "record"
+# 每次运行的落盘目录。
+#
+# ⚠️ 2026-11-02 从 `record` 改名为 `run_history`：
+#    "record" 这个名字容易被理解成"录制/录像"，实际存的是**运行历史**。
+#    run_history 更直白 —— 一次运行一个目录。
+#
+# ⚠️ 同日起 UUID 从 `uuid4().hex[:12]`（12 位无分隔）改成 `str(uuid4())`：
+#    带 `-` 的标准 UUID v4 格式（8-4-4-4-12），肉眼可分段读，
+#    也便于在日志/命令行里复制粘贴时不粘错。
+RECORD_DIR = STORAGE_DIR / "run_history"
 TMP_DIR = STORAGE_DIR / "tmp"
 
 # ★ 两个子目录在模块加载时就建好。
@@ -178,9 +187,12 @@ def current_record_dir() -> Path | None:
 
 
 def new_record_dir() -> Path:
-    """建一个新的运行目录（uuid），返回路径。"""
+    """建一个新的运行目录（uuid），返回路径。
+
+    目录名用**带 `-` 的标准 UUID v4**（8-4-4-4-12），便于肉眼分段阅读。
+    """
     RECORD_DIR.mkdir(parents=True, exist_ok=True)
-    d = RECORD_DIR / uuid.uuid4().hex[:12]
+    d = RECORD_DIR / str(uuid.uuid4())
     for sub in ("evidence", "calls", "timing", "recording_errors"):
         (d / sub).mkdir(parents=True, exist_ok=True)
     return d
@@ -277,10 +289,10 @@ def detect_shell() -> dict:
 #    所以除了环境变量，还要写一个磁盘指针：storage/record/.current
 #    后续进程启动时读它。
 
-_CURRENT_POINTER = STORAGE_DIR / "record" / ".current"
+_CURRENT_POINTER = RECORD_DIR / ".current"
 # 上一次已收尾的运行目录。finish 时由 unpin_record() 写入，
 # 供"会话结束后才入库"（case save）这类操作定位到正确的库。
-_LAST_POINTER = STORAGE_DIR / "record" / ".last"
+_LAST_POINTER = RECORD_DIR / ".last"
 
 
 def pin_record(d: Path) -> None:
