@@ -613,14 +613,37 @@ def main() -> None:
 
     # 权限弹窗：按会话级意图自动响应（放在 capture 之前，别浪费 6s 窗口）。
     # 意图由 AI 事先声明；**未声明时默认 grant（同意）**——见 perm.DEFAULT_ACTION。
+    #
+    # ⚠️ 每个权限框记成**独立的一步**（2026-11-02 用户要求）：
+    #    「如果是权限也是单独一步。不要特殊对待。」
+    #    所以 on_dialog 里直接调 evidence_paths(None, None) + capture()，
+    #    生成和普通点击同构的 step 目录（shot.png / dump.xml / meta.json）。
+    #    step 号由 auto_name() 全局递增，天然按时间排在前后步骤之间。
     perm_result = None
+    _perm_steps: list[str] = []
+
+    def _snap_perm_dialog(info) -> None:
+        """权限框出现时留一步证据。异常不外抛（证据不该阻断主流程）。"""
+        try:
+            _p, _x, _m = evidence_paths(None, None)     # 自动命名，step 号递增
+            capture(d, _p, _x, _m, extra={
+                "kind": "permission",
+                "permission_prompt": (info or {}).get("prompt"),
+                "permission_buttons": [b["text"] for b in
+                                       ((info or {}).get("buttons") or [])],
+            })
+            _perm_steps.append(_p.parent.name)
+        except Exception:  # noqa: BLE001
+            pass
+
     try:
         from db import current_session, get_db
         si = current_session()
         intent = get_db().get_perm_intent(si) if si else None
         import perm as _perm
         perm_result = timed_call("permission", _perm.handle,
-                                 d, intent["action"] if intent else None)
+                                 d, intent["action"] if intent else None,
+                                 on_dialog=_snap_perm_dialog)
     except Exception as e:  # noqa: BLE001
         perm_result = {"error": str(e)}
     if perm_result and perm_result.get("detected"):

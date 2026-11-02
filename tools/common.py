@@ -791,14 +791,27 @@ def auto_name() -> str:
 
     计数器自增用 O_EXCL 锁文件保护（读改写非原子，并行调用会拿到同一个
     step 号互相覆盖证据）；抢不到锁短暂重试，超时降级为直读（宁重号不断功能）。
+
+    ⚠️ 计数器**按会话重置**（2026-11-02 修正）：
+
+      原来计数器是全局的（`storage/.evidence_seq`，一个文件累加到底）。
+      跑了几百个会话之后它已经到 338，于是新会话的第一批自动命名变成
+      `step0338` / `step0339` —— 而 AI 自己命名的是 `step01`，
+      两种编号混在一起，翻记录根本看不出先后。
+
+      改成 `storage/.evidence_seq_<sid>`：每个会话从 1 开始，
+      `step01 / step02 / step03 …` 和 AI 手动命名的风格一致。
+
+      「一次运行只有一个会话」是常态，所以这不影响并发安全。
     """
     import os
     try:
         from db import current_session
-        sid = current_session() or "loose"
+        sid = current_session()
     except Exception:  # noqa: BLE001
-        sid = "loose"
-    seq_file = STORAGE_DIR / ".evidence_seq"
+        sid = None
+    tag = str(sid) if sid else "loose"
+    seq_file = STORAGE_DIR / f".evidence_seq_{tag}"
     lock = str(seq_file) + ".lock"
     seq_file.parent.mkdir(parents=True, exist_ok=True)
     n = 1

@@ -44,13 +44,33 @@ def main() -> None:
 
     # 权限弹窗：按会话级意图自动响应（在截图前处理，弹窗约 6s 会自行消失）
     perm_result = None
+
+    def _snap_perm_dialog(pinfo) -> None:
+        """权限框出现时留一步证据 —— 和 act 里同一个做法。
+
+        ⚠️ 只在**已经有 name 参数**时自动另存；observe 自己那一步已经会 capture，
+           再存一份会和主 step 重复。所以这里只在权限框弹出时补拍：
+           权限框是被 observe 顺手点掉的，不补拍就完全没证据。
+        """
+        try:
+            _p, _x, _m = evidence_paths(None, None)
+            capture(d, _p, _x, _m, extra={
+                "kind": "permission",
+                "permission_prompt": (pinfo or {}).get("prompt"),
+                "permission_buttons": [b["text"] for b in
+                                       ((pinfo or {}).get("buttons") or [])],
+            })
+        except Exception:  # noqa: BLE001
+            pass
+
     try:
         from db import current_session, get_db
         si = current_session()
         intent = get_db().get_perm_intent(si) if si else None
         import perm as _perm
         perm_result = timed_call("permission", _perm.handle,
-                                 d, intent["action"] if intent else None)
+                                 d, intent["action"] if intent else None,
+                                 on_dialog=_snap_perm_dialog)
     except Exception as e:  # noqa: BLE001
         perm_result = {"error": str(e)}
 

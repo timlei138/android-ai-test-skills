@@ -208,7 +208,8 @@ def _frame_signature(info: dict | None) -> str:
 
 
 def handle(d, action: str | None = None, timeout_s: float = 0.8,
-           chain_max: int = 8, observe_only: bool = False) -> dict:
+           chain_max: int = 8, observe_only: bool = False,
+           on_dialog=None) -> dict:
     """看见权限框就点，点到框没了为止 —— 和测试员的做法完全一致。
 
     多权限申请时 Android **不关框**，就在同一个框里点一次换下一个权限，
@@ -216,7 +217,22 @@ def handle(d, action: str | None = None, timeout_s: float = 0.8,
 
     action=None → 用 DEFAULT_ACTION（grant，默认同意）。
     observe_only=True → 只检测不点击（调试/仅取证时用）。
+
+    ## on_dialog：让权限框成为「独立的一步」
+
+    `on_dialog(info)` 在**每个权限框出现时**调一次（点之前）。
+    调用方通常在里面拍一张存成独立 step —— 于是权限框和普通点击一样有
+    完整的 shot.png / dump.xml / meta.json，翻 step 列表就能看到
+    「这一步弹了什么权限」。
+
+    ⚠️ 为什么不用特殊结构（2026-11-02 用户要求）：
+      「如果是权限也是单独一步。不要特殊对待。」
+        · 权限步和普通步结构统一 → 前端/回放/排查都不用写特殊分支
+        · step 号由调用方的 auto_name() 递增，天然按时间排
+        · 不需要额外的 perm/ 子目录（那会把证据链拆散）
+
     返回 {"detected","handled","clicks","dialog_count",...}
+      `clicks` 就是「点了哪几个权限」：每项 {text, rid, center}
     """
     result = {"detected": False, "handled": False, "clicks": [],
               "dialog_count": 0, "activity": None, "buttons": [], "prompts": []}
@@ -233,6 +249,12 @@ def handle(d, action: str | None = None, timeout_s: float = 0.8,
         result["buttons"] = [b["text"] for b in info["buttons"]]
         if info.get("prompt"):
             result["prompts"].append(info["prompt"])   # 留痕：本次授予了哪些权限
+        # 框出现 → 让调用方留证（这一步还没点，拍的是权限框原样）
+        if on_dialog is not None:
+            try:
+                on_dialog(info)
+            except Exception:  # noqa: BLE001
+                pass                    # 证据存不下不该阻断权限处理
         if observe_only:
             break                       # 只看不点
         btn = match_button(info["buttons"], action or DEFAULT_ACTION)
