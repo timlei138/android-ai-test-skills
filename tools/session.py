@@ -1065,6 +1065,15 @@ def main() -> None:
     s.add_argument("--status", required=True, choices=STATUSES)
     s.add_argument("--summary", default="")
     s.add_argument("--package", default=None)
+    # ⚠️ --device 收下但**不参与逻辑**（2026-11-02）。
+    #
+    #    真实踩过：跑 168 时 AI 按 start 的参数习惯写了
+    #    `finish --status PASS --device HA2DMRBK`，argparse 直接报
+    #    「unrecognized arguments: --device」，AI 只好去掉重试 ——
+    #    多花一次往返。finish 本来就不需要设备（连库都不连设备），
+    #    但为了"同一个会话的 start/finish 参数风格一致"，收下忽略更省事。
+    s.add_argument("--device", default=None,
+                   help="（兼容用，收下忽略）设备 serial；finish 不连设备")
     s.add_argument("--no-paths", action="store_true", dest="no_paths",
                    help="PASS 时默认采集路径边；加此参数跳过")
     s.add_argument("--id", type=int, default=None,
