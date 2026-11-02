@@ -1312,7 +1312,18 @@ def main() -> None:
                 if num and _re.search(rf"[_\-]{num}(?!\d)", ct):
                     existing_case = c
                     break
-        sid = db.start_session(title, user_input, args.device, case_id=args.case_id,
+        # ⚠️ 只有**库里真有这条用例**时才把 case_id 写进 sessions（2026-11-02 修）。
+        #
+        #    真实事故：`start --case 176` 走的是「从 assets/cases/ 读文件」这条路，
+        #    此时 cases 表里并没有 id=176 的行，但原来的写法照样把 case_id=176
+        #    写进了 sessions。于是 finish 时 db.finish_session 去 UPDATE cases
+        #    找不到那一行 → 抛「Associated case is missing」→ 整条会话收尾失败。
+        #    （跑 176 的子 Agent 撞上了，只能手动 `case add` 补建再改 id 才收尾。）
+        #
+        #    正确做法：case_id 只在 db.get_case() 命中时才带。
+        #    从文件读出来的用例，跑完照常靠 `case save --session N` 入库。
+        _real_case_id = args.case_id if case else None
+        sid = db.start_session(title, user_input, args.device, case_id=_real_case_id,
                                kind="diag" if args.diag else "test")
         set_current(sid)
         if args.package:

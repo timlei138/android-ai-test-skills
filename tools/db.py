@@ -393,8 +393,18 @@ class SessionDB:
                     "UPDATE cases SET package=COALESCE(package, ?), last_session_id=?,"
                     " last_run_at=?, last_status=?, run_count=COALESCE(run_count,0)+1 WHERE id=?",
                     (package or row["package"], session_id, self._now(), status, row["case_id"]))
+                # ⚠️ 关联的用例不存在时**不能让整条会话收尾失败**（2026-11-02 修）。
+                #
+                #    真实事故：`start --case 176` 从 assets/cases/ 读文件开会话，
+                #    cases 表里没有 id=176 的行，finish 时这里抛
+                #    「Associated case is missing」→ 会话卡在 running 收不了尾，
+                #    AI 只能手动 case add 补建再改 id 才绕过。
+                #
+                #    会话结论是主要产物，用例库统计是附属的 —— 附属失败不该毁掉主产物。
+                #    这里只把 case_id 解绑（置空），会话照常收尾。
                 if updated.rowcount != 1:
-                    raise ValueError("Associated case is missing")
+                    conn.execute("UPDATE sessions SET case_id=NULL WHERE id=?",
+                                 (session_id,))
             conn.commit()
             return True
         except (sqlite3.Error, ValueError, OSError):
