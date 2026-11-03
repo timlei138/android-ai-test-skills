@@ -884,7 +884,7 @@ class SessionDB:
 
         threading.Thread(target=_bg_cleanup, daemon=True,
                          name=f"evidence-cleanup-{session_id}").start()
-        return {"ok": True, "files": files, "dirs": dirs}
+        return {"ok": True, "files": 0, "dirs": 0}  # 文件后台删，数字未知记 0
 
     def set_session_kind(self, session_id: int, kind: str) -> bool:
         """切换会话类型（test=进测试记录 / diag=验证调试，默认不展示）。"""

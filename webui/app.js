@@ -431,8 +431,10 @@ function confirmDeleteSession(id) {
     let stillThere = false;
     try {
       const list = await api("/api/sessions?all=1&kind=test");
+      // ⚠️ 该接口返回 {sessions:[...], stats, kinds}（dict），不是数组
+      const rows = (list && list.sessions) || [];
       const localNum = Number(String(id).split(":").pop());
-      stillThere = (list || []).some(x =>
+      stillThere = rows.some(x =>
         x.id === id || Number(x.local_id) === localNum);
     } catch (e) { /* 核实失败时保守提示 */ }
 
