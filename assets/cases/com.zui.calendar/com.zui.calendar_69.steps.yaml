@@ -1,0 +1,34 @@
+# 自动导出：com.zui.calendar_69 的可复用跳转步骤
+#
+# 只含「锚点明确 + 落点可验 + 非前置」的 tap。
+# 前置条件、造数据、判定都不在这里 —— 那些每次都不一样。
+#
+# 用法：照着点即可。每步点之前验 expect，不命中就停、交回 AI。
+# 注意：这是**上一次**的实测路径，不是唯一正确路径。
+case: com.zui.calendar_69
+source_run: storage
+last_run: 2026-11-02T23:10:34.533
+verdict: FAIL
+step_count: 4
+start_from: activity=com.zui.calendar.settings.GrabVoteSettingsActivity
+steps:
+  - n: 1
+    why: 再次打开返程时间弹框，设一个晚于启程(11月2日)的合法值
+    via: rid=voteTimePickerBack
+    expect: rid=button_divider2
+    in_page: true
+  - n: 2
+    why: 再次打开启程时间弹框，设 11月30日（早于返程12月2日，合法）
+    via: rid=voteTimePickerGo
+    expect: rid=button_divider2
+    in_page: true
+  - n: 3
+    why: 确认启程 = 2026年11月3日（早于返程12月2日，合法）
+    via: rid=right_button,text=确定
+    expect: rid=festival_checkbox
+    in_page: true
+  - n: 4
+    why: 取消，不改动启程时间
+    via: rid=left_button,text=取消
+    expect: rid=festival_checkbox
+    in_page: true
