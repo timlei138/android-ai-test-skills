@@ -796,67 +796,95 @@ class SessionDB:
           ② storage/{evidence,logs}/<会话id>/ 自动命名目录；
           ③ ①中每个文件**所在的步骤目录**（shot.png 与 dump.xml/meta.json 同目录，
              只删 events 里那一个文件会把 dump/meta 留成孤儿）。
+
+        ## ⚠️ 性能：**先删数据库行立刻返回，文件删除放后台**（2026-11-03）
+
+        真实事故：WebUI 删一个 40 证据的会话耗时 **6.8 秒**（120 文件/40 目录）。
+        期间 HTTP 连接挂着，浏览器/系统回收空闲连接后，响应写不回去 ——
+        ConnectionAbortedError [WinError 10053]，前端 fetch 也失败，
+        用户看到「没删掉」，实际库已删 → 界面与事实不一致。
+
+        顺序反过来就好：**数据库行毫秒级删掉 → 响应立刻回 → 文件后台慢慢删**。
+        证据文件只是"录像"，晚几秒删掉不影响数据一致性；
+        即使 webui 进程退出没删完，也只是残留几个孤儿文件，无害。
+
+        后台线程用 daemon=True：webui 关停时不阻塞（没删完就当残留）。
         """
         import shutil
+        import threading
 
-        files, dirs = 0, 0
+        conn = self._conn()
+
+        # ① 先收集证据路径（删行之前，还能查到）
+        ev_paths = [r["evidence"] for r in conn.execute(
+            "SELECT evidence FROM events WHERE session_id=?",
+            (session_id,)).fetchall() if r["evidence"]]
+
+        # ② 删数据库行（毫秒级）
         try:
-            rows = self._conn().execute(
-                "SELECT evidence FROM events WHERE session_id=?", (session_id,)).fetchall()
-            ev_paths = [r["evidence"] for r in rows if r["evidence"]]
+            cur = conn.execute("DELETE FROM sessions WHERE id=?", (session_id,))
+            conn.execute("DELETE FROM events WHERE session_id=?", (session_id,))
+            conn.execute(
+                "DELETE FROM finding_events WHERE finding_id IN "
+                "(SELECT id FROM findings WHERE session_id=?)", (session_id,))
+            conn.execute("DELETE FROM findings WHERE session_id=?", (session_id,))
+            conn.commit()
+        except sqlite3.Error:
+            return {"ok": False, "files": 0, "dirs": 0}
+        ok = cur.rowcount > 0
+        if not ok or not remove_evidence:
+            return {"ok": ok, "files": 0, "dirs": 0}
 
-            if remove_evidence:
-                storage_root = Path(self.path).parent.resolve()
+        # ③ 文件删除放后台 daemon 线程（秒级，不阻塞 HTTP 响应）
+        db_path = self.path
+        storage_root = Path(db_path).parent.resolve()
+
+        def _bg_cleanup() -> None:
+            files_n, dirs_n = 0, 0
+            try:
                 step_dirs: set[Path] = set()
                 for rel_p in ev_paths:
                     try:
                         fp = (ROOT / rel_p).resolve()
-                        # 只删 storage 内的证据，防路径穿越
                         if not fp.is_relative_to(storage_root):
                             continue
                         if fp.is_file():
                             fp.unlink()
-                            files += 1
-                        # 该文件的父目录 = 一个步骤证据目录，整目录收掉
+                            files_n += 1
                         if fp.parent != storage_root and fp.parent.is_dir():
                             step_dirs.add(fp.parent)
                     except OSError:
                         pass
-                # 步骤目录整棵删（含同目录的 dump.xml / meta.json / crash.log）
+                # 步骤目录整棵删（含同目录 dump.xml / meta.json / crash.log）
                 for d in step_dirs:
                     n = sum(1 for _ in d.rglob("*") if _.is_file())
                     if shutil.rmtree(d, ignore_errors=True) or not d.exists():
-                        files += n
-                        dirs += 1
+                        files_n += n
+                        dirs_n += 1
                 # 自动命名目录 <会话id>/ 整棵删
                 for base in ("evidence", "logs"):
-                    d = Path(self.path).parent / base / str(session_id)
+                    d = Path(db_path).parent / base / str(session_id)
                     if d.is_dir():
                         n = sum(1 for _ in d.rglob("*") if _.is_file())
                         if shutil.rmtree(d, ignore_errors=True) or not d.exists():
-                            files += n
-                            dirs += 1
+                            files_n += n
+                            dirs_n += 1
                 # 清掉遗留的空目录（只清空的，不动有内容的）
-                ev_root = Path(self.path).parent / "evidence"
+                ev_root = Path(db_path).parent / "evidence"
                 if ev_root.is_dir():
                     for sub in sorted(ev_root.rglob("*"), reverse=True):
                         if sub.is_dir() and not any(sub.iterdir()):
                             try:
                                 sub.rmdir()
-                                dirs += 1
+                                dirs_n += 1
                             except OSError:
                                 pass
+            except Exception:  # noqa: BLE001
+                pass      # 后台清理失败无害：顶多残留孤儿文件
 
-            cur = self._conn().execute("DELETE FROM sessions WHERE id=?", (session_id,))
-            self._conn().execute("DELETE FROM events WHERE session_id=?", (session_id,))
-            self._conn().execute(
-                "DELETE FROM finding_events WHERE finding_id IN "
-                "(SELECT id FROM findings WHERE session_id=?)", (session_id,))
-            self._conn().execute("DELETE FROM findings WHERE session_id=?", (session_id,))
-            self._conn().commit()
-            return {"ok": cur.rowcount > 0, "files": files, "dirs": dirs}
-        except sqlite3.Error:
-            return {"ok": False, "files": files, "dirs": dirs}
+        threading.Thread(target=_bg_cleanup, daemon=True,
+                         name=f"evidence-cleanup-{session_id}").start()
+        return {"ok": True, "files": files, "dirs": dirs}
 
     def set_session_kind(self, session_id: int, kind: str) -> bool:
         """切换会话类型（test=进测试记录 / diag=验证调试，默认不展示）。"""

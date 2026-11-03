@@ -412,12 +412,39 @@ function confirmDeleteSession(id) {
   $("[data-cancel]", m.el).addEventListener("click", m.close);
   $("[data-ok]", m.el).addEventListener("click", async () => {
     const withEv = $("#del-ev", m.el).checked;
-    const r = await api(`/api/sessions/${id}?evidence=${withEv ? 1 : 0}`,
-                        { method: "DELETE" });
+    const btn = $("[data-ok]", m.el);
+    // ⚠️ 删除可能要几秒（几十个证据文件），必须有「删除中…」反馈，
+    //    否则弹窗静止不动，用户以为卡死去刷新 → 连接断 → 状态不一致。
+    btn.textContent = "删除中…";
+    btn.disabled = true;
+
+    let netOk = true;
+    let r = null;
+    try {
+      r = await api(`/api/sessions/${id}?evidence=${withEv ? 1 : 0}`,
+                    { method: "DELETE" });
+    } catch (e) {
+      netOk = false;         // 响应丢了 ≠ 删除失败，用核实兜底
+    }
+
+    // 删后核实：重新拉列表看这条还在不在（唯一可靠的事实）
+    let stillThere = false;
+    try {
+      const list = await api("/api/sessions?all=1&kind=test");
+      const localNum = Number(String(id).split(":").pop());
+      stillThere = (list || []).some(x =>
+        x.id === id || Number(x.local_id) === localNum);
+    } catch (e) { /* 核实失败时保守提示 */ }
+
     m.close();
     await viewSessions();
-    if (r && r.files != null) {
-      toast(`已删除记录 #${id}${withEv ? `，清理 ${r.files} 个证据文件` : ""}`);
+    if (stillThere) {
+      toast(`删除失败：记录 #${id} 仍存在`);
+    } else if (netOk && r && r.ok) {
+      toast(`已删除记录 #${id}${withEv ? `，后台清理证据文件中` : ""}`);
+    } else {
+      // 网络中断但记录已不在 = 实际删成功了
+      toast(`已删除记录 #${id}（响应中断，已核实）`);
     }
   });
 }

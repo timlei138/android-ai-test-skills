@@ -591,8 +591,16 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def _json(self, obj, code: int = 200):
-        self._send(code, json.dumps(obj, ensure_ascii=False).encode("utf-8"),
-                   "application/json")
+        # ⚠️ 容忍客户端断连（2026-11-03）：
+        #    删除接口耗时几秒（虽已改为先删库后台清文件），用户在此期间
+        #    刷新/关闭页面时，浏览器 abort 连接 → 写响应抛 ConnectionAbortedError
+        #    → 之前整段堆栈打到控制台，看起来像服务端坏了，实际操作已成功。
+        #    此时无话可说，静默即可。其余异常照常抛出（那才是真 bug）。
+        try:
+            self._send(code, json.dumps(obj, ensure_ascii=False).encode("utf-8"),
+                       "application/json")
+        except (ConnectionAbortedError, ConnectionResetError, BrokenPipeError):
+            pass
 
     def _static(self, relpath: str):
         fp = (WEBUI_DIR / relpath).resolve()
