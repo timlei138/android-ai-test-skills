@@ -130,6 +130,11 @@ code {
   border-left: 3px solid var(--accent); padding: 10px 14px; margin: 12px 0;
   background: var(--card); border-radius: 0 8px 8px 0; color: var(--muted);
   white-space: pre-wrap; box-shadow: var(--shadow);
+  /* 口述可以很长（实测最长 617 字符 ≈ 20 行），整块展开会把下面的
+     断言和时间线一路挤到屏幕外。限高 + 内部滚动：内容一点不少，
+     也不用先滚过一大段才能看到结果。
+     overflow-wrap 兜住超长无空格串（URL、长 rid），否则会横向溢出。 */
+  max-height: 220px; overflow-y: auto; overflow-wrap: anywhere;
 }
 .findings { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0; }
 .finding {

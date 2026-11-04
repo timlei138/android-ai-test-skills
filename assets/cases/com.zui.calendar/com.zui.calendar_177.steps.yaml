@@ -7,12 +7,21 @@
 # 注意：这是**上一次**的实测路径，不是唯一正确路径。
 case: com.zui.calendar_177
 source_run: storage
-last_run: 2026-11-03T12:59:05.957
-verdict: PASS
-step_count: 1
-start_from: activity=com.zui.calendar.timetable.display.TimetableActivity
+last_run: 2026-11-04T04:02:08.702
+verdict: FAIL
+step_count: 3
+start_from: activity=com.zui.calendar.AllInOneActivity
 steps:
   - n: 1
-    why: 前提：进入课程表列表，再进基本信息编辑页
-    via: rid=action_curriculum_table_settings
+    why: 进入课程表
+    via: text=课程表
+    expect: activity=com.zui.calendar.timetable.display.TimetableActivity
+  - n: 2
+    why: 取消日期弹框，不改值
+    via: rid=left_button
+    expect: rid=action_save
+    in_page: true
+  - n: 3
+    why: 填写名称后点完成，完成手动创建课表（用例前提）
+    via: rid=save_view
     expect: activity=com.zui.calendar.timetable.management.TimetableListActivity

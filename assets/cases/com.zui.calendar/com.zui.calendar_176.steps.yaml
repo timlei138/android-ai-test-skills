@@ -7,34 +7,26 @@
 # 注意：这是**上一次**的实测路径，不是唯一正确路径。
 case: com.zui.calendar_176
 source_run: storage
-last_run: 2026-11-03T12:53:03.833
+last_run: 2026-11-04T03:49:25.501
 verdict: FAIL
-step_count: 6
-start_from: activity=com.zui.calendar.AllInOneActivity
+step_count: 4
+start_from: activity=com.zui.calendar.timetable.management.TimetableListActivity
 steps:
   - n: 1
-    why: 进入课程表功能页
-    via: text=课程表
-    expect: activity=com.zui.calendar.timetable.display.TimetableActivity
-  - n: 2
-    why: 进入多选态，勾选两个课程表并删除（满足 176 前提：设备没有课程表）
-    via: rid=action_schedule
-    expect: rid=bottom_bar
-    in_page: true
-  - n: 3
-    why: 删除勾选的两个课程表
+    why: 176前提：删除选中的 4 个课程表
     via: rid=btn_delete
     expect: rid=message
     in_page: true
-  - n: 4
-    why: 用例步骤2：点击“手动创建课程表”
+  - n: 2
+    why: 176步骤1：日历点击页面右上角更多按钮
+    via: rid=iv_more
+    expect: rid=item_title
+    in_page: true
+  - n: 3
+    why: 176步骤2：点击手动创建课程表（预期2 进入基本信息编辑页）
     via: rid=btnCreateManually
     expect: activity=com.zui.calendar.timetable.management.EditTimetableActivity
-  - n: 5
-    why: 用例步骤3：点完成，把信息应用到空课程表，查看显示
+  - n: 4
+    why: 176步骤3：点击完成，应用信息到空课程表并查看显示
     via: rid=save_view
     expect: activity=com.zui.calendar.timetable.display.TimetableActivity
-  - n: 6
-    why: 用例步骤4：点击第一个小节的加号
-    via: rid=iv_add_hint
-    expect: activity=com.zui.calendar.timetable.course.EditCourseActivity

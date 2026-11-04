@@ -7,39 +7,27 @@
 # 注意：这是**上一次**的实测路径，不是唯一正确路径。
 case: com.zui.calendar_169
 source_run: storage
-last_run: 2026-11-03T12:27:23.939
+last_run: 2026-11-04T03:10:32.897
 verdict: PASS
-step_count: 7
-start_from: activity=com.zui.calendar.timetable.display.TimetableActivity
+step_count: 4
+start_from: activity=com.zui.calendar.AllInOneActivity
 steps:
   - n: 1
-    why: 用例169步骤1 拒绝分支：已撤销相机权限，再次点「拍照导入课程表」触发权限弹窗
-    via: rid=btnImportFromPhoto
-    expect: activity=com.zui.calendar.AllInOneActivity
+    why: 进入课程表页（空态）
+    via: text=课程表,rid=item_title
+    expect: activity=com.zui.calendar.timetable.display.TimetableActivity
   - n: 2
-    why: 用例169步骤1 拒绝分支第2次尝试：权限已被永久拒绝，再点「拍照导入课程表」触发 App 侧提示
-    via: rid=btnImportFromPhoto
+    why: 步骤1：点「拍照导入课程表」（已声明 deny 意图，权限框将自动点拒绝）
+    via: rid=btnImportFromPhoto,text=拍照导入课程表
     expect: rid=alertTitle
     in_page: true
   - n: 3
-    why: 第二次点拒绝，立即观察 App 侧提示
-    via: rid=permission_deny_and_dont_ask_again_button
-    expect: activity=com.android.settings.applications.InstalledAppDetails
-  - n: 4
-    why: 用例169步骤2 拒绝分支：相册权限已撤销，点「从图库导入课程表」
-    via: rid=btnImportFromGallery
-    expect: activity=com.zui.calendar.AllInOneActivity
-  - n: 5
-    why: 撤销权限后 App 回到首页，重新进入课程表（拒绝分支）
-    via: rid=iv_more
-    expect: rid=item_title
+    why: 重测拍照导入「允许」分支：相机权限已重置为首次请求状态，点按钮
+    via: rid=btnImportFromPhoto
+    expect: rid=alertTitle
     in_page: true
-  - n: 6
-    why: 回到课程表空态页
-    via: text=课程表
-    expect: activity=com.zui.calendar.timetable.display.TimetableActivity
-  - n: 7
-    why: 用例169步骤2 拒绝分支：点「从图库导入课程表」，触发相册权限弹窗并选择拒绝
+  - n: 4
+    why: 重测图库导入「允许」分支（照片权限已重置为首次请求）
     via: rid=btnImportFromGallery
     expect: rid=alertTitle
     in_page: true

@@ -7,35 +7,58 @@
 # 注意：这是**上一次**的实测路径，不是唯一正确路径。
 case: com.zui.calendar_29
 source_run: storage
-last_run: 2026-11-03T11:05:57.930
-verdict: FAIL
-step_count: 6
-start_from: activity=com.zui.calendar.newbuild.NewBuildActivity
+last_run: 2026-11-03T22:06:29.021
+verdict: PASS
+step_count: 11
+start_from: activity=com.zui.calendar.AllInOneActivity
 steps:
   - n: 1
-    why: 选中「生日」分类，检查光标是否在标题处、键盘是否自动调起
+    why: 新建事件入口（步骤1：新建一个生日事件）
+    via: rid=action_add_all_event
+    expect: activity=com.zui.calendar.newbuild.NewBuildActivity
+  - n: 2
+    why: 选择分类「生日」（步骤1）
     via: rid=categoryLayout,text=生日
     expect: rid=birthdayEtNotes
     in_page: true
-  - n: 2
-    why: 点生日日期行，看日期弹层里有没有农历选项
+  - n: 3
+    why: 打开生日日期选择（步骤2 选择生日的日期）
     via: rid=birthdayLlDate
     expect: rid=button_divider2
     in_page: true
-  - n: 3
-    why: 确定按农历选择生日日期（冬月初三）
+  - n: 4
+    why: 确定按农历选择的生日日期（步骤2/4）
     via: rid=right_button,text=确定
     expect: rid=action_menu_view
     in_page: true
-  - n: 4
-    why: 保存生日事件（农历冬月初三 + 任务发生当天 09:00 + 备注）
+  - n: 5
+    why: 保存生日事件（步骤2/3/4/5 的保存动作）
     via: rid=save_view,text=完成
     expect: activity=com.zui.calendar.AllInOneActivity
-  - n: 5
-    why: 进入纵览视图
+  - n: 6
+    why: 打开更多菜单，进入纵览查看生日事件是否创建成功
+    via: rid=iv_more
+    expect: rid=item_title
+    in_page: true
+  - n: 7
+    why: 进入纵览，查看生日事件是否列出
     via: rid=item_title,text=纵览
     expect: activity=com.zui.calendar.agenda.NewBuildList
-  - n: 6
-    why: 用左上返回退出编辑页，回到详情
-    via: rid=backtext,text=编辑生日
+  - n: 8
+    why: 切到「生日」分类，查看新建的生日事件
+    via: rid=birthday_layoutx,text=生日
+    expect: rid=todaynull_layout
+    in_page: true
+  - n: 9
+    why: 进提醒页，改用 swipe 手法尝试改具体时间
+    via: rid=birthdayLlReminder
+    expect: activity=com.zui.calendar.reminder.ReminderMultiSelectActivity
+  - n: 10
+    why: 打开时间弹框（第二次尝试改具体时间）
+    via: rid=reminder_time,text=09:00
+    expect: rid=selector_top_divider
+    in_page: true
+  - n: 11
+    why: 保存 09:02 提醒时间
+    via: rid=save_view,text=完成
     expect: activity=com.zui.calendar.birthday.BirthdayDetailActivity

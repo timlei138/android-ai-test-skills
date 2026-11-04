@@ -7,26 +7,25 @@
 # 注意：这是**上一次**的实测路径，不是唯一正确路径。
 case: com.zui.calendar_11
 source_run: storage
-last_run: 2026-11-02T23:27:04.335
-verdict: FAIL
+last_run: 2026-11-04T01:17:08.789
+verdict: PASS
 step_count: 4
-start_from: activity=com.zui.calendar.newbuild.NewBuildActivity
+start_from: activity=com.zui.calendar.AllInOneActivity
 steps:
   - n: 1
-    why: 用例步骤1：切到「日程」分类建带提醒事件
-    via: rid=categoryLayout,text=日程
-    expect: rid=busy_layout
-    in_page: true
-  - n: 2
-    why: 新建第 3 条带提醒事件（用于多通知合并）
+    why: 新建第二个事件（日程类）
     via: rid=action_add_all_event
     expect: activity=com.zui.calendar.newbuild.NewBuildActivity
+  - n: 2
+    why: 调整提醒偏移，让提醒在3分钟后触发
+    via: rid=reminders_row
+    expect: activity=com.zui.calendar.event.options.EventAheadActivity
   - n: 3
-    why: 确认时间 23:46（提醒为任务发生时，即刻触发）
-    via: rid=right_button,text=确定
+    why: 确认日程B开始时间01:26
+    via: rid=right_button
     expect: rid=action_menu_view
     in_page: true
   - n: 4
-    why: 保存第 3 条提醒事件
-    via: rid=save_view,text=完成
+    why: 保存课程E（提醒=上课前15分钟）
+    via: rid=save_view
     expect: activity=com.zui.calendar.AllInOneActivity

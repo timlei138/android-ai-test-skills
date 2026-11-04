@@ -134,7 +134,8 @@ def render(doc: dict) -> str:
         add("## 前置条件")
         add("")
         add("> 会话开始时**已冷启动复位**，所以起点一定是 App 首页。")
-        add("> 按 `goto` → `prepare` → `assert` 的顺序处理；不满足即 **BLOCKED**。")
+        add("> 按 `clean` → `goto` → `prepare` → `assert` 的顺序处理；"
+            "`prepare` 要自己动手造，造不出来才算 **BLOCKED**。")
         add("")
         for p in pre:
             if not isinstance(p, dict):

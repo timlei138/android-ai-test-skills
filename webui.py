@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import json
 import os
 import re
@@ -519,11 +520,22 @@ def _mask(s: str) -> str:
     return s[:4] + "*" * (len(s) - 8) + s[-4:]
 
 
-# 1x1 透明 PNG：视觉连通性测试用最小图，不依赖本地证据文件
-_TINY_PNG = (
-    b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01"
-    b"\x08\x06\x00\x00\x00\x1f\x15\xc4\x89\x00\x00\x00\nIDATx\x9cc\x00"
-    b"\x01\x00\x00\x05\x00\x01\r\n-\xb4\x00\x00\x00\x00IEND\xaeB`\x82"
+# 64x64 小图（画了个对勾）：视觉连通性测试用，不依赖本地证据文件。
+#
+# ⚠️ 别改回 1x1 —— 实测（2026-11-04，qwen3.8-27b）1x1 会被服务端直接拒：
+#     HTTP 400 "The image length and width do not meet the model restrictions.
+#     [height:1 or width:1 must be larger than 10]"
+#   真实截图（1080x1920）一直是好的，所以失败看着像"配置错了"，
+#   实际是测试用的占位图太小 —— 配置没问题，测法有问题。
+_TINY_PNG = base64.b64decode(
+    b"iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAABEElEQVR42u2aMR"
+    b"KEMAhF45+9Efc/Qo6T3sImo7O7BoEE51Nomf8CKIFsrbWS2VCS2+d4iUg66bXW"
+    b"F3mgZ1rf+nhJ7wECEIAABCAAAQhAAAIQwKFOzgdwqB9lwIJ7P8SABSNn6GCI1O"
+    b"rnAzxUv1YS61oKWGT71Q0RpFY/DcCwEYiMiTsTwFa9HkAXA+bqlQC6osVD/TCA"
+    b"iOiKFif1wwC6hf3Ua0LotPxfJ7iqV+bAfQZv9Waf0TvJ4DQ9gVXhdWWwKha8PP"
+    b"CbIUb90xD6pixy5gnbIv70owgYHML1IBIw9sRqJ6w5AFetYSNn2O53/8zXWoxX"
+    b"z+YuAQhAAAIQgAAEIEB5z73RjPd303tg4+31ybYDbuB13HUQTMgAAAAASUVORK"
+    b"5CYII="
 )
 
 
@@ -571,8 +583,19 @@ def _test_vision() -> dict:
             detail = e.read().decode("utf-8", "replace")[:300]
         except Exception:  # noqa: BLE001
             pass
+        # 400 单独说 —— 它不是"配置错"，是"请求内容被拒"，
+        # 说成 api_key 问题会把人带偏（实测 2026-11-04：测试图 1x1 被拒，
+        # 报 invalid_parameter_error，用户以为是配置填错了）。
+        if e.code == 400:
+            hint = "400 多为请求内容问题（如测试图尺寸不合规）；配置本身可能没填错"
+        elif e.code in (401, 403):
+            hint = "401/403 多为 api_key 错误"
+        elif e.code == 404:
+            hint = "404 多为 base_url 少了或多了 /v1"
+        else:
+            hint = "按 detail 里的 message 定位；鉴权类看 api_key，路径类看 base_url"
         return {"ok": False, "error": f"HTTP {e.code} {e.reason}", "detail": detail,
-                "hint": "401/403 多为 api_key 错误；404 多为 base_url 少了或多了 /v1"}
+                "hint": hint}
     except Exception as e:  # noqa: BLE001
         return {"ok": False, "error": f"{type(e).__name__}: {e}",
                 "hint": "网络不可达或 base_url 写错（需含 http(s):// 与 /v1 前缀，视服务而定）"}

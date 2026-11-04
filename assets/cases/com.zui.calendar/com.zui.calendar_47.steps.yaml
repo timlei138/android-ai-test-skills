@@ -7,77 +7,50 @@
 # 注意：这是**上一次**的实测路径，不是唯一正确路径。
 case: com.zui.calendar_47
 source_run: storage
-last_run: 2026-11-02T22:56:46.698
+last_run: 2026-11-04T05:32:03.810
 verdict: PASS
-step_count: 15
-start_from: activity=com.zui.calendar.newbuild.NewBuildActivity
+step_count: 9
+start_from: activity=com.zui.calendar.AllInOneActivity
 steps:
   - n: 1
-    why: 打开提醒的时间选择器找农历开关
+    why: 步骤1：点新建按钮，进入新建事件界面（提醒）
+    via: rid=action_add_all_event
+    expect: activity=com.zui.calendar.newbuild.NewBuildActivity
+  - n: 2
+    why: 步骤2：打开提醒的开始时间选择器，找农历开关
     via: rid=eventTimeLayout
     expect: rid=button_divider2
     in_page: true
-  - n: 2
-    why: 切到生日分类
-    via: text=生日
-    expect: rid=birthdayEtNotes
-    in_page: true
   - n: 3
-    why: 打开生日日期选择器找农历开关
+    why: 步骤2：打开生日日期选择器找农历开关
     via: rid=birthdayLlDate
     expect: rid=button_divider2
     in_page: true
   - n: 4
-    why: 新建农历纪念日事件
-    via: rid=action_add_all_event
-    expect: activity=com.zui.calendar.newbuild.NewBuildActivity
-  - n: 5
-    why: 切到纪念日分类
-    via: text=纪念日
-    expect: rid=rememberEtDescription
-    in_page: true
-  - n: 6
-    why: 打开纪念日日期选择器找农历开关
+    why: 步骤2：打开纪念日日期选择器找农历开关
     via: rid=rememberLlDate
     expect: rid=button_divider2
     in_page: true
-  - n: 7
-    why: 确定农历纪念日日期
+  - n: 5
+    why: 步骤2：确定农历纪念日日期（九月廿六）
     via: rid=right_button,text=确定
     expect: rid=action_menu_view
     in_page: true
-  - n: 8
-    why: 保存47农历纪念日
+  - n: 6
+    why: 步骤3：保存 47农历纪念日（农历九月廿六）
     via: rid=save_view
     expect: activity=com.zui.calendar.AllInOneActivity
-  - n: 9
-    why: 打开更多菜单进入纵览表
-    via: rid=iv_more
-    expect: rid=item_title
-    in_page: true
-  - n: 10
-    why: 纵览表切到提醒分类查47农历提醒
-    via: rid=reminder_layoutx
-    expect: rid=bottom_layout
-    in_page: true
-  - n: 11
-    why: 点开47农历提醒进详情页
+  - n: 7
+    why: 步骤4：点开 47农历提醒 进入详情页
     via: rid=click_layout,title=47农历提醒
     expect: activity=com.zui.calendar.reminder.ReminderInfoActivity
-  - n: 12
-    why: 点开47农历生日进详情页
-    via: rid=click_layout,title=47农历生日
-    expect: activity=com.zui.calendar.birthday.BirthdayDetailActivity
-  - n: 13
-    why: 纵览表切到纪念日分类查47农历纪念日
-    via: rid=creditcard_layoutx
-    expect: rid=bottom_tv
+  - n: 8
+    why: 步骤4：纵览表切到「生日」分类，查看 47农历生日
+    via: rid=birthday_layoutx
+    expect: rid=date_left
     in_page: true
-  - n: 14
-    why: 点开47农历纪念日进详情页
-    via: rid=click_layout,title=47农历纪念日
-    expect: activity=com.zui.calendar.reminder.RememberInfoActivity
-  - n: 15
-    why: 退出纵览表回首页
-    via: rid=backtext
-    expect: activity=com.zui.calendar.AllInOneActivity
+  - n: 9
+    why: 切到纵览表「纪念日」分类，查找 47农历纪念日
+    via: rid=creditcard_layoutx
+    expect: rid=bottom_layout
+    in_page: true

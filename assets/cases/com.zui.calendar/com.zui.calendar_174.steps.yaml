@@ -7,23 +7,36 @@
 # 注意：这是**上一次**的实测路径，不是唯一正确路径。
 case: com.zui.calendar_174
 source_run: storage
-last_run: 2026-11-03T17:35:47.826
-verdict: PASS
-step_count: 3
+last_run: 2026-11-04T03:34:44.219
+verdict: FAIL
+step_count: 6
 start_from: activity=com.zui.calendar.timetable.display.TimetableActivity
 steps:
   - n: 1
-    why: 前提需要走图库导入：点「从图库导入课程表」
-    via: rid=btnImportFromGallery
-    expect: rid=alertTitle
+    why: 174前提：触发导入课程表
+    via: rid=action_curriculum_table_import
+    expect: rid=tv_import_from_camera
     in_page: true
   - n: 2
-    why: 切到相册视图，找 /sdcard/Pictures/日历/课程表.png
-    via: text=相册
-    expect: rid=empty_text_view
+    why: 174前提：选择图库导入
+    via: rid=tv_import_from_gallery
+    expect: rid=alertTitle
     in_page: true
   - n: 3
-    why: 裁剪完成 → 进入解析（约20秒）
-    via: rid=btnDone,text=完成
+    why: 174前提：关闭提示框进照片选择器
+    via: text=知道了
+    expect: activity=com.zui.calendar.timetable.gallery.GalleryPickerActivity
+  - n: 4
+    why: 174前提：裁剪完成触发解析
+    via: rid=btnDone
     expect: rid=message
+    in_page: true
+  - n: 5
+    why: 174前提：进入课程表基本信息确认页
+    via: rid=btn_next
+    expect: activity=com.zui.calendar.timetable.temp.TempConfirmTimetableActivity
+  - n: 6
+    why: 174步骤2：日期弹框确认可弹出后取消，不改值
+    via: text=取消
+    expect: rid=arrow_current_week
     in_page: true

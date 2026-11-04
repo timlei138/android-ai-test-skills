@@ -7,59 +7,36 @@
 # 注意：这是**上一次**的实测路径，不是唯一正确路径。
 case: com.zui.calendar_38
 source_run: storage
-last_run: 2026-11-02T22:17:40.439
-verdict: PASS
-step_count: 11
-start_from: activity=com.zui.calendar.AllInOneActivity
+last_run: 2026-11-03T22:54:50.389
+verdict: BLOCKED
+step_count: 6
+start_from: activity=com.zui.calendar.event.edit.EditEventActivity
 steps:
   - n: 1
-    why: 用例38 步骤1：选择一个已有的日历事件
-    via: rid=agenda_item_text_container,text=18普通
-    expect: activity=com.zui.calendar.event.info.EventsInfoActivity
-  - n: 2
-    why: 修改项2：改开始时间
+    why: 修改开始时间
     via: rid=start_layout
     expect: rid=button_divider2
     in_page: true
-  - n: 3
-    why: 修改项3：改结束时间
+  - n: 2
+    why: 修改结束时间
     via: rid=end_layout
     expect: rid=button_divider2
     in_page: true
-  - n: 4
-    why: 确定新的结束时间 21:00
+  - n: 3
+    why: 确认结束时间改为 21:46
     via: rid=right_button,text=确定
     expect: rid=action_menu_view
     in_page: true
-  - n: 5
-    why: 修改项4：改提醒时间
+  - n: 4
+    why: 提醒页是多选列表，5分钟前被追加而非替换，需取消勾选 15分钟前 只留一个提醒
     via: rid=reminders_row
     expect: activity=com.zui.calendar.event.options.EventAheadActivity
-  - n: 6
-    why: 修改项5：改重复规则
+  - n: 5
+    why: 修改重复规则
     via: rid=rrule_layout
-    expect: rid=serif
+    expect: rid=ring
     in_page: true
-  - n: 7
-    why: 重复规则改为「每天」
-    via: text1=每天
-    expect: rid=action_menu_view
-    in_page: true
-  - n: 8
-    why: 修改项6：改「我的状态」
-    via: rid=busy_layout
-    expect: rid=serif
-    in_page: true
-  - n: 9
-    why: 我的状态改为「有空」
-    via: text1=有空
-    expect: rid=action_menu_view
-    in_page: true
-  - n: 10
-    why: 用例38 步骤2：保存修改
+  - n: 6
+    why: 保存所有修改（预期因重复规则弹「此为重复事件」）
     via: rid=save_view,text=完成
-    expect: activity=com.zui.calendar.event.info.EventsInfoActivity
-  - n: 11
-    why: 退出编辑页（不改动），回详情页
-    via: rid=backtext
     expect: activity=com.zui.calendar.event.info.EventsInfoActivity

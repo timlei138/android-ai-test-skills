@@ -221,7 +221,7 @@ _ADB_SERVER_HINT = (
     "adb server 连不上（WinError 10061）。\n"
     "处置：先重试一次本工具（工具会自己把 server 拉起来）。\n"
     "仍不行就在 bash 里跑一次 `adb devices`，确认能看到 "
-    "`<serial>	device`，然后停下问人。"
+    "`<serial>	device`；还是不行就如实上报，不要硬试。"
 )
 
 
@@ -283,7 +283,7 @@ def connect(serial: str | None):
                 fail(_ADB_SERVER_HINT)
             fail(f"设备连接失败：{error}\n"
                  "处置：在 bash 里跑 `adb devices` 确认设备是 `device` 态；"
-                 "仍不行就停下问人。")
+                 "仍不行就如实上报，不要硬试。")
 
 
 def try_connect(serial: str | None):
@@ -691,8 +691,8 @@ def case_spec_hint(case_id: int | None) -> dict | None:
                 "`preconditions.goto`（怎么从首页走到起点）→ "
                 "`preconditions.prepare`（要动手准备的状态，**已有则跳过**）→ "
                 "`preconditions.assert`（只能检查、不满足才 BLOCKED）。"
-                "⚠️ **BLOCKED 只留给硬件/设备/严重问题**；数据前提不满足要**自己恢复**"
-                "（要干净就 `pm clear`，要某个东西就造出来），不要因为『用例没要求』就停下。"
+                "⚠️ **数据前提先自己恢复**（要干净就 `pm clear`，要某个东西就造出来），"
+                "不要因为『用例没要求』就停下；造不出来（试过 2 次）才算 BLOCKED。"
                 "准备完再按 `step_index` 顺序执行 s1→s2→…。"),
         }
     return None
