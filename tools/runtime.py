@@ -42,7 +42,7 @@ def _resolve_storage_root() -> Path:
     **所以不再猜。** 显式指定（环境变量）是唯一可靠的路，
     默认值只保证"本地正常使用"这一种情况。
 
-    ## 解析顺序（★ 2026-10-27 第三次修正：bootstrap 之后）
+    ## 解析顺序
 
       ① `ANDROID_TEST_STORAGE` 环境变量
       ② **`ROOT / "storage"`**  ← 工具层旁边（bootstrap 的标准形态）
@@ -92,29 +92,28 @@ def _resolve_storage_root() -> Path:
 STORAGE_DIR = _resolve_storage_root()
 
 # ══════════════════════════════════════════════════════════════════════
-# 目录约定（2026-10-27 重构）
+# 目录约定
 # ══════════════════════════════════════════════════════════════════════
 #
 #   assets/                      ← **进 git**，是资产不是产物
 #     cases/<应用>/              ← 按应用分目录
-#       <标题>.md                ← 原始用例（人写的，或从需求文档粘的）
-#       <标题>.yaml              ← 跑过之后生成的结构化用例（AI 读这个）
+#       <包名>_<功能>_<编号>.md  ← 原始用例（人写的，或从需求文档粘的）
+#       <包名>_<编号>.steps.yaml ← 跑过之后自动导出的可复用跳转步骤
 #     knowledge/<包名>.md        ← 知识卡
 #     knowledge/paths/<包名>.md  ← 路径图
-#     （在 assets/ 下，即 assets/knowledge/**）
 #
 #   storage/                     ← **不进 git**，纯本地运行产物
-#     record/<uuid>/             ← 每次运行一个目录，互不干扰
-#       db.sqlite3               ← 该次的会话库
+#     test.db                    ← 单库，所有会话/事件/断言都在这里
+#     run_history/<uuid>/        ← 每次运行一个目录，互不干扰
 #       evidence/<步号>/         ← 截图 + dump + meta
 #       calls/                   ← 调用账本
 #       timing/
 #       recording_errors/
 #     tmp/                       ← Agent 的临时文件（探针、一次性脚本、草稿）
 #
-# 为什么 record/ 下面按 uuid 分：
-#   所有运行共用一个库 + 一个全局 evidence/ 的话，跑多了会互相污染：
-#   清理一次影响全部历史，查"这次到底点了什么"还要按 session_id 过滤。
+# 为什么运行产物按 uuid 分目录：
+#   一个全局 evidence/ 的话，跑多了会互相污染：清理一次影响全部历史，
+#   查"这次到底点了什么"还要按 session_id 过滤。
 #   改成一次运行一个目录后，删一次 = 删一个 uuid 目录，不影响别的。
 #
 # 为什么 assets 和 storage 分开：
@@ -123,25 +122,14 @@ STORAGE_DIR = _resolve_storage_root()
 
 ASSETS_DIR = Path(os.environ.get("ANDROID_TEST_ASSETS", str(ROOT / "assets"))).resolve()
 CASES_DIR = ASSETS_DIR / "cases"
-# ★ 2026-10-27：知识卡也搬到 assets/ 下（用户要求"把 knowledge 也放到 assets 下面"）。
-#
-#   为什么它该在 assets 而不在根目录：
-#     知识卡是**资产**（进 git、跨设备跨会话复用、决定下次跑得更快），
-#     和用例是同一类东西。放根目录会让人以为是代码的一部分。
-#
-#   新位置：assets/knowledge/<包名>.md + assets/knowledge/paths/<包名>.md
+# 知识卡放在 assets 下：它是**资产**（进 git、跨设备跨会话复用、决定下次跑得更快），
+# 和用例是同一类东西。放根目录会让人以为是代码的一部分。
+#   assets/knowledge/<包名>.md + assets/knowledge/paths/<包名>.md
 KNOWLEDGE_DIR = Path(os.environ.get(
     "ANDROID_TEST_KNOWLEDGE", str(ASSETS_DIR / "knowledge"))).resolve()
 PATHS_DIR = KNOWLEDGE_DIR / "paths"
-# 每次运行的落盘目录。
-#
-# ⚠️ 2026-11-02 从 `record` 改名为 `run_history`：
-#    "record" 这个名字容易被理解成"录制/录像"，实际存的是**运行历史**。
-#    run_history 更直白 —— 一次运行一个目录。
-#
-# ⚠️ 同日起 UUID 从 `uuid4().hex[:12]`（12 位无分隔）改成 `str(uuid4())`：
-#    带 `-` 的标准 UUID v4 格式（8-4-4-4-12），肉眼可分段读，
-#    也便于在日志/命令行里复制粘贴时不粘错。
+# 每次运行的落盘目录：一次运行一个目录，目录名是带 `-` 的标准 UUID v4
+# （8-4-4-4-12），肉眼可分段读，日志/命令行里复制粘贴也不易粘错。
 RECORD_DIR = STORAGE_DIR / "run_history"
 TMP_DIR = STORAGE_DIR / "tmp"
 
@@ -167,16 +155,16 @@ T = TypeVar("T")
 
 
 def current_record_dir() -> Path | None:
-    """本次运行属于哪个 record 目录？
+    """本次运行属于哪个 run_history 目录？
 
     两个来源，环境变量优先：
 
       ① `ANDROID_TEST_RECORD` —— 同一个进程内（session.py 内部）传播快
-      ② `storage/record/.current` 磁盘指针 —— 跨进程用这个
+      ② `run_history/.current` 磁盘指针 —— 跨进程用这个
 
-    ⚠️ 为什么必须有两个：observe/act 是独立进程，
-       环境变量传不过去。只靠 ① 的话，一次运行的产物会散在
-       record/<uuid>/ 和老的 storage/evidence/ 两处。
+    ⚠️ 为什么必须有两个：observe/act 是独立进程，环境变量传不过去。
+       只靠 ① 的话，一次运行的产物会散在 run_history/<uuid>/ 和
+       storage/evidence/ 两处。
     """
     raw = (os.environ.get("ANDROID_TEST_RECORD") or "").strip()
     if raw:
@@ -196,11 +184,6 @@ def new_record_dir() -> Path:
     for sub in ("evidence", "calls", "timing", "recording_errors"):
         (d / sub).mkdir(parents=True, exist_ok=True)
     return d
-
-
-def ensure_tmp() -> Path:
-    TMP_DIR.mkdir(parents=True, exist_ok=True)
-    return TMP_DIR
 
 
 # ══════════════════════════════════════════════════════════════════════
@@ -276,17 +259,15 @@ def detect_shell() -> dict:
 
 
 # ══════════════════════════════════════════════════════════════════════
-# "当前 record 目录" 的磁盘指针
+# "当前运行目录" 的磁盘指针
 # ══════════════════════════════════════════════════════════════════════
 #
 # ⚠️ 环境变量不够用。observe.py / act.py 是**独立进程**，
 #    session.py 在自己进程里设的 ANDROID_TEST_RECORD 传不过去。
+#    只靠环境变量的话，session start 建出 run_history/<uuid>/ 之后，
+#    紧接着的 observe 拿不到，又落回 storage/evidence/ —— 一次运行的东西散在两处。
 #
-#    实测后果（第一版）：session start 建出 record/<uuid>/ 目录，
-#    但紧接着的 observe 拿不到环境变量 -> 又落回 storage/evidence/，
-#    一次运行的东西散在两个地方。
-#
-#    所以除了环境变量，还要写一个磁盘指针：storage/record/.current
+#    所以除了环境变量，还要写一个磁盘指针 `run_history/.current`，
 #    后续进程启动时读它。
 
 _CURRENT_POINTER = RECORD_DIR / ".current"

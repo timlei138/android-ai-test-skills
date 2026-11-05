@@ -31,7 +31,7 @@ from runtime import timed_call
 from common import (add_common_args, add_common_args_all_subcommands, apply_stdin_args, capture,
                     next_targets, labeled_nodes, npm_identity,
                     connect, emit, evidence_paths, fail, guard_terminated,
-                    log_auto, rel, summarize_xml, ROOT)
+                    log_auto, rel, summarize_xml)
 import checkpoint
 
 
@@ -755,24 +755,12 @@ def main() -> None:
                  "需要按页面文字断言时看 nodes（--full 才是全量）。"
                  "toast 等浮层不在 nodes 里，用 read.py OCR"),
     }
-    # ★ 2026-10-28：`sig` 和 `timing` 从**返回**里去掉，但**保留落盘**。
+    # `sig`（屏幕身份签名）和 `timing`（各阶段耗时）只落盘、不回传给 AI：
+    # 它们由工具侧消费（checkpoint 判定、浮层检测、路径采集、离线性能分析），
+    # AI 一个都不需要，白占返回体积。
     #
-    #   为什么去掉：这两个字段 AI 一次都没用过。
-    #     · sig     —— 屏幕身份签名，工具内部用于 checkpoint 判定 / 浮层检测，
-    #                  以及 session.py 事后采集路径图。都在工具侧消费完。
-    #     · timing  —— 各阶段耗时（device_connect / permission / action ...），
-    #                  落盘供离线性能分析（总耗时看 events.duration_ms）。
-    #   实测它们每轮约 1,340 字符，占工具返回总量的 40%。
-    #
-    #   为什么删了不影响功能：
-    #     · 落库走 log_auto(..., info, ...) —— 用的是上面的 info 变量，
-    #       在弹掉之前就已经写进去了；meta.json 也是 capture() 里单独写的。
-    #     · checkpoint.evaluate() / detect_transient() 用的是局部变量 _sig。
-    #     · session.py 路径采集读的是 events.data_json（已落库的那份）。
-    #     · webui / app.js 完全不读这两个字段。
-    #
-    #   ⚠️ 以后再加字段时注意：**落库用的 info 和返回用的 payload 是两份**，
-    #      往 info 里加东西会同时进这两处；只想落库就加在 info、再从这里弹掉。
+    # ⚠️ 以后加字段注意：**落库用的 info 和返回用的 payload 是两份**，
+    #    往 info 里加会同时进这两处；只想落库就加在 info，再从这里弹掉。
     payload.pop("sig", None)
     payload.pop("timing", None)
     if perm_inline:

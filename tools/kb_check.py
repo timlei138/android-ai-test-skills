@@ -211,26 +211,21 @@ def check_case_expectations() -> int:
     import yaml
 
     cases_dir = ROOT / "assets" / "cases"
-    # 每次运行写 record/<uuid>/db.sqlite3，**扫全部运行库**取用例原文。
-    from runtime import RECORD_DIR
-    if not cases_dir.is_dir() or not RECORD_DIR.is_dir():
-        return 0
-    dbs = [d / "db.sqlite3" for d in RECORD_DIR.iterdir()
-           if d.is_dir() and (d / "db.sqlite3").is_file()]
-    if not dbs:
+    from runtime import STORAGE_DIR
+    db_path = STORAGE_DIR / "test.db"
+    if not cases_dir.is_dir() or not db_path.is_file():
         return 0
 
     # 收集所有会话里出现过的用例原文，按用例号归并
     rows: list[tuple] = []
-    for db in dbs:
-        try:
-            con = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
-            rows += list(con.execute(
-                "SELECT id, user_input FROM sessions"
-                " WHERE user_input IS NOT NULL"))
-            con.close()
-        except sqlite3.Error:
-            continue
+    try:
+        con = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        rows = list(con.execute(
+            "SELECT id, user_input FROM sessions"
+            " WHERE user_input IS NOT NULL"))
+        con.close()
+    except sqlite3.Error:
+        return 0
 
     by_num: dict[str, list[tuple[int, str]]] = {}
     for sid, t in rows:

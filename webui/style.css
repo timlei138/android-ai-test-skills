@@ -77,12 +77,9 @@ code {
 }
 .chip.PASS, .chip.pass { background: var(--pass-soft); color: var(--pass); }
 .chip.FAIL, .chip.fail { background: var(--fail-soft); color: var(--fail); }
-.chip.WARN, .chip.warn { background: var(--warn-soft); color: var(--warn); }
 .chip.BLOCKED, .chip.blocked { background: var(--blocked-soft); color: var(--blocked); }
 .chip.ERROR { background: var(--fail-soft); color: var(--fail); }
 .chip.running { background: var(--run-soft); color: var(--run); }
-.chip.paused { background: var(--bg3); color: var(--muted); }
-.chip.waiting { background: var(--warn-soft); color: var(--warn); }
 
 /* ── 仪表盘 ── */
 .stat-group { margin-bottom: 26px; }

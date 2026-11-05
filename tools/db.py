@@ -9,39 +9,30 @@
 
 ## 库位置：`storage/test.db` —— **所有运行共用一个库**
 
-⚠️ 2026-11-02 从「每次运行一个库」改成单库。
+### 运行之间怎么隔离
 
-### 为什么要改
-
-  原来 `storage/record/<uuid>/db.sqlite3`，一次运行一个库。跑了 138 次之后：
-
-    · WebUI 每次刷新要**打开 138 个库**再合并 —— 实测 2994ms
-    · 用例详情页要逐库查 —— 实测 5757ms
-    · 前端「看看这条用例历次结果」根本做不了（跨库没法 join）
-
-### 怎么隔离
-
-  不再靠「文件隔离」，靠 `sessions.run_id` 字段隔离：
+  靠 `sessions.run_id` 字段隔离，不靠文件隔离：
 
     sessions 表  run_id  <- 这次运行的 uuid（带 `-` 的标准 UUID v4）
     events 表    通过 session_id 关联到 sessions，自然带上 run_id
     findings 表  同上
 
-  跨运行查询变成一句 SQL：
+  跨运行查询就是一句 SQL：
 
     SELECT * FROM sessions WHERE run_id = '2b818755-fc18-454c-96c1-ea1ca0444902'
     SELECT s.run_id, s.status FROM sessions s WHERE s.title LIKE '%176%'
 
-### 运行目录还在
+  单库之后 WebUI 刷新、用例详情、跨运行对比都只连一个库，不用逐库打开再合并。
 
-  `storage/run_history/<uuid>/` 仍然建，但**只放证据和计时**，不再放 db.sqlite3：
+### 运行目录
+
+  `storage/run_history/<uuid>/` 只放证据和计时，不放 db：
 
     run_history/<uuid>/
-        evidence/           <- 每次运行的截图（2026-11-02 起归到这里）
+        evidence/           <- 每次运行的截图
         timing/ calls/ recording_errors/
-        （没有 db.sqlite3）
 
-  这样「一次运行 = 一个目录」的直觉还在，删一次运行 = 删目录 + 删库里对应行。
+  「一次运行 = 一个目录」的直觉还在，删一次运行 = 删目录 + 删库里对应行。
 """
 from __future__ import annotations
 
@@ -62,13 +53,8 @@ DB_FILE = STORAGE_DIR / "test.db"
 def _resolve_db_path() -> Path:
     """库放哪？固定是 `storage/test.db`，与运行上下文无关。
 
-    ⚠️ 与旧版的关键差异：**不再依赖 current_record_dir()**。
-
-      旧版没有运行上下文就报错（「没有进行中的测试会话」），
-      因为不知道读哪个库。单库后这个问题消失了 —— 库永远只有一个，
-      哪个都能查。所以 WebUI、导出脚本、统计工具都可以直接 get_db()。
-
-      run_id 只用于**写入时归属**（session start 时确定），不参与定位库。
+    库永远只有一个，任何进程（工具、WebUI、导出脚本、统计）都能直接 get_db()。
+    run_id 只用于**写入时归属**（session start 时确定），不参与定位库。
     """
     return DB_FILE
 
@@ -91,18 +77,12 @@ CURRENT_FILE = _current_file()   # 仅为兼容旧引用；内部一律用 _curr
 
 # 结论只有四种：PASS / FAIL / BLOCKED / ERROR。
 #
-# 没有 WARN —— 它是个含糊的中间态，实际用起来变成"不敢判 FAIL 就写 WARN"。
+# 不用含糊的中间态 —— 实际用起来会变成"不敢判 FAIL 就写 XXX"。
 # 用例预期是有明确对照的：符合就 PASS，不符合就 FAIL，
 # 环境/前置问题就 BLOCKED，工具异常就 ERROR。
-#
-# 旧数据里可能还有 WARN 的历史记录，读的时候按 FAIL 处理。
 STATUSES = ("PASS", "FAIL", "BLOCKED", "ERROR")
 # 会话中间态：不是结论，不计入通过率统计；必须以 finish 收尾。
-#
-# ⚠️ 2026-10-30 去掉 paused / waiting：批量跑时停下来等人会把整批卡死，
-#    卡住的记 BLOCKED 往下走即可。旧库里若还有这两种状态的历史记录，
-#    仍按中间态读（保留在 INTERIM 里兼容），但新代码不再产生它们。
-INTERIM = ("running", "paused", "waiting")
+INTERIM = ("running",)
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS sessions(
@@ -191,7 +171,7 @@ class SessionDB:
         #   默认参数在**函数定义时**求值 —— 也就是模块 import 那一刻。
         #   而 `session.py start` 的流程是先 import、再设环境变量、最后才
         #   get_db()。如果路径在 import 时就定死，库会建到当时那个位置去，
-        #   新建的 record/<uuid>/ 目录里就只剩几个空子目录。
+        #   而环境变量指定的位置反而是空的。
         #
         #   所以：None 默认值 + 调用时解析，环境变量才能生效。
         self.path = str(path if path is not None else _resolve_db_path())
@@ -702,8 +682,6 @@ class SessionDB:
             " SUM(CASE WHEN c.last_status='PASS' THEN 1 ELSE 0 END) AS pass,"
             " SUM(CASE WHEN c.last_status='FAIL' THEN 1 ELSE 0 END) AS fail,"
             " SUM(CASE WHEN c.last_status='BLOCKED' THEN 1 ELSE 0 END) AS blocked,"
-            # warn: 只为统计老数据（2026-10-28 之前跑过的会话）。新会话不会再产生 WARN。
-            " SUM(CASE WHEN c.last_status='WARN' THEN 1 ELSE 0 END) AS warn,"
             " SUM(CASE WHEN c.last_status='ERROR' THEN 1 ELSE 0 END) AS error,"
             " SUM(CASE WHEN c.last_status IS NULL THEN 1 ELSE 0 END) AS never_run"
             " FROM cases c"
@@ -759,13 +737,7 @@ class SessionDB:
 
             # ② 用例的程序化描述文件
             if title:
-                # ★ 2026-10-27：用例搬到 assets/cases/<应用>/ 了，且按应用分目录。
-                #
-                #   早先这里是 `Path(self.path).parent / "cases"` —— 那是
-                #   storage/cases/（旧位置），删的时候永远找不到文件，
-                #   spec_files 一直是 0，看起来"用例没有规格文件"。
-                #
-                #   现在要在 assets/cases 下**递归**找同名文件。
+                # 用例按应用分目录放在 assets/cases/<包名>/ 下，要**递归**找同名文件。
                 from runtime import CASES_DIR as _CASES
                 found: list[Path] = []
                 if _CASES.is_dir():
@@ -929,8 +901,6 @@ class SessionDB:
                 " SUM(CASE WHEN last_status='PASS' THEN 1 ELSE 0 END) AS pass,"
                 " SUM(CASE WHEN last_status='FAIL' THEN 1 ELSE 0 END) AS fail,"
                 " SUM(CASE WHEN last_status='BLOCKED' THEN 1 ELSE 0 END) AS blocked,"
-                # warn: 只统计老数据（2026-10-28 前）。新会话不再产生 WARN。
-                " SUM(CASE WHEN last_status='WARN' THEN 1 ELSE 0 END) AS warn,"
                 " SUM(CASE WHEN last_status='ERROR' THEN 1 ELSE 0 END) AS error,"
                 " SUM(CASE WHEN last_status IS NULL THEN 1 ELSE 0 END) AS never_run"
                 " FROM cases WHERE COALESCE(kind,'test') != 'mock'").fetchone()
@@ -1079,7 +1049,7 @@ class SessionDB:
             " SUM(CASE WHEN status='FAIL' THEN 1 ELSE 0 END) AS fail_n,"
             " SUM(CASE WHEN status='BLOCKED' THEN 1 ELSE 0 END) AS blocked_n,"
             " SUM(CASE WHEN status='running' THEN 1 ELSE 0 END) AS running_n,"
-            " SUM(CASE WHEN status IN ('paused','waiting') THEN 1 ELSE 0 END) AS paused_n"
+            " SUM(CASE WHEN status='ERROR' THEN 1 ELSE 0 END) AS error_n"
             " FROM sessions WHERE COALESCE(kind,'test')='test'").fetchone()
         return dict(row) if row else {}
 

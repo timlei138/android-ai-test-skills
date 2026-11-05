@@ -57,12 +57,10 @@ function durationOf(s) {
   return (b - a) / 1000;
 }
 
-/* 状态中文标签（判定规则见 SKILL.md）
-   WARN 只为兼容老数据（2026-10-28 起不再产生新 WARN） */
+/* 状态中文标签（判定规则见 SKILL.md） */
 const statusCN = {
-  PASS: "通过", FAIL: "失败", WARN: "警告(旧)",
-  BLOCKED: "阻断", ERROR: "错误",
-  running: "执行中", paused: "已暂停", waiting: "等待答复",
+  PASS: "通过", FAIL: "失败", BLOCKED: "阻断", ERROR: "错误",
+  running: "执行中",
 };
 const statusText = s => s ? (statusCN[s] || s) : "—";
 
@@ -590,7 +588,7 @@ async function replaySession(id) {
 async function viewSession(id) {
   main.innerHTML = "<div class='sub'>加载中…</div>";
   const s = await api(`/api/sessions/${id}`);  const kindLabel = { observe: "👁 观察", act: "✋ 操作", read: "🔍 读取",
-                      ask: "❓ 问人", pause: "⏸ 暂停", note: "📝 备注",
+                      note: "📝 备注",
                       state: "⚙️ 状态", logcat: "📎 取证", crash: "💥 崩溃" };
 
   // 相邻事件时间差 = AI 决策耗时；事件自身 duration_ms = 工具执行耗时

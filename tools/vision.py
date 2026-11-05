@@ -29,15 +29,9 @@ def main() -> None:
     p = argparse.ArgumentParser(description="vision：视觉模型问图（OpenAI 兼容）")
     p.add_argument("--image", required=True, help="图片路径（png/jpg）")
     p.add_argument("--prompt", required=True, help="问题/断言指令")
-    # ★ 2026-10-28：默认从 500 提到 2000。
-    #
-    #   实测：deepseek-flash 的 reasoning 开销很大。max_tokens=500 时
-    #   completion_tokens=500 **全部**是 reasoning_tokens，正文是空字符串：
-    #       {"ok":true,"text":"","usage":{"completion_tokens":500,
-    #        "completion_tokens_details":{"reasoning_tokens":500}}}
-    #   看起来"调用成功"，实际什么都没答 —— 比报错更坑。
-    #
-    #   提到 2000 后正常返回（reasoning 858 + 正文 2）。
+    # 默认 2000：这类模型的 reasoning 开销很大，max_tokens 给小了会出现
+    # completion_tokens 全被 reasoning 吃光、正文是空字符串的情况 ——
+    # 看起来"调用成功"，实际什么都没答，比报错更坑。
     p.add_argument("--max-tokens", type=int, default=2000)
     apply_stdin_args()   # 支持 --stdin-json（插件统一走 stdin 传参）
     args = p.parse_args()

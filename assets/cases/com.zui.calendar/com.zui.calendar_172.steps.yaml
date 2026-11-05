@@ -7,9 +7,9 @@
 # 注意：这是**上一次**的实测路径，不是唯一正确路径。
 case: com.zui.calendar_172
 source_run: storage
-last_run: 2026-11-04T03:29:44.615
-verdict: FAIL
-step_count: 8
+last_run: 2026-11-04T14:15:50.944
+verdict: PASS
+step_count: 5
 start_from: activity=com.zui.calendar.AllInOneActivity
 steps:
   - n: 1
@@ -17,33 +17,20 @@ steps:
     via: text=课程表
     expect: activity=com.zui.calendar.timetable.display.TimetableActivity
   - n: 2
-    why: 打开「导入课程表」弹层
-    via: rid=action_curriculum_table_import
-    expect: rid=tv_import_from_camera
-    in_page: true
-  - n: 3
-    why: 选择图库导入
-    via: rid=tv_import_from_gallery
+    why: 172步骤1：从图库选择固定课程表图片
+    via: rid=btnImportFromGallery
     expect: rid=alertTitle
     in_page: true
-  - n: 4
-    why: 关闭提示框，进入系统照片选择器
-    via: text=知道了
-    expect: activity=com.zui.calendar.timetable.gallery.GalleryPickerActivity
-  - n: 5
-    why: 172步骤1：裁剪完成后触发解析
+  - n: 3
+    why: 172步骤1：完成裁剪，触发解析
     via: rid=btnDone
     expect: rid=message
     in_page: true
-  - n: 6
-    why: 172步骤3：点击左上角返回按钮
-    via: rid=btn_previous
-    expect: activity=com.zui.calendar.timetable.temp.TempTimetableActivity
-  - n: 7
-    why: 172步骤3后半：重新进入确认流程
+  - n: 4
+    why: 172步骤3：重新进入确认流程
     via: rid=btn_next
     expect: activity=com.zui.calendar.timetable.temp.TempConfirmTimetableActivity
-  - n: 8
+  - n: 5
     why: 172步骤4：在课程表基本信息页面点击右上角「完成」
     via: rid=btn_finish
     expect: activity=com.zui.calendar.timetable.management.TimetableListActivity

@@ -20,7 +20,7 @@ from pathlib import Path
 from common import case_spec_hint, emit, knowledge_hint, steps_hint
 import sqlite3
 from db import (  # noqa: I001
-    ROOT, STATUSES, SessionDB, clear_current, current_session, get_db,
+    STATUSES, SessionDB, clear_current, current_session, get_db,
     set_current,
 )
 from runtime import (
@@ -742,16 +742,12 @@ def export_steps(db, session_id: int) -> str | None:
     out_dir.mkdir(parents=True, exist_ok=True)
     out = out_dir / f"{pkg}_{num}.steps.yaml"
 
-    # ★ 步数变少时**照样覆盖**，只在返回里告警。
+    # 步数变少时**照样覆盖**，只在返回里告警。
     #
-    #   2026-10-29 改。原来是「旧的步数多就不覆盖」，本意是别让一轮没走全
-    #   冲掉好路径。但它分不清「旧的坏」和「旧的好」，一旦写坏就永久锁死：
-    #
-    #     ae0aa1d82d21 导出 17 步（当时过滤有 bug，混了坐标/通用 rid/验证绕路）
-    #     → 修好过滤
-    #     → 70816c138fad 正确导出 5 步
-    #     → 5 < 17 被拒 → 坏文件一直留着
-    #     → start 的 last_steps 每次都喂给 AI 那份坏的（含改设备数据的步骤）
+    #   「旧步数多就不覆盖」看着稳妥，实际分不清「旧的坏」和「旧的好」，
+    #   一旦写坏就永久锁死：过滤 bug 时期导出过 17 步的脏文件（混了坐标、
+    #   通用 rid、验证绕路），后来正确只剩 5 步，5 < 17 被拒，坏文件一直留着，
+    #   每轮 start 都把它当上次路径喂给 AI（含改设备数据的步骤）。
     #
     #   坏文件的害处（AI 照错路径走、改坏设备数据）远大于一次覆盖错；
     #   而且文件里带 source_run，随时能追回是哪一轮写的。
@@ -1169,12 +1165,9 @@ def main() -> None:
     # ══════════════════════════════════════════════════════════════
     # ★ 先做参数校验，**再**建运行目录
     #
-    #   踩过（2026-10-27）：原来先建 record/<uuid>/ 再校验参数，
-    #   于是 `session.py start --title X`（漏了 --input）会：
-    #     ① 建出一个空的 record/<uuid>/ 目录
-    #     ② 打印 record_dir
-    #     ③ 然后报「需要 --case 或 --title/--input」退出
-    #   结果工作目录里堆一堆空 uuid 目录，看起来像"跑过了"。
+    #   顺序反过来会：`session.py start --title X`（漏了 --input）先
+    #   建出一个空的 run_history/<uuid>/ 目录、再报错退出，工作目录里
+    #   堆一堆空 uuid 目录，看起来像"跑过了"。
     #
     #   现在：不合法就直接退，一个字节都不写。
     # ══════════════════════════════════════════════════════════════
@@ -1344,6 +1337,24 @@ def main() -> None:
                     notes.append(okmsg)
                 except Exception:
                     notes.append(f"{cmd} 失败（可手动 logcat.py setup / clear）")
+
+            # ── u2 输入法：换成 AdbKeyboard 并设为默认 ──────────────────
+            # 为什么在开场做（2026-11-05）：换新设备、做过 OTA、或用户手动切回
+            # 搜狗之后，`send_keys(clear=True)` 会直接抛
+            #   AdbBroadcastError: ADB_KEYBOARD_CLEAR_TEXT failed: Attempt to read
+            #   from field 'ExtractedText.text' on a null object reference
+            # 这个报错出现在 act 的输出里，AI 很容易误判成「控件坏了」，
+            # 然后按「同一目标最多试 2 次」记 BLOCKED —— 实际是环境没准备。
+            #
+            # 用 u2 自带能力（_input.py:49 set_input_ime）：没装就先装
+            # （内置 assets/app-uiautomator.apk），装了就 ime enable/set +
+            # settings put secure default_input_method。已就绪时只花 ~145ms。
+            # 不自己在 connect() 里做 —— 那是每次工具调用都付的代价。
+            try:
+                d.set_input_ime(True)
+                notes.append(f"输入法已就绪（{d.current_ime()}）")
+            except Exception as e:  # noqa: BLE001
+                notes.append(f"输入法设置失败：{e}（会打不了字，先手动确认设备输入法）")
             device_note = "；".join(notes)
         else:
             device_note = "设备未连接（连上后手动跑 logcat.py setup + logcat.py clear）"
@@ -1470,15 +1481,10 @@ def main() -> None:
         emit(True, {"count": len(items), "finding_ids": ids,
                     "note": "批量写入完成"})
     elif args.cmd == "resume":
-        # 用途只剩一个：**崩溃终止后人工确认继续**（清除终态，否则工具仍拒绝执行）。
-        #
-        # ⚠️ 2026-10-30 删掉了 `pause` / `--ask` 命令。
-        #    原因：批量跑用例时停下来等人会把整批卡死。卡住的记 BLOCKED 往下走，
-        #    最后由人统一看报告。工具层不需要"暂停等人"这个状态。
-        #    用户手动终止时人也做不了什么（代码层面无事可做），直接 finish 收尾即可。
+        # 用途只有一个：**崩溃终止后人工确认继续**（清除终态，否则工具仍拒绝执行）。
         #
         # ⚠️ 顺序要紧：先校验理由，**通过后才清终态**。
-        # 曾经先 clear 再校验，导致"无理由被拒"的那次调用已把终态抹掉，
+        # 反过来会导致"无理由被拒"的那次调用已把终态抹掉，
         # 第二次不带理由的 resume 反而放行（真实 bug）。
         was_terminated = db.get_termination(args.id)
         note = maybe_file(args.note) if args.note else ""
@@ -1588,7 +1594,6 @@ def main() -> None:
         #
         #   不清的后果：下一次不属于任何会话的 observe/act
         #   会误接到上一次的目录里，把这次的证据写进历史运行。
-        #   PAUSED 不走这里（它还要接着跑）。
         unpin_record()
     elif args.cmd == "case":
         run_case_cmd(db, args)

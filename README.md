@@ -90,7 +90,7 @@ shell    : powershell
 
 运行产物目录：
   storage  = D:\dsh\android-ai-test\storage
-  record   = D:\dsh\android-ai-test\storage\record
+  record   = D:\dsh\android-ai-test\storage\run_history
   tmp      = D:\dsh\android-ai-test\storage\tmp
 ```
 
@@ -128,9 +128,10 @@ python webui.py --port 9810
 读**这个工具层自己**的：
 
 ```
-storage\record\<uuid>\     每次运行的记录（会话、事件、断言、证据）
-assets\cases\<应用>\       用例列表
-assets\knowledge\          知识卡
+storage\test.db          所有运行共用的库（会话、事件、断言）
+storage\run_history\     每次运行一个目录（证据、计时、调用账本）
+assets\cases\<应用>\     用例列表
+assets\knowledge\        知识卡
 ```
 
 在哪个目录起，就看哪份数据。
@@ -185,7 +186,7 @@ Set-Content -Path .\case168.txt -Value "步骤1: ... 预期1: ..." -Encoding utf
 | `tools/act.py` | tap / longclick / input / swipe / back / home / key；`--via` 溯源、`--why` 理由、`--watch` 瞬态弹窗响应、`--settle` 稳定窗口 |
 | `tools/read.py` | OCR 读 toast / Canvas 自绘文字（输出像素 + 归一化坐标） |
 | `tools/state.py` | 设备状态原语：权限 grant/revoke、pm clear、应用启停 |
-| `tools/session.py` | 会话生命周期：start / pause(--ask 问人) / resume / finding / finish（PASS 时自动采集路径边）/ case |
+| `tools/session.py` | 会话生命周期：start / resume / finding / finish（PASS 时自动采集路径边）/ case |
 | `tools/logcat.py` | 崩溃/ANR 取证：分级（被测/关联/无关）、自动抓崩溃前 20s 日志 |
 | `tools/vision.py` | 可选视觉通道：OpenAI 兼容多模态模型问图（测试台「视觉模型」页配置） |
 | `tools/cleanup.py` | 证据/日志轮转（--days，防 storage 膨胀） |
@@ -205,9 +206,10 @@ Set-Content -Path .\case168.txt -Value "步骤1: ... 预期1: ..." -Encoding utf
 python webui.py                      # http://127.0.0.1:9810 查看时间线/证据/知识库
 ```
 
-数据库在 `storage/record/<uuid>/db.sqlite3`（每次运行一个库）：
-`sessions`（会话）/ `events`（工具调用事件流，自动写入）/ `findings`（断言结论），
-另有用例表和断言证据关联表。界面扫全部运行库聚合展示，按"会话 → 时间线 → 截图证据"组织。
+数据库在 `storage/test.db`，所有运行共用一个库：
+`sessions`（会话，用 `run_id` 区分运行）/ `events`（工具调用事件流，自动写入）/
+`findings`（断言结论），另有用例表和断言证据关联表。
+界面按"会话 → 时间线 → 截图证据"组织。
 
 ### 可信记录
 
@@ -236,10 +238,11 @@ PASS/FAIL 断言必须显式绑定本会话证据：`session.py finding --event-
 │   ├── bootstrap.py            #   把工具层拷到工作目录
 │   └── ...
 ├── assets/
-│   ├── cases/<应用>/            # 用例：<包名>_<编号>.md（原文）+ .yaml（跑过的）
+│   ├── cases/<应用>/            # 用例：<包名>_<功能>_<编号>.md（原文）+ <包名>_<编号>.steps.yaml（跑过的路径）
 │   └── knowledge/              # App 知识卡（按包名）+ paths/ 路径图
 ├── storage/                    # 运行产物（不进 git）
-│   ├── record/<uuid>/          #   每次运行一个目录（db + evidence + calls + timing）
+│   ├── test.db                 #   所有运行共用的库
+│   ├── run_history/<uuid>/     #   每次运行一个目录（evidence + calls + timing）
 │   └── tmp/                    #   Agent 临时文件
 ├── webui/                      # 测试台前端
 └── webui.py                    # 测试台服务

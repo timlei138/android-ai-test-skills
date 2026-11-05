@@ -161,8 +161,7 @@ def target_root(cwd: Path | None = None) -> Path:
 
     ## ② 为什么需要
 
-    实测在 `D:\\dsh\\langgraph-poc>` 下跑，副本建到了那个**废弃目录**。
-    再在 `D:\\dsh>` 下跑一次又是另一份 —— 谁也说不清 AI 用的是哪个。
+    在不同工作目录下跑，副本会落到不同位置 —— 谁也说不清 AI 用的是哪个。
     设 `ANDROID_TEST_WORKSPACE` 能把落点钉死。
     """
     here = (cwd or Path.cwd()).resolve()

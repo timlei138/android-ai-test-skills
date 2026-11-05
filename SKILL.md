@@ -314,7 +314,7 @@ python act.py tap --x <x> --y <y> --via "rid=<按钮>" --expect "rid=<落点 rid
 
 ### 上次走过的跳转步骤（`last_steps`）
 
-跑过的用例，`finish` 时会自动导出 `assets/cases/<包名>/<包名>_<编号>.steps.yaml`。
+跑过的用例，`finish` 时会自动导出 `assets/cases/<包名>/<包名>_<编号>.steps.yaml`（用例文件名是 `<包名>_<功能>_<编号>.md`，导出的 steps 只保留结尾编号）。
 下次 `start` 同一条用例，返回里会带 `last_steps`：
 
 ```json
@@ -553,7 +553,7 @@ python session.py finding --status FAIL --event-id <最后一次证据> \
 
 ## Session 判定规则（结论只在 finish 时写）
 
-`running / paused / waiting` 是**中间态**，不是结论；结论只有四种：
+`running` 是**中间态**，不是结论；结论只有四种：
 
 | 情形 | 结论 |
 |---|---|

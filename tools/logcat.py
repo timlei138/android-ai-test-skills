@@ -20,7 +20,7 @@ import re
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from common import (ROOT, add_common_args_all_subcommands, connect, emit, fail,
+from common import (add_common_args_all_subcommands, connect, emit, fail,
                     log_auto, rel)
 from runtime import STORAGE_DIR, timed_call, execution
 

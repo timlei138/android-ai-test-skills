@@ -7,50 +7,18 @@
 # 注意：这是**上一次**的实测路径，不是唯一正确路径。
 case: com.zui.calendar_69
 source_run: storage
-last_run: 2026-11-04T00:13:49.029
+last_run: 2026-11-05T01:06:03.928
 verdict: FAIL
-step_count: 9
+step_count: 2
 start_from: activity=com.zui.calendar.settings.GrabVoteSettingsActivity
 steps:
   - n: 1
-    why: 重开启程时间弹框，确认上一次选择是否被保存
-    via: rid=voteTimePickerGo,text=启程时间
+    why: 重新打开启程日期弹框（上次确定未生效，静默丢弃）
+    via: rid=voteTimePickerGo
     expect: rid=button_divider2
     in_page: true
   - n: 2
-    why: 先测返程能否写入（判断是不是日期选择器整体不保存）
-    via: rid=voteTimePickerBack,text=返程时间
-    expect: rid=button_divider2
-    in_page: true
-  - n: 3
-    why: 先取消待处理的弹框，回月视图用已保存的往返日期（启程11月4日/返程12月4日）核实「票」标记
-    via: rid=left_button,text=取消
-    expect: rid=festival_checkbox
-    in_page: true
-  - n: 4
-    why: 核实抢票实际保存的往返日期
-    via: text=设置
-    expect: activity=com.zui.calendar.settings.GeneralSettingsActivity
-  - n: 5
-    why: 读取抢票页当前保存的启程/返程日期
-    via: rid=android:id/title,text=抢火车票设置
-    expect: activity=com.zui.calendar.settings.GrabVoteSettingsActivity
-  - n: 6
-    why: 回到今天(11月)看「票」标记与下方事件
-    via: rid=action_back_today
-    expect: rid=agenda_item_text_container
-    in_page: true
-  - n: 7
-    why: 进抢票页恢复默认
-    via: text=抢火车票设置
-    expect: activity=com.zui.calendar.settings.GrabVoteSettingsActivity
-  - n: 8
-    why: 打开返程弹框把月改回 11 月
-    via: rid=voteTimePickerBack
-    expect: rid=button_divider2
-    in_page: true
-  - n: 9
-    why: 确认返程恢复默认 11月4日
-    via: rid=right_button,text=确定
+    why: 确定启程 2026-12-5（只改月的复验：先改月）
+    via: rid=right_button
     expect: rid=festival_checkbox
     in_page: true

@@ -245,12 +245,11 @@ def _adb_server_alive(host: str = "127.0.0.1", port: int = 5037,
 def connect(serial: str | None):
     """延迟导入 uiautomator2：无依赖环境也能 --help / 查看用法。
 
-    ## 这里不做自己的 ADB 恢复逻辑（2026-10-29 定稿）
+    ## 这里不做自己的 ADB 恢复逻辑
 
     adbutils 的 `_safe_connect()` **自带 `adb start-server`**
     （.venv/Lib/site-packages/adbutils/_adb.py:69），那是被大量项目验证过的
-    机制。我们**不重写、也不拦它** —— 旧版的 `recover_adb`
-    （`adb reconnect` + 轮询 3 秒）实测白烧 44 秒，已删。
+    机制。我们**不重写、也不拦它**。
 
     工具层只做两件库管不到的事：
 
@@ -308,10 +307,9 @@ def _card_keywords(card: Path) -> list[str]:
 
     用途见 knowledge_hint 的 cross_cards 分支。
 
-    ⚠️ 注意匹配 `com.zui.calendar.md` 这种带后缀的写法：旧实现用
-    ``\\b(com\\.[a-z0-9_.]+)\\b``，会把 ``.md`` 一起吃进包名（得到
-    ``com.zui.calendar.md``），再去拼 ``assets/knowledge/com.zui.calendar.md.md``
-    必然不存在，于是**跨卡指路静默失效**。这里显式剥掉已知后缀。
+    ⚠️ 必须显式剥掉 `.md` 后缀：`\\b(com\\.[a-z0-9_.]+)\\b` 会把后缀一起吞进
+    包名（得到 ``com.zui.calendar.md``），拼出来的路径必然不存在，
+    于是**跨卡指路静默失效**。
     """
     try:
         text = card.read_text(encoding="utf-8")
@@ -324,12 +322,12 @@ def _card_keywords(card: Path) -> list[str]:
 def _sections_matching(sections: list[str], screen: str | None) -> list[str]:
     """按当前屏幕/前台包，把相关小节挑到前面。
 
-    ⚠️ 真实教训（2026-10-14，用例 121「加倒数日小部件 + 开负一屏」）：
+    ⚠️ 真实教训（用例 121「加倒数日小部件 + 开负一屏」）：
     `knowledge_hint` 只平铺小节标题，AI 扫一眼觉得"跟我这步无关"就跳过，
-    结果**把已经写好的负一屏坐标重新探了一遍**，还探错了（旧记录坐标与本机不符）。
+    结果**把已经写好的坐标重新探了一遍**，还探错了（旧记录坐标与本机不符）。
 
     真正的病根有两个，都在这里一起治：
-      1. **索引漏了 `###` 级小节**（见 _scan_sections）：负一屏那节是 `###`，
+      1. **索引漏了 `###` 级小节**（见 _scan_sections）：关键小节是 `###`，
          压根没进索引，AI 不可能"看到但不读"——它是根本没出现。
       2. 标题平铺、没有相关性排序。
 
@@ -394,13 +392,9 @@ def _sections_matching(sections: list[str], screen: str | None) -> list[str]:
 def _scan_sections(card: Path) -> tuple[list[str], list[str]]:
     """扫卡片的 `##` 与 `###` 小节标题。
 
-    ⚠️ **必须同时收 `###`**（2026-10-14 真实教训）：
-    负一屏那节标题是
-        `### ⚠️ 负一屏（桌面左侧资讯页）相关：开关位置与「预授权弹窗」不可重现`
-    它在 `## 页面-设置页 / 备份与恢复` 之下。旧实现只收 `## `，
-    于是**这一节从未出现在 knowledge_hint 的索引里** ——
-    AI 不是"看到标题却不读"，而是**根本看不到**，只好从头重新探索，
-    还探错了坐标。收 `###` 后它才可见。
+    ⚠️ **必须同时收 `###`**：卡里有些关键小节是挂在 `##` 之下的 `###`，
+    只收 `## ` 的话**这一节根本不会出现在 knowledge_hint 的索引里** ——
+    AI 不是"看到标题却不读"，而是看不到，只好从头重新探索，往往还探错坐标。
 
     返回 (全部小节, 顶层小节)。`###` 会带上前缀的父级，便于 AI 判断上下文。
     """
@@ -431,16 +425,14 @@ _SYSTEM_CARD = "assets/knowledge/_system.md"
 def _system_card_hint() -> dict:
     """兜底卡（跨 App 的系统行为）的索引。
 
-    ⚠️ 为什么不能只给一个路径字符串（2026-10-30 实测）：
-      原来 `system_card` 的返回值就是 `"assets/knowledge/_system.md"` 一句话，
-      **没有目录**。AI 看到的是一个路径，不知道里面有什么，于是从不主动读。
-
-      后果：卡里写了「系统设置里应用通知有两个层级，别选错」，
-      而跑 87 那轮时 AI 完全没看这张卡，自己摸索着把「通知类别」改成静音
+    ⚠️ 必须给 `sections` 目录，不能只给一个路径字符串：只给
+      `"assets/knowledge/_system.md"` 一句话，AI 不知道里面有什么，于是从不主动读。
+      后果很实在 —— 卡里写了「系统设置里应用通知有两个层级，别选错」，
+      跑 87 那轮 AI 完全没看，自己摸索着把「通知类别」改成静音
       （应该关应用级总开关），还判错了结论。
 
-      对比：本包的知识卡有 `sections` 目录，AI 看到标题就知道该读哪节。
-      兜底卡同样需要。19 个小节标题约 400 字符，一次性给，比 AI 摸黑试探便宜得多。
+      本包知识卡有 `sections` 目录，AI 看到标题就知道该读哪节；兜底卡同样需要。
+      19 个小节标题约 400 字符，一次性给，比 AI 摸黑试探便宜得多。
 
     返回 {"path", "how_to_read", "sections", "tip"}；
     卡不存在时退化成只给路径。
@@ -524,15 +516,10 @@ def knowledge_hint(package: str | None, shown: bool = False,
                 cross[other] = f"assets/knowledge/{other}.md"
 
     out: dict = {
-        # ★ 直接给「怎么调」，不给文件路径。
-        #
-        #   2026-10-28 实测：原来这里是 `"card": "assets/knowledge/<包名>.md"`
-        #   （一个文件路径）。AI 看到路径就用 `android_read_file(path=...)`
-        #   整份读卡 —— 一轮读了 12 次，把整卡和整路径卡各读好几遍。
-        #   而 `card=<包名>` 模式能一次搜两卡、还能按节取，快得多。
-        #
-        #   所以：字段名改成 `package` + 给出两个现成的调用式，
-        #   别让 AI 自己把路径反推成参数。
+        # 直接给「怎么调」，不给文件路径：给路径的话 AI 会用
+        # `android_read_file(path=...)` 整份读卡（一轮读十几次，两卡各读好几遍）；
+        # 而 `card=<包名>` 能一次搜两卡、还能按节取，快得多。
+        # 所以字段名是 `package` + 两个现成的调用式，别让 AI 自己把路径反推成参数。
         "package": package if card.is_file() else None,
         "how_to_read": (
             f'android_read_file(card="{package}", query="<这条用例要干什么>")'
@@ -591,13 +578,8 @@ def case_spec_hint(case_id: int | None) -> dict | None:
     """
     if not case_id:
         return None
-    # ★ 2026-10-27：用例从 storage/cases 搬到 assets/cases/<应用>/ 了。
-    #
-    #   为什么要递归 glob：现在按应用分子目录
-    #     assets/cases/com.zui.calendar/
-    #       com.zui.calendar_168.yaml
-    #       com.zui.calendar_176.yaml
-    #   平铺 glob("*.yaml") 会一条都找不到。
+    # 用例按应用分目录放在 assets/cases/<包名>/ 下，必须**递归** glob：
+    # 平铺 glob("*.yaml") 一条都找不到。
     from runtime import CASES_DIR as _CASES
     cases_dir = _CASES
     if not cases_dir.is_dir():
@@ -705,7 +687,8 @@ def steps_hint(package: str | None, title: str | None) -> dict | None:
 
     每次跑同一条用例，AI 都要重新摸「更多按钮在哪、菜单里哪个是课程表」。
     这些是纯机械的跳转，`session finish` 已经自动导出到
-    `assets/cases/<包名>/<包名>_<编号>.steps.yaml`，但**开场没人告诉 AI 它存在**。
+    `assets/cases/<包名>/<包名>_<编号>.steps.yaml`（用例 md 叫 `<包名>_<功能>_<编号>.md`，
+    导出的 steps 只取结尾编号），但**开场没人告诉 AI 它存在**。
 
     ## 只作参考，不自动执行
 
@@ -772,10 +755,8 @@ def steps_hint(package: str | None, title: str | None) -> dict | None:
         "last_run": meta.get("last_run"),
         "verdict": meta.get("verdict"),
         "step_count": meta.get("step_count") or len(steps),
-        # 起点条件：第 1 步之前得在哪个页面。
-        # ⚠️ 2026-10-29 补齐：原来这字段只写进 steps.yaml，没放进返回 ——
-        #    AI 拿到 8 步却不知道"这 8 步要求你先在日历首页"，
-        #    起点不对时可能点错地方还不自知。
+        # 起点条件：第 1 步之前得在哪个页面。不给这个字段，AI 拿到 8 步
+        # 却不知道"这 8 步要求你先在日历首页"，起点不对时可能点错地方还不自知。
         "start_from": meta.get("start_from"),
         "steps": brief,
         "truncated": len(steps) > 8,
@@ -792,17 +773,9 @@ def auto_name() -> str:
     计数器自增用 O_EXCL 锁文件保护（读改写非原子，并行调用会拿到同一个
     step 号互相覆盖证据）；抢不到锁短暂重试，超时降级为直读（宁重号不断功能）。
 
-    ⚠️ 计数器**按会话重置**（2026-11-02 修正）：
-
-      原来计数器是全局的（`storage/.evidence_seq`，一个文件累加到底）。
-      跑了几百个会话之后它已经到 338，于是新会话的第一批自动命名变成
-      `step0338` / `step0339` —— 而 AI 自己命名的是 `step01`，
-      两种编号混在一起，翻记录根本看不出先后。
-
-      改成 `storage/.evidence_seq_<sid>`：每个会话从 1 开始，
-      `step01 / step02 / step03 …` 和 AI 手动命名的风格一致。
-
-      「一次运行只有一个会话」是常态，所以这不影响并发安全。
+    计数器**按会话重置**（`storage/.evidence_seq_<sid>`）：每个会话从 1 开始，
+    命名形如 `step01 / step02 / step03 …`，和 AI 手动命名的风格一致。
+    「一次运行只有一个会话」是常态，所以这不影响并发安全。
     """
     import os
     try:
@@ -848,10 +821,8 @@ def auto_name() -> str:
             except OSError:
                 pass
     # 2 位补零：step01 / step02 …… step99；超过 99 自然变成 step100。
-    #
-    # ⚠️ 原来是 4 位（step0001），但 AI 自己传的 --name 都是 `case168/step01`
-    #    这种 2 位风格。两种编号混在一个目录里时按字符排序会错乱
-    #    （"step0001" < "step00"），翻记录看不出先后。统一成 2 位。
+    # 必须和 AI 自己传的 --name（`case168/step01`）同一风格：
+    # 两种位数混在一个目录里按字符排序会错乱（"step0001" < "step00"）。
     return f"{sid}/step{n:02d}"
 
 
@@ -860,20 +831,12 @@ def evidence_paths(base_dir: str | None, name: str | None) -> tuple[Path, Path, 
 
     ## 默认落点：本次运行的目录，不是全局大锅饭
 
-    ⚠️ 2026-11-02 修正（用户反馈）：
+    有当前运行目录时落 `run_history/<uuid>/evidence/<name>/` —— 删一次运行
+    就等于删一个 uuid 目录。落在全局 `storage/evidence/<name>/` 的话，
+    证据没有归属（多轮运行叠加、想删某次无从下手、只增不减）。
 
-      原来不传 base_dir 时一律落 `storage/evidence/<name>/`，
-      于是**一次运行的证据没有归属**：
-        · `storage/evidence/case46/` 下混了 337 个 step —— 那是多轮运行叠加的
-        · `storage/evidence/176/` 这种纯数字目录 —— auto_name() 用 session id 命名的
-        · 想删某次运行的证据无从下手（不知道哪些是它的）
-        · 2.7 GB 只增不减
-
-      现在：有当前运行目录时落 `run_history/<uuid>/evidence/<name>/`，
-      删一次运行 = 删一个 uuid 目录，干净。
-
-      没有运行目录（工具被单独调用、没开会话）时仍退到
-      `storage/evidence/<name>/`，保证工具可独立使用。
+    没有运行目录（工具被单独调用、没开会话）时退到
+    `storage/evidence/<name>/`，保证工具可独立使用。
 
     ## name 由调用方给
 
@@ -1477,17 +1440,9 @@ def emit(ok: bool, payload: dict) -> None:
     result = {"ok": ok, **payload, "call_id": CALL_ID,
               "event_ids": list(EVENT_IDS), "execution_state": runtime.EXECUTION_STATE}
     with stage("serialization"):
-        # ★ 2026-10-28：**紧凑输出，不要 indent=2**。
-        #
-        #   原来 `indent=2` 是为了人眼好看，但它占了一半体积：
-        #       实测一条 act 返回 2,739 字符，其中 1,335 是缩进空格（49%）
-        #       73 轮的用例累计浪费约 9.7 万字符
-        #
-        #   AI 读紧凑 JSON 没有问题（它本来就在解析 token，空白无信息量），
-        #   而人要看的时候有两条路：
-        #     · meta.json（capture 里写，仍是 indent=2）
-        #     · webui 页面（自己排版）
-        #   所以这里紧凑化，不影响任何人工排查。
+        # **紧凑输出，不要 indent=2**：缩进会占掉近一半体积（实测一条 act 返回
+        # 2,739 字符里 1,335 是空格）。AI 读紧凑 JSON 没问题，人要看时
+        # 有 meta.json（仍 indent=2）和 webui 页面两条路。
         text = json.dumps(result, ensure_ascii=False,
                           separators=(",", ":"))
     timing = {**timing_snapshot(), "response_bytes": len((text + "\n").encode("utf-8"))}

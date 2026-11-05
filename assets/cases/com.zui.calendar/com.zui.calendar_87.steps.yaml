@@ -7,21 +7,26 @@
 # 注意：这是**上一次**的实测路径，不是唯一正确路径。
 case: com.zui.calendar_87
 source_run: storage
-last_run: 2026-11-04T02:06:49.034
-verdict: BLOCKED
-step_count: 3
-start_from: activity=com.zui.calendar.newbuild.NewBuildActivity
+last_run: 2026-11-05T01:45:28.631
+verdict: PASS
+step_count: 4
+start_from: activity=com.android.settings.Settings$AppNotificationSettingsActivity
 steps:
   - n: 1
-    why: 步骤1：保存事件 C87通知开（02:13，提醒=任务发生时），等待提醒
-    via: rid=save_view
-    expect: activity=com.zui.calendar.AllInOneActivity
-  - n: 2
-    why: 步骤2：上一步的点击被系统的通知权限弹窗吃掉，重新点新建事件
+    why: 新建 C87B（01:59，通知开关已关）
     via: rid=action_add_all_event
     expect: activity=com.zui.calendar.newbuild.NewBuildActivity
+  - n: 2
+    why: 改时间为 01:59（+3分钟）
+    via: rid=eventTimeLayout
+    expect: rid=button_divider2
+    in_page: true
   - n: 3
-    why: 步骤2：确认事件开始时间 02:18
+    why: 确定 01:59
     via: rid=right_button
     expect: rid=action_menu_view
     in_page: true
+  - n: 4
+    why: 保存 C87B
+    via: rid=save_view
+    expect: activity=com.zui.calendar.AllInOneActivity

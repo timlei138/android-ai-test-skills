@@ -7,29 +7,12 @@
 # 注意：这是**上一次**的实测路径，不是唯一正确路径。
 case: com.zui.calendar_36
 source_run: storage
-last_run: 2026-11-03T22:43:53.629
-verdict: BLOCKED
-step_count: 5
+last_run: 2026-11-04T21:56:18.338
+verdict: PASS
+step_count: 1
 start_from: activity=com.zui.calendar.AllInOneActivity
 steps:
   - n: 1
-    why: 步骤1：打开一个已有的日历事件
-    via: rid=agenda_item_text_container,text=C18非全天事件
-    expect: activity=com.zui.calendar.event.info.EventsInfoActivity
-  - n: 2
-    why: 选择「日程」分类（有地点/邀请人字段的详情页）
-    via: rid=categoryName,text=日程
-    expect: rid=busy_layout
-    in_page: true
-  - n: 3
-    why: 保存新建的 C36 部分字段事件
-    via: rid=save_view,text=完成
-    expect: activity=com.zui.calendar.AllInOneActivity
-  - n: 4
-    why: 点事件标题打开 C36 事件详情页
-    via: rid=title,text=C36详情核对
-    expect: activity=com.zui.calendar.event.info.EventsInfoActivity
-  - n: 5
-    why: 退出编辑页返回详情页（未做修改）
-    via: rid=backtext
+    why: 用例36步骤1：打开已有日程事件
+    via: text=C18_EVENT_B
     expect: activity=com.zui.calendar.event.info.EventsInfoActivity

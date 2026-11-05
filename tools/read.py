@@ -54,17 +54,9 @@ def main() -> None:
 
     try:
         with stage("ocr_import"):
-            # ★ 2026-10-27：OCR 库改名了。
-            #
-            #   旧：rapidocr-onnxruntime（模块名 rapidocr_onnxruntime）
-            #       它停更在 1.2.3，元数据写死 requires_python="<3.13"，
-            #       在 Python 3.13 上根本装不了 —— 当时 setup.ps1 因此
-            #       把解释器上限卡在 3.12（**那个上限现在已取消**）。
-            #
-            #   新：rapidocr（3.x，模块名 rapidocr），原生支持 3.13。
-            #       但**返回类型变了**，见下面 ocr_call 的注释。
-            #
-            #   先试新包名，再退回旧包名 —— 两种环境都能跑。
+            # OCR 库模块名：新包叫 `rapidocr`（3.x，原生支持 3.13），
+            # 旧包叫 `rapidocr_onnxruntime`。先试新的，再退回旧的 —— 两种环境都能跑。
+            # 两者**返回类型不同**，见下面 ocr_call 的注释。
             from rapidocr import RapidOCR
             _OCR_NEW = True
     except ImportError:
@@ -93,24 +85,13 @@ def main() -> None:
     execution("may_have_executed")
 
     # ══════════════════════════════════════════════════════════════
-    # ★ 2026-10-27：OCR 返回结构变了，这里有一段血泪
+    # OCR 两种返回结构都要认，不靠包名猜，直接看结构：
     #
-    #   旧包 rapidocr_onnxruntime 的 ocr(path) 返回 **元组**：
-    #       (result, elapse)
-    #       result = [[box, text, score], ...]     box 是 4 个点
-    #
-    #   新包 rapidocr 3.x 返回 **对象** RapidOCROutput：
-    #       res.boxes   # [[[x,y],...], ...]
-    #       res.txts    # ('Hello 123',)
-    #       res.scores  # (0.99932,)
-    #   它**不可迭代**，按元组解包直接抛：
-    #       TypeError: cannot unpack non-iterable RapidOCROutput object
-    #
-    #   实测后果（2026-10-27 15 条用例）：14 条几乎都要读数，
-    #   全都撞这个 TypeError，子 Agent 只能自己在 storage/tmp/ 里
-    #   写临时 OCR 脚本绕过 —— 工具层的核心能力等于不可用。
-    #
-    #   所以这里**两种返回都认**，不靠包名猜，直接看结构。
+    #   旧包 rapidocr_onnxruntime 返回**元组** `(result, elapse)`，
+    #       result = [[box, text, score], ...]，box 是 4 个点
+    #   新包 rapidocr 3.x 返回**对象** RapidOCROutput（**不可迭代**，
+    #       按元组解包会抛 TypeError: cannot unpack non-iterable）：
+    #       res.boxes / res.txts / res.scores
     # ══════════════════════════════════════════════════════════════
     raw = timed_call("ocr_inference", ocr, str(img_path))
     execution("executed")

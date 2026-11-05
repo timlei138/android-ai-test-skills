@@ -170,9 +170,8 @@ def main() -> None:
         "hint": ("定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。"
                  "`next` 是精简可点清单；要按页面文字做断言时加 --full"),
     }
-    # ★ 2026-10-28：sig / timing 从返回里去掉，保留落盘（同 act.py 的理由）。
-    #   observe 里 timing 由 capture() 注入到 info，sig 在 L69 加进 info，
-    #   两者都已随 log_auto 落库，这里只是不再回传给 AI。
+    # sig / timing 只落盘、不回传给 AI（同 act.py 的理由）：timing 由 capture()
+    # 注入到 info，sig 在 L69 加进 info，两者都已随 log_auto 落库。
     payload.pop("sig", None)
     payload.pop("timing", None)
     if k_hint:

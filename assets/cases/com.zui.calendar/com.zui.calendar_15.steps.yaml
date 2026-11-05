@@ -7,37 +7,36 @@
 # 注意：这是**上一次**的实测路径，不是唯一正确路径。
 case: com.zui.calendar_15
 source_run: storage
-last_run: 2026-11-03T21:22:10.055
+last_run: 2026-11-04T21:08:23.753
 verdict: FAIL
 step_count: 6
 start_from: activity=com.zui.calendar.newbuild.NewBuildActivity
 steps:
   - n: 1
-    why: 切到「日程」分类，该分类才有起始/结束时间、我的状态等字段
+    why: 切换到日程分类
     via: rid=categoryLayout,text=日程
     expect: rid=busy_layout
     in_page: true
   - n: 2
-    why: 点「结束时间」调起结束时间弹框
-    via: rid=end_layout,text=结束时间
+    why: 调起开始时间弹框
+    via: rid=start_layout,text=开始时间
     expect: rid=button_divider2
     in_page: true
   - n: 3
-    why: 点「我的状态」调起状态弹框
-    via: rid=busy_layout,text=我的状态
-    expect: rid=ring
+    why: 调起结束时间弹框
+    via: rid=end_layout,text=结束时间
+    expect: rid=button_divider2
     in_page: true
   - n: 4
-    why: 再进新建事件页，用启动器图标返回的方式复核 Home 键路径
+    why: 重新进入新建事件页（继续测其余弹框）
     via: rid=action_add_all_event
     expect: activity=com.zui.calendar.newbuild.NewBuildActivity
   - n: 5
-    why: 关掉当前弹框，退出新建事件页
+    why: 取消恢复中的时间弹框
     via: rid=left_button,text=取消
     expect: rid=action_menu_view
     in_page: true
   - n: 6
-    why: 开「开始时间」弹框
-    via: rid=start_layout,text=开始时间
-    expect: rid=button_divider2
-    in_page: true
+    why: 调起提醒弹框
+    via: rid=reminders_row,text=提醒
+    expect: activity=com.zui.calendar.event.options.EventAheadActivity

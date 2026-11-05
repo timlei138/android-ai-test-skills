@@ -7,36 +7,36 @@
 # 注意：这是**上一次**的实测路径，不是唯一正确路径。
 case: com.zui.calendar_174
 source_run: storage
-last_run: 2026-11-04T03:34:44.219
+last_run: 2026-11-04T14:21:10.181
 verdict: FAIL
 step_count: 6
-start_from: activity=com.zui.calendar.timetable.display.TimetableActivity
+start_from: activity=com.zui.calendar.AllInOneActivity
 steps:
   - n: 1
-    why: 174前提：触发导入课程表
+    why: 打开更多菜单
+    via: rid=iv_more
+    expect: rid=item_title
+    in_page: true
+  - n: 2
+    why: 进入课程表周视图（172 导入的课表已存在）
+    via: text=课程表
+    expect: activity=com.zui.calendar.timetable.display.TimetableActivity
+  - n: 3
+    why: 进入导入方式弹层（174 前提：走图库导入链路到确认页）
     via: rid=action_curriculum_table_import
     expect: rid=tv_import_from_camera
     in_page: true
-  - n: 2
-    why: 174前提：选择图库导入
+  - n: 4
+    why: 点图库导入课程表
     via: rid=tv_import_from_gallery
     expect: rid=alertTitle
     in_page: true
-  - n: 3
-    why: 174前提：关闭提示框进照片选择器
-    via: text=知道了
-    expect: activity=com.zui.calendar.timetable.gallery.GalleryPickerActivity
-  - n: 4
-    why: 174前提：裁剪完成触发解析
+  - n: 5
+    why: 完成裁剪，触发解析
     via: rid=btnDone
     expect: rid=message
     in_page: true
-  - n: 5
-    why: 174前提：进入课程表基本信息确认页
+  - n: 6
+    why: 174 前提：进入课程表基本信息确认页
     via: rid=btn_next
     expect: activity=com.zui.calendar.timetable.temp.TempConfirmTimetableActivity
-  - n: 6
-    why: 174步骤2：日期弹框确认可弹出后取消，不改值
-    via: text=取消
-    expect: rid=arrow_current_week
-    in_page: true

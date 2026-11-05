@@ -7,30 +7,26 @@
 # 注意：这是**上一次**的实测路径，不是唯一正确路径。
 case: com.zui.calendar_85
 source_run: storage
-last_run: 2026-11-04T01:38:56.930
+last_run: 2026-11-05T01:19:11.226
 verdict: PASS
-step_count: 5
-start_from: activity=com.zui.calendar.newbuild.NewBuildActivity
+step_count: 4
+start_from: activity=com.zui.calendar.AllInOneActivity
 steps:
   - n: 1
-    why: 把日程开始时间改到当前时刻之后几分钟，制造"即将响铃的日程"
-    via: rid=start_layout
-    expect: rid=button_divider2
-    in_page: true
-  - n: 2
-    why: 上一条日程提醒时间已过未触发通知，另建一条提醒时刻在将来的日程，确保能观测到提醒
+    why: 新建日程（用例85前提）
     via: rid=action_add_all_event
     expect: activity=com.zui.calendar.newbuild.NewBuildActivity
+  - n: 2
+    why: 改事件开始时间为 01:23
+    via: rid=eventTimeLayout
+    expect: rid=button_divider2
+    in_page: true
   - n: 3
-    why: 把提醒偏移改成『任务发生时』，让提醒时刻等于开始时间，便于精确等待
-    via: rid=reminders_row
-    expect: activity=com.zui.calendar.event.options.EventAheadActivity
-  - n: 4
-    why: 确认开始时间 01:51
+    why: 确定时间 01:23
     via: rid=right_button
     expect: rid=action_menu_view
     in_page: true
-  - n: 5
-    why: 保存日程F（开始01:51，提醒=任务发生时）
+  - n: 4
+    why: 保存事件 C85Stay
     via: rid=save_view
     expect: activity=com.zui.calendar.AllInOneActivity
