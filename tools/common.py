@@ -1451,8 +1451,8 @@ def add_common_args(p: argparse.ArgumentParser) -> argparse.ArgumentParser:
                    help="nodes 给全量语义节点（检查模式；默认导航模式，只给可点/可滑动节点）")
     p.add_argument("--no-filter", action="store_true", dest="no_filter",
                    help="不过滤系统界面节点（默认只保留当前前台包的节点）")
-    p.add_argument("--settle", type=int, default=600,
-                   help="动作后稳定窗口毫秒数，默认 600（仅 act 用）")
+    p.add_argument("--settle", type=int, default=500,
+                   help="动作后稳定窗口毫秒数，默认 500（仅 act 用）")
     p.add_argument("--perm-action", default=None, choices=["grant", "deny"],
                    dest="perm_action",
                    help="声明权限意图（**仅 act 用**）：测「拒绝」路径时才需要，"

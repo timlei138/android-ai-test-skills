@@ -12,7 +12,7 @@ from common import (add_common_args, apply_stdin_args, backfill_package, capture
                     rel, summarize_xml)
 import time
 from datetime import datetime
-from runtime import timed_call, execution
+from runtime import execution
 
 
 
@@ -42,39 +42,12 @@ def main() -> None:
     started_at = datetime.now().isoformat(timespec="milliseconds")
     execution("may_have_executed")
 
-    # 权限弹窗：按会话级意图自动响应（在截图前处理，弹窗约 6s 会自行消失）
-    perm_result = None
-    _perm_steps: list[str] = []
-
-    def _snap_perm_dialog(pinfo) -> None:
-        """权限框出现时留一步证据 —— 和 act 里同一个做法。
-
-        ⚠️ 只在**已经有 name 参数**时自动另存；observe 自己那一步已经会 capture，
-           再存一份会和主 step 重复。所以这里只在权限框弹出时补拍：
-           权限框是被 observe 顺手点掉的，不补拍就完全没证据。
-        """
-        try:
-            _p, _x, _m = evidence_paths(None, None)
-            capture(d, _p, _x, _m, extra={
-                "kind": "permission",
-                "permission_prompt": (pinfo or {}).get("prompt"),
-                "permission_buttons": [b["text"] for b in
-                                       ((pinfo or {}).get("buttons") or [])],
-            })
-            _perm_steps.append(_p.parent.name)
-        except Exception:  # noqa: BLE001
-            pass
-
-    try:
-        from db import current_session, get_db
-        si = current_session()
-        intent = get_db().get_perm_intent(si) if si else None
-        import perm as _perm
-        perm_result = timed_call("permission", _perm.handle,
-                                 d, intent["action"] if intent else None,
-                                 on_dialog=_snap_perm_dialog)
-    except Exception as e:  # noqa: BLE001
-        perm_result = {"error": str(e)}
+    # ⚠️ observe **不处理权限弹窗**。
+    #   observe 是只读操作，它自己不会引发权限申请；在这里点弹窗等于让
+    #   「看一眼」去改设备状态，职责错位。而且每步都付一次检测钱（历史
+    #   1,139 次 observe × ~1s），为的只是冷启动后那一次可能撞上的框。
+    #   权限由两处兜底：① 点击类动作（tap/longclick）走完会顺手点掉弹窗；
+    #   ② AI 需要时可以调 android_perm 用 adb 直接授予。
 
     try:
         info = capture(d, png, xml, meta)
@@ -82,14 +55,6 @@ def main() -> None:
         fail(f"采集失败: {e}")
     execution("executed")
     detail = "观察屏幕"
-    if perm_result and perm_result.get("detected"):
-        clk = ", ".join(c["text"] for c in perm_result.get("clicks") or [])
-        detail += (f" · 权限弹窗({perm_result.get('activity')})"
-                   + (f" 已自动点击: {clk}" if clk else " 未点击"))
-        # 把「生成了哪几个权限 step」告诉 AI —— 见 act.py 里同一处的说明
-        if _perm_steps:
-            perm_result["evidence_steps"] = list(_perm_steps)
-            detail += f" · 已存权限步 {', '.join(_perm_steps)}"
     # 和 act 一样带**屏幕身份签名** —— 自动整理路径边时要靠它判"这一步在哪个节点"。
     # ⚠️ observe 也必须带：会话开头往往先 observe（还没有 act），
     # 若它没签名，第一条边的前溯就落空，源节点只能退回裸 activity（真实缺陷）。
@@ -178,14 +143,6 @@ def main() -> None:
         payload["knowledge_hint"] = k_hint
     if alert:
         payload["alert"] = alert
-    if perm_result and perm_result.get("detected"):
-        payload["permission"] = perm_result
-        if not (perm_result.get("clicks") or []):
-            payload["permission_hint"] = (
-                "检测到系统权限弹窗但**没有自动点击**：弹窗里没有可匹配的按钮"
-                f"（可见 {perm_result.get('buttons')}）。"
-                "若是要测「拒绝」路径，用 perm-intent --action deny 后重触发；"
-                "否则看 buttons 自己决定点哪个。")
     if terminate:
         # 硬性终止信号：AI 必须立即 finish(BLOCKED)，不要再发下一个动作
         payload["terminate"] = True

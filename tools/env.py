@@ -61,6 +61,65 @@ def _deps_ok() -> str:
     return "ok" if not miss else "缺: " + ",".join(miss)
 
 
+IME_OK = "com.github.uiautomator/.AdbKeyboard"
+
+
+def _device() -> dict:
+    """设备 + 输入法状态。
+
+    ## 为什么放在 env 里（2026-11-06 定）
+
+    写字的动作（`android_act input`）底层是 u2 的 `send_keys`，它要设备上
+    当前输入法是 **AdbKeyboard**。换成搜狗/原生输入法后 `clear=True` 会抛
+
+        AdbBroadcastError: ADB_KEYBOARD_CLEAR_TEXT failed: Attempt to read
+        from field 'ExtractedText.text' on a null object reference
+
+    这个报错出现在 act 的输出里，执行子 Agent 很容易误判成「控件坏了」，
+    然后按「同一目标最多试 2 次」记 BLOCKED —— 实际是设备环境没准备。
+
+    输入法在整个测试过程中不会被人改，所以**只查一次就够**：主 Agent 的
+    开工第一条就是 `android_env`，在这里报出来，派发前就能发现并修掉。
+    子 Agent 不用管这件事。
+
+    ## 失败不能让 env.py 挂
+
+    env.py 是开工第一条，它崩了整个流程就断了。所以设备不在线 / 多台设备
+    / adb 起不来，一律返回 serial=None + advice，不抛异常，也不拖慢：
+    查询前先探 5037（100ms），server 没跑就直接返回，不在这里起 daemon。
+    """
+    out = {"serial": None, "ime": None, "ime_ok": False, "advice": None}
+    try:
+        import adbutils
+        from common import _adb_server_alive
+        if not _adb_server_alive():
+            out["advice"] = "adb server 没起：在 bash 里跑一次 `adb devices`"
+            return out
+        devices = [d.serial for d in adbutils.adb.list() if d.state == "device"]
+        if not devices:
+            out["advice"] = "设备没连：`adb devices` 确认是 device 态"
+            return out
+        if len(devices) > 1:
+            out["advice"] = ("多台设备在线（" + "、".join(devices) +
+                             "）：开工时显式指定 serial")
+            return out
+        serial = devices[0]
+        out["serial"] = serial
+        ime = adbutils.adb.device(serial).shell(
+            "settings get secure default_input_method").strip()
+        out["ime"] = ime or None
+        if ime == IME_OK:
+            out["ime_ok"] = True
+        else:
+            out["advice"] = (f"当前输入法是 {ime or '(空)'}，写字会失败。"
+                             f"切回：adb -s {serial} shell ime enable {IME_OK}"
+                             f" ; adb -s {serial} shell ime set {IME_OK}")
+        return out
+    except Exception as error:  # noqa: BLE001
+        out["advice"] = f"设备查询失败：{error}"
+        return out
+
+
 def main() -> None:
     env = detect_shell()
     if "--json" in sys.argv:
@@ -80,6 +139,8 @@ def main() -> None:
             "tmp_output": str(TMP_DIR),
             "knowledge_dir": str(KNOWLEDGE_DIR),
             "deps_ok": _deps_ok(),
+            # ★ 设备和输入法：主 Agent 开工就看到，别等子 Agent 跑到打字那步才炸
+            "device": _device(),
             "storage_source": (
                 "env:ANDROID_TEST_STORAGE"
                 if os.environ.get("ANDROID_TEST_STORAGE")
@@ -110,6 +171,17 @@ def main() -> None:
     print(f"  record   = {RECORD_DIR}")
     print(f"  tmp      = {TMP_DIR}")
     print(f"  knowledge= {KNOWLEDGE_DIR}")
+    print()
+
+    # ── 设备 + 输入法 ───────────────────────────────────────────
+    dev = _device()
+    print("★ 设备：")
+    if dev["serial"]:
+        print(f"  serial   = {dev['serial']}")
+        mark = "✅" if dev["ime_ok"] else "❌"
+        print(f"  输入法   = {dev['ime'] or '(空)'} {mark}")
+    if dev["advice"]:
+        print(f"  ⚠️ {dev['advice']}")
     print()
 
     # ── 工具目录 + 开会话模板 ────────────────────────────────────

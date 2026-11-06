@@ -1340,6 +1340,21 @@ def main() -> None:
                 except Exception:
                     notes.append(f"{cmd} 失败（可手动 logcat.py setup / clear）")
 
+            # ── 屏幕常亮：测试过程中不许灭屏 ────────────────────────────
+            # 灭屏的代价不是「白等」那么简单：屏幕一黑，UI 树和截图都拿不到，
+            # AI 会判成「控件找不到」，然后按 2 次上限记 BLOCKED —— 一条用例
+            # 就这么废了，而真实原因只是设备省电。
+            #
+            # `svc power stayon true` 对应「充电时不锁屏」，插着 USB 就一直亮。
+            # **开了不还原**（用户 2026-11-06 的裁决：「只开不管，一直保持常亮」）：
+            # 还原反而会在收尾和下一轮开工之间留一个灭屏窗口。
+            # 失败不阻断开工 —— 屏幕设置不成功也该把用例跑完，只在 note 里写明。
+            try:
+                d.shell("svc power stayon true")
+                notes.append("屏幕常亮已开启（stayon true）")
+            except Exception as e:  # noqa: BLE001
+                notes.append(f"屏幕常亮设置失败：{e}（跑的过程中可能灭屏）")
+
             # ── u2 输入法：换成 AdbKeyboard 并设为默认 ──────────────────
             # 为什么在开场做（2026-11-05）：换新设备、做过 OTA、或用户手动切回
             # 搜狗之后，`send_keys(clear=True)` 会直接抛

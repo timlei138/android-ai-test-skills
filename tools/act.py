@@ -16,13 +16,14 @@
 - --watch：动作后监听瞬态弹窗并立即点击（tap/longclick/input/swipe 均支持），
   多候选用 | 分隔；决策在挂载时完成，弹窗出现亚秒级响应，不经 AI。
 - --via 定位依据溯源（链路卡提炼靠它）；--why 本步理由（时间轴展示）。
-- --settle 动作后稳定窗口毫秒数（默认 600）。异步渲染页（联网解析等）AI 应
+- --settle 动作后稳定窗口毫秒数（默认 500）。异步渲染页（联网解析等）AI 应
   按知识卡经验加大，而不是靠反复 observe 轮询堆证据。
 """
 from __future__ import annotations
 from runtime import PATHS_DIR, execution
 
 import argparse
+import json
 import sys
 import time
 from datetime import datetime
@@ -562,7 +563,13 @@ def main() -> None:
         fail(f"动作执行失败: {e}")
 
     execution("executed")
+    # ⚠️ **所有动作**执行完都在这里等 settle 再 dump+截图，无一例外。
+    #    这个等待不是可选的：界面（尤其是弹窗）有滑入动画，动画结束前后
+    #    dump 出来的控件坐标是两套 —— 实测权限框刚弹出时「允许」在
+    #    (831,376)（动画中间帧），稳住后才到 (2171,1420)。整段动画约 300ms。
+    #    漏掉这个等待，后面拿到的是动画中间帧的坐标，点了点空。
     timed_call("settle_wait", time.sleep, args.settle / 1000)
+    _is_click = args.action in ("tap", "longclick")
 
     png, xml, meta = evidence_paths(args.dir, args.name)
     # ⚠️ 必须按 action 分支求值：字典字面量会**同时**求值所有 value，
@@ -611,72 +618,105 @@ def main() -> None:
             detail += (f" · watch阶段{watch_result['missed_stage'] + 1}未出现"
                        f"（候选 {watch_result.get('missed_specs')}）")
 
-    # 权限弹窗：按会话级意图自动响应（放在 capture 之前，别浪费 6s 窗口）。
-    # 意图由 AI 事先声明；**未声明时默认 grant（同意）**——见 perm.DEFAULT_ACTION。
+    # ── 权限弹窗处理 ─────────────────────────────────────────────────────
     #
-    # ⚠️ 每个权限框记成**独立的一步**（2026-11-02 用户要求）：
-    #    「如果是权限也是单独一步。不要特殊对待。」
-    #    所以 on_dialog 里直接调 evidence_paths(None, None) + capture()，
-    #    生成和普通点击同构的 step 目录（shot.png / dump.xml / meta.json）。
-    #    step 号由 auto_name() 全局递增，天然按时间排在前后步骤之间。
+    # 只有**点击类动作**（tap / longclick）才查权限：权限申请几乎只会被点击触发
+    # （用户 2026-11-06 裁决）。swipe / back / home / input / key 一律不查 ——
+    # 为极低概率的场景让每步都付一次检测钱不划算，代码也别复杂化。
+    #
+    # 流程是一条直线，每一轮**只拍一次**（截图+dump），拍完直接拿那份 dump 判断：
+    #   点 → 等 settle → 拍一份 → 有权限框就点 → 等 300ms → 拍一份 → 循环到框消失
+    #   → 最后那份就是本次 act 的证据
+    #
+    # ⚠️ 截图每轮只拍一次（用户 2026-11-06）：「点击后等 500ms 我们 dump 截图，
+    #    肯定有这个弹窗的截图…不用存两份吧」。但**点掉的每个弹窗仍记一步**
+    #    （「点过的就是当做一个步骤」）：shot() 刚写进 act 目录的那份画面就是
+    #    弹窗本体，on_dialog 把它**复制**到独立 step 目录再记事件 —— 零额外拍摄，
+    #    下一轮 shot() 自然覆盖 act 目录，最后留下的（无框）当 act 证据。
     perm_result = None
     _perm_steps: list[str] = []
+    png, xml, meta = evidence_paths(args.dir, args.name)
 
-    def _snap_perm_dialog(info) -> None:
-        """权限框出现时留一步证据 + 一条事件。异常不外抛（证据不该阻断主流程）。"""
+    def _snap_perm_dialog(info, btn) -> None:
+        """把刚拍的这份弹窗画面转存成一个独立权限步 + 一条事件。不重拍、异常不外抛。"""
         try:
+            import shutil
             _ts = datetime.now().isoformat(timespec="seconds")
             _p, _x, _m = evidence_paths(None, None)     # 自动命名，step 号递增
+            shutil.copyfile(png, _p)
+            shutil.copyfile(xml, _x)
             _prompt = (info or {}).get("prompt")
             _buttons = [b["text"] for b in ((info or {}).get("buttons") or [])]
-            capture(d, _p, _x, _m, extra={
-                "kind": "permission",
-                "permission_prompt": _prompt,
-                "permission_buttons": _buttons,
-            })
-            # 只落盘不落库的话，WebUI 时间线（读 events 表）里就看不到这个权限框，
-            # 而磁盘上却多出一个没人引用的 step 目录 —— 账实不符。
+            try:
+                _md = json.loads(meta.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                _md = {}
+            _md.update({"kind": "permission", "permission_prompt": _prompt,
+                        "permission_buttons": _buttons,
+                        "clicked": (btn or {}).get("text")})
+            _m.write_text(json.dumps(_md, ensure_ascii=False, indent=2),
+                          encoding="utf-8")
+            _clk = (btn or {}).get("text") or "?"
             log_auto("perm", "perm-dialog",
-                     f"权限弹窗：{_prompt or '?'} · 按钮 {_buttons or '[]'}",
-                     {"kind": "permission", "prompt": _prompt, "buttons": _buttons},
+                     f"权限弹窗：{_prompt or '?'} · 已点击「{_clk}」",
+                     {"kind": "permission", "prompt": _prompt,
+                      "buttons": _buttons, "clicked": btn},
                      rel(_p), None, _ts)
             _perm_steps.append(_p.parent.name)
-        except Exception:  # noqa: BLE001
+        except Exception:  # noqa: BLE001  证据不该阻断点框主流程
             pass
 
-    try:
-        from db import current_session, get_db
-        si = current_session()
-        intent = get_db().get_perm_intent(si) if si else None
-        import perm as _perm
-        perm_result = timed_call("permission", _perm.handle,
-                                 d, intent["action"] if intent else None,
-                                 on_dialog=_snap_perm_dialog)
-    except Exception as e:  # noqa: BLE001
-        perm_result = {"error": str(e)}
+    def _shot_for_perm():
+        """拍一份 dump+截图并**直接落成本次 act 的证据**，返回 (xml_text, payload)。
+
+        权限流程每一轮都调它：既回答「框还在不在」，又产出最终证据。
+        多次调用会覆盖同一个 step 目录 —— 留下的永远是最后那份（框消失后的画面）；
+        中途点掉过的弹窗由 _snap_perm_dialog 从这些文件里复制留证。
+        """
+        nonlocal _captured
+        _captured = capture(d, png, xml, meta, extra={
+            "action": action, **({"watch": watch_result} if watch_result else {})})
+        return xml.read_text(encoding="utf-8"), _captured
+
+    _captured = None                    # 已拍好的采集结果，避免拍第二遍
+    if _is_click:
+        try:
+            from db import current_session, get_db
+            si = current_session()
+            intent = get_db().get_perm_intent(si) if si else None
+            import perm as _perm
+            perm_result = timed_call(
+                "permission", _perm.handle, d,
+                intent["action"] if intent else None,
+                shot=_shot_for_perm, on_dialog=_snap_perm_dialog,
+                settle_s=0.3)
+        except Exception as e:  # noqa: BLE001
+            perm_result = {"error": str(e)}
     if perm_result and perm_result.get("detected"):
         clk = ", ".join(c["text"] for c in perm_result.get("clicks") or [])
         src = "（默认）" if perm_result.get("action_source") == "default" else ""
-        detail += f" · 权限弹窗({perm_result.get('activity')})"
+        detail += " · 权限弹窗"
         if clk:
             detail += f" 已自动点击: {clk} {src}".rstrip()
         elif perm_result.get("unmatched"):
             detail += f" 未匹配可点按钮，可见: {perm_result.get('buttons')}"
         else:
             detail += " 未点击"
-        # ⚠️ 把「生成了哪几个权限 step」告诉 AI（2026-11-02）。
-        #
-        #    真实踩过：跑 168 时工具在后台存了 step0001-step0006 六个权限步，
-        #    但返回里只有 dialog_count=5，AI 不知道这些证据存在，
-        #    summary 里写成「没有留下独立 act 步骤」—— 记账和事实不符。
-        #    报出来之后 AI 能在 summary 里写准，也知道去哪查。
+        # 告诉 AI 后台存了哪几个权限步。不说的话它会在 summary 里写
+        # 「没有留下独立步骤」——账实不符（实测踩过，跑 168 时）。
         if _perm_steps:
             perm_result["evidence_steps"] = list(_perm_steps)
             detail += f" · 已存权限步 {', '.join(_perm_steps)}"
+        if perm_result.get("stuck"):
+            detail += " · ⚠️弹窗点不动（内容无变化），可能被遮挡"
 
     try:
-        info = capture(d, png, xml, meta,
-                       extra={"action": action, **({"watch": watch_result} if watch_result else {})})
+        if _captured is not None:
+            # shot() 在权限流程里已经拍好并落盘了，直接用它当证据 —— 不重拍
+            info = _captured
+        else:
+            info = capture(d, png, xml, meta,
+                           extra={"action": action, **({"watch": watch_result} if watch_result else {})})
     except Exception as e:  # noqa: BLE001
         fail(f"动作已执行但采集失败: {e} | action={action}")
 

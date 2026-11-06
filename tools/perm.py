@@ -148,6 +148,38 @@ def permission_prompt(xml_text: str) -> str:
     return ""
 
 
+def detect_from_xml(xml_text: str) -> dict | None:
+    """从**已经 dump 下来的 xml** 判断这是不是一个权限弹窗。
+
+    返回 {"activity": None, "buttons": [...], "package": None, "prompt": "..."}
+    或 None（不是权限框）。
+
+    ## 为什么要有这条路径
+
+    原来点完权限框后要再跑一次 `detect()` 去 `dumpsys` 查前台 activity，
+    最多白等 1 秒。而调用方（act）点完之后**本来就要 dump + 截图**存档 ——
+    那份 xml 里有没有权限按钮，就是「框还在不在」的事实本身。
+    用现成的 xml 判断：0 额外开销，而且不受页面过渡期 `dumpsys` 返回旧值的
+    干扰（`common.foreground_of` 的坑，见那里的注释）。
+
+    ⚠️ 拿不到 activity，所以只按**按钮形态**判断。这是有意的：判断依据是
+       「屏幕上有没有可点的权限按钮」，而不是「前台是不是权限 Activity」——
+       前者才是用户能看见的事实。
+
+    ⚠️ 但普通页面也有按钮（「新建」「设置」），光看「有按钮」不算数。
+       所以额外要求：xml 里出现 `permissioncontroller` 这个包名 —— 权限控制器
+       渲染的所有控件 rid 都带它，普通 App 的页面不可能有。这是**权限框的
+       物理标记**，不是靠文案猜的（换语言/换 OEM 也不受影响）。
+    """
+    if "permissioncontroller" not in (xml_text or ""):
+        return None
+    btns = list_buttons(xml_text)
+    if not btns:
+        return None
+    return {"activity": None, "buttons": btns, "package": None,
+            "prompt": permission_prompt(xml_text)}
+
+
 def detect(d, timeout_s: float = 0.8, interval_s: float = 0.2) -> dict | None:
     """有界轮询检测权限弹窗。
 
@@ -207,64 +239,79 @@ def _frame_signature(info: dict | None) -> str:
     return "|".join(parts)
 
 
-def handle(d, action: str | None = None, timeout_s: float = 0.8,
-           chain_max: int = 8, observe_only: bool = False,
-           on_dialog=None) -> dict:
+def handle(d, action: str | None = None, shot=None, on_dialog=None,
+           settle_s: float = 0.3, chain_max: int = 8) -> dict:
     """看见权限框就点，点到框没了为止 —— 和测试员的做法完全一致。
 
     多权限申请时 Android **不关框**，就在同一个框里点一次换下一个权限，
     所以循环判据只有一条：**框还在就继续点**。`chain_max` 只是防死循环的兜底。
 
     action=None → 用 DEFAULT_ACTION（grant，默认同意）。
-    observe_only=True → 只检测不点击（调试/仅取证时用）。
 
-    ## on_dialog：让权限框成为「独立的一步」
+    ## 每一轮只拍一次：截图 + dump 都在调用方
 
-    `on_dialog(info)` 在**每个权限框出现时**调一次（点之前）。
-    调用方通常在里面拍一张存成独立 step —— 于是权限框和普通点击一样有
-    完整的 shot.png / dump.xml / meta.json，翻 step 列表就能看到
-    「这一步弹了什么权限」。
+        调用方点完按钮、等够了结算时间 → 调 shot() 拍一份
+          → 这份 dump 里有没有权限按钮？没有 → 结束
+          → 有 → 点掉 → 等 settle_s → 下一轮再拍一份
 
-    ⚠️ 为什么不用特殊结构（2026-11-02 用户要求）：
-      「如果是权限也是单独一步。不要特殊对待。」
-        · 权限步和普通步结构统一 → 前端/回放/排查都不用写特殊分支
-        · step 号由调用方的 auto_name() 递增，天然按时间排
-        · 不需要额外的 perm/ 子目录（那会把证据链拆散）
+    `shot()` 返回 `(xml_text, payload_dict)`，payload 是给 AI 的证据描述。
+    **第一份也是 shot() 拍的**，不是 detect() —— 调用方已经等过结算时间，
+    那时权限框早就渲染完了，direct dump 就是权限框原样；再去 dumpsys 轮询
+    一遍纯属白花时间。
 
-    返回 {"detected","handled","clicks","dialog_count",...}
-      `clicks` 就是「点了哪几个权限」：每项 {text, rid, center}
+    `on_dialog(info, btn)`：每**点掉**一个弹窗回调一次（2026-11-06 裁决：
+    「点过的就是当做一个步骤」）。此刻调用方 step 目录里那份 png/xml/meta
+    正是这个弹窗的画面 —— 调用方把它复制去独立目录记一步即可，**不要再拍**，
+    下一轮 shot() 会自然覆盖 act 目录。回调异常不中断点框流程。
+
+    ⚠️ 为什么不在这里自己截图/dump：那张图要成为本次 act 的证据，必须落在
+      调用方的 step 目录、走 capture() 的落盘链路。在这里拍等于同一时刻拍
+      两份（一份白丢，还要多花一次截图的钱）。
+
+    ⚠️ 判断框在不在，不看 activity 名，只看 **xml 里有没有权限控制器渲染的
+      按钮**（`detect_from_xml`）：0 额外开销，且不受页面过渡期 dumpsys
+      返回旧值的影响。
+
+    返回 {"detected","handled","clicks","dialog_count",...,"prompts"}
+      `detected=False` 表示拍的第一份画面里就没有权限框 —— 本次动作与权限无关
+      `clicks` 是「点了哪几个权限」：每项 {text, rid, center}
     """
     result = {"detected": False, "handled": False, "clicks": [],
-              "dialog_count": 0, "activity": None, "buttons": [], "prompts": []}
-    if not observe_only:
-        result["action"] = action or DEFAULT_ACTION
-        result["action_source"] = "declared" if action else "default"
+              "dialog_count": 0, "buttons": [], "prompts": []}
+    result["action"] = action or DEFAULT_ACTION
+    result["action_source"] = "declared" if action else "default"
+    if shot is None:
+        result["error"] = "handle() 需要 shot 回调"
+        return result
+
+    before = None                       # 上一轮点之前的画面指纹
     for i in range(max(1, chain_max)):
-        info = detect(d, timeout_s=timeout_s if i == 0 else 2.0)
-        if not info:
-            break                       # 框没了 = 点完了（或本来就没有）
+        try:
+            xml_text, _payload = shot()
+        except Exception as e:  # noqa: BLE001
+            result["shot_error"] = str(e)
+            break
+        info = detect_from_xml(xml_text)
+        if info is None:
+            break                       # 画面里没有权限框 → 结束
         result["detected"] = True
         result["dialog_count"] = i + 1
-        result["activity"] = info["activity"]
         result["buttons"] = [b["text"] for b in info["buttons"]]
         if info.get("prompt"):
             result["prompts"].append(info["prompt"])   # 留痕：本次授予了哪些权限
-        # 框出现 → 让调用方留证（这一步还没点，拍的是权限框原样）
-        if on_dialog is not None:
-            try:
-                on_dialog(info)
-            except Exception:  # noqa: BLE001
-                pass                    # 证据存不下不该阻断权限处理
-        if observe_only:
-            break                       # 只看不点
-        btn = match_button(info["buttons"], action or DEFAULT_ACTION)
+
+        # 点了没反应：和上一轮点之前的画面一模一样 → 这一下没生效（disabled/遮挡）。
+        # 用户 2026-11-06 的裁决：「这种情况不会发生。即使发生了报 BLOCK 就行了。」
+        sig = _frame_signature(info)
+        if before is not None and sig == before:
+            result["stuck"] = True
+            break
+
+        btn = match_button(info["buttons"], result["action"])
         if not btn:
             result["unmatched"] = True  # 框在，但没有可点的匹配项 → 交回 AI
             break
-        # ⚠️ 点完看**框变了没有** —— 和人的做法一样：点一下，看有没有反应。
-        # 变了 = 换成下一个权限/关了；没变 = 点不动（disabled/遮挡），立刻停。
-        # 不做"这是不是同一个框"的判断（多权限时按钮全叫「允许」，判不出来）。
-        before = _frame_signature(info)
+        before = sig
         try:
             d.click(*btn["center"])
             result["clicks"].append({"text": btn["text"], "rid": btn["rid"],
@@ -273,12 +320,12 @@ def handle(d, action: str | None = None, timeout_s: float = 0.8,
         except Exception as e:  # noqa: BLE001
             result["click_error"] = str(e)
             break
-        time.sleep(0.5)                 # 给框内换下一个权限留渲染时间
-        after = detect(d, timeout_s=1.0)
-        if after is None:
-            break                       # 框关了 → 正常结束
-        if _frame_signature(after) == before:
-            # 屏幕内容和点之前一模一样 → 这一下没生效，别再连点（最坏会白等 18s）
-            result["stuck"] = True
-            break
+        # 点掉一个 = 一个步骤。此刻调用方目录里那份画面就是这个弹窗，
+        # 复制去独立目录留证（不重拍）；下一轮 shot() 会覆盖调用方目录。
+        if on_dialog:
+            try:
+                on_dialog(info, btn)
+            except Exception:  # noqa: BLE001  留证失败不该中断点框
+                pass
+        time.sleep(settle_s)            # 给框内换下一个权限留渲染时间
     return result
