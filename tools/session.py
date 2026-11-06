@@ -17,7 +17,8 @@ import re
 import sys
 from pathlib import Path
 
-from common import case_spec_hint, emit, knowledge_hint, steps_hint
+from common import (case_spec_hint, emit, knowledge_hint, resolve_case_stem,
+                    steps_hint)
 import sqlite3
 from db import (  # noqa: I001
     STATUSES, SessionDB, clear_current, current_session, get_db,
@@ -518,7 +519,7 @@ def _pick_landing(new_nodes: set[str]) -> str | None:
 
 
 def export_steps(db, session_id: int) -> str | None:
-    """把本轮「能复用的跳转步骤」导成 steps.yaml，返回写到的路径。
+    """把本轮「能复用的跳转步骤」导成 `<md文件名>_steps.yaml`，返回写到的路径。
 
     ## 存什么
 
@@ -733,14 +734,15 @@ def export_steps(db, session_id: int) -> str | None:
             start_from = fa
             break
 
-    # 变量：用例编号
+    # 导出文件名 = 用例 md 的文件名 + `_steps.yaml`（与 md 同名，天然唯一）。
     title = str(row.get("title") or "")
-    m = re.search(r"[_\-](\d{2,4})(?!\d)", title) or \
-        re.search(r"(\d{2,4})", title)
-    num = m.group(1) if m else "unknown"
+    stem = resolve_case_stem(pkg, title, row.get("user_input"))
+    if not stem:
+        # 解析不出对应用例 md —— 不硬造一个孤儿产物（WebUI 里只会是空白条目）
+        return None
     out_dir = CASES_DIR / pkg
     out_dir.mkdir(parents=True, exist_ok=True)
-    out = out_dir / f"{pkg}_{num}.steps.yaml"
+    out = out_dir / f"{stem}_steps.yaml"
 
     # 步数变少时**照样覆盖**，只在返回里告警。
     #
@@ -765,14 +767,14 @@ def export_steps(db, session_id: int) -> str | None:
                          f"回看这轮是否没走全）")
 
     lines = [
-        f"# 自动导出：{pkg}_{num} 的可复用跳转步骤",
+        f"# 自动导出：{stem} 的可复用跳转步骤",
         "#",
         "# 只含「锚点明确 + 落点可验 + 非前置」的 tap。",
         "# 前置条件、造数据、判定都不在这里 —— 那些每次都不一样。",
         "#",
         "# 用法：照着点即可。每步点之前验 expect，不命中就停、交回 AI。",
         "# 注意：这是**上一次**的实测路径，不是唯一正确路径。",
-        f"case: {pkg}_{num}",
+        f"case: {stem}",
         f"source_run: {Path(str(db.path)).parent.name}",
         f"last_run: {row.get('started_at') or ''}",
         f"verdict: {row.get('status') or ''}",
@@ -1413,7 +1415,7 @@ def main() -> None:
         # 这些是机械跳转，finish 时已经导出到 steps.yaml，开场给它看。
         try:
             steps = steps_hint(args.package or (case["package"] if case else None),
-                               _title)
+                               _title, _input)
             if steps:
                 out["last_steps"] = steps
         except Exception as e:  # noqa: BLE001
@@ -1561,7 +1563,7 @@ def main() -> None:
         #
         # ⚠️ diag（验证/调试）会话不导出。
         #   自检会话的标题常常也带用例编号（如"联想日历_176 步骤提示验证"），
-        #   导出会覆盖掉真实运行的 steps.yaml —— 实测踩过一次。
+        #   导出会覆盖掉真实运行的步骤文件 —— 实测踩过一次。
         steps_note = None
         try:
             _kind = str((db.get_session(sid) or {}).get("kind") or "test")

@@ -623,15 +623,23 @@ def main() -> None:
     _perm_steps: list[str] = []
 
     def _snap_perm_dialog(info) -> None:
-        """权限框出现时留一步证据。异常不外抛（证据不该阻断主流程）。"""
+        """权限框出现时留一步证据 + 一条事件。异常不外抛（证据不该阻断主流程）。"""
         try:
+            _ts = datetime.now().isoformat(timespec="seconds")
             _p, _x, _m = evidence_paths(None, None)     # 自动命名，step 号递增
+            _prompt = (info or {}).get("prompt")
+            _buttons = [b["text"] for b in ((info or {}).get("buttons") or [])]
             capture(d, _p, _x, _m, extra={
                 "kind": "permission",
-                "permission_prompt": (info or {}).get("prompt"),
-                "permission_buttons": [b["text"] for b in
-                                       ((info or {}).get("buttons") or [])],
+                "permission_prompt": _prompt,
+                "permission_buttons": _buttons,
             })
+            # 只落盘不落库的话，WebUI 时间线（读 events 表）里就看不到这个权限框，
+            # 而磁盘上却多出一个没人引用的 step 目录 —— 账实不符。
+            log_auto("perm", "perm-dialog",
+                     f"权限弹窗：{_prompt or '?'} · 按钮 {_buttons or '[]'}",
+                     {"kind": "permission", "prompt": _prompt, "buttons": _buttons},
+                     rel(_p), None, _ts)
             _perm_steps.append(_p.parent.name)
         except Exception:  # noqa: BLE001
             pass

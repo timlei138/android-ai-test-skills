@@ -97,8 +97,8 @@ STORAGE_DIR = _resolve_storage_root()
 #
 #   assets/                      ← **进 git**，是资产不是产物
 #     cases/<应用>/              ← 按应用分目录
-#       <包名>_<功能>_<编号>.md  ← 原始用例（人写的，或从需求文档粘的）
-#       <包名>_<编号>.steps.yaml ← 跑过之后自动导出的可复用跳转步骤
+#       <包名>_<功能>_<编号>.md    ← 原始用例（人写的，或从需求文档粘的）
+#       <md文件名>_steps.yaml     ← 跑过之后自动导出的可复用跳转步骤（与 md 同名）
 #     knowledge/<包名>.md        ← 知识卡
 #     knowledge/paths/<包名>.md  ← 路径图
 #

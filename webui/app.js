@@ -363,7 +363,7 @@ async function viewSessions() {
       ${sessions.map(s => `
         <div class="lt-row${s.kind === "diag" ? " diag" : ""}" data-id="${s.id}">
           <span class="c-id" title="${esc(s.id)}">${esc(sidShort(s.id))}</span>
-          <span class="c-title">
+          <span class="c-title" title="${esc(s.title || `会话 #${s.id}`)}">
             ${s.kind === "diag" ? '<span class="tag-diag">验证</span>' : ""}
             <a class="row-link" data-id="${s.id}">${esc(s.title || `会话 #${s.id}`)}</a>
           </span>
@@ -589,7 +589,8 @@ async function viewSession(id) {
   main.innerHTML = "<div class='sub'>加载中…</div>";
   const s = await api(`/api/sessions/${id}`);  const kindLabel = { observe: "👁 观察", act: "✋ 操作", read: "🔍 读取",
                       note: "📝 备注",
-                      state: "⚙️ 状态", logcat: "📎 取证", crash: "💥 崩溃" };
+                      state: "⚙️ 状态", logcat: "📎 取证", crash: "💥 崩溃",
+                      perm: "🔐 权限" };
 
   // 相邻事件时间差 = AI 决策耗时；事件自身 duration_ms = 工具执行耗时
   const ts = e => Date.parse(e.created_at);
@@ -737,7 +738,7 @@ async function viewCaseLib() {
       ${shown.map(c => `
         <div class="lt-row" data-id="${c.id}">
           <span class="c-id" title="${esc(c.id)}">${esc(caseNum(c))}</span>
-          <span class="c-title"><a class="row-link" data-id="${c.id}">${esc(c.title || "(无标题)")}</a></span>
+          <span class="c-title" title="${esc(c.title || "(无标题)")}"><a class="row-link" data-id="${c.id}">${esc(c.title || "(无标题)")}</a></span>
           <span class="c-pkg" title="${esc(c.package || "")}">${esc(pkgShort(grpOf(c)))}</span>
           <span class="c-status">${statusChip(c.last_status) || "<span class='muted'>未执行</span>"}</span>
           <span class="c-run">${c.run_count ?? 0} 次</span>

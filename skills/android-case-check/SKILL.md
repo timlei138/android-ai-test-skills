@@ -129,11 +129,11 @@ adb shell settings put system user_rotation 1             # 横屏（0 为竖屏
 ```
 D:\Project\deepseek\android-ai-test-skills\assets\cases\<应用包名>\
     <应用包名>_<功能>_<编号>.md          ← 原始用例（人写的）
-    <应用包名>_<编号>.steps.yaml         ← 跑过之后沉淀的跳转步骤（有就比 .md 更准）
+    <同名>_steps.yaml                    ← 跑过之后沉淀的跳转步骤（有就比 .md 更准）
 ```
 
-**同一个编号，`.steps.yaml` 优先** —— 它带上次实测的落点，是跑完沉淀下来的。
-没 `.steps.yaml` 就用 `.md`。
+**同一条用例，`_steps.yaml` 优先** —— 它是从同名 md 那条用例跑出来的，带上次实测的落点。
+没 `_steps.yaml` 就用 `.md`。
 
 列出某应用全部用例，一条命令：
 

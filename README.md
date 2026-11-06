@@ -238,7 +238,7 @@ PASS/FAIL 断言必须显式绑定本会话证据：`session.py finding --event-
 │   ├── bootstrap.py            #   把工具层拷到工作目录
 │   └── ...
 ├── assets/
-│   ├── cases/<应用>/            # 用例：<包名>_<功能>_<编号>.md（原文）+ <包名>_<编号>.steps.yaml（跑过的路径）
+│   ├── cases/<应用>/            # 用例：<包名>_<功能>_<编号>.md（原文）+ <同名>_steps.yaml（跑过的路径）
 │   └── knowledge/              # App 知识卡（按包名）+ paths/ 路径图
 ├── storage/                    # 运行产物（不进 git）
 │   ├── test.db                 #   所有运行共用的库

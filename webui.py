@@ -20,6 +20,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "tools"))
+from common import resolve_case_stem  # noqa: E402
 from db import SessionDB, get_db  # noqa: E402
 from runtime import KNOWLEDGE_DIR, STORAGE_DIR  # noqa: E402
 
@@ -215,31 +216,23 @@ def _scan_case_files() -> list[dict]:
       · 加一条用例 —— 就是放一个 `.md` 文件
       · 数据库的 cases 表只有"跑过且回写过"的才有记录
 
-    ## 同一条用例的 .md 和 .steps.yaml 怎么合并
+    ## 同一条用例的 .md 和 _steps.yaml 怎么合并
 
-    同一个用例编号、扩展名不同 = 同一条用例：
+    扩展名不同、**文件名同源** = 同一条用例：
       · `.md`         人写的原文（一定有）
-      · `.steps.yaml` 跑过之后沉淀的跳转步骤（可能有）
-    一条用例只出一行，`has_yaml` 标记有没有跳转步骤。
+      · `_steps.yaml` 跑过之后沉淀的跳转步骤（可能有，与 md 同名）
+    一条用例只出一行，`has_steps` 标记有没有跳转步骤。
 
-    ## 运行统计从哪来：按**用例编号**关联
+    ## 运行统计从哪来：按**用例 md 文件名**关联
 
     用例在文件里（`com.zui.calendar_新建课程表_176`），会话在数据库里
-    （`联想日历_176 课程表-从图库导入`），两边名字对不上。
-    唯一的共同点是**编号 176**。
+    （`联想日历_176 课程表-从图库导入`），两边名字对不上 —— 用
+    `common.resolve_case_stem()` 把会话标题解回 md 文件名再配对。
 
-    所以要分别从两边抽编号再配对：
-
-        文件名  com.zui.calendar_168            -> 168
-        会话标题 联想日历_168 课程表-从图库导入   -> 168      ✅ 配上
-
-    编号从哪来：`[_\\-](\\d{2,4})(?!\\d)`。
-      · 前面的 `[_\\-]` 防止把 "calendar" 里的数字（没有）或
-        长数字串的后四位误当成编号
-      · 后面的 `(?!\\d)` 防止 1680 被切出 168
-
-    ⚠️ 这个匹配规则和 `tools/session.py start` 里"提示用 --case 复用"
-       用的是同一个正则 —— 两处必须一致，否则统计和复用判断会打架。
+    ⚠️ 不能用**编号**配对。编号会撞：`com.zui.calendar_启动应用_03` 和
+       `com.zui.calendar_重要日倒数_03` 都是 03，按编号汇总时两条用例
+       共用同一份次数和最近结论，两条都是错的。
+       解不出来的会话（诊断会话、标题对不上任何文件）直接不计入。
     """
     if not CASES_DIR.is_dir():
         return []
@@ -260,38 +253,44 @@ def _scan_case_files() -> list[dict]:
         app = rel.parts[0] if len(rel.parts) > 1 else ""
         if app in SKIP_DIRS:
             continue
-        # `.steps.yaml` 是 finish 时导出的**跳转步骤副产物**，不是用例本身。
-        # 归到主用例上：stem 去掉 `.steps` 后缀，作为该用例的「有跳转步骤」标记。
+        # 跳转步骤副产物 `xxx_steps.yaml` 不是用例本身 —— 它是 finish 时
+        # 从**同名用例 md** 导出的，所以文件名去掉 `_steps` 就回到主用例上。
         stem = fp.stem
-        is_steps = stem.endswith(".steps")
+        is_steps = stem.endswith("_steps")
         if is_steps:
-            stem = stem[: -len(".steps")]
+            stem = stem[: -len("_steps")]
         slot = found.setdefault((app, stem), {})
         if is_steps:
             slot["steps"] = fp
         else:
             slot[fp.suffix.lower()] = fp
 
-    # ── 扫库，按用例编号汇总 ──────────────────────────────
+    # ── 扫库，按用例 md 文件名汇总 ────────────────────────
     #
-    # 一次遍历拿全：编号 -> {run_count, last_status, last_run_at,
+    # 一次遍历拿全：stem -> {run_count, last_status, last_run_at,
     #                        last_session_id, last_run_id}
     # 不逐条用例查库。
-    by_num: dict[str, dict] = {}
+    #
+    # ⚠️ 关联键是 **stem（md 文件名，含模块名）**，不是编号。
+    #    编号会撞：com.zui.calendar_启动应用_03 和 com.zui.calendar_重要日倒数_03
+    #    都是 03，按编号汇总时两条用例共用一份统计，次数和最近结论都会串。
+    by_stem: dict[str, dict] = {}
     db = _open_db()
     if db is not None:
         try:
             rows = db._conn().execute(
-                "SELECT id, run_id, title, status, started_at"
-                " FROM sessions WHERE title IS NOT NULL"
+                "SELECT id, run_id, title, user_input, package, status,"
+                " started_at FROM sessions WHERE title IS NOT NULL"
                 " ORDER BY started_at").fetchall()
         except Exception:  # noqa: BLE001
             rows = []
         for r in rows:
-            num = _case_number(str(r["title"] or ""))
-            if not num:
+            pkg = r["package"] or "com.zui.calendar"
+            stem = resolve_case_stem(pkg, r["title"], r["user_input"])
+            # 认不出是哪条用例的会话（诊断会话、标题对不上文件）不计入统计
+            if not stem:
                 continue
-            slot = by_num.setdefault(num, {"run_count": 0})
+            slot = by_stem.setdefault(stem, {"run_count": 0})
             slot["run_count"] += 1
             # rows 按 started_at 升序遍历，最后写入的就是最近一次
             slot["last_status"] = r["status"]
@@ -302,12 +301,12 @@ def _scan_case_files() -> list[dict]:
     items: list[dict] = []
     for (app, stem), files in sorted(
             found.items(), key=lambda kv: (kv[0][0], kv[0][1])):
-        # 只有 `.steps.yaml` 而没有 `.md`/`.yaml` 的，是**孤立的导产物** ——
+        # 只有 `_steps.yaml` 而没有 `.md`/`.yaml` 的，是**孤立的导产物** ——
         # 用例原文都没有，列出来只会在用例库里多几个点进去空白的条目。
         if not (".md" in files or ".yaml" in files):
             continue
         num = _case_number(stem)
-        st = by_num.get(num or "", {})
+        st = by_stem.get(stem, {})
         # id 用标题（前端只用它做 key / 路由），不用数据库自增 id
         items.append({
             "id": stem,
@@ -316,7 +315,7 @@ def _scan_case_files() -> list[dict]:
             "case_number": num,
             "has_md": ".md" in files,
             "has_yaml": ".yaml" in files,
-            # `.steps.yaml` = 跑过之后导出的跳转步骤，算附属产物，不是独立用例
+            # `_steps.yaml` = 跑过之后导出的跳转步骤，算附属产物，不是独立用例
             "has_steps": "steps" in files,
             "run_count": st.get("run_count") or 0,
             "last_status": st.get("last_status"),
@@ -704,7 +703,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"error": "not found"}, 404)
             return self._json({"name": name, "content": fp.read_text(encoding="utf-8")})
 
-        # ── 用例程序化描述（assets/cases/<包名>/*.steps.yaml）──
+        # ── 用例程序化描述（assets/cases/<包名>/*_steps.yaml）──
         if path == "/api/case-specs":
             items = []
             for fp in sorted(CASES_DIR.rglob("*.yaml")):
@@ -718,10 +717,17 @@ class Handler(BaseHTTPRequestHandler):
                 except Exception:  # noqa: BLE001
                     pass
                 md = fp.with_suffix(".md")
+                # `xxx_steps.yaml` 对应的原文是 `xxx.md`，不是 `xxx_steps.md`
+                if fp.stem.endswith("_steps"):
+                    md = fp.with_name(fp.stem[: -len("_steps")] + ".md")
+                # 没有原文的 `_steps.yaml` 是**孤立的导产物**（用例原文已删掉），
+                # 列出来点进去是空白页，直接不列。
+                if not md.is_file():
+                    continue
                 items.append({
                     "name": fp.name, "title": title, "case_id": cid,
                     "size": st.st_size,
-                    "has_md": md.is_file(),
+                    "has_md": True,
                     "mtime": datetime.fromtimestamp(st.st_mtime)
                     .isoformat(timespec="seconds"),
                 })

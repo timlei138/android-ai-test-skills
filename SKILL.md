@@ -150,6 +150,18 @@ session.py findings-batch --file "<target>\storage\tmp\facts.json"
 **`event_id` 必须是本会话真事件**（从 `android_observe` / `android_act` 返回的
 `event_ids` 里拿），拿错了整批会被拒。
 
+#### ⚠️ `event_id` 边做边抄，不要留到最后
+
+每次 `act` / `observe` 的返回里都有 `event_ids`。**做完一步就把用到的 ID 记在你的
+草稿里**（哪个 ID 证明哪条预期）。留到最后靠回忆去凑，一定会漏 —— 一处漏就整批被拒。
+
+**`event_id` 不能是空数组**：PASS/FAIL 至少 1 个；`[]` 会被判「没有证据」整批打回。
+答不出 ID 说明这条预期当时没留证据 —— 那就不该判 PASS/FAIL，按前面的判定规则记 BLOCKED。
+
+> 报 `Verified findings require an expectation and explicit evidence events` 时，
+> 缺的就是这两样之一：`expect` 空着，或者 `event_id` 是空的/不是本会话的。
+> 不用去 `--help`、也不用翻 `db.py` 找原因 —— 按这一句对号入座就行。
+
 ### ⚠️ 一批数据一次造完，再逐条操作
 
 用例写"创建各类条目（A 类型、B 类型、C 类型…），设置 X"这类**枚举型步骤**时：
@@ -314,7 +326,7 @@ python act.py tap --x <x> --y <y> --via "rid=<按钮>" --expect "rid=<落点 rid
 
 ### 上次走过的跳转步骤（`last_steps`）
 
-跑过的用例，`finish` 时会自动导出 `assets/cases/<包名>/<包名>_<编号>.steps.yaml`（用例文件名是 `<包名>_<功能>_<编号>.md`，导出的 steps 只保留结尾编号）。
+跑过的用例，`finish` 时会自动导出 `assets/cases/<包名>/<用例md文件名>_steps.yaml`（与用例 md 同名，只是后缀换成 `_steps.yaml`）。
 下次 `start` 同一条用例，返回里会带 `last_steps`：
 
 ```json
@@ -642,6 +654,8 @@ python session.py finding --status FAIL --event-id <最后一次证据> \
 ```
 
 > `--fact` 可重复传，合并成一次调（逐条调每次都要进程冷启动）。
+> 证据 ID 必须跟在 `--evidence` 后面；裸写在末尾会被当成多余参数拒掉
+> （`unrecognized arguments: 16 17`）。长文本用 `--file <json>` 更好写。
 
 **第 ③ 步必须你来做** —— 「这条卡里有没有」是语义判断，
 工具只能做完全匹配，同一件事换个说法它就认不出来了。

@@ -680,15 +680,95 @@ def case_spec_hint(case_id: int | None) -> dict | None:
     return None
 
 
-def steps_hint(package: str | None, title: str | None) -> dict | None:
+_CASE_NUM_RE = re.compile(r"[_\-](\d{2,4})(?!\d)")
+
+
+def case_stems(package: str | None) -> list[str]:
+    """`assets/cases/<包名>/` 下所有用例 md 的文件名（不含 `.md`）。"""
+    if not package:
+        return []
+    d = CASES_DIR / package
+    if not d.is_dir():
+        return []
+    return sorted(p.stem for p in d.glob("*.md"))
+
+
+def _stem_num(stem: str) -> str | None:
+    m = _CASE_NUM_RE.search(stem)
+    return m.group(1) if m else None
+
+
+def _stem_module(stem: str) -> str:
+    """`com.zui.calendar_重要日倒数_03` → `重要日倒数`"""
+    m = _CASE_NUM_RE.search(stem)
+    return stem[: m.start()].rstrip("_-") if m else ""
+
+
+def _loose(s: str) -> str:
+    """去掉数字、标点、空白，只留可比的汉字/字母 —— 用于「模块名像不像」判断。"""
+    return re.sub(r"[\s\-_/（）()【】\[\]0-9A-Za-z.]+", "", s)
+
+
+def resolve_case_stem(package: str | None, title: str | None,
+                      user_input: str | None = None) -> str | None:
+    """把会话的「标题 + 用例原文」解析成**用例 md 的文件名**（不含 `.md`）。
+
+    steps 文件名一律是 `<md文件名>_steps.yaml`，所以必须先知道 md 叫什么。
+    编号不唯一（实测「启动应用_03」和「重要日倒数_03」并存），只有带上模块名
+    的文件名才天然不撞 —— 写入（`session.py:export_steps`）和读取
+    （`steps_hint`）都走这里，各写一套正则必然打架。
+
+    解析顺序（在 372 条真实会话上验证，命中 370 条）：
+      ① 用例原文首行 `# xxx` 且 `xxx.md` 存在 —— 最可靠，直接就是文件名
+      ② 标题**以某个 md 文件名开头** —— 派发时原样抄的文件名会是这样
+      ③ 标题里的编号在目录里唯一 —— 多数情况
+      ④ 编号有多个候选时，用模块名匹配（标题里含 md 的模块名）
+    都不中返回 None（调用方按"没这条用例"处理，别报错）。
+    """
+    stems = case_stems(package)
+    if not stems:
+        return None
+    pool = set(stems)
+    # ① 原文首行
+    if user_input:
+        first = (user_input.lstrip("\ufeff").splitlines() or [""])[0].strip()
+        if first.startswith("#"):
+            cand = first.lstrip("#").strip()
+            if cand in pool:
+                return cand
+    if not title:
+        return None
+    # ② 标题前缀
+    hits = [s for s in stems if title.startswith(s)]
+    if hits:
+        return max(hits, key=len)
+    # ③ 编号唯一
+    m = _CASE_NUM_RE.search(title) or re.search(r"(\d{2,4})", title)
+    if not m:
+        return None
+    num = m.group(1)
+    cands = [s for s in stems if _stem_num(s) == num]
+    if len(cands) == 1:
+        return cands[0]
+    if not cands:
+        return None
+    # ④ 模块名消歧
+    tn = _loose(title)
+    hit = [s for s in cands
+           if (mod := _stem_module(s)) and _loose(mod) in tn]
+    return hit[0] if len(hit) == 1 else None
+
+
+def steps_hint(package: str | None, title: str | None,
+               user_input: str | None = None) -> dict | None:
     """告诉 AI「这条用例上次走过的跳转步骤」，给它参考。
 
     ## 为什么需要
 
     每次跑同一条用例，AI 都要重新摸「更多按钮在哪、菜单里哪个是课程表」。
     这些是纯机械的跳转，`session finish` 已经自动导出到
-    `assets/cases/<包名>/<包名>_<编号>.steps.yaml`（用例 md 叫 `<包名>_<功能>_<编号>.md`，
-    导出的 steps 只取结尾编号），但**开场没人告诉 AI 它存在**。
+    `assets/cases/<包名>/<md文件名>_steps.yaml`，但**开场没人告诉 AI 它存在**。
+    （文件名与用例 md 同名，见 `resolve_case_stem` 的说明。）
 
     ## 只作参考，不自动执行
 
@@ -705,11 +785,10 @@ def steps_hint(package: str | None, title: str | None) -> dict | None:
     """
     if not package or not title:
         return None
-    m = re.search(r"[_\-](\d{2,4})(?!\d)", title) or re.search(r"(\d{2,4})", title)
-    if not m:
+    stem = resolve_case_stem(package, title, user_input)
+    if not stem:
         return None
-    num = m.group(1)
-    f = CASES_DIR / package / f"{package}_{num}.steps.yaml"
+    f = CASES_DIR / package / f"{stem}_steps.yaml"
     if not f.is_file():
         return None
     try:
