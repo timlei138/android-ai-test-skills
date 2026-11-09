@@ -17,59 +17,39 @@ ROOT = Path(__file__).resolve().parent.parent
 def _resolve_storage_root() -> Path:
     """storage/ 放哪？
 
-    ## 用户要求（2026-10-27）
-
-    「storage 应该是当前工作目录下新建 storage 目录。里面有 tmp 和 record 两个路径。
-      record 里面包含 webui 相关的数据库。和每次的记录。」
-
     ## 解析顺序
 
-      ① `ANDROID_TEST_STORAGE` 环境变量  —— **显式指定，最可靠**
-      ② `cwd / "storage"`               —— 默认，用户要的就是这个
-      ③ 都写不了 -> 返回 ②，让上游第一次写就报错，**不静默换地方**
-
-    ## 为什么不再"自动上溯找能写的地方"（踩过两次）
-
-    子 Agent 跑在 DSH 沙箱里（workspace-write，只能写 workspace 根）。
-    它为了跑 `python tools/xxx.py` 通常先 cd 到 skill 项目目录（沙箱外）。
-
-      · 第一版：`cwd/storage` -> D:\\Project\\...\\storage -> WinError 5
-      · 第二版：写不进去就上溯 -> 找到 D:\\Project\\storage -> 还是沙箱外
-
-    而且 `_writable()` 探测在子 Agent 进程里**不可信**：
-    进程本身有管理员权限，探针能过，但真正的写入被 DSH 沙箱拦掉。
-
-    **所以不再猜。** 显式指定（环境变量）是唯一可靠的路，
-    默认值只保证"本地正常使用"这一种情况。
-
-    ## 解析顺序
-
-      ① `ANDROID_TEST_STORAGE` 环境变量
-      ② **`ROOT / "storage"`**  ← 工具层旁边（bootstrap 的标准形态）
+      ① `ANDROID_TEST_STORAGE` 环境变量  —— 显式指定，最可靠
+      ② **`ROOT / "storage"`**  ← 工具层在 cwd 之下时，产物放工具层旁边
       ③ `cwd / "storage"`        ← 兜底
 
-    ## 为什么改成"工具层旁边"优先
+    ## 为什么 ② 优先
 
-    bootstrap 会把工具层拷到 `<workspace>/android-ai-test/`，之后一切走那份。
-    此时理想形态是：
+    理想形态是三者并排、自包含：
 
-        <workspace>/android-ai-test/
-            tools/  assets/  storage/     ← 三者并排，自包含
+        <target>/
+            tools/  assets/  storage/
 
-    但 ② 之前是 `cwd/storage`，而子 Agent 的 cwd 通常是 `<workspace>`，
-    于是 storage 会跑到 `<workspace>/storage/`，和 `android-ai-test/` 并排 ——
-    看起来"东西散了两处"，而且换个工具层副本就分不清谁是谁的产物。
+    这样"哪个副本在用，产物就在那份里"，换一份工具层不会分不清谁的产物。
 
-    **工具层旁边**才符合直觉：哪个副本在用，产物就在那份里。
+    如果 ② 反过来（cwd 优先），而调用方 cwd 是 target 的上一级，
+    产物就会落在 `<cwd>/storage/`，和 `tools/`、`assets/` 拆成两处 ——
+    看起来像"东西散了两处"。
 
-    ## 什么时候还看 cwd
+    ## 什么时候退回 cwd
 
-    工具层直接从安装位置跑（没 bootstrap）时，`ROOT/storage` 是安装目录 ——
-    那里不该放产物（用户原话「storage 的数据不应该提交」）。
-    这种情况退回 cwd。
+    工具层在 cwd 之外（直接从安装位置跑，没有独立副本）时，
+    `ROOT/storage` 是安装目录 —— 那里不该放产物（用户原话
+    「storage 的数据不应该提交」）。这种情况退回 cwd。
 
-    判定"工具层是不是某个 workspace 里的副本"：看它是否在 cwd 之下。
-    是 -> 用 ROOT/storage（自包含）；否 -> 用 cwd/storage。
+    判定方法：看 `ROOT` 是否在 cwd 之下。是 -> `ROOT/storage`；否 -> `cwd/storage`。
+
+    ## 为什么不"自动上溯找能写的地方"
+
+    早期试过写不进去就往上找可写目录。两个问题：
+    探测本身不可信（进程权限和实际写入能力可以不一致），
+    而"悄悄换个地方落库"会让 AI 以为自己在用 A 库、实际写的是 B 库。
+    **所以不猜。** 环境变量显式指定，或按上面的固定规则解析。
     """
     explicit = (os.environ.get("ANDROID_TEST_STORAGE") or "").strip()
     if explicit:
@@ -78,14 +58,14 @@ def _resolve_storage_root() -> Path:
     cwd = Path.cwd().resolve()
     root = ROOT.resolve()
 
-    # 工具层在工作目录下（bootstrap 拷过来的一份）-> 产物放它旁边
+    # 工具层在 cwd 之下 -> 产物放工具层旁边（自包含）
     try:
         if root.is_relative_to(cwd):
             return (root / "storage").resolve()
     except (OSError, ValueError):
         pass
 
-    # 工具层在别处（直接从安装位置跑）-> 产物放 cwd，别写进安装目录
+    # 工具层在 cwd 之外（安装位置）-> 产物放 cwd，别写进安装目录
     return (cwd / "storage").resolve()
 
 

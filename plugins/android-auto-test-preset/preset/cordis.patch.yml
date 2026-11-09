@@ -66,7 +66,7 @@
 
               ## 命令：能用 android_* 就别用 bash
 
-              android_read_file(card="<包名>", section="课程表")             读知识卡+路径卡
+              android_read_file(card="<包名>", section=["课程表", "空状态"])   读知识卡+路径卡
               android_read_file(path="<target>/assets/cases")              看用例目录
               android_read_file(path="<target>/assets/cases/<包名>/<用例md文件名>")   读用例原文
 
@@ -387,8 +387,8 @@
       id: android-executor
       name: Android 用例执行
       description: >-
-        执行子 Agent：用 bash 跑工具层（act/observe/session），按 SKILL 自己判断
-        每一步、自己记断言。不禁手脚，只禁改源码。
+        执行子 Agent：动设备、看屏幕走 android_* 工具，只有 session.py 用 bash。
+        按 SKILL 自己判断每一步、自己记断言。不禁手脚，只禁改源码。
       # order 比主 Agent 大 —— 它是被派发的执行者，不该排在主列表前面
       order: 51
       plugins:
@@ -417,6 +417,7 @@
                             · android_vision    —— **视觉模型，读图标/颜色/布局**
                             · android_read_file —— **读知识卡 + 路径卡**（UTF-8，永不乱码）
                             · android_perm      —— **查/授/撤权限**（走 adb，不走弹窗）
+                            · android_state     —— **清数据 / 起停 App**（只在用例明确要求时用）
                             · bash              —— 只用来跑 `session.py`（开会话、记断言、收尾）
                                                   动设备、看屏幕一律走 android_* 工具，不要用 bash
                             · read/glob/grep    —— 读 SKILL.md、读知识卡、看用例 md
@@ -446,13 +447,11 @@
 
                             OCR 读不清就换 `android_vision` 问一句。
 
-                            **`android_vision` 用不了时**，才退到 `read_image`（DSH 内置的看图，
-                            但当前模型可能不支持读图，会失败）。
-
                             ## ⓪ 第一步：android_env，然后先查卡
 
                             开工第一条就调 `android_env`（不需要参数）。它返回 platform /
-                            shell / storage —— storage 是产物落点。
+                            shell / storage（产物落点）/ deps_ok（依赖装好没）/
+                            device（serial、输入法是否就绪）。
 
                             ### 然后立刻查知识卡 + 路径卡（一次调用搞定）
 
@@ -478,8 +477,8 @@
                             # 不知道从哪下手 -> 先看目录
                             android_read_file(card="com.zui.calendar")
 
-                            # 按主题精确读（多节合并，超 8000 字符会截断）
-                            android_read_file(card="com.zui.calendar", section="课程表")
+                            # 按主题精确读（section 是数组，可一次读多节；超 8000 字符会截断）
+                            android_read_file(card="com.zui.calendar", section=["课程表", "空状态"])
 
                             # 找具体 rid / activity / 文案
                             android_read_file(card="com.zui.calendar", grep="TimetableActivity")
@@ -491,6 +490,7 @@
                             android_observe()
                             android_act(action="tap", x=1520, y=961, via="rid=btn_ok", why="提交表单")
                             android_act(action="input", x=1520, y=375, text="高数", via="rid=et_name")
+                            android_act(action="input", x=1520, y=375, text="", via="rid=et_name")   # 清空
                             android_act(action="swipe", from="540,2000", to="540,800", dur=300)
                             android_act(action="back")
                             android_read(region="0,200,3040,600")
@@ -498,7 +498,7 @@
 
                             **参数是结构化 JSON，不走 shell 解析** —— 所以：
 
-                            ✅ 中文、弯引号 “ ”、空格、等号，**原样传就行**
+                            ✅ 中文、弯引号 “ ”、空格、等号、空字符串，**原样传就行**
                             ❌ 不要 `bash` 里跑 `python act.py ...`（那是老路子，
                             每一个会话都在它的引号和 `&` 前缀上白跑一轮）
 
@@ -555,6 +555,21 @@
                               「is managed by role」—— **那是系统限制，不是用例失败**，如实记 BLOCKED 即可
                             · **一个 case 查一次就够**，不必每步都查
 
+                            ## 清数据 / 起停 App：`android_state`
+
+                            **只在用例明确要求时用**（用例写「首次使用」「清理数据」才清）。
+
+                            ```
+                            android_state(action="clear", package="com.zui.calendar")        # 清数据
+                            android_state(action="start", package="...", activity="...")     # 起 App
+                            android_state(action="stop",  package="...")                     # 停 App
+                            android_state(action="grant", package="...", perm="camera")      # 授权限
+                            android_state(action="revoke", package="...", perm="camera")     # 撤权限
+                            ```
+
+                            · 用例没写清理 → **什么都不做**（清理不是你的收尾动作，见 SKILL）
+                            · 清完数据下次进 App 会重弹隐私协议 + 权限框，那是正常的
+
                             ## serial
 
                             只有一个设备时不用传 `serial`，工具自己会用当前连着的设备。
@@ -595,7 +610,8 @@
 
                             每步的 `dump.xml` 落盘了，但**去 grep 它是重复劳动**：
                             `android_observe` / `android_act` 返回的 `nodes` 就是它的结构化版本
-                            （`i`=序号 `c`=坐标 `t`=文字 `r`=rid `d`=desc）。
+                            （`i`=序号 `c`=坐标 `t`=文字+desc `r`=rid `s`=可滑动 `off`=不可用
+                            `checked`/`selected`=选中态；**没有单独的 `d` 键，desc 已并进 `t`**）。
 
                             要看全量就 `android_observe(full=true)`。
 
@@ -643,16 +659,8 @@
 
         # ── ★ 核心：shell ───────────────────────────────────────────────
         #
-        # 这是新旧方案最大的区别。
-        #
-        # 旧方案不给 bash，只给一个 android_case 工具，然后用 18851 行
-        # Python 去猜 AI 想要什么。实测两周，修的 7 个 bug 全是那层中间件。
-        #
-        # 给 bash 之后 AI 能做的事：
-        #   · python tools/act.py tap --x .. --y ..   （执行动作）
-        #   · python tools/observe.py                  （看屏）
-        #   · grep bounds dump.xml                     （找控件坐标）
-        #   · python -c "from PIL import Image..."     （像素统计）
+        # 动设备/看屏幕走原生 android_* 工具（见下面 android-tools 段），
+        # bash 只剩一个职责：跑 session.py（开会话 / 记断言 / 收尾）。
         #
         # ⚠️ bash 能跑 python，但 write/edit 关着 ——
         #    它能执行工具，不能改工具。这个边界很重要：

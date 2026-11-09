@@ -34,9 +34,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from common import ensure_utf8_stdio  # noqa: E402
+from common import apply_stdin_args, ensure_utf8_stdio  # noqa: E402
 from runtime import (  # noqa: E402
-    KNOWLEDGE_DIR, RECORD_DIR, STORAGE_DIR, TMP_DIR, detect_shell,
+    KNOWLEDGE_DIR, RECORD_DIR, ROOT, STORAGE_DIR, TMP_DIR, detect_shell,
 )
 
 # 必须第一件事就切 UTF-8。
@@ -62,6 +62,22 @@ def _deps_ok() -> str:
 
 
 IME_OK = "com.github.uiautomator/.AdbKeyboard"
+
+
+def _storage_source() -> str:
+    """storage/ 是按哪条规则定下来的 —— 和 runtime._resolve_storage_root() 的三档对应。
+
+    为什么要报出来：AI 看到「storage 在哪」才知道产物落哪；看到「按哪条规则定的」
+    才能在换机器 / 换 cwd 之后判断"这个路径对不对"，而不是等到写不进去才怀疑工具坏了。
+    """
+    if (os.environ.get("ANDROID_TEST_STORAGE") or "").strip():
+        return "env:ANDROID_TEST_STORAGE"
+    try:
+        if ROOT.resolve().is_relative_to(Path.cwd().resolve()):
+            return "工具层在 cwd 之下 -> <target>/storage"
+    except (OSError, ValueError):
+        pass
+    return "工具层在 cwd 之外 -> cwd/storage"
 
 
 def _device() -> dict:
@@ -121,6 +137,10 @@ def _device() -> dict:
 
 
 def main() -> None:
+    # ★ 必须在判断 --json 之前调：插件走 `env.py --stdin-json` 把参数塞 stdin，
+    #   apply_stdin_args() 会把 sys.argv 换成 JSON 里的参数（可能含 --json）。
+    #   放后面就会出现「AI 传了 --json 却拿到人类可读文本」的老问题。
+    apply_stdin_args()
     env = detect_shell()
     if "--json" in sys.argv:
         payload = dict(env)
@@ -141,10 +161,7 @@ def main() -> None:
             "deps_ok": _deps_ok(),
             # ★ 设备和输入法：主 Agent 开工就看到，别等子 Agent 跑到打字那步才炸
             "device": _device(),
-            "storage_source": (
-                "env:ANDROID_TEST_STORAGE"
-                if os.environ.get("ANDROID_TEST_STORAGE")
-                else "默认 = cwd/storage"),
+            "storage_source": _storage_source(),
         })
         print(json.dumps(payload, ensure_ascii=False, indent=2))
         return
@@ -157,9 +174,7 @@ def main() -> None:
     print()
 
     # ── 产物目录：这个必须打出来，AI 才能确认它对不对 ────────────
-    src = ("环境变量 ANDROID_TEST_STORAGE"
-           if os.environ.get("ANDROID_TEST_STORAGE")
-           else "默认 = 当前工作目录下的 storage/")
+    src = _storage_source()
     print("★ 用这个解释器跑后面的所有命令：")
     print(f"  {sys.executable}")
     deps = _deps_ok()

@@ -571,7 +571,10 @@ def main() -> None:
     timed_call("settle_wait", time.sleep, args.settle / 1000)
     _is_click = args.action in ("tap", "longclick")
 
-    png, xml, meta = evidence_paths(args.dir, args.name)
+    # ⚠️ evidence_paths() 在下面第 638 行左右只调**一次**，别在这里再调一遍。
+    #   它内部会 mkdir + auto_name() 自增序号：调两次就会多建一个空目录、
+    #   并且把 step 号用掉一个（实测 1000182 的 54 个 act 建了 116 个目录、
+    #   其中 54 个是空的）。
     # ⚠️ 必须按 action 分支求值：字典字面量会**同时**求值所有 value，
     # 而 tap 没有 args.text / swipe 没有 args.x / back 没有 args.code
     # → AttributeError 让除 input 外的所有动作在采集阶段直接崩（真实事故）。
@@ -776,9 +779,6 @@ def main() -> None:
         info = {**info, "checkpoint": _ck}
         detail += (" · ✅检查点命中" if _ck["ok"]
                    else " · ⚠️检查点未命中: " + "; ".join(_ck["missed"]))
-    _transient = checkpoint.detect_transient(_sig)
-    if _transient:
-        info = {**info, "transient_popup": _transient}
     duration_ms = round((time.perf_counter() - t0) * 1000)
     info["duration_scope"] = "core operation through capture/signature/crash check; excludes connection, event write and response"
     log_auto("act", f"act {args.action}", detail, info, rel(png), duration_ms, started_at)
@@ -825,11 +825,6 @@ def main() -> None:
                 "⚠️ 落点与预期不符：未命中 " + "; ".join(_ck["missed"]) + "。"
                 "先判断是「多余的临时弹窗」（不影响主流程 → 关掉继续）还是"
                 "「用例要的东西不存在了」（主流程被改 → 停止并如实记录）。")
-    if _transient:
-        payload["transient_popup"] = _transient
-        payload["transient_hint"] = (
-            "检测到已知临时弹窗，可关闭后继续（不影响主流程）。"
-            "若它每次都出现，则应作为流程节点记入路径图，而非当弹窗处理。")
     if perm_result and perm_result.get("detected"):
         payload["permission"] = perm_result
         if not (perm_result.get("clicks") or []):

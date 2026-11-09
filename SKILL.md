@@ -9,8 +9,8 @@ description: Android 真机 GUI 测试。当用户给出测试用例（步骤+�
 >
 > | 什么时候读 | 读哪个 |
 > |---|---|
-> | 命令参数不确定 / 环境问题 | `docs/环境与工具.md` |
-> | 批量走路径(act steps) / 崩溃处理 / 报错分档 | `docs/执行参考.md` |
+> | 工具没返回预期结果 / 环境问题 / 参数不确定 | `docs/环境与工具.md` |
+> | 崩溃处理 / 报错分档 | `docs/执行参考.md` |
 > | 知识卡与路径图怎么写 / OCR 读不到的文字 | `docs/知识卡与路径图.md` |
 
 ## 你的角色：执行测试的人
@@ -53,7 +53,7 @@ description: Android 真机 GUI 测试。当用户给出测试用例（步骤+�
 | 用例怎么写的 | 你要做的 |
 |---|---|
 | 前提/步骤**明确要求**某状态 | 去准备（该建的建、该删的删）。**必须做，不能省** |
-| 前提要求「首次使用 / 清理数据」 | 才 `state.py clear`（一次性引导弹窗只有清数据才会再出现） |
+| 前提要求「首次使用 / 清理数据」 | 才 `android_state(action="clear", package=<包名>)`（一次性引导弹窗只有清数据才会再出现） |
 | 用例**没提**清理 | 跑完**什么都不做**，原样留着 |
 | 拿不准算不算"要求了" | **按"没要求"处理**（不动），在 summary 里写明为什么没动 |
 
@@ -65,7 +65,7 @@ description: Android 真机 GUI 测试。当用户给出测试用例（步骤+�
 > ⚠️ **别读反**：不是"任何时候都不清理"。用例要求清就必须清 ——
 > 否则前置不满足，这条用例根本没在测它要测的东西。
 
-> ⚠️ **`state.py clear` 是大锤**：它把权限、设置、用户数据一起清掉，
+> ⚠️ **`android_state(action="clear")` 是大锤**：它把权限、设置、用户数据一起清掉，
 > 后续每条都要重走"首次启动三连 + 权限授予"，既慢又不像真实用户。
 > 只有用例明写「首次使用 / 首次打开 / 升级后首次 / 清理APP数据」时才用。
 
@@ -89,17 +89,26 @@ description: Android 真机 GUI 测试。当用户给出测试用例（步骤+�
 
 ## 最小工作流
 
-```powershell
-# ① 开会话（已有正式用例时用 --case <id> 复用）
-python session.py start --case 1 --device <serial> --package com.app
+**动设备、看屏幕、读文件，一律走 `android_*` 工具**（参数是结构化 JSON，不走 shell 解析，
+引号/中文/`&`/`%` 都不会出问题）。只有 `session.py` 用 bash 跑。
 
-# ② 执行：act 每次自动回传动作后的画面（截图 + dump + nodes）
-python act.py --serial <s> tap --x <x> --y <y> --via "rid=<目标 rid>" --why "点保存"
-
-# ③ 记断言（按预期逐条记）→ ④ 收尾
-python session.py findings-batch --file <target>\storage\tmp\facts.json
-python session.py finish --status FAIL --summary "<结论 + 设备当前状态>"
 ```
+① 开会话（已有正式用例时用 case 参数复用）
+   bash: & "<toolkit>\.venv\Scripts\python.exe" "<toolkit>\tools\session.py" `
+           start --title "<标题>" --input "@<用例文件>" --package <包名> --device <serial>
+
+② 执行：android_act 每次自动回传动作后的画面（截图 + dump + nodes）
+   android_act(action="tap", x=<x>, y=<y>, via="rid=<目标 rid>", why="点保存")
+
+③ 记断言（按预期逐条记）→ ④ 收尾
+   bash: & "<toolkit>\.venv\Scripts\python.exe" "<toolkit>\tools\session.py" `
+           findings-batch --file "<target>\storage\tmp\facts.json"
+   bash: & "<toolkit>\.venv\Scripts\python.exe" "<toolkit>\tools\session.py" `
+           finish --status FAIL --summary "<结论 + 设备当前状态>"
+```
+
+> `<toolkit>` = 工具层根目录（`android_env()` 返回的 `storage_dir` 上一级）。
+> 开会话是**唯一必须用 bash** 的命令，其余一律走工具。
 
 > `--summary` 里**必须带上设备当前停留的状态**（现存几条数据、停在哪个页面），
 > 这是给下一条用例的交接信息 —— 跑完**不做任何清理**，见「只做用例要求的事」。
@@ -139,10 +148,11 @@ python session.py finish --status FAIL --summary "<结论 + 设备当前状态>"
 ]
 ```
 
-写成 `<target>\storage\tmp\facts.json`，然后：
+写成 `<target>\storage\tmp\facts.json`，然后（bash）：
 
 ```powershell
-session.py findings-batch --file "<target>\storage\tmp\facts.json"
+& "<toolkit>\.venv\Scripts\python.exe" "<toolkit>\tools\session.py" `
+    findings-batch --file "<target>\storage\tmp\facts.json"
 ```
 
 > 逐条调每次约 6 秒（AI 思考 + 进程冷启动），9 条断言要 50 秒以上。
@@ -152,7 +162,7 @@ session.py findings-batch --file "<target>\storage\tmp\facts.json"
 
 #### ⚠️ `event_id` 边做边抄，不要留到最后
 
-每次 `act` / `observe` 的返回里都有 `event_ids`。**做完一步就把用到的 ID 记在你的
+每次 `android_act` / `android_observe` 的返回里都有 `event_ids`。**做完一步就把用到的 ID 记在你的
 草稿里**（哪个 ID 证明哪条预期）。留到最后靠回忆去凑，一定会漏 —— 一处漏就整批被拒。
 
 **`event_id` 不能是空数组**：PASS/FAIL 至少 1 个；`[]` 会被判「没有证据」整批打回。
@@ -174,63 +184,65 @@ session.py findings-batch --file "<target>\storage\tmp\facts.json"
 用例关心的是**后面那个动作**（通知行为），不是"每类都单独跑一遍"。
 这类"批量建数据 + 单点验证"的用例很常见，别把它读成串行任务。
 
-### ⚠️ 重复手势用 `--repeat`，**别拆成 N 次调用**
+### ⚠️ 重复手势用 `repeat`，**别拆成 N 次调用**
 
-拨滚轮、连点加减号这类"同一动作重复 N 次"，**用 `act tap --repeat N`**（可加 `--gap 毫秒`）——
+拨滚轮、连点加减号这类"同一动作重复 N 次"，**用 `android_act(action="tap", repeat=N)`**（可加 `gap` 毫秒）——
 N 次点按在**一个进程内**完成：
 
 ```
-✅ act tap --x <x> --y <y> --repeat 6          # 一次调用点 6 格
-❌ for i in 1..6 { run.py act tap --x <x> --y <y> }   # 6 次冷启动 → 超时 → 会话作废
+✅ android_act(action="tap", x=<x>, y=<y>, repeat=6)      # 一次调用点 6 格
+✅ android_act(action="tap", x=<x>, y=<y>, repeat=6, gap=80)
+❌ 用 bash 循环 6 次、每次冷启动跑一遍工具       # 6 次冷启动 → 超时 → 会话作废
 ```
 
 - 点按滚轮选中行的**上一格/下一格**即 ±1，**点几次就是几格**，不需要点一次观察一次
-- ❌ 不要用外层 shell 循环包 N 次 `run.py`：每次冷启动 Python 3-6 秒，极易撞命令超时；
+- ❌ 不要用外层 shell 循环包 N 次：每次冷启动 Python 3-6 秒，极易撞命令超时；
   而**超时会让动作"执行了但没记账"**，会话随即被判 `recording incomplete` 而作废
 - ❌ 拨滚轮也别用 `swipe`：有惯性会过冲，且每次都要一次工具往返
 
-### ⚠️ `act.py` 只按坐标点击，没有 text/desc 选择器
+### ⚠️ `tap` / `longclick` 只按坐标点击，没有 text/desc/id 选择器
 
-`tap` / `longclick` **必须**给 `--x --y`，坐标从**本次** `observe` 的 `next[].c` 取。
+`tap` / `longclick` **必须**给 `x` `y`，坐标从**上一次返回**的 `next[].c` 取
+（`android_act` 和 `android_observe` 都会给）。
 
 **为什么**：`t`（text）定位在**同 rid 多态**时不可靠（一个 `android:id/button1`
 可能是"删除/完成/确定"），坐标由本次 dump 现场派生才准。
 
-传了 `--text/--id/--desc` 会**直接参数报错**（不会执行）——
+传 `text` / `id` / `desc` 会**直接参数报错**（不会执行）——
 这不是"少传参数"，换成坐标即可。
 
-### ⚠️ 清空输入框用 `--text=`，不要连按退格
+> `longclick` 不支持 `repeat`（只有 `tap` 支持）。
 
-要清空一个输入框，**一次调用**就够：
+### ⚠️ 清空输入框：`text=""`
 
-```bash
-python act.py input --x <x> --y <y> --text= --via "rid=<输入框 rid>" --why "清空"
+要清空一个输入框，**一次调用**就够 —— 直接传空字符串：
+
+```
+android_act(action="input", x=<x>, y=<y>, text="", via="rid=<输入框 rid>", why="清空")
 ```
 
-**必须写成 `--text=`（等号形式）**。写成 `--text ""` 在 PowerShell 里
-**空串会被整个丢掉**，实际传成 `['--text']`，argparse 报
-`expected one argument` —— 看着像"工具不支持空文本"，其实是 shell 传参，
-换成 `--text=` 即可（`--text ""` → 丢弃；`--text=` → 正确传入空串）。
+`text` 走的是 stdin 的 JSON，不经 shell 解析，**空串能原样传进去**。
+（覆盖式输入是默认行为：不传 `append: true` 就是先清空再输入。）
 
 > 🩸 **别用退格清空 —— 会锁死会话。**
-> 连发 N 次 `act key` 时，外层循环超时被杀会留下未结束记录，会话只能以 ERROR 收尾。
-> 一次 `--text=` 就够。
+> 连发 N 次 `android_act(action="key", code=67)` 时，外层循环超时被杀会留下未结束记录，
+> 会话只能以 ERROR 收尾。一次 `text=""` 就够。
 
-### ⚠️ 用 `--expect` 让工具判落点，别自己读 dump 认页面
+### ⚠️ 用 `expect` 让工具判落点，别自己读 dump 认页面
 
-每个 `act` 都可以带 `--expect` 声明**这一步之后应该在哪个页面**。
+每个 `android_act` 都可以带 `expect` 声明**这一步之后应该在哪个页面**。
 工具执行完直接告诉你命中没有 —— **不用再去读 dump 自己判断**。
 
-```powershell
-python act.py tap --x <x> --y <y> --via "text=<入口>" --expect "activity=<目标页>"
-python act.py tap --x <x> --y <y> --via "rid=<按钮>" --expect "rid=<落点 rid>"
+```
+android_act(action="tap", x=<x>, y=<y>, via="text=<入口>", expect="activity=<目标页>")
+android_act(action="tap", x=<x>, y=<y>, via="rid=<按钮>", expect="rid=<落点 rid>")
 
-# 多个条件 = AND（逗号）；任一 = OR（竖线）
---expect "activity=<页A>,rid=<元素 rid>"
---expect "activity=<页A>|activity=<页B>"
+多个条件 = AND（逗号）；任一 = OR（竖线）
+  expect="activity=<页A>,rid=<元素 rid>"
+  expect="activity=<页A>|activity=<页B>"
 ```
 
-> `--expect` 首选 **activity 名**（真跳转）；同一 activity 内的形态变化（空态/有内容）
+> `expect` 首选 **activity 名**（真跳转）；同一 activity 内的形态变化（空态/有内容）
 > 用 **rid** 区分。
 
 返回里多了 `checkpoint`：
@@ -254,19 +266,19 @@ python act.py tap --x <x> --y <y> --via "rid=<按钮>" --expect "rid=<落点 rid
 >
 > 白名单外的意外画面 → 停，如实记录，按判定规则给状态（别猜）。
 
-### ⚠️ `--expect` 从哪来：已知落点才写得出来
+### ⚠️ `expect` 从哪来：已知落点才写得出来
 
 | | 怎么走 |
 |---|---|
 | **已记录的落点**（路径图里有 / 上一轮跑过） | 每步都带上，落点交给工具判 |
-| **第一次走的新路** | 先跑一步，看返回的 `activity`，下一跳就把这个落点写进 `--expect` |
+| **第一次走的新路** | 先跑一步，看返回的 `activity`，下一跳就把这个落点写进 `expect` |
 
 > 第一轮慢是**在采信息**（省下的正是"两次调用之间读 dump 认页面"）。
 > 但同一个用例第二次跑还一样慢，说明**落点没沉淀进路径图** —— 路径图是 `finish` 时自动采的。
 
 **落点不用你手写进路径图**：`finish` 会自动把「从哪来 → 点了什么 → 到哪去」采成草稿
-`storage/pending_paths.md`，人工确认后才入库。你只要保证每步 `act` 都带 `--via`（记清点了什么）
-和 `--expect`（记清该到哪），采集靠这两样。
+`storage/pending_paths.md`。你只要保证每步 `android_act` 都带 `via`（记清点了什么）
+和 `expect`（记清该到哪），采集靠这两样。
 
 ### ⚠️ 开场三步：读前提 → 定位 → 决定起点
 
@@ -308,7 +320,7 @@ python act.py tap --x <x> --y <y> --via "rid=<按钮>" --expect "rid=<落点 rid
 "knowledge_hint": {
   "package": "<被测包名>",
   "how_to_read": "android_read_file(card=\"<包名>\", query=\"<用例要干什么>\")",
-  "how_to_read_section": "android_read_file(card=\"<包名>\", section=\"A\", section=\"B\")",
+  "how_to_read_section": "android_read_file(card=\"<包名>\", section=[\"A\", \"B\"])",
   "sections": ["<小节1>", "<小节2>", ...],
   "system_card": "assets/knowledge/_system.md"
 }
@@ -318,21 +330,26 @@ python act.py tap --x <x> --y <y> --via "rid=<按钮>" --expect "rid=<落点 rid
 返回的每个 match 里 **`body` 已经是该小节全文**（不是摘要），
 看完就能动手，**不要再回头把同一节读一遍**。
 
-**要看具体某几节，用 `how_to_read_section`，`section` 可以重复传多个** ——
-一次读完所有要看的节，别一节一次调（每节一次约 3 秒）。
+**要看具体某几节，用 `how_to_read_section`，`section` 是数组** ——
+一次读完所有要看的节，别一节一次调（每节一次约 3 秒）：
+
+```
+android_read_file(card="<包名>", section=["<小节1>", "<小节2>"])
+```
 
 ⚠️ **不要用 `path=` 整份读卡**（`android_read_file(path="assets/knowledge/...md")`）——
 整卡 2 万字，读两次就把上下文挤满了。
 
 ### 上次走过的跳转步骤（`last_steps`）
 
-跑过的用例，`finish` 时会自动导出 `assets/cases/<包名>/<用例md文件名>_steps.yaml`（与用例 md 同名，只是后缀换成 `_steps.yaml`）。
+跑过的用例，`finish` 时会自动导出
+`assets/cases/<包名>/<用例md文件名>_steps.yaml`（**与用例 md 同名的 stem + `_steps.yaml`**）。
 下次 `start` 同一条用例，返回里会带 `last_steps`：
 
 ```json
 "last_steps": {
   "start_from": "activity=<起点 Activity>",
-  "step_count": 8,
+  "step_count": "8",
   "truncated": false,
   "steps": [
     {"via": "rid=<入口>", "expect": "rid=<落点>", "in_page": true},
@@ -394,33 +411,33 @@ python act.py tap --x <x> --y <y> --via "rid=<按钮>" --expect "rid=<落点 rid
 **只有一种：这一步操作改变了状态，新状态需要重新看。**
 （比如改完设置回来看效果、保存后重进页面。）
 
-「我刚才没看清」**不是**回头复验的理由 —— 那是当时就该用 `read`/`--full` 看清。
+「我刚才没看清」**不是**回头复验的理由 —— 那是当时就该用 `android_read`/`full` 看清。
 「我不确定这条算不算过」也不是 —— 不确定就在**当下**补一次证据，不要走过去再折返。
 
-> 🔴 **现场信号**：当你发现自己对**同一块屏幕区域**做第二次 `read`/`observe`，
+> 🔴 **现场信号**：当你发现自己对**同一块屏幕区域**做第二次 `android_read`/`android_observe`，
 > 立刻停下 —— 问「我这次想确认什么？」，答案是"刚才就该看清"的话，
 > 直接按已有证据判掉，别再扫。
 
 ### 操作循环：**每一步都是一个 act，从它的 `next` 里找下一个目标**
 
 ```
-act（--full 当步要断言时）
+android_act（要断言时加 full=true）
   ↓ 返回里有 `next`：[{c:[x,y], t:文字, r:rid}, …]  ← 精简可点清单
   ↓ 直接从 next 里挑目标
-act …
+android_act …
 ```
 
 > ### ⚠️ 第一反应必须是「看 next」，不是「再 observe 一下」
 >
 > 拿到上一步的返回后，**先读 `next`** —— 下一个点哪、坐标多少、叫什么，它已经给了。
-> **不要下意识地再起一次 `observe` 去看屏幕/拿坐标。**
+> **不要下意识地再起一次 `android_observe` 去看屏幕/拿坐标。**
 >
 > ```
-> ✅ act → 读 next → 挑目标 → act
-> ❌ act → observe（拿坐标）→ act → observe → …    ← 每步多一次往返
+> ✅ android_act → 读 next → 挑目标 → android_act
+> ❌ android_act → android_observe（拿坐标）→ android_act → observe → …   ← 每步多一次往返
 > ```
 >
-> **`observe.py` 只在两种情况下用**：
+> **`android_observe` 只在两种情况下用**：
 > ① 会话第一步（还没有任何 act 的返回可用）
 > ② 上一步返回的 `next`/`nodes` 里**找不到**目标（可能需滚动/换页）
 >
@@ -432,9 +449,9 @@ act …
 >
 > 🔴 **现场信号**：一旦你发现自己在**对同一个目标连续 act 第二次以上**，
 > 就说明方向错了 —— 停下来查知识卡，别继续试。
-> 重复手势用 `--repeat N`；滚轮类控件**绝对不要用 `swipe`**（有惯性会过冲）。
+> 重复手势用 `repeat=N`；滚轮类控件**绝对不要用 `swipe`**（有惯性会过冲）。
 
-**`act` 的返回已经给了你两样东西**：
+**`android_act` 的返回已经给了你两样东西**：
 
 | 字段 | 用途 |
 |---|---|
@@ -442,26 +459,28 @@ act …
 | `activity` / `nodes` | 当前画面状态（断言用） |
 
 > ⚠️ **说"某元素不存在"之前，先按 rid/文字在完整 dump 里搜一遍** ——
-> 不要只看输出开头几条就下结论。用 `grep`/`Select-String` 搜 `<rid 或文字>`，命中即存在。
+> 不要只看输出开头几条就下结论。用 `full=true` 拿全量 nodes，或 `android_read_file`
+> 的 `grep` 搜 rid/文案，命中即存在。
 
-> ⚠️ **验证类步骤用 `act --full`**：一次调用同时给「动作 + 全量节点文字」，
+> ⚠️ **验证类步骤用 `full=true`**：一次调用同时给「动作 + 全量节点文字」，
 > **它自己就是检查点**（`activity` + 文本即判据）。
 
 > ⚠️ **纯验证步也不要"做个小动作"来凑一次返回。**
 >
-> 想验证时，用**已有信息**判断（上一步 `act` 的 `activity`/`nodes`、`read.py` 的 OCR），
+> 想验证时，用**已有信息**判断（上一步 `android_act` 的 `activity`/`nodes`、`android_read` 的 OCR），
 > 而不是"点一下/滑一下看看" —— 那一下可能真的改了状态，还会在执行记录里留一条**假步骤**。
-> 确实只需"看一眼"时用 `observe.py`（它不产生动作）。
+> 确实只需"看一眼"时用 `android_observe`（它不产生动作）。
 
-**等待时间**：启动 App / force-stop 后用 `Start-Sleep -Seconds 2` 即可，
-不要动辄等 6 秒——后续 `observe`/`act` 本身就会等画面稳定。
+**等待时间**：启动 App / force-stop 之后**直接 `android_observe` 就行** ——
+它会等画面稳定；`android_act` 也可以加 `settle` 毫秒数（默认 500）加大稳定窗口。
+不必额外 sleep。
 
 ### nodes 两种模式
 
 | 模式 | 内容 | 何时用 |
 |---|---|---|
 | **nav（默认）** | **可点 + 可滑动**节点，短键名 | 找"下一步点哪"——绝大多数步骤 |
-| **full（`--full`）** | 全部有语义节点，完整字段名 | 要按**页面文字**断言 / nav 里找不到目标时 |
+| **full（`full=true`）** | 全部有语义节点，完整字段名 | 要按**页面文字**断言 / nav 里找不到目标时 |
 
 **nav 模式的字段**（短键名）：
 
@@ -475,23 +494,23 @@ act …
 | `off` | 不可用（disabled） |
 | `checked` / `selected` | 选中态 |
 
-> ⚠️ **要断言"页面上出现了什么文字"（提示语、列表项）时必须 `--full`** ——
+> ⚠️ **要断言"页面上出现了什么文字"（提示语、列表项）时必须 `full=true`** ——
 > nav 只含可点/可滑动节点，非可点的文本会被漏掉、误判 FAIL。
 > 返回里 `nodes_mode` 标明当前模式。
 
 **默认还会过滤非当前前台包的节点**（状态栏/导航栏/桌面 taskbar 等噪音，实测省 66%）。
 按"**前台包**"过滤而非"被测包"——这样崩溃回落桌面、系统权限弹窗、跳到相机/图库时
-都能正常看见（若按被测包过滤会把这些滤空）。需要全量加 `--no-filter`。
+都能正常看见（若按被测包过滤会把这些滤空）。需要全量加 `noFilter=true`。
 
 ### 截图：每次都留痕，但不要每次都看
 
-`act`/`observe` 每次**自动截图落盘**（证据链，必须保留），但**不要习惯性去读图**——
+`android_act`/`android_observe` 每次**自动截图落盘**（证据链，必须保留），但**不要习惯性去读图**——
 读图是把整张图喂进上下文（492KB～1.2MB），是全流程最贵的一步。
 
 | 目的 | 用什么 |
 |---|---|
 | 定位按钮、判页面切换 | **nodes + activity 就够** |
-| 确认提示语文字 | `--full` 的 nodes，或 `read.py` OCR |
+| 确认提示语文字 | `full=true` 的 nodes，或 `android_read` OCR |
 | 判置灰/颜色/图标点亮 | 才需要看图 |
 | UI 树里完全找不到（自绘控件） | 才需要看图/OCR |
 
@@ -502,8 +521,8 @@ act …
 | 情况 | 你要做的 |
 |---|---|
 | 用例只测「功能能用」 | **不用管** |
-| 用例要测「拒绝」分支 | 动作时加 `--perm-action deny --perm <类型>` |
-| 双分支用例（先拒后允） | 第二轮先 `python state.py revoke --package <包名> --perm <类型>` 再跑；跑完 `python session.py perm-intent --clear` |
+| 用例要测「拒绝」分支 | 动作时加 `permAction="deny"`（要指定权限类型再加 `perm="<类型>"`） |
+| 双分支用例（先拒后允） | 第二轮先 `android_state(action="revoke", package=<包名>, perm=<类型>)` 再跑；跑完用 bash `session.py perm-intent --clear` 清意图 |
 | 点了几次「拒绝」后**再也不弹框** | 这是系统机制，不是控件坏了。用 `android_perm` 查一次当前状态再判 |
 
 > ⚠️ **不要预先 grant**。真实用户第一次也是弹框，用例要验的就是这条真实路径。
@@ -532,8 +551,9 @@ act …
 一句话：**验证过但没通过 = FAIL；连验证的机会都没有 = BLOCKED。**
 
 ```powershell
-# 卡住时这么做（status 按上面三行选）
-python session.py finding --status FAIL --event-id <最后一次证据> \
+# 卡住时这么做（status 按上面三行选；bash 跑，唯一允许用 bash 的就是 session.py）
+& "<toolkit>\.venv\Scripts\python.exe" "<toolkit>\tools\session.py" finding `
+  --status FAIL --event-id <最后一次证据> `
   --expect "<这条预期>" --actual "无法验证：<卡在哪>；已尝试 2 次（<试过什么>）"
 ```
 
@@ -636,9 +656,8 @@ python session.py finding --status FAIL --event-id <最后一次证据> \
 ③ AI 自己对比：这条卡里是不是已经有了（同义/改写也算有）
      有 → 跳过，不要提
 ④ 只把「确实没有的」提上去 —— **一次调用提交全部，不要逐条调**：
-     session.py kb-propose --card <包名> \
-       --fact "..." --fact "..." --fact "..." \
-       --evidence 16 --evidence 17
+     & "<toolkit>\.venv\Scripts\python.exe" "<toolkit>\tools\session.py" kb-propose `
+       --card <包名> --fact "..." --fact "..." --fact "..." --evidence 16 --evidence 17
 ```
 
 > `--fact` 可重复传，合并成一次调（逐条调每次都要进程冷启动）。
@@ -662,7 +681,7 @@ python session.py finding --status FAIL --event-id <最后一次证据> \
 ❌ 该怎么判 PASS/FAIL（判定权在执行者手上）
 ```
 
-**最后三条工具会主动拦下来并告诉你为什么。**
+**最后三条（坐标 / 会话号 / 判定权）工具会主动拦下来并告诉你为什么。**
 
 ### 提上去之后：不用管了
 

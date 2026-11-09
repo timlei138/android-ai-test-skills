@@ -608,38 +608,6 @@ def export_steps(db, session_id: int) -> str | None:
             prev_activity = after or prev_activity
             prev_sig = after_sig or prev_sig
             continue
-        # ①b 为「造条件验证断言」而绕的路不要
-        #
-        #   2026-10-29 实测：这轮 AI 为了验「上课周数最多24周」，
-        #   先去课程表设置里把学期总周数改成 24，再回来看 —— 6 步。
-        #   这些步骤的 why 不含"前置/准备"，所以旧过滤放行了，
-        #   整份 steps.yaml 从 8 步涨到 17 步。
-        #
-        #   ⚠️ 只靠 why 关键词堵不住：实测第一次补了 7 个词，
-        #      17 → 11 步，还剩 3 步漏网（"进入课表176的基本信息页"、
-        #      "保存课程表设置（学期总周数 24）"、"核对上课周数上限
-        #      （学期总周数已设为24周）"）—— AI 每次措辞都不一样。
-        #
-        #   所以用两个判据，任一命中就丢：
-        #      · why 里出现"验证/核对/上限"等字样 → 这步是为断言服务的
-        #      · why 或 via 里出现用例里没提的**中间设置页**（系学期/总周数）
-        if any(k in why for k in ("为核对", "为了验证", "为验证", "用于验证",
-                                  "以便验证", "验证上限", "改周数",
-                                  "核对", "验证", "上限", "设置")):
-            prev_activity = after or prev_activity
-            prev_sig = after_sig or prev_sig
-            continue
-        # ①c 改设备设置的步骤不要（属于"造条件"，不是跳转路径）
-        #
-        #   判据：via 落在设置类节点上。这类步骤的共同点是
-        #   **点完会改变设备的持久状态**（学期总周数、课程表名称…），
-        #   下次照着走会把设备改歪。
-        if any(k in (via + why) for k in (
-                "total_weeks", "schedule_name", "layout_", "switch",
-                "seekbar", "et_schedule", "学期总周数", "学期开始时间")):
-            prev_activity = after or prev_activity
-            prev_sig = after_sig or prev_sig
-            continue
         # ② 只收 tap
         if act.get("type") != "tap":
             prev_activity = after or prev_activity

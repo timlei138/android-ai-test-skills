@@ -15,8 +15,8 @@ from __future__ import annotations
 
 import argparse
 
-from common import (add_common_args_all_subcommands, connect, emit, fail,
-                    log_auto, guard_terminated)
+from common import (add_common_args_all_subcommands, apply_stdin_args, connect,
+                    emit, fail, guard_terminated, log_auto)
 from runtime import execution
 
 
@@ -81,6 +81,7 @@ def main() -> None:
 
     # --serial 写在子命令前后都能解析（与其他工具一致）
     add_common_args_all_subcommands(p)
+    apply_stdin_args()
     args = p.parse_args()
     guard_terminated(f"state {args.cmd}")
     try:

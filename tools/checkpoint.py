@@ -23,23 +23,6 @@ try:
 except Exception:  # noqa: BLE001  common 不可用时不要因此崩掉
     pass
 
-# 临时弹窗白名单：**每次不一定出现**的浮层（活动/引导/升级提示）。
-# 判据是"是不是每次都在" —— 每次都在的属于**流程节点**（该进路径图），
-# 不在这里；时有时无的才算临时弹窗，命中后自动关掉、继续走。
-#
-# ⚠️ 白名单只放"确定是临时的"。白名单外的意外画面**不猜**，交回给 AI 判断。
-TRANSIENT_POPUP_RIDS = {
-    # 系统弹框的通用键 —— 只在"该弹框不属于本用例主流程"时才该被关掉，
-    # 所以调用方需显式允许（见 is_transient），不默认启用。
-}
-
-# 已知的 App 自有临时弹窗（版本性的引导/提示框）。
-TRANSIENT_POPUP_SPECS = (
-    # 课程表功能引导框（首次进入课程表时出现，清数据后才有）
-    {"rid": "timetable_guide_button", "text": "我知道了"},
-)
-
-
 def parse_expect(spec: str | None) -> dict:
     """把 `--expect` 的字符串解析成条件字典。
 
@@ -107,18 +90,3 @@ def evaluate(expect: dict, *, activity: str | None, sig: list[str] | None,
                 f"{key}={'|'.join(vals)}")
 
     return {"checked": True, "ok": not missed, "matched": matched, "missed": missed}
-
-
-def detect_transient(sig: list[str] | None) -> dict | None:
-    """若当前画面是**已知的临时弹窗**，返回它的描述，供调用方决定是否关掉。
-
-    只认白名单。**未知画面一律返回 None** —— 不猜，交回给 AI。
-    """
-    sigset = set(sig or [])
-    for spec in TRANSIENT_POPUP_SPECS:
-        rid = spec.get("rid")
-        if rid and f"rid={rid}" not in sigset:
-            continue
-        return {"rid": rid, "text": spec.get("text"),
-                "reason": "已知临时弹窗（非长期流程），可自动关闭后继续"}
-    return None

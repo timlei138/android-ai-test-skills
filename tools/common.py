@@ -527,8 +527,8 @@ def knowledge_hint(package: str | None, shown: bool = False,
             '看完直接用，别把同一节再读一遍'
             if card.is_file() else None),
         "how_to_read_section": (
-            f'android_read_file(card="{package}", section="A", section="B")'
-            '  —— 按节读，可重复传多个 section，一次读完所有要看的节'
+            f'android_read_file(card="{package}", section=["A", "B"])'
+            '  —— 按节读，section 是数组，一次读完所有要看的节'
             if card.is_file() else None),
         "sections": sections,
         "tip": ("**执行前先定位**：路径图是节点图（节点=落脚点，边=认什么锚点→去哪）。"

@@ -46,7 +46,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from common import ensure_utf8_stdio  # noqa: E402
+from common import apply_stdin_args, ensure_utf8_stdio  # noqa: E402
 
 ensure_utf8_stdio()
 
@@ -161,6 +161,7 @@ def main() -> None:
     p.add_argument("--serial", default=None,
                    help="设备 serial；只有一台设备时可省略")
     p.add_argument("--json", action="store_true", help="机器可读输出")
+    apply_stdin_args()
     args = p.parse_args()
 
     grant, revoke = _split(args.grant), _split(args.revoke)
