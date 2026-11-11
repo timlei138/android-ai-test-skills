@@ -1,9 +1,0 @@
-{
-  "call_id": "e8ed2e1bc1094509883a951d967a15a7",
-  "session_id": 332,
-  "tool": "observe",
-  "started_at": "2026-10-09T12:13:24.272",
-  "status": "started",
-  "expects_event": true,
-  "structured_result_required": true
-}

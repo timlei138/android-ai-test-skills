@@ -24,6 +24,10 @@ __pycache__/
 #   knowledge/paths/<包名>.md         路径图
 storage/
 
+# 历史归档：跑批留下的 evidence/calls/timing 快照，已经清掉，不再进 git
+# （早期它们被跟踪过，所以要么删要么忽略；现在两件都做）
+_archived-storage/
+
 # vision 配置里有 api_key，绝对不能进 git（上面 storage/ 已覆盖，这里显式再写一遍）
 storage/vision.json
 

@@ -1,9 +1,0 @@
-{
-  "call_id": "4bdd9708792c4b45b95df0b478721a1b",
-  "session_id": 355,
-  "tool": "act",
-  "started_at": "2026-10-09T16:33:06.336",
-  "status": "started",
-  "expects_event": true,
-  "structured_result_required": true
-}
