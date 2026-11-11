@@ -8,7 +8,7 @@
 所以拿不到那个字段 —— 于是它继续按 Linux 习惯敲 `ls -1`。
 
 实测：主 Agent 问"有多少 case"，第一条命令就是
-    ls -1 "D:/Project/deepseek/android-ai-test-skills/assets/cases"
+    ls -1 "<target>/assets/cases"
 在 Windows PowerShell 上 `ls` 不认 `-1`，直接 exit 1。
 
 ## 用法
@@ -36,8 +36,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from common import apply_stdin_args, ensure_utf8_stdio  # noqa: E402
 from runtime import (  # noqa: E402
-    KNOWLEDGE_DIR, RECORD_DIR, ROOT, STORAGE_DIR, TMP_DIR, detect_shell,
+    ASSETS_DIR, KNOWLEDGE_DIR, RECORD_DIR, ROOT, STORAGE_DIR, TMP_DIR,
+    detect_shell, storage_fix_hint, storage_root_source, writability_report,
 )
+import harness  # noqa: E402  纯标准库，import 不会引入第三方依赖
 
 # 必须第一件事就切 UTF-8。
 #
@@ -70,14 +72,41 @@ def _storage_source() -> str:
     为什么要报出来：AI 看到「storage 在哪」才知道产物落哪；看到「按哪条规则定的」
     才能在换机器 / 换 cwd 之后判断"这个路径对不对"，而不是等到写不进去才怀疑工具坏了。
     """
-    if (os.environ.get("ANDROID_TEST_STORAGE") or "").strip():
-        return "env:ANDROID_TEST_STORAGE"
+    return storage_root_source()
+
+
+def _workspace() -> tuple[dict, bool | None]:
+    """本会话的工作区在哪 + 工具层在不在里面。
+
+    为什么不看 `os.getcwd()`：harness 起 bash 时 cwd 确实是工作区，可一旦有人
+    `cd` 走（实测我自己就常在用例目录里），cwd 就不再代表工作区，而
+    `runtime.py` 的 storage 落点规则恰恰是拿 cwd 判的 —— 于是产物会悄悄落到
+    另一棵树（2026-11-09 那 16 条用例的记录通道就是这么废的）。
+    `harness.py` 从落盘的会话目录名反推，与 cwd 无关，所以这里报的是**真**工作区，
+    和 `storage_source` 那条（cwd 规则）并排放着，两者不一致就该警觉。
+    """
     try:
-        if ROOT.resolve().is_relative_to(Path.cwd().resolve()):
-            return "工具层在 cwd 之下 -> <target>/storage"
-    except (OSError, ValueError):
-        pass
-    return "工具层在 cwd 之外 -> cwd/storage"
+        import harness
+        ws = harness.workspace()
+        return ws, harness.is_inside(ROOT, ws)
+    except Exception as exc:  # noqa: BLE001
+        return ({"path": None, "source": f"harness.py 不可用：{exc}",
+                 "confidence": "unknown"}, None)
+
+
+def _roots_agree() -> tuple[bool, str]:
+    """脚本被调用时走的那条路径，和 runtime 算出来的 ROOT，是不是同一个地方？
+
+    不一致 = 中间有软链 / junction。这本身是**允许的用法**
+    （Windows 那边就靠 junction 把 skill 目录链进源码树），
+    但产物根会跟着 resolve() 跑到链接目标去，资产也可能落在另一棵树里。
+    所以不是禁止，而是必须说出来 —— 不说，跑完才发现 steps.yaml 不见了。
+    """
+    invoked = Path(__file__).resolve().parent.parent
+    if invoked == ROOT:
+        return True, ""
+    return False, (f"调用路径 {Path(__file__).parent} 解析后是 {invoked}，"
+                   f"而工具层 ROOT = {ROOT}（中间有软链 / junction）")
 
 
 def _device() -> dict:
@@ -142,6 +171,9 @@ def main() -> None:
     #   放后面就会出现「AI 传了 --json 却拿到人类可读文本」的老问题。
     apply_stdin_args()
     env = detect_shell()
+    _writ = writability_report()
+    _root_ok, _root_note = _roots_agree()
+    _ws, _inside = _workspace()
     if "--json" in sys.argv:
         payload = dict(env)
         payload.update({
@@ -159,6 +191,20 @@ def main() -> None:
             "tmp_output": str(TMP_DIR),
             "knowledge_dir": str(KNOWLEDGE_DIR),
             "deps_ok": _deps_ok(),
+            # ★ 可写性实测：权限位好看 ≠ 写得进去（沙箱就是这么拦的）
+            "writability": _writ,
+            "storage_writable": not _writ["storage"],
+            "assets_writable": not (_writ["knowledge"] or _writ["cases"]),
+            "tool_root": str(ROOT),
+            "workspace": _ws,
+            "workspace_confidence": _ws["confidence"],
+            "tool_root_in_workspace": _inside,
+            # 产物根落点（cwd 规则算出来的）在不在真工作区里。false = 这次跑的
+            # 会话/证据会写到另一棵树，脚本判这个布尔就行，不用自己比路径。
+            "storage_in_workspace": (None if _ws.get("path") is None else
+                                     harness.is_inside(STORAGE_DIR, _ws)),
+            "roots_agree": _root_ok,
+            "root_note": _root_note,
             # ★ 设备和输入法：主 Agent 开工就看到，别等子 Agent 跑到打字那步才炸
             "device": _device(),
             "storage_source": _storage_source(),
@@ -175,17 +221,45 @@ def main() -> None:
 
     # ── 产物目录：这个必须打出来，AI 才能确认它对不对 ────────────
     src = _storage_source()
+    setup_cmd = ("pwsh -File scripts\\setup.ps1" if os.name == "nt"
+                 else "bash scripts/setup.sh")
     print("★ 用这个解释器跑后面的所有命令：")
     print(f"  {sys.executable}")
     deps = _deps_ok()
     if deps != "ok":
-        print(f"  ⚠️ 但它{deps} —— 先跑 pwsh -File scripts/setup.ps1 装依赖")
+        print(f"  ⚠️ 但它{deps} —— 先跑 {setup_cmd} 装依赖")
     print()
     print("运行产物目录（来源：%s）：" % src)
     print(f"  storage  = {STORAGE_DIR}")
     print(f"  record   = {RECORD_DIR}")
     print(f"  tmp      = {TMP_DIR}")
     print(f"  knowledge= {KNOWLEDGE_DIR}")
+    print(f"  assets   = {ASSETS_DIR}")
+    print()
+    _mark = {True: "在其内 ✅", False: "在它外面 ⚠️  ← 落点规则信的是 cwd，两者不一致就要警觉",
+             None: "判不了"}[_inside]
+    print(f"会话工作区：{_ws['path']}  [{_ws['confidence']}]  依据：{_ws['source']}")
+    print(f"           工具层 {_mark}：{ROOT}")
+    print()
+    # ── 可写性：真写一个探针，别看权限位 ──────────────────────
+    hard_keys = ("storage", "run_history", "tmp")
+    hard = [k for k in hard_keys if _writ.get(k)]
+    soft = [k for k, v in _writ.items() if v and k not in hard_keys]
+    if not hard and not soft:
+        print("可写性：storage / assets 全部实测可写 ✅")
+    else:
+        print("⚠️ 可写性实测（权限位是 rwx 也照样可能被沙箱拦）：")
+        for k in hard:
+            print(f"  ✗ {k:<12} {_writ[k]}")
+        for k in soft:
+            print(f"   ! {k:<12} {_writ[k]}")
+        if hard:
+            print("  → 上面硬失败：session.py start 会直接拒绝开始（不会偷偷换个库）。")
+        if soft:
+            print("  → 上面软失败：跑得不影响，但 steps.yaml / 知识卡写不回，下次重摸路。")
+        print(f"  → 解法：{storage_fix_hint()}")
+    if not _root_ok:
+        print(f"⚠️ 路径不同源：{_root_note}")
     print()
 
     # ── 设备 + 输入法 ───────────────────────────────────────────
@@ -204,8 +278,8 @@ def main() -> None:
     # 工具在哪、怎么开会话都直接印出来，省掉 AI 自己探路的那几步。
     #
     # ⚠️ 不能用 Path(__file__).resolve() —— 它会**解开 junction**：
-    #   skill 装在 ~/.agents/skills/android-gui-test，
-    #   是个指向源码 D:\Project\...\android-ai-test-skills 的链接。
+    #   skill 装在 ~/.agents/skills/android-ai-test-skills，
+    #   是个指向源码树的链接（junction/symlink）。
     #   resolve() 之后报的是源码路径，而 AI 该用的是工作区那份
     #   （有 .venv、有 storage）。所以优先用工作区根目录。
     here = Path(__file__).parent          # 不 resolve，保留 junction 路径
@@ -219,17 +293,22 @@ def main() -> None:
     print(f"  target   = {ws_root}")
     print()
     print("★ 开会话（唯一必须用 bash 的命令）：")
-    print(f'  & "{py}" "{tools_dir}\\session.py" start '
-          f'--title "<标题>" --input "@<用例文件>" --package <包名>')
+    if os.name == "nt":
+        print(f'  & "{py}" "{tools_dir}\\session.py" start '
+              f'--title "<标题>" --input "@<用例文件>" --package <包名>')
+    else:
+        print(f'  "{py}" "{tools_dir}/session.py" start \\'
+              f'\n    --title "<标题>" --input "@<用例文件>" --package <包名>')
     print("  中文长文本先写 UTF-8 文件再传 @文件；别直接放命令行")
     print()
-    print("⚠️ 如果你在**受限沙箱**里跑（只能写某个 workspace），")
-    print("   而这个 storage 不在可写范围内，先设环境变量再调工具：")
-    print()
-    print('   $env:ANDROID_TEST_STORAGE = "<你的可写目录>\\storage"')
-    print()
-    print("   设完重跑这条命令，确认上面的 storage 变了。")
-    print()
+    # 只有真写不进的时候才提示换路径；能写就不啰嗦（上面已实测过）
+    if any(_writ.get(k) for k in ("storage", "run_history", "tmp")):
+        print("⚠️ 上面这几个目录写不进去 —— 先设环境变量再调工具：")
+        print()
+        print(f"   {storage_fix_hint()}")
+        print()
+        print("   设完重跑这条命令，确认上面的 storage 变了。")
+        print()
 
     if env["shell"] == "powershell":
         print("本机常用对照：")
