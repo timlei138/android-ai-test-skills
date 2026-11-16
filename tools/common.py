@@ -1423,7 +1423,8 @@ _DECOR_PKGS = ("com.android.systemui", "com.zui.launcher", "com.android.launcher
 
 @timed("node_summary")
 def summarize_xml(xml_text: str, max_nodes: int = 300,
-                  mode: str = "nav", fg_package: str | None = None) -> list[dict]:
+                  mode: str = "nav", fg_package: str | None = None,
+                  texts_out: list | None = None) -> list[dict]:
     """把 UI 树压成给 LLM 读的节点列表。
 
     两种模式（实测同一屏 3840×2560 的压缩效果）：
@@ -1445,10 +1446,19 @@ def summarize_xml(xml_text: str, max_nodes: int = 300,
     按前台包过滤则天然兼容：屏幕上是什么，就保留什么。
 
     为什么要分模式 + 过滤：nodes 每步都进 LLM 上下文，导航时给全量是纯浪费。
+
+    texts_out（可选，传一个 list 进来就地填充）：
+      nav 模式只留可点/可滑节点，**屏幕上不可点的文字全被丢掉** ——
+      而「某字段/某功能在不在」恰恰要靠这些文字判断。实测「设置-日期和时间」页
+      nav 只回 21 个节点、t 大量为空，屏幕上 25 条文字（`时区` / `GMT+08:00 …`）
+      一条都没给，AI 只能判「没有」→ 误判「功能不存在」。
+      所以把那些文字**去重收集**到 texts_out，由调用方限量回传给 AI。
+      实测代价：144 个真实页面平均 +145 字符（中位 11 条），是 full 模式的 1%。
     """
     import xml.etree.ElementTree as ET
     full = (mode == "full")
     nodes: list[dict] = []
+    seen_texts: set[str] = set()
     for el in ET.fromstring(xml_text).iter("node"):
         a = el.attrib
         rid, text, desc = a.get("resource-id", ""), a.get("text", ""), a.get("content-desc", "")
@@ -1466,6 +1476,15 @@ def summarize_xml(xml_text: str, max_nodes: int = 300,
             # 导航模式：留可点的 + 可滑动的。
             # ⚠️ 必须带 scrollable——不可点但可滑动的容器（列表/滚轮）正是
             # "该往哪滑"的线索；只留 clickable 会让 AI 在长列表里找不到滑动目标。
+            #
+            # 丢之前先把它的文字收进 texts_out：这些不可点文字正是判断
+            # 「某字段/某功能在不在」的唯一依据（见函数 docstring 的实测案例）。
+            if texts_out is not None:
+                t = (text + " " + desc).strip() if desc else text.strip()
+                t = " ".join(t.split())
+                if t and t not in seen_texts:
+                    seen_texts.add(t)
+                    texts_out.append(t[:40])
             continue
         if full and not (clickable or scrollable or rid or text or desc):
             continue                      # 检查模式：跳过纯容器
@@ -1512,6 +1531,28 @@ def summarize_xml(xml_text: str, max_nodes: int = 300,
         if len(nodes) >= max_nodes:
             break
     return nodes
+
+
+TEXTS_CAP = 20
+
+
+def texts_payload(texts: list) -> dict:
+    """把 summarize_xml(texts_out=…) 收到的文字压成回传给 AI 的片段。
+
+    为什么要限量：144 个真实页面实测，不可点文字数中位 7 条、p90 33 条、最多 38 条。
+    上限 20 条时 88% 的页面一次拿全（不用再调一次 full），平均只多传 78 字符；
+    而 full 一次要 14,500 字符 —— 这个方案是它的 0.5%。
+
+    超过上限不截断丢弃、而是给 `texts_more` 告知还剩多少：
+    AI 看到数字才知道「还没看全」，才有理由去调 full。
+    **静默截断是这里唯一的坑** —— 截了不说等于又造一次「以为看全了」。
+    """
+    if not texts:
+        return {}
+    out: dict = {"texts": texts[:TEXTS_CAP]}
+    if len(texts) > TEXTS_CAP:
+        out["texts_more"] = len(texts) - TEXTS_CAP
+    return out
 
 
 def add_common_args(p: argparse.ArgumentParser) -> argparse.ArgumentParser:

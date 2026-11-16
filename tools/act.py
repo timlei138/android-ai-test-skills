@@ -33,7 +33,7 @@ from runtime import timed_call
 from common import (add_common_args, add_common_args_all_subcommands, apply_stdin_args, capture,
                     next_targets, labeled_nodes, npm_identity,
                     connect, emit, evidence_paths, fail, guard_terminated,
-                    log_auto, rel, summarize_xml)
+                    log_auto, rel, summarize_xml, texts_payload)
 import checkpoint
 
 
@@ -814,10 +814,12 @@ def main() -> None:
     info["duration_scope"] = "core operation through capture/signature/crash check; excludes connection, event write and response"
     log_auto("act", f"act {args.action}", detail, info, rel(png), duration_ms, started_at)
 
+    _texts: list = []
     nodes = summarize_xml(xml.read_text(encoding="utf-8"),
                           mode="full" if getattr(args, "full", False) else "nav",
                           fg_package=None if getattr(args, "no_filter", False)
-                          else info.get("package"))
+                          else info.get("package"),
+                          texts_out=_texts)
     payload = {
         "action": action,
         **info,
@@ -830,9 +832,12 @@ def main() -> None:
         "nodes": nodes,
         "nodes_count": len(nodes),
         "nodes_mode": "full" if getattr(args, "full", False) else "nav",
+        **texts_payload(_texts),
         "hint": ("下一步点 `next` 里的目标（c=坐标，t=文字，r=rid）；"
-                 "需要按页面文字断言时看 nodes（--full 才是全量）。"
-                 "toast 等浮层不在 nodes 里，用 read.py OCR"),
+                 "`next` 只含可点控件，`texts` 是本页不可点文字（最多 20 条）。"
+                 "判断「某字段/某功能在不在」看 texts 或 nodes，不要用 next 有没有；"
+                 "texts_more>0 要看全就 full=true。"
+                 "toast 等浮层不在 nodes 里，用 android_read OCR"),
     }
     # `sig`（屏幕身份签名）和 `timing`（各阶段耗时）只落盘、不回传给 AI：
     # 它们由工具侧消费（checkpoint 判定、浮层检测、路径采集、离线性能分析），

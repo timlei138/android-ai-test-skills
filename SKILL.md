@@ -444,7 +444,7 @@ android_read_file(card="<包名>", section=["<小节1>", "<小节2>"])
 ### 操作循环：**每一步都是一个 act，从它的 `next` 里找下一个目标**
 
 ```
-android_act（要断言时加 full=true）
+android_act（默认就返回 next + texts；要 bounds/rid 精确时加 full=true）
   ↓ 返回里有 `next`：[{c:[x,y], t:文字, r:rid}, …]  ← 精简可点清单
   ↓ 直接从 next 里挑目标
 android_act …
@@ -481,12 +481,13 @@ android_act …
 | `next` | **下一步能点什么**（精简可点清单，含坐标与文字） |
 | `activity` / `nodes` | 当前画面状态（断言用） |
 
-> ⚠️ **说"某元素不存在"之前，先按 rid/文字在完整 dump 里搜一遍** ——
-> 不要只看输出开头几条就下结论。用 `full=true` 拿全量 nodes，或 `android_read_file`
-> 的 `grep` 搜 rid/文案，命中即存在。
+> ⚠️ **说"某元素不存在"之前，先把 `texts` 看一遍** ——
+> `texts` 是本页**不可点**文字（默认就带，最多 20 条），`next`/`nodes` 只有可点控件。
+> `texts_more` 存在 = 还没给全，这时才加 `full=true` 拿全量 nodes；
+> 或 `android_read_file` 的 `grep` 搜 rid/文案。三者都没有再说"不存在"。
 
-> ⚠️ **验证类步骤用 `full=true`**：一次调用同时给「动作 + 全量节点文字」，
-> **它自己就是检查点**（`activity` + 文本即判据）。
+> ⚠️ **验证类步骤看 `texts` + `activity` 就够**（默认返回就带），
+> **不需要为断言单独加 `full=true`** —— 只有要 bounds/rid 精确位置、或 `texts_more>0` 时才加。
 
 > ⚠️ **纯验证步也不要"做个小动作"来凑一次返回。**
 >
@@ -498,12 +499,29 @@ android_act …
 它会等画面稳定；`android_act` 也可以加 `settle` 毫秒数（默认 500）加大稳定窗口。
 不必额外 sleep。
 
-### nodes 两种模式
+### nodes 两种模式 + `texts`
 
 | 模式 | 内容 | 何时用 |
 |---|---|---|
 | **nav（默认）** | **可点 + 可滑动**节点，短键名 | 找"下一步点哪"——绝大多数步骤 |
-| **full（`full=true`）** | 全部有语义节点，完整字段名 | 要按**页面文字**断言 / nav 里找不到目标时 |
+| **full（`full=true`）** | 全部有语义节点，完整字段名 | 要 **bounds / rid 精确**位置时 |
+
+**除了 `nodes`，默认返回里还有 `texts`：本页**不可点**的文字（去重，最多 20 条）。**
+判断「某字段 / 某功能在不在」**看 `texts`**（或 `nodes`），**不要看 `next` / `nodes` 里有没有** ——
+`nav` 只留可点控件，`next` 里没有不代表页面上没有。
+
+> ⚠️ 实测过的事故：「设置-日期和时间」页 nav 只回 21 个节点、`t` 大量为空，
+> 屏幕上 25 条文字（`时区` / `GMT+08:00 中国标准时间` / `2026年11月5日`）一条都没给，
+> AI 只能判"没有这个功能" → 误判 FAIL。`texts` 就是为这个加的。
+
+| 字段 | 含义 |
+|---|---|
+| `texts` | 本页不可点文字，去重、每条截 40 字、按出现顺序，最多 20 条 |
+| `texts_more` | 还有多少条没给（**没这个键 = 已经给全了**） |
+
+`texts_more` 存在且你要精确的 bounds/rid、或要看全剩余文字 → 加 `full=true`。
+实测上限 20 条时 **88% 的页面一次拿全**，平均只多 78 字符（是 `full` 的 0.5%）。
+`texts` 为空 = 这页 nav 已经看全。
 
 **nav 模式的字段**（短键名）：
 
@@ -517,8 +535,6 @@ android_act …
 | `off` | 不可用（disabled） |
 | `checked` / `selected` | 选中态 |
 
-> ⚠️ **要断言"页面上出现了什么文字"（提示语、列表项）时必须 `full=true`** ——
-> nav 只含可点/可滑动节点，非可点的文本会被漏掉、误判 FAIL。
 > 返回里 `nodes_mode` 标明当前模式。
 
 **默认还会过滤非当前前台包的节点**（状态栏/导航栏/桌面 taskbar 等噪音，实测省 66%）。
@@ -533,7 +549,7 @@ android_act …
 | 目的 | 用什么 |
 |---|---|
 | 定位按钮、判页面切换 | **nodes + activity 就够** |
-| 确认提示语文字 | `full=true` 的 nodes，或 `android_read` OCR |
+| 确认提示语/字段文字 | **`texts`**（默认就有）；`texts_more>0` 或需要 bounds 时 `full=true` |
 | 判置灰/颜色/图标点亮/有无某图标 | `android_vision` |
 | UI 树里完全找不到（自绘控件） | `android_vision`，或 `android_read` OCR |
 

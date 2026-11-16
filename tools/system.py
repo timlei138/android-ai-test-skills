@@ -53,7 +53,8 @@ from datetime import datetime
 
 from common import (add_common_args, apply_stdin_args, capture, connect, emit,
                     evidence_paths, fail, guard_terminated, labeled_nodes,
-                    log_auto, next_targets, npm_identity, rel, summarize_xml)
+                    log_auto, next_targets, npm_identity, rel, summarize_xml,
+                    texts_payload)
 from runtime import execution, timed_call
 import checkpoint
 
@@ -537,9 +538,11 @@ def main() -> None:
     # （实测 `com.zui.calendar.AllInOneActivity`）。照它过滤会把面板里所有控件
     # 全滤掉（实测 nodes_count=0、next 空）。所以：面板开着就不过滤。
     fg = None if (getattr(args, "no_filter", False) or opened) else info.get("package")
+    _texts: list = []
     nodes = summarize_xml(xml_text,
                           mode="full" if getattr(args, "full", False) else "nav",
-                          fg_package=fg)
+                          fg_package=fg,
+                          texts_out=_texts)
     payload = {
         "action": action,
         **info,
@@ -551,6 +554,7 @@ def main() -> None:
         "nodes": nodes,
         "nodes_count": len(nodes),
         "nodes_mode": "full" if getattr(args, "full", False) else "nav",
+        **texts_payload(_texts),
         "hint": "",
     }
     if args.action == "rotate" and rot_after:

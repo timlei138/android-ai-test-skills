@@ -764,21 +764,32 @@
 
                             规则：
 
-                              · `android_observe` 的 `nodes` / `next` 里有答案 → 直接判，别查图
-                              · 「有没有某控件/某文字」→ UI 树
-                              · 「文字是什么」但 UI 树没有（toast、Canvas）→ `android_read`
+                              · `android_observe` 返回的 `texts` 里有答案 → 直接判，别查图
+                              · 「有没有某控件」→ `nodes` / `next`
+                              · 「有没有某文字 / 某字段在不在」→ **`texts`**（本页不可点文字，默认就带）
+                                `texts_more` 存在 = 还有没给全的，要精确就看 `full=true`
+                              · 「文字是什么」但 UI 树和 texts 都没有（toast、Canvas）→ `android_read`
                               · 「颜色是不是红的」这类视觉判断 → `android_read` 的截图 + 一次看图，
                                 **一次就定论**，不要再用 OCR 或像素脚本复验
                               · 任何一项最多用一种方法确认；已经确认过的不要再换方法验证
+
+                            ### ⚠️ `next` 里没有 ≠ 页面上没有
+
+                            `next` 和 `nodes`（nav 模式）**只含可点/可滑动控件**。
+                            不可点的文字（字段名、值、说明、时区、日期…）在 **`texts`** 里。
+                            判断「这个功能/字段存在吗」只能看 `texts` 或 `nodes`（full），
+                            **绝不能用「next 里没找到」当「不存在」** —— 这是误判「功能不存在」的
+                            最主要来源（历史上有 11 个会话反复踩）。
 
                             ### ⚠️ 不要 grep `dump.xml` —— `android_observe` 已经给你了
 
                             每步的 `dump.xml` 落盘了，但**去 grep 它是重复劳动**：
                             `android_observe` / `android_act` 返回的 `nodes` 就是它的结构化版本
                             （`i`=序号 `c`=坐标 `t`=文字+desc `r`=rid `s`=可滑动 `off`=不可用
-                            `checked`/`selected`=选中态；**没有单独的 `d` 键，desc 已并进 `t`**）。
+                            `checked`/`selected`=选中态；**没有单独的 `d` 键，desc 已并进 `t`**），
+                            不可点文字在 `texts` 里。
 
-                            要看全量就 `android_observe(full=true)`。
+                            要看全量（bounds/rid 精确、剩下的 texts）就 `android_observe(full=true)`。
 
                             ```powershell
                             ❌ Select-String dump.xml -Pattern "iv_add_hint"

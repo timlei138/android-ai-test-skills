@@ -9,7 +9,7 @@ import argparse
 
 from common import (add_common_args, apply_stdin_args, backfill_package, capture, connect, emit,
                     evidence_paths, fail, guard_terminated, log_auto, next_targets, labeled_nodes, npm_identity,
-                    rel, summarize_xml)
+                    rel, summarize_xml, texts_payload)
 import time
 from datetime import datetime
 from runtime import execution
@@ -103,10 +103,12 @@ def main() -> None:
                  info, crash.get("log_path"))
 
     backfill_package(info.get("package"))
+    _texts: list = []
     nodes = summarize_xml(xml.read_text(encoding="utf-8"),
                           mode="full" if getattr(args, "full", False) else "nav",
                           fg_package=None if getattr(args, "no_filter", False)
-                          else info.get("package"))
+                          else info.get("package"),
+                          texts_out=_texts)
     # 知识卡浮现：`start` 时若还不知道包名，由首个 observe 补上（只提示一次）
     k_hint = None
     try:
@@ -132,8 +134,11 @@ def main() -> None:
         "nodes": nodes,
         "nodes_count": len(nodes),
         "nodes_mode": "full" if getattr(args, "full", False) else "nav",
+        **texts_payload(_texts),
         "hint": ("定位降级链：r/rid > d/desc > t/text > c/center（坐标本次 dump 现场派生）。"
-                 "`next` 是精简可点清单；要按页面文字做断言时加 --full"),
+                 "`next` 只含**可点控件**；`texts` 是本页不可点文字（去重，最多 20 条）。"
+                 "判断「某字段/某功能在不在」看 texts 或 nodes，**不要用 next 有没有**。"
+                 "texts_more>0 表示还有更多文字没给 —— 要看全就 full=true"),
     }
     # sig / timing 只落盘、不回传给 AI（同 act.py 的理由）：timing 由 capture()
     # 注入到 info，sig 在 L69 加进 info，两者都已随 log_auto 落库。

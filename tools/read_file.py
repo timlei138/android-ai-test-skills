@@ -39,9 +39,11 @@ AI 看完自己挑一节再精确读，比乱试 grep 准得多。
 from __future__ import annotations
 
 import argparse
+import io
 import json
 import re
 import sys
+import time
 from pathlib import Path
 
 # stdin JSON 归一（标准 {"args": [...]} 和扁平字段都认）。
@@ -378,7 +380,139 @@ def _card_mode(pkg: str, query: str | None, section: str | None,
     return out
 
 
+# ══════════════════════════════════════════════════════════════════
+# 读卡基线日志
+# ══════════════════════════════════════════════════════════════════
+#
+# 为什么要有：读卡行为原本完全不上报（本文件没有任何 log_auto/emit），
+# 于是「改了卡到底有没有用」无从证明 —— 命中率、每次读卡塞进上下文多少字、
+# 哪节被反复读、哪些猜测落空，全都在会话日志的 zstd 里，事后解一次要几分钟。
+# 落一行 JSONL 之后，改卡前后跑同样几条用例就能直接比。
+#
+# 为什么不走 log_auto：它写库失败时会 emit(False) + SystemExit(1)，那是给
+# 「动作已执行、不能重放」的保护；读卡是只读的，为记一条统计把读卡本身搞失败
+# 不值当，而且 emit 会往 stdout 多打一行 JSON，污染 AI 要解析的结果。
+# 所以这里只追加一行，任何异常都吞掉。
+BASELINE_NAME = "card_reads.jsonl"
+
+
+def _asked(out: dict) -> dict:
+    """从 AI 实际拿到的那个 JSON 里抽出「问了什么 / 命中了什么」。"""
+    rec: dict = {"mode": out.get("mode"), "ok": out.get("ok")}
+    for key in ("package", "query", "grep", "path"):
+        if out.get(key) is not None:
+            rec[key] = out[key]
+    asked = out.get("sections_asked")
+    if asked is None and out.get("section") is not None:
+        asked = [out["section"]]
+    if asked:
+        rec["asked"] = asked
+
+    titles: list = []
+    # path 模式：section 读全文。⚠️ toc 模式下 `sections` 是**节数（int）**，
+    # 不是列表 —— 直接 `for sec in out.get("sections")` 会 TypeError。
+    secs = out.get("sections")
+    for sec in secs if isinstance(secs, list) else []:
+        if isinstance(sec, dict) and sec.get("title"):
+            titles.append(sec["title"])
+    # query / grep 模式：matches
+    mats = out.get("matches")
+    for m in mats if isinstance(mats, list) else []:
+        if isinstance(m, dict) and m.get("title"):
+            titles.append(m["title"])
+    # card 模式：每张卡各自的命中
+    per_card = []
+    cds = out.get("cards")
+    for c in cds if isinstance(cds, list) else []:
+        if not isinstance(c, dict):
+            continue
+        cm = c.get("matches")
+        ct = [m.get("title") for m in (cm if isinstance(cm, list) else [])
+              if isinstance(m, dict) and m.get("title")]
+        if c.get("section"):
+            ct.insert(0, c["section"])
+        titles.extend(ct)
+        per_card.append({"source": c.get("source"),
+                         "found": c.get("found"),
+                         "match_n": len(cm if isinstance(cm, list) else []),
+                         "titles": ct})
+    # card 多节模式：found 是 [{source, asked, title}]
+    for f in out.get("found") if isinstance(out.get("found"), list) else []:
+        if isinstance(f, dict) and f.get("title"):
+            titles.append(f["title"])
+    if per_card:
+        rec["per_card"] = per_card
+    if titles:
+        rec["hit"] = titles
+    elif asked:
+        # 问了但一个都没命中。必须显式记 `[]`，否则事后统计分不清
+        # 「命中 0 个」和「这次根本没按节名问」。
+        rec["hit"] = []
+    # 落空的：section 模式直接给了 missing，card 多节模式给了 missing
+    if out.get("missing"):
+        rec["missing"] = out["missing"]
+    if out.get("found") is False:
+        rec["hit"] = []
+    for key in ("found", "matched"):
+        if isinstance(out.get(key), int):
+            rec[key] = out[key]
+    if isinstance(out.get("content"), str):
+        rec["content_chars"] = len(out["content"])
+    rec["out_chars"] = len(json.dumps(out, ensure_ascii=False))
+    return rec
+
+
+def _log_baseline(rec: dict) -> None:
+    """追加一行到 storage/card_reads.jsonl。绝不抛异常、绝不打印。"""
+    try:
+        import runtime
+        from db import current_session
+        rec["session_id"] = current_session()
+        rec["ts"] = time.strftime("%Y-%m-%dT%H:%M:%S")
+        path = runtime.STORAGE_DIR / BASELINE_NAME
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(rec, ensure_ascii=False,
+                                separators=(",", ":")) + "\n")
+    except BaseException:        # noqa: BLE001 —— 统计不能影响读卡
+        pass
+
+
 def main() -> int:
+    """跑 _main()，把它打印的 JSON 原样透出，同时记一行基线。"""
+    started = time.perf_counter()
+    buf = io.StringIO()
+    real = sys.stdout
+    rc = 0
+    try:
+        sys.stdout = buf
+        try:
+            rc = _main()
+        finally:
+            sys.stdout = real
+    finally:
+        text = buf.getvalue()
+        try:
+            real.write(text)
+        except UnicodeEncodeError:
+            # 参数里混进了 lone surrogate（编码猜错的残留）。读卡是只读的，
+            # 不能因为这个就让 AI 一个字都拿不到 —— 降级成 replace 再写。
+            real.buffer.write(text.encode("utf-8", "replace"))
+            real.flush()
+        rec = {"argv": [a for a in sys.argv[1:] if a != "--stdin-json"],
+               "rc": rc,
+               "duration_ms": round((time.perf_counter() - started) * 1000)}
+        try:
+            rec.update(_asked(json.loads(text) if text.strip() else {}))
+        except BaseException:        # noqa: BLE001
+            # 统计抽取出错绝不能改变读卡结果 —— 这里在 finally 里，抛出去会
+            # 把本来 rc=0 的成功读卡变成 rc=1，AI 就一个字都拿不到了。
+            rec["unparsed"] = True
+        _log_baseline(rec)
+    return rc
+
+
+def _main() -> int:
     ap = argparse.ArgumentParser(description="读文本文件（UTF-8）")
     ap.add_argument("--path", default=None,
                     help="文件路径（相对工具层根目录）。给了 --card 时不用它")
