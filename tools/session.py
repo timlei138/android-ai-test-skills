@@ -17,7 +17,7 @@ import re
 import sys
 from pathlib import Path
 
-from common import (case_spec_hint, emit, knowledge_hint, resolve_case_stem,
+from common import (emit, knowledge_hint, resolve_case_stem,
                     steps_hint)
 import sqlite3
 from db import (  # noqa: I001
@@ -888,12 +888,6 @@ def main() -> None:
             out["knowledge_hint"] = hint
             # 只要发出了 hint 就落标记（无卡包也有 system_card 提示，同样别重复发）
             db.mark_knowledge_shown(sid)
-        # 用例规格浮现：该用例有沉淀好的 YAML 时，**开场就给**。
-        # 为什么必须在这里（2026-10-15 真实缺口）：规格里写着首轮踩过的全部坑，
-        # 但 start 的返回里原本一个字都没提它，复跑只能从零重探、坑原样再踩一遍。
-        spec = case_spec_hint(args.case_id)
-        if spec:
-            out["case_spec"] = spec
         # 上次走过的跳转步骤：纯参考，不自动执行。
         # 每次跑同一条用例，AI 都要重新摸「更多按钮在哪、菜单里哪个是课程表」——
         # 这些是机械跳转，finish 时已经导出到 steps.yaml，开场给它看。
