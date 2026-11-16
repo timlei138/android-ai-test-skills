@@ -298,6 +298,7 @@ def _search_one(filepath: Path, query: str | None,
     if section:
         want = section.strip().lower()
         picked = [s for s in sections if want in s["title"].lower()]
+        exact = bool(picked)
         if not picked:
             toks = _tokens(section)
             cand = []
@@ -311,7 +312,11 @@ def _search_one(filepath: Path, query: str | None,
         if picked:
             sec = picked[0]
             body = "\n".join(lines[sec["start"] - 1:sec["end"]])
-            return {**base, "mode": "section", "section": sec["title"],
+            # exact=False 表示是 token 回退猜中的，节名和问的不是一回事。
+            # 必须标出来 —— 否则 AI 会以为「我要的那节就是这个」，
+            # 拿着近似命中当精确答案用（这正是「给错的比不给更糟」）。
+            return {**base, "mode": "section", "found": True,
+                    "section": sec["title"], "exact": exact,
                     "line": sec["start"], "content": body[:4000]}
         return {**base, "mode": "section", "found": False}
 
@@ -332,6 +337,20 @@ def _search_one(filepath: Path, query: str | None,
         return {**base, "mode": "query", "matches": []}
 
     return {**base, "mode": "toc", "toc": _toc(lines, sections, 40)}
+
+
+def _hit_count(r: dict) -> int:
+    """一张卡命中了几项。
+
+    ⚠️ section 模式的结果落在 `content`，既没有 `matches` 也没有 `toc`。
+    只数后两者会把「读到了 400 字正文」报成「0 项」—— 实测 AI 明明已经拿到
+    整节内容，hint 却说 0 项，还教它再传一次 --section，于是它又去猜一遍节名。
+    """
+    for key in ("matches", "toc"):
+        v = r.get(key)
+        if isinstance(v, list):
+            return len(v)
+    return 1 if isinstance(r.get("content"), str) and r["content"].strip() else 0
 
 
 def _card_mode(pkg: str, query: str | None, section: str | None,
@@ -364,8 +383,7 @@ def _card_mode(pkg: str, query: str | None, section: str | None,
     # 给一句汇总，AI 一眼知道两边各命中多少
     summary = []
     for r in results:
-        n = len(r.get("matches") or []) or len(r.get("toc") or [])
-        summary.append(f"{r['source']}({r['name']}): {n} 项")
+        summary.append(f"{r['source']}({r['name']}): {_hit_count(r)} 项")
     # ⚠️ 别教 --path。实测教了之后 AI 就一路 path=+section 单节读，
     #    一轮读了 9 次。card= 能一次搜两张卡、section 还能重复传多节。
     if query:
@@ -374,9 +392,22 @@ def _card_mode(pkg: str, query: str | None, section: str | None,
                          f"不用再读一遍。需要别的节就用 "
                          f'--card {pkg} --section <节名>（section 可重复传多个）')
     else:
-        out["hint"] = ("；".join(summary)
-                       + f"。要读某一节，用 --card {pkg} --section <节名>"
-                         "（section 可重复传多个，一次读完所有要看的节）")
+        # 已经读到了就别再教它传一次 --section —— 实测 AI 会照做，又去猜一遍节名。
+        fuzzy = [r["section"] for r in results
+                 if r.get("exact") is False and r.get("section")]
+        if section and fuzzy:
+            out["hint"] = ("；".join(summary)
+                           + f"。⚠️ 没有节名正好叫「{section}」，"
+                             f"上面给的是最接近的「{fuzzy[0]}」—— 先确认它说的就是你要的"
+                             "事，不是就直接看目录挑节名。")
+        elif section and any(_hit_count(r) for r in results):
+            out["hint"] = ("；".join(summary)
+                           + "。content 就是该节全文，直接用。"
+                             "还要看别的节再按节名传 --section。")
+        else:
+            out["hint"] = ("；".join(summary)
+                           + f"。要读某一节，用 --card {pkg} --section <节名>"
+                             "（section 可重复传多个，一次读完所有要看的节）")
     return out
 
 
@@ -434,7 +465,7 @@ def _asked(out: dict) -> dict:
         titles.extend(ct)
         per_card.append({"source": c.get("source"),
                          "found": c.get("found"),
-                         "match_n": len(cm if isinstance(cm, list) else []),
+                         "match_n": _hit_count(c),
                          "titles": ct})
     # card 多节模式：found 是 [{source, asked, title}]
     for f in out.get("found") if isinstance(out.get("found"), list) else []:
@@ -525,7 +556,8 @@ def _main() -> int:
                     help="章节名（可重复传多次，一次读多节）")
     ap.add_argument("--grep", default=None)
     ap.add_argument("--offset", type=int, default=None)
-    ap.add_argument("--limit", type=int, default=120)
+    ap.add_argument("--limit", type=int, default=None,
+                    help="按行读时读几行，默认 120")
     ap.add_argument("--stdin-json", action="store_true", dest="stdin_json",
                     help="从 stdin 读 JSON {\"args\": [\"--path\", ...]}，"
                          "避免命令行引号被 Windows 拆断")
@@ -581,6 +613,7 @@ def _main() -> int:
                             "sections_asked": secs,
                             "found": [], "content": ""}
             parts: list[str] = []
+            fuzzy: list[str] = []
             for s in secs:
                 one = _card_mode(args.card, args.query, s, args.grep)
                 for c in one.get("cards") or []:
@@ -591,7 +624,10 @@ def _main() -> int:
                         merged["found"].append({
                             "source": label, "asked": s,
                             "title": c.get("section"),
+                            "exact": c.get("exact"),
                             "chars": len(c["content"])})
+                        if c.get("exact") is False and s not in fuzzy:
+                            fuzzy.append(s)
                     for m in c.get("matches") or []:
                         merged["found"].append({
                             "source": label, "asked": s,
@@ -608,6 +644,10 @@ def _main() -> int:
             if missed:
                 hint += f"；**没找到**：{', '.join(missed)}"
                 merged["missing"] = missed
+            if fuzzy:
+                # 近似命中不能当精确命中报 —— 否则 AI 拿错节当答案。
+                hint += (f"；⚠️ {', '.join(fuzzy)} 没有节名正好对上，"
+                         "给的是最接近的那节，先确认说的是不是你要的事")
             merged["hint"] = hint
             out = merged
 
@@ -821,7 +861,7 @@ def _main() -> int:
     # ── 模式 4：按行读 ──────────────────────────────────────────
     if args.offset is not None:
         a = max(1, args.offset)
-        b = min(total, a + max(1, args.limit) - 1)
+        b = min(total, a + max(1, args.limit or 120) - 1)
         print(json.dumps({
             **base, "mode": "lines",
             "offset": a, "end_line": b,

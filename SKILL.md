@@ -360,6 +360,10 @@ android_act(action="tap", x=<x>, y=<y>, via="rid=<按钮>", expect="rid=<落点 
 android_read_file(card="<包名>", section=["<小节1>", "<小节2>"])
 ```
 
+节名记不准没关系，它会返回最接近的一节，并在 `exact` 字段标 `false`、
+`hint` 里写明「没有节名正好叫 X，给的是最接近的 Y」—— 看到这个标记，
+**先确认那一节说的就是你问的事**，不是就按目录挑准确节名，别拿近似命中当答案。
+
 ⚠️ **不要用 `path=` 整份读卡**（`android_read_file(path="assets/knowledge/...md")`）——
 整卡 2 万字，读两次就把上下文挤满了。
 
