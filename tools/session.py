@@ -25,7 +25,7 @@ from db import (  # noqa: I001
     set_current,
 )
 from runtime import (
-    CASES_DIR, PATHS_DIR, STORAGE_DIR, current_record_dir,
+    CASES_DIR, STORAGE_DIR, current_record_dir,
     detect_shell, last_record_dir, new_record_dir, pin_record,
     require_writable_storage, unpin_record,
 )
@@ -50,135 +50,6 @@ def maybe_file(v: str) -> str:
     if v and v.startswith("@"):
         return Path(v[1:]).read_text(encoding="utf-8")
     return v
-
-
-def _parse_path_nodes(text: str) -> list[dict]:
-    """解析路径图，得到每个节点：{name, activity, keys:[(kind,value)], anchors:{...}}。
-
-    识别键来自节点里的 `- **识别键**: \\`kind=value\\` · ...` 行（机器可读），
-    用于把采集到的边**归到节点名**（而不是只有裸 activity）。
-    """
-    nodes: list[dict] = []
-    cur: dict | None = None
-    for ln in text.splitlines():
-        if ln.startswith("## "):
-            name = ln[3:].strip()
-            # 非节点小节：索引 / 自动采集的边，以及以符号开头的说明性小节
-            # （如「## ⚠️ 同 rid 多态：…」「## 📌 说明」）—— 它们不是落脚点。
-            if (name in ("节点索引（先认自己在哪）", "自动采集的边")
-                    or not name[0].isalnum() and not ("\u4e00" <= name[0] <= "\u9fff")):
-                cur = None
-                continue
-            cur = {"name": name, "activity": "", "keys": []}
-            nodes.append(cur)
-            continue
-        if cur is None:
-            continue
-        s = ln.strip()
-        if s.startswith("- **activity**:"):
-            cur["activity"] = s.split(":", 1)[1].strip().strip("`")
-        elif s.startswith("- **识别键**:"):
-            for part in s.split(":", 1)[1].split("·"):
-                p = part.strip().strip("`").strip()
-                if "=" in p:
-                    k, v = p.split("=", 1)
-                    cur["keys"].append((k.strip(), v.strip()))
-    return nodes
-
-
-def _match_node(nodes: list[dict], snapshot_keys: set[str]) -> str:
-    """按「识别键命中数」判定当前落在哪个节点。
-
-    snapshot_keys：当时屏幕上出现过的 `rid=xxx` / `text=xxx` / `desc=xxx`。
-    命中最多者胜；一个都不中就返回空（宁可归不出，也不乱归）。
-    """
-    best, best_n = "", 0
-    for n in nodes:
-        hit = sum(1 for k, v in n["keys"] if f"{k}={v}" in snapshot_keys)
-        if hit > best_n:
-            best, best_n = n["name"], hit
-    return best
-
-
-def apply_pending_paths(only: str | None = None,
-                        package: str | None = None) -> dict:
-    """把 `storage/pending_paths.md` 里的草稿边写入路径图。
-
-    写入位置：路径图末尾的「## 自动采集的边」区（不碰人工整理好的各节点节）——
-    人工节的锚点表带 desc/text 与 ⚠️ 提示，自动边只有 rid/text，混进去反而降质。
-    人看过草稿后，可自行把高频边**手抄进对应节点**。
-    """
-    draft = STORAGE_DIR / "pending_paths.md"
-    if not draft.is_file():
-        return {"ok": False, "error": "没有待确认草稿（先跑 paths 采集）"}
-
-    text = draft.read_text(encoding="utf-8")
-    pkg = package
-    if not pkg:
-        m = re.search(r"app:\s*`([^`]+)`", text)
-        if not m:
-            return {"ok": False, "error": "草稿里没有 app 包名"}
-        pkg = m.group(1)
-    path = PATHS_DIR / f"{pkg}.md"
-    if not path.is_file():
-        return {"ok": False, "error": f"路径图不存在：assets/knowledge/paths/{pkg}.md"}
-
-    # 解析草稿里的边：`N. **源** --[锚点]--> **目标**`
-    picks = set()
-    if only:
-        for p in only.split(","):
-            p = p.strip()
-            if p.isdigit():
-                picks.add(int(p))
-    rows: list[tuple[str, str, str]] = []
-    for m in re.finditer(r"^\s*(\d+)\.\s+\*\*(.+?)\*\*\s+--\[(.+?)\]-->\s+\*\*(.+?)\*\*",
-                         text, re.M):
-        idx, a, v, b = int(m.group(1)), m.group(2), m.group(3), m.group(4)
-        if picks and idx not in picks:
-            continue
-        rows.append((a, v, b))
-    if not rows:
-        return {"ok": False, "error": "草稿里没有可应用的边（或 --only 没选中任何一条）"}
-
-    lines = path.read_text(encoding="utf-8").splitlines()
-    marker = "## 自动采集的边"
-    if marker not in lines:
-        lines += ["", marker, "",
-                  "<!-- 自动整理、经人确认写入；可手抄进上方节点 -->", ""]
-    existing = set(l.strip() for l in lines)
-    added_lines = []
-    for a, v, b in rows:
-        row = f"- `{a}` --[{v}]--> `{b}`"
-        if row not in existing:
-            added_lines.append(row)
-    if added_lines:
-        lines += added_lines
-        path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-
-    # 应用过的边从草稿里删掉，剩下的留着下次确认
-    remaining = []
-    for m in re.finditer(r"^\s*(\d+)\.\s+\*\*(.+?)\*\*\s+--\[(.+?)\]-->\s+\*\*(.+?)\*\*",
-                         text, re.M):
-        if int(m.group(1)) not in {i for i, _ in enumerate(rows, 1)}:
-            remaining.append(m.group(0))
-    # 简化：直接按"是否已写入路径图"判断剩余
-    rest = [r for r in re.findall(
-        r"^\s*\d+\.\s+\*\*(.+?)\*\*\s+--\[(.+?)\]-->\s+\*\*(.+?)\*\*", text, re.M)
-        if f"- `{r[0]}` --[{r[1]}]--> `{r[2]}`" not in set(l.strip() for l in
-                                                           path.read_text(encoding="utf-8").splitlines())]
-    head = [f"# 路径图更新建议（剩余 {len(rest)} 条待确认）", "", f"app: `{pkg}`", "",
-            "> 已应用的不再列出。确认后执行 `python tools/session.py paths-apply`", ""]
-    body = []
-    for i, (a, v, b) in enumerate(rest, 1):
-        body += [f"{i}. **{a}** --[{v}]--> **{b}**", ""]
-    draft.write_text("\n".join(head + body + ["---", ""]), encoding="utf-8")
-
-    return {"ok": True, "package": pkg,
-            "applied": len(added_lines), "skipped_duplicate": len(rows) - len(added_lines),
-            "remaining": len(rest),
-            "path": f"assets/knowledge/paths/{pkg}.md"}
-
-
 
 
 # 「弹窗标题」类 rid：出现即说明某个弹层打开了，是最可靠的页内落点。
@@ -537,117 +408,6 @@ def export_steps(db, session_id: int) -> str | None:
     return f"assets/cases/{pkg}/{out.name}{drop_note}"
 
 
-def collect_paths(db, session_id: int) -> str | None:
-    """采集本次会话的「路径边」，**生成待确认草稿**（不直接改路径图）。
-
-    记什么（对齐路径图模型）：
-        节点（从哪个落脚点出发）→ 锚点（点了什么控件）→ 节点（到了哪）
-
-    为什么要"草稿 + 确认"：
-        自动采集只能拿到 activity + 点击时的屏幕快照，归节点靠识别键 ——
-        大部分能归对，但边界情况（同 activity 多形态、弹层）需要人扫一眼。
-        所以**先出草稿，人确认后再写入**，而不是自动改卡。
-
-    采集规则（避免噪声）：
-      - 只取带 `via`（点了什么）**且**前后 activity 发生变化的动作 —— 那才是"路径边"；
-      - 同 activity 内的点击（弹菜单/弹窗）不记为页面级跳转；
-      - 无 via 的动作跳过（当时没记定位依据，采不出可信的锚点）。
-    """
-    s = db.get_session(session_id)
-    if not s:
-        return None
-    pkg = s.get("package")
-    if not pkg:
-        return None
-
-    path = PATHS_DIR / f"{pkg}.md"
-    nodes = _parse_path_nodes(path.read_text(encoding="utf-8")) if path.is_file() else []
-
-    def _snapshot_keys(ev) -> set[str]:
-        """取某次事件落库的**屏幕身份签名**（act 时随事件写入的 `sig`）。"""
-        try:
-            j = json.loads(ev.get("data_json") or "{}")
-        except Exception:  # noqa: BLE001
-            return set()
-        return set(j.get("sig") or [])
-
-    evs = s["events"]
-
-    def _act_of(ev) -> str:
-        try:
-            return (json.loads(ev.get("data_json") or "{}").get("activity") or "")
-        except Exception:  # noqa: BLE001
-            return ""
-
-    edges: list[tuple[str, str, str]] = []   # (源节点, 锚点, 目标节点)
-    for i, e in enumerate(evs):
-        if e["kind"] != "act":
-            continue
-        data = json.loads(e["data_json"] or "{}")
-        act = data.get("action") or {}
-        via = (act.get("via") or "").strip()
-        if not via:
-            continue                          # 没记定位依据 → 采不出可信锚点
-        # 边 = 「点之前的页面」--[锚点]--> 「点之后的页面」。
-        # 这条 act 自带的 activity 是**点击之后**的，来源要往前找最近一条有 activity 的事件。
-        src_act, src_snap = "", set()
-        for prev in reversed(evs[:i]):
-            a = _act_of(prev)
-            if a:
-                src_act = a
-                src_snap = _snapshot_keys(prev)
-                break
-        dst_act = _act_of(e)
-        if not src_act or not dst_act or src_act == dst_act:
-            continue                          # 同页（弹菜单/弹窗）→ 不是页面级路径边
-        src_node = _match_node(nodes, src_snap) or src_act
-        dst_node = _match_node(nodes, _snapshot_keys(e)) or dst_act
-        edges.append((src_node, via, dst_node))
-    if not edges:
-        return None
-
-    # 去重（同一条边可能多次走到）
-    seen, uniq = set(), []
-    for a, v, b in edges:
-        if a == b:
-            continue          # 自环：归到同一节点（如「图库导入流程」内部的子步骤），不是路径边
-        if (a, v, b) not in seen:
-            seen.add((a, v, b))
-            uniq.append((a, v, b))
-
-    # 已有内容里出现过的**完整边**（源节点 + 锚点 + 目标节点）才跳过。
-    # ⚠️ 不能只拿 via 去搜全文 —— 锚点名（如 rid=iv_more）在卡里到处出现，
-    # 会把所有边都误判成"已存在"（真实缺陷）。
-    existing_txt = path.read_text(encoding="utf-8") if path.is_file() else ""
-    fresh = [(a, v, b) for (a, v, b) in uniq if v not in existing_txt
-             or f"{a}** --[{v}]--> **{b}" not in existing_txt]
-
-    # 写草稿（不直接改路径图 —— 等人确认）
-    draft = STORAGE_DIR / "pending_paths.md"
-    draft.parent.mkdir(parents=True, exist_ok=True)
-    block = [
-        f"# 路径图更新建议（会话 #{session_id}）",
-        "",
-        f"app: `{pkg}`　路径图: `assets/knowledge/paths/{pkg}.md`",
-        "",
-        "> 自动整理出的**待确认草稿**，尚未写入路径图。",
-        "> 确认后执行：`python tools/session.py paths-apply --id "
-        f"{session_id}`（或加 `--only 1,3` 只挑几条）",
-        "",
-    ]
-    if not fresh:
-        block += ["（本次没有新的边需要补充）", ""]
-    for i, (a, v, b) in enumerate(fresh, 1):
-        block += [f"{i}. **{a}** --[{v}]--> **{b}**", ""]
-    block += ["---", "", "<!-- 本文件每次采集时覆盖重写 -->", ""]
-    draft.write_text("\n".join(block), encoding="utf-8")
-
-    if not fresh:
-        return f"无需追加（会话 #{session_id} 的边都已在路径图中）"
-    return (f"草稿已生成 storage/pending_paths.md（{len(fresh)} 条待确认边）；"
-            f"确认后执行 `session.py paths-apply --id {session_id}`")
-
-
 
 
 def run_case_cmd(db, args) -> None:
@@ -778,7 +538,7 @@ def main() -> None:
     s.add_argument("--event-id", action="append", type=int, default=[],
                    help="关联本会话证据事件；可重复传入多个事件 ID")
     s.add_argument("--id", type=int, default=None,
-                   help="记录到指定会话（暂停/等待中的会话用 --id）")
+                   help="记录到指定会话（不给就记到当前会话）")
 
     # ★ 批量记断言：一次调用写多条
     #
@@ -812,10 +572,8 @@ def main() -> None:
     #    但为了"同一个会话的 start/finish 参数风格一致"，收下忽略更省事。
     s.add_argument("--device", default=None,
                    help="（兼容用，收下忽略）设备 serial；finish 不连设备")
-    s.add_argument("--no-paths", action="store_true", dest="no_paths",
-                   help="PASS 时默认采集路径边；加此参数跳过")
     s.add_argument("--id", type=int, default=None,
-                   help="收尾指定会话（暂停/等待中的会话已解绑，须用 --id）")
+                   help="收尾指定会话（不给就收尾当前会话）")
 
     s = sub.add_parser("resume", help="崩溃终止后人工确认继续（清除终态）")
     s.add_argument("--id", type=int, required=True)
@@ -851,20 +609,6 @@ def main() -> None:
     s.add_argument("--clear", action="store_true", help="清除意图（分支测完就清）")
     s.add_argument("--show", action="store_true", help="只查看当前意图")
     s.add_argument("--id", type=int, default=None, help="指定会话（默认当前）")
-
-    s = sub.add_parser("paths", help="采集路径边 → 生成待确认草稿 storage/pending_paths.md")
-    s.add_argument("--id", type=int, default=None)
-
-    s = sub.add_parser("paths-apply",
-                       help="把待确认草稿写入路径图（人确认后执行）")
-    s.add_argument("--only", default=None,
-                   help="只应用草稿里的第几条（如 1,3）；缺省=全部")
-    s.add_argument("--package", default=None, help="目标包名（缺省取草稿里的）")
-    # --id 只为兼容：草稿里本来就带会话号，收下但不用。
-    # 实测 AI 以为跟 `paths` 一样要给 --id，白报错一次 + 探路一次（约 8 秒）。
-    s.add_argument("--id", type=int, default=None,
-                   help="（兼容用，可忽略）草稿里已带会话号，不需要指定")
-
 
     sub.add_parser("list")
     sub.add_parser("current")
@@ -1248,7 +992,7 @@ def main() -> None:
     elif args.cmd == "finish":
         sid = args.id if getattr(args, "id", None) else current_session()
         if not sid:
-            raise SystemExit("没有进行中的会话（暂停/等待中的会话用 --id 指定）")
+            raise SystemExit("没有进行中的会话（要收尾别的会话请加 --id）")
         summary = maybe_file(args.summary)
         ok = db.finish_session(sid, args.status, summary, args.package)
         cleanup_warning = None
@@ -1287,17 +1031,6 @@ def main() -> None:
                          f"python session.py case save --session {sid}")
         # 采集路径边（不再导出步骤序列）。
         # 为什么换掉：步骤序列是最易腐的知识（换个状态/版本就废），
-        # 而「从哪个落脚点、点什么锚点、到了哪」是耐用的结构。
-        # ⚠️ **不看会话结论**：BLOCKED / FAIL 的会话里，崩溃前走过的路径同样有效
-        # （实测 170 走到最后一步才崩，前面的「导入课程表→图库导入→裁剪→解析」全是真路径）。
-        # 只要有 act 事件就能采出边 —— 早先只采 PASS，白丢了这些。
-        path_note = None
-        if not getattr(args, "no_paths", False):
-            try:
-                path_note = collect_paths(db, sid)
-            except Exception as e:  # noqa: BLE001
-                self_check.append(f"⚠️ 路径采集失败：{e}")
-
         # 导出「可复用的跳转步骤」（只含锚点明确+落点可验+非前置的 tap）。
         # 下次跑同一条用例时可以直接照着点这几步，不用 AI 每步重新找控件。
         #
@@ -1321,10 +1054,6 @@ def main() -> None:
                         "结论应为 BLOCKED 且报告需附 crash.log 证据路径；"
                         "无关包崩溃仅需在报告中说明")
                if crash_n else "无崩溃事件"}
-        if path_note:
-            out["paths_collected"] = path_note
-            out["note"] = ("已采集路径边到 assets/knowledge/paths/<包名>.md"
-                           "（落脚点 + 锚点 + 去向；下次操作可直接查，不用探索）")
         if steps_note:
             out["steps_exported"] = steps_note
             out["steps_note"] = (
@@ -1404,14 +1133,6 @@ def main() -> None:
                                        f"【{'同意' if args.action == 'grant' else '拒绝'}】"
                                        f"；分支测完请 perm-intent --clear")},
                              ensure_ascii=False))
-    elif args.cmd == "paths":
-        # 手动采集某会话的路径边 → 草稿（finish 时已自动做）
-        note = collect_paths(db, args.id if getattr(args, "id", None) else current_session())
-        print(json.dumps({"ok": bool(note), "paths": note}, ensure_ascii=False))
-    elif args.cmd == "paths-apply":
-        print(json.dumps(apply_pending_paths(
-            only=getattr(args, "only", None),
-            package=getattr(args, "package", None)), ensure_ascii=False))
     elif args.cmd == "list":
         print(json.dumps(db.list_sessions(20), ensure_ascii=False, indent=2))
     elif args.cmd == "current":

@@ -75,7 +75,7 @@ def evaluate(expect: dict, *, activity: str | None, sig: list[str] | None,
             def _act_hit(v: str) -> bool:
                 if not act:
                     return False
-                v = v.strip().lstrip(".")      # 允许写成 .a.B（路径图里就是这写法）
+                v = v.strip().lstrip(".")      # 允许写成 .a.B（用例里就是这写法）
                 if not v:
                     return False
                 if act == v:

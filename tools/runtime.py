@@ -98,7 +98,6 @@ def storage_root_source() -> str:
 #       <包名>_<功能>_<编号>.md    ← 原始用例（人写的，或从需求文档粘的）
 #       <md文件名>_steps.yaml     ← 跑过之后自动导出的可复用跳转步骤（与 md 同名）
 #     knowledge/<包名>.md        ← 知识卡
-#     knowledge/paths/<包名>.md  ← 路径图
 #
 #   storage/                     ← **不进 git**，纯本地运行产物
 #     test.db                    ← 单库，所有会话/事件/断言都在这里
@@ -122,10 +121,9 @@ ASSETS_DIR = Path(os.environ.get("ANDROID_TEST_ASSETS", str(ROOT / "assets"))).r
 CASES_DIR = ASSETS_DIR / "cases"
 # 知识卡放在 assets 下：它是**资产**（进 git、跨设备跨会话复用、决定下次跑得更快），
 # 和用例是同一类东西。放根目录会让人以为是代码的一部分。
-#   assets/knowledge/<包名>.md + assets/knowledge/paths/<包名>.md
+#   assets/knowledge/<包名>.md
 KNOWLEDGE_DIR = Path(os.environ.get(
     "ANDROID_TEST_KNOWLEDGE", str(ASSETS_DIR / "knowledge"))).resolve()
-PATHS_DIR = KNOWLEDGE_DIR / "paths"
 # 每次运行的落盘目录：一次运行一个目录，目录名是带 `-` 的标准 UUID v4
 # （8-4-4-4-12），肉眼可分段读，日志/命令行里复制粘贴也不易粘错。
 RECORD_DIR = STORAGE_DIR / "run_history"

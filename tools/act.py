@@ -21,7 +21,7 @@
   按知识卡经验加大，而不是靠反复 observe 轮询堆证据。
 """
 from __future__ import annotations
-from runtime import PATHS_DIR, execution
+from runtime import execution
 
 import argparse
 import json
@@ -164,268 +164,6 @@ def _reject_selector_misuse(p: argparse.ArgumentParser) -> None:
     )
 
 
-def _first(v) -> str:
-    """parse_expect 的值是**列表**（支持 `a|b`），这里取第一个用于定位。"""
-    if isinstance(v, list):
-        return v[0] if v else ""
-    return v or ""
-
-
-def _find_anchor(nodes: list[dict], labeled: list[tuple], sel: dict) -> dict | None:
-    """在当前屏幕里找一个锚点 → 返回 {x, y, label, how}。
-
-    降级链与路径图一致：rid → desc → text。
-    坐标**现场派生**（不写死），所以同一份路径图换设备/分辨率仍可用。
-    """
-    want_rid = _first(sel.get("rid")).split("/")[-1]
-    want_desc = _first(sel.get("desc"))
-    want_text = _first(sel.get("text"))
-
-    # full 模式给的是完整键；nav 模式是短键 r/d/t
-    for n in nodes:
-        c = n.get("center") or n.get("c")
-        if not c:
-            continue
-        rid = (n.get("rid") or n.get("r") or "").split("/")[-1]
-        desc = n.get("desc") or n.get("d") or ""
-        text = n.get("text") or n.get("t") or ""
-        if want_rid and rid == want_rid:
-            # 同 rid 多态：若同时给了 text，必须文字也对上（否则会点错项）
-            if want_text and want_text not in text:
-                # 文字可能在子节点里 → 用 nearby 文字兜底
-                near = ""
-                for lx, ly, lt in (labeled or []):
-                    if abs(lx - c[0]) <= 400 and abs(ly - c[1]) <= 80 and len(lt) > len(near):
-                        near = lt
-                if want_text not in near:
-                    continue
-                return {"x": c[0], "y": c[1], "label": want_text, "how": f"rid={want_rid}+text"}
-            return {"x": c[0], "y": c[1], "label": text or desc or want_rid,
-                    "how": f"rid={want_rid}"}
-    for n in nodes:
-        c = n.get("center") or n.get("c")
-        if not c:
-            continue
-        desc = n.get("desc") or n.get("d") or ""
-        if want_desc and want_desc in desc:
-            return {"x": c[0], "y": c[1], "label": desc, "how": f"desc={want_desc}"}
-    # text 兜底：必须**整串相等**，不能用 `in`。
-    # ⚠️ 用子串匹配会点到无关元素 —— 真实事故：找 `text=设置` 时命中了页面上
-    # 另一个含"设置"的容器（`layout_time_settings`），点到了完全不同的行，
-    # 落点跑到 TimeSlotSettingsActivity。宁可找不到（报 anchor_not_found），
-    # 也不要"猜一个差不多"的（那会把测试带到错误页面还继续跑）。
-    for n in nodes:
-        c = n.get("center") or n.get("c")
-        if not c:
-            continue
-        text = (n.get("text") or n.get("t") or "").strip()
-        if want_text and text == want_text:
-            return {"x": c[0], "y": c[1], "label": text, "how": f"text={want_text}"}
-    # 再退一步：可点容器自己没有文字、文字在子节点里 → 邻近且**相等**才算
-    for n in nodes:
-        c = n.get("center") or n.get("c")
-        if not c:
-            continue
-        for lx, ly, lt in (labeled or []):
-            if (want_text and lt.strip() == want_text
-                    and abs(lx - c[0]) <= 400 and abs(ly - c[1]) <= 80):
-                return {"x": c[0], "y": c[1], "label": lt, "how": f"text≈{want_text}"}
-    return None
-
-
-def run_steps(args) -> None:
-    """按路径图批量执行：起点 → 终点，每步校验检查点，不符即停。"""
-    import pathmap
-    # ⚠️ 整批必须**保证有结构化返回**：run.py 按"是否拿到结构化结果"判定
-    # 记录是否完整，异常逃逸会让 ledger 停在 started、把会话锁死（真实事故）。
-    try:
-        _run_steps_inner(args, pathmap)
-    except SystemExit:
-        raise
-    except Exception as e:  # noqa: BLE001
-        emit(False, {"error": f"act steps 失败: {type(e).__name__}: {e}",
-                     "hint": "本批未完成；已走的步骤见上面的逐步证据。"
-                             "修好后用 --resume-from N 接着跑。"})
-
-
-def _run_steps_inner(args, pathmap) -> None:
-    pkg = getattr(args, "package", None)
-    if not pkg:
-        try:
-            from db import current_session, get_db
-            si = current_session()
-            if si:
-                row = get_db().get_session(si)
-                pkg = (row or {}).get("package") if isinstance(row, dict) else None
-        except Exception:  # noqa: BLE001
-            pkg = None
-    if not pkg:
-        # 没有活动会话/没记包名 → 看路径图目录：只有一张图时无歧义，直接用
-        maps = sorted(PATHS_DIR.glob("*.md"))
-        if len(maps) == 1:
-            pkg = maps[0].stem
-        elif maps:
-            emit(False, {"error": "有多个路径图，无法判断用哪张："
-                                  + ", ".join(m.stem for m in maps)
-                                  + "。加 --package <包名> 指定。"})
-            return
-    if not pkg:
-        emit(False, {"error": "找不到路径图 assets/knowledge/paths/*.md"
-                              "（act steps 依赖路径图；没有图就先手动跑一遍采边）"})
-        return
-
-    path_map = PATHS_DIR / f"{pkg}.md"
-    if not path_map.is_file():
-        emit(False, {"error": f"路径图不存在: assets/knowledge/paths/{pkg}.md"})
-        return
-    nodes = pathmap.load(path_map)
-    plan = pathmap.path_between(nodes, args.src, args.dst, args.max_hops)
-    if not plan["found"]:
-        emit(False, {"error": plan["reason"],
-                     "hint": "路径图里没有这条通路。先手动跑一遍，"
-                             "再用 session.py paths 采集边、paths-apply 写回。"})
-        return
-    if args.dry_run:
-        emit(True, {"dry_run": True, "route": plan["nodes"],
-                    "steps": [{"n": i, "from": s["from"], "to": s["to"],
-                               "anchor": s["anchor"], "selector": pathmap.edge_selector(s),
-                               "expect": pathmap.finish_expect(pathmap.find_node(nodes, s["to"]))}
-                              for i, s in enumerate(plan["steps"], 1)]})
-        return
-
-    d = connect(args.serial)
-    results = []
-    start = max(1, args.resume_from)
-
-    # 先认起点：不在起点就别硬走 —— 直接说清楚"你现在在哪、应该在哪"。
-    # 否则会在第 1 步报"找不到锚点"，让人误以为是路径图错了（实际是先没到起点）。
-    if start == 1:
-        _xml0 = d.dump_hierarchy()
-        _sig0 = npm_identity(_xml0, pkg)
-        _src = pathmap.find_node(nodes, args.src)
-        exp0 = pathmap.finish_expect(_src)
-        ck0 = checkpoint.evaluate(checkpoint.parse_expect(exp0),
-                                  activity=(d.app_current() or {}).get("activity"), sig=_sig0)
-        if ck0["checked"] and not ck0["ok"]:
-            _here = checkpoint.evaluate(
-                checkpoint.parse_expect(""), activity="", sig=_sig0)
-            emit(False, {"error": f"当前不在起点「{args.src}」",
-                         "expect": exp0, "missed": ck0["missed"],
-                         "hint": f"先导航到「{args.src}」再执行；"
-                                 f"或用 --from 指定你实际所在的节点。"
-                                 f"当前 activity={(d.app_current() or {}).get('activity')}"})
-            return
-
-    for i, step in enumerate(plan["steps"], 1):
-        if i < start:
-            results.append({"n": i, "from": step["from"], "to": step["to"],
-                            "status": "skipped"})
-            continue
-        sel = pathmap.edge_selector(step)
-        if not sel:
-            _rec = {"n": i, "from": step["from"], "to": step["to"],
-                    "status": "no_anchor", "reason": "这条边在路径图里没记锚点"}
-            _e = log_auto("act", f"act steps[{i}] 中止",
-                          f"第 {i} 步无法执行：这条边没记锚点",
-                          {"batch_step": i, "reason": "no_anchor"}, None, 0,
-                          datetime.now().isoformat(timespec="milliseconds"))
-            _rec["event_id"] = _e
-            results.append(_rec)
-            break
-
-        xml = d.dump_hierarchy()
-        full = summarize_xml(xml, mode="full", fg_package=pkg)
-        labeled = labeled_nodes(xml, pkg)
-        spec = checkpoint.parse_expect(sel)
-        hit = _find_anchor(full, labeled, spec)
-        if not hit:
-            # 锚点找不到也要落事件：否则整批没有任何事件 → ledger 判"无动作事件"。
-            _png, _xml, _meta = evidence_paths(args.dir, args.name or f"steps{i:02d}")
-            try:
-                capture(d, _png, _xml, _meta, extra={"batch_step": i, "anchor_missing": sel})
-            except Exception:  # noqa: BLE001
-                _png = None
-            _rec = {"n": i, "from": step["from"], "to": step["to"],
-                    "status": "anchor_not_found", "selector": sel,
-                    "reason": f"当前屏幕找不到锚点 {sel}"}
-            _e = log_auto("act", f"act steps[{i}] {step['from']} → {step['to']}",
-                          f"第 {i} 步失败：找不到锚点 {sel}",
-                          {"batch_step": i, "anchor": sel, "status": "anchor_not_found"},
-                          rel(_png) if _png else None, 0,
-                          datetime.now().isoformat(timespec="milliseconds"))
-            _rec["event_id"] = _e
-            results.append(_rec)
-            break
-
-        d.click(hit["x"], hit["y"])
-        time.sleep(args.settle / 1000)
-
-        # 每步都要落证据 —— 批量执行**不能**降低取证标准。
-        # 单步 act 的截图/dump 是 finding 绑定证据的前提；批量若只记一条汇总事件，
-        # 事后就无法用 --event-id 引用（真实缺陷：会话 328 finding 被拒）。
-        step_dir = None
-        png = xml2_path = None
-        try:
-            _png, _xml, _meta = evidence_paths(args.dir, args.name or f"steps{i:02d}")
-            capture(d, _png, _xml, _meta, extra={"batch_step": i,
-                                                 "from": step["from"], "to": step["to"]})
-            png, xml2_path, step_dir = _png, _xml, _meta
-        except Exception as e:  # noqa: BLE001
-            results.append({"n": i, "from": step["from"], "to": step["to"],
-                            "status": "evidence_failed", "reason": str(e)})
-            break
-
-        xml2 = xml2_path.read_text(encoding="utf-8")
-        act2 = None
-        try:
-            act2 = d.app_current().get("activity")
-        except Exception:  # noqa: BLE001
-            pass
-        sig2 = npm_identity(xml2, pkg)
-        tgt_node = pathmap.find_node(nodes, step["to"])
-        exp = pathmap.finish_expect(tgt_node)
-        ck = checkpoint.evaluate(checkpoint.parse_expect(exp), activity=act2, sig=sig2)
-        rec = {"n": i, "from": step["from"], "to": step["to"],
-               "anchor": step["anchor"], "selector": sel,
-               "how": hit["how"], "clicked": [hit["x"], hit["y"]],
-               "activity": act2, "expect": exp, "checkpoint": ck}
-        # 每步一条事件，绑该步证据 —— 这样 finding 能按步引用
-        eid = log_auto(
-            "act", f"act steps[{i}] {step['from']} → {step['to']}",
-            f"第 {i} 步 点 {hit['how']} ({hit['x']},{hit['y']}) → {act2}"
-            + (" · ✅检查点命中" if ck["ok"] else
-               " · ⚠️检查点未命中 " + "; ".join(ck["missed"])),
-            {"action": {"type": "tap", "x": hit["x"], "y": hit["y"],
-                        "via": sel, "why": args.why},
-             "activity": act2, "sig": sig2, "checkpoint": ck, "batch_step": i},
-            rel(png) if png else None, 0,
-            datetime.now().isoformat(timespec="milliseconds"))
-        rec["event_id"] = eid
-        if ck["checked"] and not ck["ok"]:
-            rec["status"] = "checkpoint_missed"
-            results.append(rec)
-            break
-        rec["status"] = "ok"
-        results.append(rec)
-
-    done = [r for r in results if r.get("status") == "ok"]
-    failed = next((r for r in results if r.get("status") not in ("ok", "skipped")), None)
-    payload = {
-        "route": plan["nodes"],
-        "steps": results,
-        "completed": len(done),
-        "total": len(plan["steps"]),
-        "ok": failed is None,
-    }
-    if failed:
-        payload["failed_at"] = failed["n"]
-        payload["hint"] = (f"第 {failed['n']} 步没过（{failed['status']}）："
-                           f"{failed.get('reason') or failed.get('checkpoint', {}).get('missed')}。"
-                           f"修好后可 `act.py steps --from ... --to ... --resume-from {failed['n']}` 接着跑。"
-                           "先判断是临时弹窗（关掉继续）还是用例要的东西没了（停下来记录）。")
-    emit(True, payload)
-
-
 def main() -> None:
     p = argparse.ArgumentParser(description="act：执行动作并回传动作后画面")
     # --settle / --perm-action / --perm 已在 add_common_args 里定义
@@ -482,27 +220,12 @@ def main() -> None:
     s.add_argument("--code", type=int, required=True)
     s.add_argument("--why", default=None)
 
-    # 批量走**路径图里已有的边**。第一次走某条路时用不着（边还没采到），
-    # 第二次以及同事复用同一 SKILL 时，就不必再逐步 "看一眼 → 想一下 → 点一下"。
-    s = sub.add_parser("steps", help="按路径图批量执行一串已知步骤（带检查点）")
-    s.add_argument("--from", dest="src", required=True, help="起点节点名（路径图里的 ## 名）")
-    s.add_argument("--to", dest="dst", required=True, help="目标节点名")
-    s.add_argument("--max-hops", type=int, default=12, dest="max_hops")
-    s.add_argument("--dry-run", action="store_true", dest="dry_run",
-                   help="只打印计划，不碰设备")
-    s.add_argument("--resume-from", type=int, default=1, dest="resume_from",
-                   help="从第 N 步开始（失败后修好接着跑，默认 1）")
-    s.add_argument("--why", default=None)
-
     # 让 --serial/--dir/--name 在子命令前后都能写（两种位置解析后合并）
     add_common_args_all_subcommands(p)
     _reject_selector_misuse(p)
     apply_stdin_args()   # 支持 --stdin-json（参数走 stdin，避开 Windows 引号问题）
     args = p.parse_args()
     guard_terminated(f"act {args.action}")   # 会话已因崩溃终止 → 拒绝执行
-    if args.action == "steps":
-        run_steps(args)
-        return
     via = getattr(args, "via", None)
     why = getattr(args, "why", None)
 
@@ -795,7 +518,7 @@ def main() -> None:
     if perm_result and perm_result.get("detected"):
         info = {**info, "permission": perm_result}
     # 落库前先算一份**屏幕身份签名**（`kind=value` 集合），随事件一起存。
-    # 用途：事后自动整理路径边时，判断"这一步落在路径图的哪个节点"。
+    # 用途：给这一步打一份「屏幕身份签名」，事后能认出当时停在哪一页。
     # 只存签名不存整个 nodes —— 签名几十个短串，nodes 可能有上百个对象。
     _sig = npm_identity(xml.read_text(encoding="utf-8"),
                         None if getattr(args, "no_filter", False) else info.get("package"))

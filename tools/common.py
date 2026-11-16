@@ -13,7 +13,7 @@ import runtime
 from datetime import datetime
 from pathlib import Path
 from runtime import (
-    CALL_ID, CASES_DIR, EVENT_IDS, KNOWLEDGE_DIR, PATHS_DIR, STORAGE_DIR,
+    CALL_ID, CASES_DIR, EVENT_IDS, KNOWLEDGE_DIR, STORAGE_DIR,
     current_record_dir, recording_issues, stage, timed, timing_snapshot,
 )
 
@@ -492,21 +492,7 @@ def knowledge_hint(package: str | None, shown: bool = False,
     if not package or shown:
         return None
     card = KNOWLEDGE_DIR / f"{package}.md"
-    path_map = PATHS_DIR / f"{package}.md"
-    # 路径图节点（落脚点），有就一并给出 —— 它才是"先定位，再找出边"的入口
-    path_nodes: list[str] = []
-    # 这些小节不是落脚点，是路径图的辅助段，别混进节点索引
-    _NOT_NODES = ("节点索引", "自动采集的边", "说明", "索引", "同 rid 多态")
-    if path_map.is_file():
-        try:
-            for line in path_map.read_text(encoding="utf-8").splitlines():
-                if line.startswith("## "):
-                    name = line[3:].strip()
-                    if name and not any(k in name for k in _NOT_NODES):
-                        path_nodes.append(name)
-        except OSError:
-            pass
-    if not card.is_file() and not path_nodes:
+    if not card.is_file():
         return {
             "card": None,
             "system_card": _system_card_hint(),
@@ -535,7 +521,7 @@ def knowledge_hint(package: str | None, shown: bool = False,
         "package": package if card.is_file() else None,
         "how_to_read": (
             f'android_read_file(card="{package}", query="<这条用例要干什么>")'
-            '  —— 一次同时搜知识卡+路径卡，每个 match 的 body 就是该节全文，'
+            '  —— 搜这个应用的知识卡，每个 match 的 body 就是该节全文，'
             '看完直接用，别把同一节再读一遍'
             if card.is_file() else None),
         "how_to_read_section": (
@@ -543,9 +529,7 @@ def knowledge_hint(package: str | None, shown: bool = False,
             '  —— 按节读，section 是数组，一次读完所有要看的节'
             if card.is_file() else None),
         "sections": sections,
-        "tip": ("**执行前先定位**：路径图是节点图（节点=落脚点，边=认什么锚点→去哪）。"
-                "先认自己在哪个节点（看 activity + 屏幕上有什么），再检索该节点的出边。"
-                "知识卡是客观事实（什么情况下会发生什么、怎么运作、怎么算符合预期），"
+        "tip": ("知识卡是客观事实（什么情况下会发生什么、怎么运作、怎么算符合预期），"
                 "按交互类型词检索命中标题，只读对应小节。"
                 "**用 card= 参数读，不要用 path= 整份读。**"),
         "system_card": _system_card_hint(),
@@ -560,10 +544,6 @@ def knowledge_hint(package: str | None, shown: bool = False,
         out["cross_cards_tip"] = (
             "本包卡片正文引用了这些包的内容 —— 若当前界面属于它们，"
             "对应知识可能就写在本包里，别只按被测包名找卡。")
-    if path_nodes:
-        out["path_map"] = f"assets/knowledge/paths/{package}.md"
-        # 字段名直说用途：这是"节点索引"，供先定位、再 grep 对应节
-        out["nodes"] = path_nodes
     return out
 
 
@@ -1285,8 +1265,8 @@ def npm_identity(xml_text: str, fg_package: str | None = None,
                  limit: int = 80) -> list[str]:
     """给一屏算一个**身份签名**：页面上出现过的 `kind=value` 短串集合。
 
-    用途：事后自动整理路径边时，判断"这一步落在路径图的哪个节点"
-    （路径图节点带「识别键」，形如 `rid=btnCreateManually` / `text=全部课程表`）。
+    用途：判断一个快照里出现了哪些「识别键」形式的键
+    （形如 `rid=btnCreateManually` / `text=全部课程表`）。
 
     为什么存签名而不是存 nodes：签名是几十个短串（可随事件落库），
     nodes 是上百个对象（落库太占地方）。

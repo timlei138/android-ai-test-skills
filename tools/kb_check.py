@@ -1,4 +1,4 @@
-"""知识资产体检：查知识卡 / 路径图 / 用例 YAML 三者的一致性。
+"""知识资产体检：查知识卡 / 用例 YAML 两者的一致性。
 
 存在的理由
 ----------
@@ -9,13 +9,10 @@
 
 检查项
 ------
-  1. 路径图断链   ：「→ 去向」写了一个没有对应 `## 节点` 的名字
-  2. 索引不同步   ：「节点索引」表与文中实际的 `## 节点` 对不上
-  3. 废弃仍引用    知识卡标注"已移除/改版"的 rid，路径图仍当可用锚点
-  4. 引用锚过期    用例 YAML 里 `from: 卡.md#小节` 指向的知识卡小节，
+  1. 引用锚过期    用例 YAML 里 `from: 卡.md#小节` 指向的知识卡小节，
                    内容已变（quote_hash 对不上）→ 该 YAML 的副本可能已过期
 
-关于第 4 项（为什么允许重复、但要能查出过期）
+关于这项（为什么允许重复、但要能查出过期）
 ---------------------------------------------
 YAML 要**自包含**：回放时不该要求执行者再翻知识卡（翻卡费时且易漏），
 所以 `know`/`pitfalls` 里**有意**保留知识卡结论的精简副本。
@@ -25,8 +22,7 @@ YAML 要**自包含**：回放时不该要求执行者再翻知识卡（翻卡�
 
 用法
 ----
-    python tools/kb_check.py                 # 检查全部
-    python tools/kb_check.py --package com.zui.calendar
+    python tools/kb_check.py
 退出码：0 = 全通过；1 = 有待办项（见输出）。
 """
 from __future__ import annotations
@@ -53,13 +49,6 @@ except (AttributeError, ValueError):
 
 ROOT = Path(__file__).resolve().parent.parent
 KNOWLEDGE = ROOT / "assets" / "knowledge"
-PATHS = KNOWLEDGE / "paths"
-
-# 「去向」允许是这些**页内动作/弹层**，不必单独立节点（有意为之）
-INLINE_LAYERS = (
-    "弹层", "弹框", "确认框", "提示框", "同节点", "回上一步", "多选态",
-    "回到今天", "直接创建", "Activity`",
-)
 
 
 def section_text(md: str, section: str) -> str | None:
@@ -302,120 +291,13 @@ def collect_anchors(node, out=None) -> list[tuple[str, str]]:
     return out
 
 
-def check_package(pkg: str) -> int:
-    pf = PATHS / f"{pkg}.md"
-    kf = KNOWLEDGE / f"{pkg}.md"
-    if not pf.is_file():
-        print(f"[跳过] {pkg}: 无路径图")
-        return 0
-    p = pf.read_text(encoding="utf-8")
-    k = kf.read_text(encoding="utf-8") if kf.is_file() else ""
-    issues = 0
-
-    nodes = {m.strip() for m in re.findall(r"^## (.+)$", p, re.M)}
-    real_nodes = {n for n in nodes
-                  if not n.startswith("⚠️") and "索引" not in n and "自动采集" not in n}
-    # 索引里登记为 ⚠️ 的 = "知道有这个页面、还没单独建节点"，出边指向它们不算断链
-    absent_marked = {m.strip() for m in re.findall(r"^\|\s*⚠️\s*(.+?)\s*\|", p, re.M)}
-
-    print(f"── {pkg} ──  节点 {len(real_nodes)} 个")
-
-    # ① 断链：只看出边表
-    broken = []
-    in_edges = False
-    for i, line in enumerate(p.split("\n"), 1):
-        s = line.strip()
-        if s.startswith("**出边**"):
-            in_edges = True
-            continue
-        if s.startswith("## ") or s.startswith("---"):
-            in_edges = False
-            continue
-        if not in_edges or not s.startswith("|") or set(s) <= set("|-: "):
-            continue
-        cells = [c.strip() for c in s.strip("|").split("|")]
-        if len(cells) < 5 or cells[-1].endswith("去向"):
-            continue
-        dest = cells[-1].split("→")[-1].strip().strip("*").strip()
-        dest = re.sub(r"（.*?）", "", dest).strip()
-        dest = re.split(r"[；，]", dest)[0].strip()
-        if not dest or dest == "—":
-            continue
-        if any(w in dest for w in INLINE_LAYERS):
-            continue
-        if dest in real_nodes or any(
-                n.startswith(dest) or dest.startswith(n) for n in real_nodes):
-            continue
-        # 已在索引里用 ⚠️ 登记为"知道有、还没建节点"的，不算断链
-        if any(dest and (dest in a or a in dest) for a in absent_marked):
-            continue
-        broken.append((i, dest))
-    if broken:
-        issues += len(broken)
-        print(f"  ⚠️ 断链 {len(broken)} 处（去向无对应节点）")
-        for i, d in broken:
-            print(f"     L{i}: 「{d}」")
-    else:
-        print("  ✅ 出边无断链")
-
-    # ② 索引同步：只解析「## 节点索引」到下一个 `---` / `##` 之间的那张表
-    idx = set()
-    in_idx = False
-    for line in p.split("\n"):
-        s = line.strip()
-        if s.startswith("## 节点索引"):
-            in_idx = True
-            continue
-        if in_idx and (s.startswith("## ") or s.startswith("---")):
-            break
-        if not in_idx or not s.startswith("|") or set(s) <= set("|-: "):
-            continue
-        cells = [c.strip() for c in s.strip("|").split("|")]
-        if cells and "认出它" not in cells[0]:
-            idx.add(re.sub(r"^⚠️\s*", "", cells[0]).strip())
-    missing = {n for n in real_nodes
-               if n not in idx and not any(n in i or i in n for i in idx)}
-    if missing:
-        issues += len(missing)
-        print(f"  ⚠️ 节点索引漏列 {len(missing)} 个: {sorted(missing)}")
-    else:
-        print("  ✅ 索引与节点一致")
-
-    # ③ 废弃 rid 仍当锚点
-    DEP = ("已移除", "已不成立", "旧链路", "已废弃")
-    dep_bad = 0
-    for i, line in enumerate(k.split("\n"), 1):
-        if not any(d in line for d in DEP):
-            continue
-        for r in re.findall(r"`([a-z_][a-z0-9_]{4,})`", line):
-            for j, pl in enumerate(p.split("\n"), 1):
-                s = pl.strip()
-                if s.startswith("|") and "→" in s and f"`{r}`" in s:
-                    dep_bad += 1
-                    print(f"  ⚠️ {r}: 卡 L{i} 称已废弃，图 L{j} 仍作锚点")
-    if not dep_bad:
-        print("  ✅ 无废弃 rid 被当锚点")
-    issues += dep_bad
-
-    return issues
-
-
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--package")
-    args = ap.parse_args()
+    ap.parse_args()
 
-    if args.package:
-        pkgs = [args.package]
-    else:
-        pkgs = sorted(f.stem for f in PATHS.glob("*.md"))
-    if not pkgs:
-        print("没有可检查的路径图")
-        return 0
+    total = 0
 
-    total = sum(check_package(p) for p in pkgs)
-
-    print("\n── 用例 YAML 引用锚 ──")
+    print("── 用例 YAML 引用锚 ──")
     total += check_case_specs()
 
     print("\n── 用例 YAML 的 case_expect 是否照抄原文 ──")

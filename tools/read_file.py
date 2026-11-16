@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""read_file.py —— 读知识卡 / 路径卡 / 用例（UTF-8，永不乱码）。
+"""read_file.py —— 读知识卡 / 用例（UTF-8，永不乱码）。
 
 ## 为什么需要它
 
-知识卡和路径卡都是 UTF-8 无 BOM，而 Windows PowerShell 5.1 的
+知识卡是 UTF-8 无 BOM，而 Windows PowerShell 5.1 的
 `Get-Content` 默认按 GBK 解析，必然乱码。实测（2026-10-28 11:35）：
 
     AI 看到：# ZUI 鏃ュ巻锛堣仈鎯冲钩鏉匡級
@@ -246,39 +246,18 @@ def _resolve(path_arg: str) -> Path:
 
 
 # ══════════════════════════════════════════════════════════════════
-# 卡片模式：一次同时搜知识卡 + 路径卡
+# 卡片模式：按包名搜知识卡
 # ══════════════════════════════════════════════════════════════════
-#
-# ## 为什么需要
-#
-# 这两张卡是**两个独立文件**，而且互不指路：
-#
-#     knowledge/<包名>.md           是什么、为什么、怎么算符合预期
-#     knowledge/paths/<包名>.md     在哪找什么（节点与锚点）
-#
-# 知识卡里提到「路径图」但**没写文件在哪**；只有路径卡反过来提了知识卡。
-# 结果：只读知识卡的 AI 会漏掉整个路径图（从哪个页面点什么到哪）。
-#
-# 实测（2026-10-28）：176 那条用例的 AI 一直在猜 activity 名，
-# 而路径卡里就写着「课程表页-空态 / 课程表页-周视图」的节点和锚点。
-#
-# ## 所以：card= 参数一次搜两张
 #
 #     --card com.zui.calendar --query "怎么加课程"
 #
-# 结果按来源标注 [知识卡] / [路径卡]，让 AI 知道哪条来自哪里。
+# 结果按来源标注 [知识卡]。
 
 
 def _card_paths(pkg: str) -> list[tuple[str, Path]]:
     """某应用的卡片文件：[(来源标签, 路径)]。"""
-    out: list[tuple[str, Path]] = []
     k = ROOT / "assets" / "knowledge" / f"{pkg}.md"
-    if k.is_file():
-        out.append(("知识卡", k))
-    p = ROOT / "assets" / "knowledge" / "paths" / f"{pkg}.md"
-    if p.is_file():
-        out.append(("路径卡", p))
-    return out
+    return [("知识卡", k)] if k.is_file() else []
 
 
 def _search_one(filepath: Path, query: str | None,
@@ -355,14 +334,12 @@ def _hit_count(r: dict) -> int:
 
 def _card_mode(pkg: str, query: str | None, section: str | None,
                grep: str | None) -> dict:
-    """同时搜知识卡 + 路径卡，按来源标注。"""
+    """搜本包知识卡，按来源标注。"""
     cards = _card_paths(pkg)
     if not cards:
         return {"ok": False,
                 "error": f"找不到 {pkg} 的卡片",
-                "tried": [str(ROOT / "assets" / "knowledge" / f"{pkg}.md"),
-                          str(ROOT / "assets" / "knowledge" / "paths"
-                              / f"{pkg}.md")]}
+                "tried": [str(ROOT / "assets" / "knowledge" / f"{pkg}.md")]}
     results = []
     for label, fp in cards:
         try:
@@ -548,9 +525,8 @@ def _main() -> int:
     ap.add_argument("--path", default=None,
                     help="文件路径（相对工具层根目录）。给了 --card 时不用它")
     ap.add_argument("--card", default=None,
-                    help="包名，如 com.zui.calendar。一次同时搜"
-                         " assets/knowledge/<包名>.md 和"
-                         " assets/knowledge/paths/<包名>.md")
+                    help="包名，如 com.zui.calendar。搜"
+                         " assets/knowledge/<包名>.md")
     ap.add_argument("--query", default=None)
     ap.add_argument("--section", action="append", default=None,
                     help="章节名（可重复传多次，一次读多节）")
@@ -590,8 +566,8 @@ def _main() -> int:
         # ⚠️ card 模式下 --path / --offset / --limit 不生效。
         #
         # 实测（2026-10-28）：AI 把它当成「按行读某一张卡的某段」传了
-        #   --card com.zui.calendar --path paths/xxx.md --offset 546 --limit 20
-        # 实际拿到两张卡的目录。**不报错，结果错** —— 最坑的那种。
+        #   --card com.zui.calendar --path xxx.md --offset 546 --limit 20
+        # 实际拿到的是卡片目录。**不报错，结果错** —— 最坑的那种。
         #
         # 所以现在显式告知被忽略，并给出正确用法。
         ignored: list[str] = []
@@ -655,7 +631,7 @@ def _main() -> int:
             out["ignored_params"] = ignored
             out["warning"] = (
                 f"card 模式下 {', '.join(ignored)} 不生效（已忽略）。"
-                "card 是「一次同时搜知识卡+路径卡」，"
+                "card 是「按包名搜知识卡」，"
                 "要看某个具体文件请改用 --path 而不给 --card；"
                 "要读某一节给 --section")
         print(json.dumps(out, ensure_ascii=False))
@@ -665,7 +641,7 @@ def _main() -> int:
         print(json.dumps({
             "ok": False,
             "error": "需要 --path <文件> 或 --card <包名>",
-            "hint": "--card com.zui.calendar 一次搜知识卡+路径卡；"
+            "hint": "--card com.zui.calendar 按包名搜知识卡；"
                     "--path 指定具体文件",
         }, ensure_ascii=False))
         return 2
