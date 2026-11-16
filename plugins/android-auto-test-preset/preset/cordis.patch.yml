@@ -51,7 +51,7 @@
 
               android_env()   # platform / shell / storage_dir（产物落点）/ deps_ok（依赖装没装）
                               # writability（五个目录能不能写）/ device（serial、输入法是否就绪）
-              android_read_file(card="<包名>", query="<用户要干什么>")   # 查知识卡+路径卡
+              android_read_file(card="<包名>", query="<用户要干什么>")   # 查知识卡
 
               **`deps_ok` 不是 `ok`，或 `writability` 里有一项不是空串 → 环境跑不起来。
               照着 `hint` / `root_note` 修好再派；修不好就直接告诉用户，不要硬派。**
@@ -70,7 +70,7 @@
 
               ## 命令：能用 android_* 就别用 bash
 
-              android_read_file(card="<包名>", section=["课程表", "空状态"])   读知识卡+路径卡
+              android_read_file(card="<包名>", section=["课程表", "空状态"])   读知识卡
               android_read_file(path="<target>/assets/cases")              看用例目录
               android_read_file(path="<target>/assets/cases/<包名>/<用例md文件名>")   读用例原文
 
@@ -113,11 +113,26 @@
 
               ### ③ 派发执行
 
-              两步：
+              **先判定，再派发。没判定就派 = 违规。**
 
-              a. 用 **android-case-check** skill 心算判断（有步骤吗、有能判的预期吗）
-              —— **不用读任何文件**
-              b. 够格 -> `subagent` 派给 android-executor
+              「用户要的是执行，不是筛查」不是免判定的理由。判据是 **android-case-check**
+              的 1 → 6，按顺序短路，命中第一个就停、只报那一类：
+
+              1 说不出步骤 ｜ 2 说不出什么算 FAIL ｜ 3 超出工具层且本机造不出
+              4 描述模糊（读不出唯一走法）｜ 5 需拆分（互斥前置 / 独立终态）
+              6 不适合自动化（写具体了、工具层仍做不到）
+
+              命中 1–6 → 不派，报「编号 + 类别 + 原文证据 + 补齐建议」。
+              隐含依赖（未声明的素材 / 联网服务）→ 只提醒，照常派。
+
+              细节以 `android-case-check` skill 为准 —— **派之前先加载它**，
+              别凭记忆自己简化成更少的两三条。
+
+              **整批（一次 ≥ 2 条）多一道闸门**：先出筛查清单
+              「可跑 N 条（附提醒 K 条）/ 待改 M 条」，每条带编号和命中类别，
+              用户确认后再分组派发。**不许跳过清单、直接按模块分组往下派。**
+
+              过关 -> `subagent` 派给 android-executor
 
               #### ⚠️ 铁律：同一时间只能有一个执行子 Agent
 
@@ -331,9 +346,9 @@
         #   但实际用起来主 Agent 需要 shell 做这些：
         #
         #     · 查设备状态（adb devices / dumpsys）判断"现在能不能跑"
-        #     · 查库（sqlite3 runs.db "select ..."）回答"176 跑过几次"
-        #     · 起停工具层的 webui（python webui.py --port 9810）
-        #     · 看运行产物（读 report.json / run.log）
+        #     · 查库（sqlite3 storage\test.db "select ..."）回答"176 跑过几次"
+        #     · 起停工具层的 webui（工具层根下 python webui.py --port 8900）
+        #     · 看运行产物（storage\run_history\<uuid>\ 下的 calls / evidence / timing）
         #
         #   这些都不是"跑用例"，主 Agent 自己去查比"派生一个子 Agent 去查"
         #   省一整个子会话的 token。
@@ -491,7 +506,7 @@
                             · android_observe   —— 看屏（前台 activity + 可点清单 next）
                             · android_read      —— **OCR，只读文字**
                             · android_vision    —— **视觉模型，读图标/颜色/布局**
-                            · android_read_file —— **读知识卡 + 路径卡**（UTF-8，永不乱码）
+                            · android_read_file —— **读知识卡**（UTF-8，永不乱码）
                             · android_perm      —— **查/授/撤权限**（走 adb，不走弹窗）
                             · android_state     —— **清数据 / 起停 App**（只在用例明确要求时用）
                             · android_system    —— **通知栏 / 快捷设置 / 亮屏解锁 / 横竖屏切换**
@@ -531,19 +546,18 @@
                             shell / storage（产物落点）/ deps_ok（依赖装好没）/
                             device（serial、输入法是否就绪）。
 
-                            ### 然后立刻查知识卡 + 路径卡（一次调用搞定）
+                            ### 然后立刻查知识卡（一次调用搞定）
 
                             ```
                             android_read_file(card="<包名>", query="<这条用例要干什么>")
                             ```
 
-                            **`card` 一次同时搜两张卡**，结果按 `[知识卡]` / `[路径卡]`
-                            标注：
+                            `card` 搜的是这个应用的知识卡：
+                            `assets/knowledge/<包名>.md`。跨 App 的系统界面在
+                            `_system.md` 里。
 
                             · **知识卡** = 客观事实：什么情况下会发生什么、怎么运作、
                               怎么算符合预期（都是人写、用户能用肉眼确认的那种话）
-                            · **路径卡** = 每个页面的 `activity` + "认出它"的条件
-                              + 从哪点什么能到哪
 
                             **为什么必须先查**：卡里写过的坑，不查就会再踩一遍。
 
@@ -732,12 +746,16 @@
 
                               **只做用例要求的事 / 一切如实记录 / 同一目标最多试 2 次
                               不通就记 BLOCKED 往下走（不问人、不 pause）/ PASS FAIL
-                              BLOCKED ERROR 四档怎么选** —— 这四条也在里面，按它执行。
+                              BLOCKED ERROR 四档怎么选** —— 这些也在里面，按它执行。
 
                               一句话先记住：**验证过但没通过 = FAIL；连验证的机会都没有
                               = BLOCKED；工具层自己崩了 = ERROR**。前三档是结论会进通过率，
                               ERROR 不进 —— 报给用户时单独说，别混进去，也别把工具报错
                               硬写成 BLOCKED。
+
+                              还有一条：**用例预期指代不清（不知道说哪个页面 / 两种解释
+                              都不成立）→ 判 FAIL，不要挑一种解释凑成 PASS**，更不许拿
+                              另一次操作、另一个页面的成功结果顶替这条预期的验证。
 
                             ### ⚠️ 拿不准就重读 SKILL.md，不要凭印象
 
@@ -747,6 +765,7 @@
                             该重读的时机：
 
                             ✅ 拿不准这一步判 FAIL 还是 BLOCKED
+                            ✅ 用例某条预期读不懂 / 不知道指的是哪个页面
                             ✅ 记不清参数怎么填（`text=""` / `repeat` / `settle` /
                                `permAction` / `append` / `section` 数组）
                             ✅ 弹窗、权限框、页面认不清该不该管
