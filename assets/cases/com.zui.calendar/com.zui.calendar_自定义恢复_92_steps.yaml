@@ -7,21 +7,59 @@
 # 注意：这是**上一次**的实测路径，不是唯一正确路径。
 case: com.zui.calendar_自定义恢复_92
 source_run: storage
-last_run: 2026-11-06T02:08:03.731
+last_run: 2026-11-16T14:26:04.694
 verdict: FAIL
-step_count: 3
-start_from: activity=com.zui.calendar.settings.GeneralSettingsActivity
+step_count: 11
+start_from: activity=com.zui.calendar.agenda.NewBuildList
 steps:
   - n: 1
-    why: 步骤2：进入备份与恢复界面
+    why: 基线取证：切到「日程」分类看用户事件
+    via: rid=event_layoutx
+    expect: rid=bottom_layout
+    in_page: true
+  - n: 2
+    why: 步骤1：菜单中选择设置
+    via: text=设置
+    expect: activity=com.zui.calendar.settings.GeneralSettingsActivity
+  - n: 3
+    why: 步骤2：打开备份与恢复界面
     via: text=备份与恢复
     expect: activity=com.zui.calendar.settings.LenovoSettingsBackupActivity
-  - n: 2
-    why: 步骤3：点右上角编辑按钮，进入编辑模式
+  - n: 4
+    why: 预置完成检查：自定义恢复列表是否有多个备份
+    via: rid=selecte_restore_layout
+    expect: activity=com.zui.calendar.common.backup.SelectRestoreActivity
+  - n: 5
+    why: 步骤3：点击右上角编辑按钮，进入编辑模式
     via: rid=edit_menu
     expect: rid=listviewx_cancel
     in_page: true
-  - n: 3
-    why: 打开纵览「全部」查看恢复后的事件列表
+  - n: 6
+    why: 步骤3：点击底部删除键，看二次确认弹窗文案
+    via: rid=restoreLlDeleteLayout
+    expect: rid=alertTitle
+    in_page: true
+  - n: 7
+    why: 步骤4：选择一条备份记录进行恢复
+    via: text=日历_2026年11月16日_14时29分02秒
+    expect: rid=alertTitle
+    in_page: true
+  - n: 8
+    why: 恢复后取证：打开菜单进纵览
+    via: rid=iv_more
+    expect: rid=item_title
+    in_page: true
+  - n: 9
+    why: 恢复后取证：进纵览
     via: text=纵览
     expect: activity=com.zui.calendar.agenda.NewBuildList
+  - n: 10
+    why: 恢复后取证：切到「提醒」分类比对条数与时间
+    via: rid=reminder_layoutx
+    expect: rid=bottom_layout
+    in_page: true
+  - n: 11
+    why: 恢复后取证：切到「日程」分类比对条数与起止时间
+    via: rid=event_layoutx
+    expect: rid=time2
+    in_page: true

@@ -7,23 +7,48 @@
 # 注意：这是**上一次**的实测路径，不是唯一正确路径。
 case: com.zui.calendar_抢火车票_69
 source_run: storage
-last_run: 2026-11-06T00:31:08.197
+last_run: 2026-11-16T14:53:16.958
 verdict: FAIL
-step_count: 3
-start_from: activity=com.zui.calendar.settings.GrabVoteSettingsActivity
+step_count: 9
+start_from: activity=com.zui.calendar.settings.GeneralSettingsActivity
 steps:
   - n: 1
-    why: 取消本次弹框（保留 setdate 已勾选状态用于步骤4观察）
-    via: rid=left_button
-    expect: rid=festival_checkbox
-    in_page: true
+    why: 点该行下半部进入抢火车票设置子页
+    via: text=抢火车票设置/暂不显示行
+    expect: activity=com.zui.calendar.settings.GrabVoteSettingsActivity
   - n: 2
-    why: 第二次尝试：改为直接点选滚轮上的具体日期
+    why: 再次打开启程弹框，验证此前丢弃是否因与返程冲突
     via: rid=voteTimePickerGo
     expect: rid=button_divider2
     in_page: true
   - n: 3
-    why: 返程日期 11/4 早于启程 11/6，点确定看是否有提示
+    why: 打开返程弹框，试把返程改到早于启程
+    via: rid=voteTimePickerBack
+    expect: rid=button_divider2
+    in_page: true
+  - n: 4
+    why: 确定提交返程11/16（早于启程11/20），看有无提示
     via: rid=right_button
     expect: rid=festival_checkbox
     in_page: true
+  - n: 5
+    why: 还原设置：进菜单
+    via: rid=iv_more
+    expect: rid=item_title
+    in_page: true
+  - n: 6
+    why: 进设置页
+    via: text=设置
+    expect: activity=com.zui.calendar.settings.GeneralSettingsActivity
+  - n: 7
+    why: 菜单中选择设置
+    via: text=设置
+    expect: activity=com.zui.calendar.AllInOneActivity
+  - n: 8
+    why: 进抢火车票设置子页
+    via: text=抢火车票设置/按往返日期显示抢票行
+    expect: activity=com.zui.calendar.settings.GrabVoteSettingsActivity
+  - n: 9
+    why: 关闭设置回首页，留干净现场
+    via: text=关闭
+    expect: activity=com.zui.calendar.AllInOneActivity

@@ -7,13 +7,22 @@
 # 注意：这是**上一次**的实测路径，不是唯一正确路径。
 case: com.zui.calendar_长按图标_117
 source_run: storage
-last_run: 2026-11-05T20:24:10.986
-verdict: FAIL
-step_count: 1
-start_from: activity=com.zui.launcher.drawer.NormalLauncher
+last_run: 2026-11-17T11:48:18.915
+verdict: PASS
+step_count: 3
+start_from: activity=com.zui.wallpapersetting.activity.CustomizaActivity
 steps:
   - n: 1
-    why: 长按进入了桌面编辑模式而非快捷菜单，先退出再重试
-    via: rid=complete_button,text=完成
-    expect: rid=hotseat
+    why: 进入主题设置页
+    via: rid=themeLayout,text=主题
+    expect: activity=com.zui.theme.settings.ThemePreviewActivity
+  - n: 2
+    why: 步骤3：选择非默认主题 幻彩时光镜
+    via: rid=theme_layout,text=幻彩时光镜
+    expect: rid=btn_switch_theme
+    in_page: true
+  - n: 3
+    why: 步骤3：应用幻彩时光镜主题
+    via: rid=btn_switch_theme,text=应用
+    expect: rid=category_tab_container
     in_page: true

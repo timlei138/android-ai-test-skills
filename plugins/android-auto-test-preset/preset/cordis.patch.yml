@@ -5,17 +5,10 @@
 #   android-tester    主 Agent：检查用例、派发、汇总、状态恢复。不碰设备。
 #   android-executor  执行子 Agent：有 bash + 读文件能力，按 SKILL 自己跑。
 #
-# 设计原则（2026-10-27 定）：
-#   放开工具的权限，把纪律写进 SKILL。
+# 设计原则：**放开工具的权限，把纪律写进 SKILL。**
 #
-#   旧方案的教训：给子 Agent 只挂 android_case 一个工具，
-#   然后用 18851 行 Python 补回被剥夺的能力。两周实测下来，
-#   修的 7 个 bug 全是"我自己加的中间层挡住 AI"，不是 AI 不行。
-#
-#   关键证据：AI 被卡住时，绕道方案都需要 shell ——
-#     · 点不到 clickable=false 的控件 -> grep dump.xml 手算坐标
-#     · 视觉通道 401 -> 用 Pillow 逐格统计像素
-#   没有 bash，这两条绕道都做不到，只能报"工具不支持"然后停住。
+#   不给执行者 bash，AI 被卡住时就无法绕道（自己 grep dump 手算坐标、
+#   用 Pillow 数像素），只能报"工具不支持"然后停住。
 # ══════════════════════════════════════════════════════════════════════════
 
 - insert:
@@ -36,9 +29,8 @@
 
         # ── 人格 ────────────────────────────────────────────────────────
         #
-        # 四件事写死在这里，因为它**不该**做第五件事。
-        # 旧版主 Agent 的 persona 有 100+ 行（拆解规则、坐标规则、判定规则…），
-        # 那些全是在替执行者操心 —— 现在派出去就该是子 Agent 的事。
+        # 四件事写死在这里，因为它**不该**做第五件事 ——
+        # 拆解规则、坐标规则、判定规则都是在替执行者操心，派出去就该是子 Agent 的事。
         - id: persona
           name: '@deepseek-ai/dsh-persona'
           config:
@@ -203,6 +195,19 @@
               | 中间 | 普通用例 | 默认 |
               | **最后** | 卸载 / 恢复预装 / 换主题换图标 | 用例写「卸载」「恢复预装应用」 |
 
+              | **最后** | **设密码 / 应用锁 / 时间限额** | 「设置密码」「应用锁」「加锁」「时间限额」「家长控制」「屏幕使用时间」 |
+
+              **设密码 / 应用锁类必须排到最后，宁可不跑。** 它们会设锁屏密码、开应用锁、
+              触发时间限额，**跑完设备可能被锁死**，后面每条都进不去。所以：
+
+              · 批量执行时**不优先跑**，全部排到批次末尾
+              · 它们的内部顺序按「可逆性」排：能取消限额的先跑，要改密码的后跑
+              · 派之前明确提醒用户：「这条会设密码 / 开限额，跑完可能需要手动解锁或清密码」，
+                用户确认后再派
+              · 设备已被锁住、或上一条刚设过密码 → 不派，先问用户怎么解锁
+
+              锁死的代价高于覆盖率 —— 少跑一条远好过把设备关在门外。
+
               **清数据会把备份一起清掉。** 依赖备份的用例必须排在清数据用例之前，
               否则永远验不了。
 
@@ -324,7 +329,7 @@
           name: '@deepseek-ai/dsh-tool-fs'
           config:
             read: true
-            # ★ readImage 关掉 —— 和旧 preset 一致（那是验证过的配置）。
+            # ★ readImage 关掉。
             #
             #   理由：主 Agent **不操作设备**，它不需要看截图。
             #   看图是执行子 Agent 的事（它才需要判断"屏幕上有没有加号"）。
@@ -340,10 +345,9 @@
 
         # ── shell ───────────────────────────────────────────────────────
         #
-        # ★ 主 Agent 也给 bash（用户 2026-10-27 明确要求）。
+        # ★ 主 Agent 也给 bash。
         #
-        #   我原先的想法是"跑用例是子 Agent 的事，主 Agent 碰 shell 会越界"。
-        #   但实际用起来主 Agent 需要 shell 做这些：
+        #   主 Agent 需要 shell 做这些：
         #
         #     · 查设备状态（adb devices / dumpsys）判断"现在能不能跑"
         #     · 查库（sqlite3 storage\test.db "select ..."）回答"176 跑过几次"
@@ -361,33 +365,18 @@
             enableRunInBackground: true    # webui 要常驻，需要后台
             promoteOnTimeout: true
 
-        # ── 关于 run_in_background：**什么都不用加** ─────────────────────
+        # ── 关于 run_in_background：**这里什么都不用加** ─────────────────
         #
-        # 我在这里绕过一大圈，记录下来免得再犯：
-        #
-        # ① 看到报错 "background jobs unavailable: no job controller serves
-        #    this agent" -> 以为 preset 缺 jobs 插件。
-        #
-        # ② 加了 `- id: jobs / dsh-jobs-local` -> **加载直接失败**：
+        # ⚠️ 别在这里加 `- id: jobs / dsh-jobs-local` —— **加载会直接失败**：
         #       jobs (@deepseek-ai/dsh-jobs-local):
         #         service "jobs" has been registered at <LocalJobRegistry>
         #
-        #    原因：profile 的 `dsh-base` 已经在顶层声明了
-        #       - id: jobs   name: dsh-jobs-local
-        #       - id: tool-jobs   name: dsh-tool-jobs
+        #    原因：profile 的 `dsh-base` 已经在顶层声明了 jobs 服务，
         #    服务是**全局共享**的，preset 里再声明就是重复注册。
         #    （只有 `isolate:` 里列出的服务才是隔离的 —— 我们只 isolate 了
         #      compaction，jobs 不在其中。）
         #
-        # ③ 那当初那条报错是谁报的？
-        #    查会话日志：是 **`standard` preset** 的会话（origin=None），
-        #    也就是用户没用我们的 preset 直接问的那次。和这里无关。
-        #
-        # 旧 preset（android-runner）里也**完全没有** jobs 配置 ——
-        # 因为它压根没挂 tool-bash（persona 里写着「你没有 shell」）。
-        #
-        # 结论：`enableRunInBackground: true` 是唯一需要的。
-        #       jobs 服务和 job_output/list/kill 工具都由 dsh-base 提供。
+        # 需要的只有下面这一行：jobs 服务和 job_output/list/kill 工具都由 dsh-base 提供。
 
         # ── 派发 ────────────────────────────────────────────────────────
         #
@@ -427,7 +416,7 @@
             # ★ maxDepth 语义：childDepth = 父的 depth + 1，
             #   childDepth > maxDepth 就抛。
             #   顶层 depth 0，第一个子 Agent 是 depth 1；
-            #   写 0 会连第一次委派都拒掉（实测报
+            #   写 0 会连第一次委派都拒掉（报
             #   "subagent depth 1 exceeds maxDepth 0"）。正确值是 1。
             maxDepth: 1
 
@@ -442,7 +431,7 @@
         # 操作设备是子 Agent 的事（persona 里写了「你不碰设备」）。
         #
         # ⚠️ config.target 必须在这里显式写：插件自己的 cordis.patch.yml
-        #    只在 profile 层生效，preset 引用时配置不会跟过来（踩过一次）。
+        #    只在 profile 层生效，preset 引用时配置不会跟过来。
         - id: android-tools
           name: '@local/dsh-android-tools'
           config:
@@ -488,10 +477,9 @@
         #
         # ★ persona 必须在这里（不是 tool-subagent 的 config.persona）。
         #
-        #   踩过的坑（用户实测三次）：子 Agent 被派出去后回复
-        #   「这条用例被派发给负责执行的子 Agent 来处理」然后崩了 ——
-        #   因为它以为自己是主 Agent，想把任务再往下派。
-        #   独立成 preset 后，它**看不到**主 Agent 那段"派发"，从根上不会认错角色。
+        #   必须独立成 preset：子 Agent 若能看到主 Agent 那段"派发"，
+        #   会以为自己是主 Agent、想把任务再往下派，然后崩掉。
+        #   独立之后它看不到那段话，从根上不会认错角色。
         - id: persona
           name: '@deepseek-ai/dsh-persona'
           config:
@@ -615,6 +603,25 @@
                             **必须带 `&`** —— 不加会被 PowerShell 当成字符串，报
                             `Unexpected token`。
 
+                            ### 临时验证 / 探针：开会话时就加 `--diag`
+                            
+                            **不是用例的跑动，开会话时加 `--diag`** —— 自检工具、验证刚改的地方生效没有、
+                            造一份数据看看长什么样，都算：
+                            
+                            ```powershell
+                            & "<工具层>\.venv\Scripts\python.exe" "<工具层>\tools\session.py" start --title "验证 xx" --input @xx.txt --diag
+                            ```
+                            
+                            加上之后**不进「测试记录」、不计入成功率、不导出 `_steps.yaml`**，收尾照样 `finish`。
+                            
+                            | 这次跑动是… | 怎么开 |
+                            |---|---|
+                            | 用例（有步骤和预期，要出结论） | `start --title/--case ...`（不加 `--diag`） |
+                            | 工具自检、改完代码验证、造数据探路 | `start ... --diag` |
+                            | 已经开成 test 了才发现不是用例 | 趁还 `running` 用 `abandon` 作废 |
+                            
+                            > `--diag` 会话对不上任何用例 md 时也不进用例库 —— 它本来就不是用例。
+                            
                             ### ⚠️ 一条用例 = 一个会话
 
                             派给你 3 条用例，不是开一个会话连跑 3 条，而是：
@@ -671,6 +678,14 @@
                             | 用例要用的功能需要权限，但一进去就是空数据 / 灰按钮 | 调 `android_perm(package=...)` 看是不是没授权 → 需要就 `grant` 后重试 |
                             | 用例要测「没给权限时的样子」（拒绝路径） | `revoke` 掉对应权限，再走用例 |
                             | 点了好几次「拒绝」，之后再也不弹框 | 这是系统的 don't-ask-again 机制，不是控件坏了 —— 用 `android_perm` 查/授 |
+
+                            **权限用例先跑拒绝分支、再跑同意分支。** 拒绝只是让权限保持未授予，
+                            不影响下次再弹；反过来先同意的话权限变成已授予，**弹框不会再出现**，
+                            后面那条「选择拒绝」就无从验证，只能记 BLOCKED。
+
+                            拒绝分支用 `session.py perm-intent --action deny`（act 会自动点拒绝），
+                            测完 `perm-intent --clear` 回到默认同意。
+                            **永远不要点「拒绝并不再询问」** —— 点了这个权限的弹窗永不再出现。
                             | 点了按钮，弹窗正常弹出来了 | **什么都不用做**，act 已经点掉了 |
 
                             ```
@@ -798,7 +813,7 @@
                             不可点的文字（字段名、值、说明、时区、日期…）在 **`texts`** 里。
                             判断「这个功能/字段存在吗」只能看 `texts` 或 `nodes`（full），
                             **绝不能用「next 里没找到」当「不存在」** —— 这是误判「功能不存在」的
-                            最主要来源（历史上有 11 个会话反复踩）。
+                            最主要来源。
 
                             ### ⚠️ 不要 grep `dump.xml` —— `android_observe` 已经给你了
 
@@ -831,7 +846,7 @@
         # ── 只读文件工具 ────────────────────────────────────────────────
         #
         # 保留 read / glob / grep：它要用 grep 在 dump.xml 里找控件坐标
-        # （这是实测中最常见的绕道手段 —— 点不到 clickable=false 的控件时）。
+        # （最常见的绕道手段 —— 点不到 clickable=false 的控件时）。
         #
         # ⚠️ write / edit 必须显式写 false（默认是 true）。
         - id: tool-fs
@@ -866,7 +881,7 @@
             enableRunInBackground: false
             promoteOnTimeout: false
 
-        # ── 原生 Android 工具（2026-10-28 新增）────────────────────────
+        # ── 原生 Android 工具 ─────────────────────────────────────────
         #
         # 把 env / act / observe / read 从命令行脚本变成**结构化工具调用**：
         #
@@ -874,7 +889,7 @@
         #
         # 为什么必须这样：原来靠 `bash` 跑
         #     & "D:\...\python.exe" "D:\...\act.py" tap --via "rid=btn_ok"
-        # 在 Windows PowerShell 5.1 上有三个坑，实测 14 个会话**全部**踩到：
+        # 在 Windows PowerShell 5.1 上有三个坑：
         #   ① 引号包裹的 exe 必须加 `&`，否则 Unexpected token（每个会话白跑一轮）
         #   ② 中文弯引号 “ ” 被当定界符，参数被截断
         #   ③ 子脚本 print 中文按 GBK 编码，UnicodeEncodeError 崩
@@ -885,9 +900,9 @@
         #
         #   插件自己的 cordis.patch.yml 也写了 config.target，但**那层是
         #   profile 的**；preset 里 `- id: android-tools` 引用时配置不会跟过来。
-        #   实测报错：{"ok":false,"error":"android-tools: config.target 未配置"}
+        #   漏了会报：{"ok":false,"error":"android-tools: config.target 未配置"}
         #
-        #   所以凡是 preset 里引用这个插件，都要把 target 写全。踩过一次。
+        #   所以凡是 preset 里引用这个插件，都要把 target 写全。
         - id: android-tools
           name: '@local/dsh-android-tools'
           config:

@@ -7,40 +7,35 @@
 # 注意：这是**上一次**的实测路径，不是唯一正确路径。
 case: com.zui.calendar_删除课程_183
 source_run: storage
-last_run: 2026-11-04T04:55:50.840
-verdict: PASS
-step_count: 7
-start_from: activity=com.zui.calendar.AllInOneActivity
+last_run: 2026-11-16T15:37:17.953
+verdict: FAIL
+step_count: 6
+start_from: activity=com.zui.calendar.timetable.course.CourseListActivity
 steps:
   - n: 1
-    why: 进入课程表页周视图
-    via: text=课程表
-    expect: activity=com.zui.calendar.timetable.display.TimetableActivity
+    why: 点击课程列表条目，进编辑课程弹窗
+    via: rid=clCourseDetail
+    expect: activity=com.zui.calendar.timetable.course.EditCourseActivity
   - n: 2
-    why: 重新打开导入课程表菜单
-    via: rid=action_curriculum_table_import
-    expect: rid=tv_import_from_camera
+    why: 步骤3：点底部删除课程
+    via: rid=btnDelete
+    expect: rid=alertTitle
     in_page: true
   - n: 3
-    why: 再次选图库导入
+    why: 关掉编辑课程弹窗，确认取消后课程仍在课程表上
+    via: text=关闭
+    expect: activity=com.zui.calendar.timetable.display.TimetableActivity
+  - n: 4
+    why: 单击课程卡片进课程列表
+    via: rid=curriculum_card_view
+    expect: activity=com.zui.calendar.timetable.course.CourseListActivity
+  - n: 5
+    why: 步骤1：进图库选图
     via: rid=tv_import_from_gallery
     expect: rid=alertTitle
     in_page: true
-  - n: 4
-    why: 裁剪完成，触发识别
-    via: rid=btnDone
-    expect: rid=message
-    in_page: true
-  - n: 5
-    why: 退出识别结果页，回到已保存的课程表（步骤2要用已保存的课程表）
-    via: rid=btn_previous,text=上一步
-    expect: activity=com.zui.calendar.timetable.crop.CropImageActivity
   - n: 6
-    why: 退回课程表周视图
-    via: rid=btnCancel,text=上一步
-    expect: activity=com.zui.calendar.timetable.display.TimetableActivity
-  - n: 7
-    why: 用例步骤3：点击底部「删除课程」
-    via: rid=btnDelete,text=删除课程
+    why: 点完成触发识别，看是否被联想账号登录阻断
+    via: rid=btnDone
     expect: rid=alertTitle
     in_page: true
