@@ -519,7 +519,7 @@ def resolve_shell_exe() -> dict:
 
 _CURRENT_POINTER = RECORD_DIR / ".current"
 # 上一次已收尾的运行目录。finish 时由 unpin_record() 写入，
-# 供"会话结束后才入库"（case save）这类操作定位到正确的库。
+# 供收尾之后还要查那一段运行的显式用法定位到正确的库。
 _LAST_POINTER = RECORD_DIR / ".last"
 
 
@@ -537,16 +537,12 @@ def unpin_record() -> None:
 
     ★ **同时留下 `.last` 存档。**
 
-      为什么：`session finish` 之后调用 `case save` 必失败 ——
-        finish -> unpin_record() -> `.current` 没了
-        case save 是独立进程 -> current_record_dir() 返回 None
-        -> 没有上下文，查不到那个会话 -> "会话不存在"
-
-      实测后果：一批用例跑完后，**很多条一条都没写进用例库**，
-      因为子 Agent 都在 finish 之后才想到入库。
+      为什么：finish 之后 `.current` 就没了，而收尾之后仍可能有独立进程
+      要回头查「刚才那一段运行」（复盘、补记、统计）。没有 `.last` 就
+      只能靠时间戳猜是哪一次运行。
 
       `.last` 只是"上一段运行在哪"，不参与任何默认路径计算
-      （否则又会污染下一次运行）。只给 `case save --last` 这种显式用法读。
+      （否则又会污染下一次运行），只有显式点名要它时才读。
     """
     try:
         # 先存档，再删指针 —— 顺序反了就丢信息
@@ -563,12 +559,12 @@ def unpin_record() -> None:
 
 
 def last_record_dir() -> Path | None:
-    """上一次已收尾的运行目录（`.last`）。给 finish 之后的 case save 用。
+    """上一次已收尾的运行目录（`.last`）。给收尾之后还要回查的显式用法。
 
     ⚠️ 读的时候用 `utf-8-sig`：PowerShell 的 `Set-Content -Encoding utf8`
     会写 BOM，带 BOM 的路径字符串拼不出有效目录，`Path()` 会静默失败。
     （2026-10-28 实测踩过一次 —— 手工修指针时用 Set-Content 覆盖了文件，
-     之后 `case save --last` 就找不到上一次的库了。）
+     之后读 `.last` 就找不到上一次的库了。）
     """
     try:
         txt = _LAST_POINTER.read_text(encoding="utf-8-sig").strip()

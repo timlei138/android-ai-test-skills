@@ -17,8 +17,8 @@ import re
 import sys
 from pathlib import Path
 
-from common import (emit, knowledge_hint, resolve_case_stem,
-                    steps_hint)
+from common import (emit, find_case_file_by_ref, knowledge_hint,
+                    resolve_case_stem, steps_hint)
 import sqlite3
 from db import (  # noqa: I001
     INTERIM, STATUSES, SessionDB, clear_current, current_session, get_db,
@@ -86,24 +86,64 @@ _GENERIC_RIDS = {
 }
 
 
+_OPEN_CLOSE = {"(": ")", "[": "]", "{": "}", "（": "）", "【": "】"}
+# 括号里出现这些 = 坐标/位置描述，整条不可执行。
+# `\d,\d` 是裸坐标：AI 常直接写 `text=关闭(193,718)` / `rid=xx (952,732)`，
+# 前面不带 x=/y= —— 这种换个分辨率就废，必须拒。
+_BAD_IN_BRACKET = re.compile(
+    r"[xXyY]\s*=\s*-?\d|第\s*\d+\s*[节格行列]|[×x]\s*\d+|\d\s*,\s*\d")
+
+
+def _strip_brackets(via: str) -> str | None:
+    """去掉 via 里的括号注释；括号里是坐标/位置描述则返回 None（整条不可执行）。
+
+    ★ 为什么是「先看括号里是什么」而不是「有括号就拒」（2026-11-17 改）：
+
+    AI 很爱在锚点后面加一句人类注释 —— `rid=themeLayout(text=主题)`、
+    `text=设置(hotseat)`。括号里是**正常的文字补充**，锚点本身完全可执行。
+    原来一刀切全拒，实测全库 5940 次 tap 里有 1591 次（26%）因此进不了 yaml，
+    是所有过滤器里最大的一块。后果很具体：`长按图标_117` 的 start_from 从
+    「桌面」退到了「主题预览页」——「桌面 → 设置 → 主题」三步全被丢掉，
+    剩下的两步都是页内动作，下次照它走第一步就得自己先摸到主题预览页。
+
+    真正该拒的只有括号里写坐标/位置的那种：
+        `弹框外空白（x=300,y=1700）`、`日列选中行上一格 (-1)×22`
+    这类换个机型就废，且多半要 AI 现场判断。
+    """
+    out: list[str] = []
+    i = 0
+    while i < len(via):
+        close = _OPEN_CLOSE.get(via[i])
+        if close is None:
+            out.append(via[i])
+            i += 1
+            continue
+        j = via.find(close, i + 1)
+        if j < 0:
+            return None                  # 括号不配对，说不清是什么
+        if _BAD_IN_BRACKET.search(via[i + 1:j]):
+            return None
+        i = j + 1
+    return "".join(out)
+
+
 def _anchors_of(via: str) -> list[str] | None:
     """把 via 拆成可执行的锚点列表；不可执行返回 None。
 
     可执行 = 纯 `key=value`，多个用逗号/空格分隔，每个值都非空。
 
     ⚠️ 三类必须拒掉（都是实测踩过的）：
-      ① **坐标/人话混入**：`rid=cv_empty_content 第1节 周一格`
+      ① **坐标/位置混入**：`rid=cv_empty_content 第1节 周一格`
          —— rid 有 14 个同名的格子，光凭 rid 不知道点哪个。
-      ② **全角括号坐标**：`弹框外空白（x=300,y=1700）`
-         —— 2026-10-29 实测漏网。原来只查半角 `(` `[`，
-            而 AI 写的是全角 `（`，于是这行坐标被当"纯锚点"写进 yaml。
-      ③ **通用 rid**：`rid=android:id/button1`
+         括号里的坐标（`弹框外空白（x=300,y=1700）`）同样拒，见 `_strip_brackets`。
+      ② **通用 rid**：`rid=android:id/button1`
          —— 每个弹窗都有，点它等于瞎点。
+      ③ **空值 / 非 kv**：`rid=`、`返回`
     """
     if not via:
         return None
-    # ①② 括号（半角+全角）、方括号、"第N节/第N格"这类位置描述
-    if any(ch in via for ch in "([{（【"):
+    via = _strip_brackets(via)
+    if not via:
         return None
     parts = [p for p in re.split(r"[,\s]+", via.strip()) if p]
     if not parts:
@@ -157,6 +197,12 @@ def _pick_landing(new_nodes: set[str]) -> str | None:
     # ③ desc
     descs = sorted(str(n) for n in new_nodes if str(n).startswith("desc="))
     return descs[0] if descs else None
+
+
+def _case_stem_of(row: dict) -> str | None:
+    """一条会话记录对应的用例 md 文件名；对不上返回 None。"""
+    return resolve_case_stem(row.get("package") or "", row.get("title"),
+                             row.get("user_input"))
 
 
 def export_steps(db, session_id: int) -> str | None:
@@ -410,98 +456,6 @@ def export_steps(db, session_id: int) -> str | None:
 
 
 
-def run_case_cmd(db, args) -> None:
-    """用例库子命令：add/list/show/update/save（从会话提升）。"""
-    if args.ccmd == "add":
-        cid = db.add_case(maybe_file(args.title), maybe_file(args.input),
-                          args.package)
-        print(json.dumps({"ok": True, "case_id": cid,
-                          "hint": "复跑：session.py start --case " + str(cid)},
-                         ensure_ascii=False))
-    elif args.ccmd == "list":
-        cases = db.list_cases()
-        print(json.dumps(cases, ensure_ascii=False, indent=2))
-    elif args.ccmd == "show":
-        c = db.get_case(args.id)
-        if not c:
-            raise SystemExit(f"用例 #{args.id} 不存在")
-        print(json.dumps(c, ensure_ascii=False, indent=2))
-    elif args.ccmd == "update":
-        ok = db.update_case(args.id,
-                            maybe_file(args.title) if args.title else None,
-                            maybe_file(args.input) if args.input else None,
-                            args.package)
-        print(json.dumps({"ok": ok}, ensure_ascii=False))
-    elif args.ccmd == "save":
-        # ══════════════════════════════════════════════════════════
-        # ★ finish 之后入库：当前库查不到就自动去 `.last` 找
-        #
-        #   `finish` 会调 unpin_record() 删掉 `.current` 指针，
-        #   于是独立进程启动时 current_record_dir() 返回 None，
-        #   直接查就报"会话不存在" —— 而会话其实在上一次收尾的运行里。
-        #
-        #   实测后果：一批用例跑完，很多条一条都没进用例库，
-        #   因为子 Agent 都是 finish 之后才想到 case save。
-        #
-        #   修法：当前库查不到就自动去「上一次收尾的运行」(`.last`) 找。
-        #   加 `--last` 是显式写法，不加也自动兜（省得 AI 记这个坑）。
-        # ══════════════════════════════════════════════════════════
-        s = db.get_session(args.session) if not args.last else None
-        used_db = db
-        if not s:
-            rec_last = last_record_dir()
-            if rec_last is not None:
-                try:
-                    db_last = SessionDB((rec_last / "db.sqlite3"))
-                except Exception:  # noqa: BLE001
-                    db_last = None
-                if db_last is not None:
-                    s = db_last.get_session(args.session)
-                    if s:
-                        # 后续的 add_case / UPDATE 都要写回那个库
-                        used_db = db_last
-        if not s:
-            raise SystemExit(
-                f"会话 #{args.session} 不存在（当前库和历史运行都查了）\n"
-                f"  提示：确认会话号对不对 —— `session.py list` 查看；\n"
-                f"  如果是已收尾的运行，加 `--last` 或确认 "
-                f"{STORAGE_DIR / 'record' / '.last'} 存在")
-        if not (s.get("user_input") or "").strip():
-            raise SystemExit("该会话没有口述用例文本，无法提升")
-        title = maybe_file(args.title) if args.title else (s.get("title") or f"会话{args.session}用例")
-        if s.get("case_id"):
-            used_db.update_case(s["case_id"], title=title, user_input=s["user_input"])
-            cid = s["case_id"]
-            action = "updated"
-        else:
-            cid = used_db.add_case(title, s["user_input"], s.get("package"))
-            action = "created"
-        # ⚠️ 入库必须**顺手关联会话并计入统计**，否则用例库 run_count/last_status 永远是空的
-        # （真实事故：170 BLOCKED 入库后 run=0 last=None，统计与实际脱节）。
-        # 结果状态**不限于 PASS** —— FAIL / BLOCKED 同样是有效测试结果，必须计入。
-        try:
-            # ⚠️ 用 used_db，不是 db —— 会话可能是在 `.last` 那个历史库里找到的
-            conn = used_db._conn()
-            conn.execute("UPDATE sessions SET case_id=? WHERE id=?", (cid, args.session))
-            conn.execute(
-                "UPDATE cases SET last_session_id=?, last_status=?, last_run_at=?,"
-                " run_count=(SELECT COUNT(*) FROM sessions WHERE case_id=?), updated_at=?"
-                " WHERE id=?",
-                (args.session, s.get("status"), used_db._now(), cid,
-                 used_db._now(), cid))
-            conn.commit()
-        except Exception as e:  # noqa: BLE001
-            print(json.dumps({"ok": False, "error": f"关联失败: {e}"}, ensure_ascii=False))
-            raise SystemExit(1)
-        print(json.dumps({"ok": True, "case_id": cid, "action": action,
-                          # self.path 是字符串（db.py L174），要套 Path 才能取目录名
-                          "record": Path(str(used_db.path)).parent.name,
-                          "run_count": (used_db.get_case(cid) or {}).get("run_count"),
-                          "last_status": s.get("status"),
-                          "hint": "复跑：session.py start --case " + str(cid)},
-                         ensure_ascii=False))
-
-
 def main() -> None:
     p = argparse.ArgumentParser(description="测试会话生命周期")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -509,8 +463,10 @@ def main() -> None:
     s = sub.add_parser("start")
     s.add_argument("--title", default=None)
     s.add_argument("--input", default=None, help="用户口述的用例原文（追溯锚点）")
-    s.add_argument("--case", type=int, default=None, dest="case_id",
-                   help="引用用例库：自动带出标题与用例文本，无需重复输入")
+    s.add_argument("--case", type=str, default=None, dest="case_id",
+                   help="引用 assets/cases 下的用例文件，自动带出标题与正文。"
+                        "传文件名末尾的编号（如 176）；该编号在本应用内重号时"
+                        "传 模块_编号（如 图库导入入口_168）。不要传文件名或路径")
     s.add_argument("--device", default=None)
     s.add_argument("--force", action="store_true",
                    help="即使已有运行中的会话也强行新建（默认拒绝，防孤儿会话）")
@@ -579,27 +535,6 @@ def main() -> None:
     s.add_argument("--id", type=int, required=True)
     s.add_argument("--note", default="", help="恢复原因，随事件入库")
 
-    c = sub.add_parser("case", help="正式用例库：口述用例的沉淀与复用")
-    csub = c.add_subparsers(dest="ccmd", required=True)
-    ca = csub.add_parser("add")
-    ca.add_argument("--title", required=True)
-    ca.add_argument("--input", required=True)
-    ca.add_argument("--package", default=None)
-    csub.add_parser("list")
-    cs = csub.add_parser("show")
-    cs.add_argument("--id", type=int, required=True)
-    cu = csub.add_parser("update")
-    cu.add_argument("--id", type=int, required=True)
-    cu.add_argument("--title", default=None)
-    cu.add_argument("--input", default=None)
-    cu.add_argument("--package", default=None)
-    cv = csub.add_parser("save", help="把会话的口述用例提升为正式用例（首次跑新用例后用）")
-    cv.add_argument("--session", type=int, required=True)
-    cv.add_argument("--title", default=None, help="缺省沿用会话标题")
-    cv.add_argument("--last", action="store_true",
-                    help="在「上一次已收尾的运行」里找这个会话"
-                         "（finish 之后入库必须加，否则找不到库）")
-
     s = sub.add_parser("perm-intent",
                        help="声明/查看/清除权限响应意图（act/observe 遇到权限弹窗时按此自动响应）")
     s.add_argument("--action", default=None, choices=["grant", "deny"],
@@ -641,40 +576,6 @@ def main() -> None:
     #
     #   现在：不合法就直接退，一个字节都不写。
     # ══════════════════════════════════════════════════════════════
-    if args.cmd == "start":
-        _case = None
-        _case_from_file = None
-        if args.case_id:
-            _db0 = get_db()
-            _case = _db0.get_case(args.case_id)
-            if not _case:
-                # 用例库里没有就找 assets/cases/ 下的文件（与下面正式解析同一套规则）
-                _want = str(args.case_id)
-                for _fp in (CASES_DIR.rglob("*.md") if CASES_DIR.is_dir() else []):
-                    _m2 = re.search(r"[_\-](\d+)$", _fp.stem)
-                    if _m2 and _m2.group(1) == _want:
-                        _case_from_file = _fp
-                        break
-            if not _case and _case_from_file is None:
-                raise SystemExit(
-                    f"用例 #{args.case_id} 不存在：用例库里没有，"
-                    f"assets/cases/ 下也找不到编号 {args.case_id} 的 .md 文件")
-        _title = maybe_file(args.title) if args.title else (
-            (_case["title"] if _case else (
-                _case_from_file.read_text(encoding="utf-8", errors="replace")
-                .splitlines()[0].lstrip("# ").strip() if _case_from_file else None)))
-        _input = maybe_file(args.input) if args.input else (
-            _case["input"] if _case else (
-                _case_from_file.read_text(encoding="utf-8", errors="replace")
-                if _case_from_file else None))
-        if not _title or not _input:
-            raise SystemExit(
-                "需要 --case <id>（复用库中用例）或 --title/--input（新用例，"
-                "中文长文本用 @文件）\n"
-                "  ⚠️ --title 和 --input 是**两个**参数：\n"
-                "     --title  用例标题（如「联想日历_167 ...」）\n"
-                "     --input  用例原文（步骤 + 预期）")
-
     # start 时先建运行目录，再开库（get_db 读 ANDROID_TEST_RECORD 定库位置）
     if args.cmd == "start" and not current_record_dir():
         _rec = new_record_dir()
@@ -722,72 +623,31 @@ def main() -> None:
                         f"\n"
                         f"  （确定不要这条检查时加 --force）")
 
-        case = db.get_case(args.case_id) if args.case_id else None
-        # ⚠️ cases 表为空时退回**找用例文件**（2026-11-02 新增）。
+        # ── 定位这条用例是哪份 md 文件 ──────────────────────────────
         #
-        #    真实踩过：跑 176 时 AI 按直觉写 `start --case 176`，
-        #    报「用例 #176 不存在」—— 因为单库化迁移只带了有记录的老库，
-        #    cases 表本来就没数据。但 `assets/cases/com.zui.calendar_176.md`
-        #    一直在，AI 只好改用 --title + --input 重来一遍，白花一轮。
+        # ★ 用例的**唯一真相是磁盘上的 md 文件**（2026-11-17 用户裁决：
+        #   「case 表整个删掉」）。数据库里不再有用例表，所以这里只做一件事：
+        #   把 `--case` 给的标识解成一份 md，读它的标题行和正文。
         #
-        #    用例的唯一真相是**文件**（和 webui 一致），库里那张表只是"跑过的痕迹"。
-        #    所以：表里找不到就去 assets/cases/<应用>/ 下按编号找，找到就读原文。
-        _case_file = None
-        if args.case_id and not case:
-            _want = str(args.case_id)
-            for _fp in (CASES_DIR.rglob("*.md") if CASES_DIR.is_dir() else []):
-                # 文件名形如 com.zui.calendar_176.md / 联想日历_176.md
-                _m = re.search(r"[_\-](\d+)$", _fp.stem)
-                if _m and _m.group(1) == _want:
-                    _case_file = _fp
-                    break
-            if _case_file is None:
-                raise SystemExit(
-                    f"用例 #{args.case_id} 不存在：\n"
-                    f"  · 用例库里没有（`session.py case list` 查看）\n"
-                    f"  · assets/cases/ 下也找不到编号 {args.case_id} 的 .md 文件\n"
-                    f"请检查编号，或改用 --title/--input 直接描述")
+        # 标识接受两种写法：
+        #   · 纯编号      `--case 176`
+        #   · 模块_编号   `--case 图库导入入口_168`
+        # 编号在本应用内**已有重号**（启动应用_03 vs 重要日倒数_03），
+        # 所以重号时必须用后者；一个编号只命中一条时写编号就行。
+        _case_file = find_case_file_by_ref(args.case_id, args.package)
         if _case_file is not None:
             # 文件头是 `# com.zui.calendar_176` 这种标题行，正文才是用例
             _raw = _case_file.read_text(encoding="utf-8", errors="replace")
             title = _raw.splitlines()[0].lstrip("# ").strip() if _raw else None
             user_input = _raw
         else:
-            title = maybe_file(args.title) if args.title else (case["title"] if case else None)
-            user_input = maybe_file(args.input) if args.input else (case["input"] if case else None)
+            title = maybe_file(args.title) if args.title else None
+            user_input = maybe_file(args.input) if args.input else None
         if not title or not user_input:
-            raise SystemExit("需要 --case <id>（复用用例库或 assets/cases 下的用例文件）"
+            raise SystemExit("需要 --case <编号>"
+                             "（编号在本应用内重复时写 模块_编号）"
                              "或 --title/--input（新用例，中文长文本用 @文件）")
-        # ⚠️ 用例库里已有同一条用例时**当场提示用 --case 复用**：
-        # 早先只在 finish 时提示"尚未进入用例库"，那时会话已结束、提示等于没用
-        # （真实事故：168/169/170 三条都建成了游离会话，用例库统计全不对）。
-        # 匹配用**用例编号**（标题里的「_168」这种），不用全等 ——
-        # 标题后缀常有人手写差异（如「图库导入入口」vs「图库导入课程表」），全等匹配不到。
-        existing_case = None
-        if not args.case_id and title:
-            import re as _re
-            m = _re.search(r"[_\-](\d{2,4})(?!\d)", title)
-            num = m.group(1) if m else None
-            for c in db.list_cases(include_mock=False):
-                ct = (c.get("title") or "").strip()
-                if ct == title.strip():
-                    existing_case = c
-                    break
-                if num and _re.search(rf"[_\-]{num}(?!\d)", ct):
-                    existing_case = c
-                    break
-        # ⚠️ 只有**库里真有这条用例**时才把 case_id 写进 sessions（2026-11-02 修）。
-        #
-        #    真实事故：`start --case 176` 走的是「从 assets/cases/ 读文件」这条路，
-        #    此时 cases 表里并没有 id=176 的行，但原来的写法照样把 case_id=176
-        #    写进了 sessions。于是 finish 时 db.finish_session 去 UPDATE cases
-        #    找不到那一行 → 抛「Associated case is missing」→ 整条会话收尾失败。
-        #    （跑 176 的子 Agent 撞上了，只能手动 `case add` 补建再改 id 才收尾。）
-        #
-        #    正确做法：case_id 只在 db.get_case() 命中时才带。
-        #    从文件读出来的用例，跑完照常靠 `case save --session N` 入库。
-        _real_case_id = args.case_id if case else None
-        sid = db.start_session(title, user_input, args.device, case_id=_real_case_id,
+        sid = db.start_session(title, user_input, args.device,
                                kind="diag" if args.diag else "test")
         set_current(sid)
         if args.package:
@@ -857,7 +717,7 @@ def main() -> None:
         # （如「首次使用」「清除日历的数据」「测首次授权」）——见 SKILL「清理的范围跟着用例走」。
         # 拿 pm clear 当默认复位＝拿大锤砸一切：会清掉本用例要用的前置数据。
         restart_note = None
-        pkg = args.package or (case["package"] if case else None)
+        pkg = args.package
         if d is not None and pkg and not args.no_restart:
             try:
                 d.app_stop(pkg)
@@ -883,7 +743,7 @@ def main() -> None:
         #   而是在开场把探测结果直接给它。
         out["env"] = detect_shell()
         # 知识卡浮现：有卡就提示路径 + 小节索引（只提示一次，见 common.knowledge_hint）
-        hint = knowledge_hint(args.package or (case["package"] if case else None))
+        hint = knowledge_hint(args.package)
         if hint:
             out["knowledge_hint"] = hint
             # 只要发出了 hint 就落标记（无卡包也有 system_card 提示，同样别重复发）
@@ -892,28 +752,11 @@ def main() -> None:
         # 每次跑同一条用例，AI 都要重新摸「更多按钮在哪、菜单里哪个是课程表」——
         # 这些是机械跳转，finish 时已经导出到 steps.yaml，开场给它看。
         try:
-            steps = steps_hint(args.package or (case["package"] if case else None),
-                               _title, _input)
+            steps = steps_hint(args.package, title, user_input)
             if steps:
                 out["last_steps"] = steps
         except Exception as e:  # noqa: BLE001
             out.setdefault("warnings", []).append(f"步骤提示读取失败：{e}")
-        # 用例库关联提醒：**当场提示**才有用（finish 时才提示＝会话已结束，等于没用）
-        if existing_case:
-            out["case_exists"] = {
-                "case_id": existing_case["id"],
-                "title": existing_case["title"],
-                "run_count": existing_case.get("run_count"),
-                "last_status": existing_case.get("last_status"),
-            }
-            out["case_hint"] = (
-                f"⚠️ 用例库已有同名用例 #{existing_case['id']}（跑过 "
-                f"{existing_case.get('run_count') or 0} 次，上次 {existing_case.get('last_status')}）。"
-                f"**本次未关联它** —— 跑的是同一条就该用 `start --case {existing_case['id']}` 复用；"
-                f"已经开跑了可结束前用 `case save --session {sid}` 关联。")
-        elif not args.case_id:
-            out["case_hint"] = (f"新用例（未关联用例库）。跑完后 `case save --session {sid}` 入库 —— "
-                                f"**PASS / FAIL / BLOCKED 都该入库**（失败与阻断也是测试结果）。")
         print(json.dumps(out, ensure_ascii=False))
     elif args.cmd == "finding":
         sid = args.id if getattr(args, "id", None) else current_session()
@@ -1015,14 +858,6 @@ def main() -> None:
             if eff["cp_miss"]:
                 self_check.append(
                     f"⚠️ 有 {eff['cp_miss']} 次检查点未命中 —— 确认是否为无效试探步")
-        # bug1 修复：会话没有关联用例时主动提示入库。
-        # 用例不会自动进库（什么时候沉淀是人的决定），但**必须提醒**，
-        # 否则跑完的用例悄悄丢掉、仪表盘/用例库永远是旧的。
-        case_hint = None
-        row = db.get_session(sid) or {}
-        if not row.get("case_id") and (row.get("user_input") or "").strip():
-            case_hint = (f"本会话尚未进入用例库。沉淀为正式用例："
-                         f"python session.py case save --session {sid}")
         # 采集路径边（不再导出步骤序列）。
         # 为什么换掉：步骤序列是最易腐的知识（换个状态/版本就废），
         # 导出「可复用的跳转步骤」（只含锚点明确+落点可验+非前置的 tap）。
@@ -1043,7 +878,6 @@ def main() -> None:
 
         out = {"ok": ok, "session_id": sid, "crash_events": crash_n,
                "findings": stats, "self_check": self_check,
-               "case_hint": case_hint,
                "hint": (f"本会话有 {crash_n} 个崩溃事件——若涉及被测/关联包，"
                         "结论应为 BLOCKED 且报告需附 crash.log 证据路径；"
                         "无关包崩溃仅需在报告中说明")
@@ -1060,8 +894,6 @@ def main() -> None:
         #   不清的后果：下一次不属于任何会话的 observe/act
         #   会误接到上一次的目录里，把这次的证据写进历史运行。
         unpin_record()
-    elif args.cmd == "case":
-        run_case_cmd(db, args)
     elif args.cmd == "abandon":
         sid = args.id if getattr(args, "id", None) else current_session()
         if not sid:

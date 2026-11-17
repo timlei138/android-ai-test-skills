@@ -107,19 +107,6 @@ CREATE TABLE IF NOT EXISTS sessions(
   started_at TEXT,
   finished_at TEXT
 );
-CREATE TABLE IF NOT EXISTS cases(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  title TEXT NOT NULL,
-  input TEXT NOT NULL,
-  package TEXT,
-  kind TEXT DEFAULT 'test',
-  last_session_id INTEGER,
-  last_run_at TEXT,
-  last_status TEXT,
-  run_count INTEGER DEFAULT 0,
-  created_at TEXT,
-  updated_at TEXT
-);
 CREATE TABLE IF NOT EXISTS events(
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   session_id INTEGER NOT NULL REFERENCES sessions(id),
@@ -190,7 +177,6 @@ class SessionDB:
                          "ALTER TABLE sessions ADD COLUMN related TEXT",
                          "ALTER TABLE sessions ADD COLUMN case_id INTEGER",
                          "ALTER TABLE sessions ADD COLUMN kind TEXT DEFAULT 'test'",
-                         "ALTER TABLE cases ADD COLUMN kind TEXT DEFAULT 'test'",
                          "ALTER TABLE sessions ADD COLUMN terminated INTEGER DEFAULT 0",
                          "ALTER TABLE sessions ADD COLUMN terminate_reason TEXT",
                          "ALTER TABLE sessions ADD COLUMN perm_intent_action TEXT",
@@ -379,23 +365,6 @@ class SessionDB:
                 "UPDATE sessions SET status=?, summary=?, finished_at=?,"
                 " package=COALESCE(?, package) WHERE id=?",
                 (status, summary, self._now(), package, session_id))
-            if row["case_id"]:
-                updated = conn.execute(
-                    "UPDATE cases SET package=COALESCE(package, ?), last_session_id=?,"
-                    " last_run_at=?, last_status=?, run_count=COALESCE(run_count,0)+1 WHERE id=?",
-                    (package or row["package"], session_id, self._now(), status, row["case_id"]))
-                # ⚠️ 关联的用例不存在时**不能让整条会话收尾失败**（2026-11-02 修）。
-                #
-                #    真实事故：`start --case 176` 从 assets/cases/ 读文件开会话，
-                #    cases 表里没有 id=176 的行，finish 时这里抛
-                #    「Associated case is missing」→ 会话卡在 running 收不了尾，
-                #    AI 只能手动 case add 补建再改 id 才绕过。
-                #
-                #    会话结论是主要产物，用例库统计是附属的 —— 附属失败不该毁掉主产物。
-                #    这里只把 case_id 解绑（置空），会话照常收尾。
-                if updated.rowcount != 1:
-                    conn.execute("UPDATE sessions SET case_id=NULL WHERE id=?",
-                                 (session_id,))
             conn.commit()
             return True
         except (sqlite3.Error, ValueError, OSError):
@@ -623,154 +592,6 @@ class SessionDB:
             out["ratio"] = round(out["observe"] / out["act"], 2)
         return out
 
-    # ── 用例库（正式用例资产：口述文本的沉淀与复用）─────────────────
-    def add_case(self, title: str, user_input: str, package: str | None = None,
-                 kind: str = "test") -> int:
-        if kind not in SESSION_KINDS:
-            kind = "test"
-        now = self._now()
-        cur = self._conn().execute(
-            "INSERT INTO cases (title, input, package, kind, created_at, updated_at)"
-            " VALUES (?,?,?,?,?,?)", (title, user_input, package, kind, now, now))
-        self._conn().commit()
-        return cur.lastrowid
-
-    def set_case_kind(self, case_id: int, kind: str) -> bool:
-        """切换用例类型（test 正式 / mock 占位，不入库；diag 预留）。"""
-        if kind not in SESSION_KINDS:
-            return False
-        try:
-            self._conn().execute(
-                "UPDATE cases SET kind=?, updated_at=? WHERE id=?",
-                (kind, self._now(), case_id))
-            self._conn().commit()
-            return True
-        except sqlite3.Error:
-            return False
-
-    def update_case(self, case_id: int, title: str | None = None,
-                    user_input: str | None = None, package: str | None = None) -> bool:
-        try:
-            self._conn().execute(
-                "UPDATE cases SET"
-                " title=COALESCE(?, title), input=COALESCE(?, input),"
-                " package=COALESCE(?, package), updated_at=? WHERE id=?",
-                (title, user_input, package, self._now(), case_id))
-            self._conn().commit()
-            return True
-        except sqlite3.Error:
-            return False
-
-    def get_case(self, case_id: int) -> dict | None:
-        row = self._conn().execute(
-            "SELECT * FROM cases WHERE id=?", (case_id,)).fetchone()
-        return dict(row) if row else None
-
-    def list_cases(self, limit: int = 100, include_mock: bool = False) -> list[dict]:
-        """用例列表。默认排除 mock（占位/构造数据，不该出现在用例库）。"""
-        sql = ("SELECT c.*,"
-               " (SELECT COUNT(*) FROM sessions s WHERE s.case_id=c.id) AS session_count"
-               " FROM cases c")
-        if not include_mock:
-            sql += " WHERE COALESCE(c.kind,'test') != 'mock'"
-        sql += " ORDER BY c.id DESC LIMIT ?"
-        rows = self._conn().execute(sql, (limit,)).fetchall()
-        return [dict(r) for r in rows]
-
-    def module_stats(self) -> list[dict]:
-        """按模块（包名）聚合用例数与结论分布（仪表盘/用例库分组）。
-
-        package 为空时**不再一律归成「未识别」**：优先从该用例最近一次
-        关联会话的 package 兜底，仍为空才记「未识别」。否则历史用例
-        （建卡时没写包名）会全挤进一个桶，模块分类失去意义（真实 bug）。
-        """
-        rows = self._conn().execute(
-            "SELECT COALESCE(NULLIF(c.package,''),"
-            "                NULLIF((SELECT s.package FROM sessions s"
-            "                        WHERE s.id=c.last_session_id),''),"
-            "                '未识别') AS package,"
-            " COUNT(*) AS total,"
-            " SUM(CASE WHEN c.last_status='PASS' THEN 1 ELSE 0 END) AS pass,"
-            " SUM(CASE WHEN c.last_status='FAIL' THEN 1 ELSE 0 END) AS fail,"
-            " SUM(CASE WHEN c.last_status='BLOCKED' THEN 1 ELSE 0 END) AS blocked,"
-            " SUM(CASE WHEN c.last_status='ERROR' THEN 1 ELSE 0 END) AS error,"
-            " SUM(CASE WHEN c.last_status IS NULL THEN 1 ELSE 0 END) AS never_run"
-            " FROM cases c"
-            " WHERE COALESCE(c.kind,'test') != 'mock'"
-            " GROUP BY 1 ORDER BY total DESC").fetchall()
-        return [dict(r) for r in rows]
-
-    def delete_case(self, case_id: int) -> bool:
-        """删除用例（**不牵连**历史会话：sessions.case_id 置空而非级联删）。
-
-        ⚠️ WebUI 的「删除用例」走的是 `delete_case_cascade`（连记录一起删），
-        不是本方法。本方法保留给"只想去掉用例、留住记录"的场景（如 CLI 整理用例库）。
-        """
-        try:
-            cur = self._conn().execute("DELETE FROM cases WHERE id=?", (case_id,))
-            self._conn().execute(
-                "UPDATE sessions SET case_id=NULL WHERE case_id=?", (case_id,))
-            self._conn().commit()
-            return cur.rowcount > 0
-        except sqlite3.Error:
-            return False
-
-    def delete_case_cascade(self, case_id: int) -> dict:
-        """删除用例，**并连带删除其全部历史测试记录**（数据库 + 磁盘证据）。
-
-        与 delete_case（只解关联、保留会话）的区别：
-          本方法用于 WebUI「删除用例」——语义是"这条用例连同它的记录一起不要了"。
-
-        连带删除的内容：
-          ① 该用例关联的每个会话 → 复用 delete_session（含 events/findings/
-             finding_events 及磁盘截图、dump、日志）；
-          ② 用例自身的 YAML / 渲染 MD（assets/cases/<应用>/<标题>.yaml|.md）。
-
-        ⚠️ 不可恢复。调用方负责二次确认。
-        """
-        out = {"ok": False, "case": False, "sessions": 0,
-               "files": 0, "dirs": 0, "spec_files": 0}
-        try:
-            row = self._conn().execute(
-                "SELECT id, title FROM cases WHERE id=?", (case_id,)).fetchone()
-            if row is None:
-                return out
-            title = row["title"]
-
-            # ① 逐会话级联删（删一个提交一次，中途失败不会留下半删状态）
-            sids = [r["id"] for r in self._conn().execute(
-                "SELECT id FROM sessions WHERE case_id=?", (case_id,))]
-            for sid in sids:
-                r = self.delete_session(sid, remove_evidence=True)
-                out["files"] += r.get("files", 0)
-                out["dirs"] += r.get("dirs", 0)
-            out["sessions"] = len(sids)
-
-            # ② 用例的程序化描述文件
-            if title:
-                # 用例按应用分目录放在 assets/cases/<包名>/ 下，要**递归**找同名文件。
-                from runtime import CASES_DIR as _CASES
-                found: list[Path] = []
-                if _CASES.is_dir():
-                    for suf in (".yaml", ".md"):
-                        found.extend(_CASES.rglob(f"{title}{suf}"))
-                for fp in found:
-                    try:
-                        if fp.is_file():
-                            fp.unlink()
-                            out["spec_files"] += 1
-                    except OSError:
-                        pass
-
-            # ③ 最后删用例本身。此时已无会话引用它，无需再解关联。
-            cur = self._conn().execute("DELETE FROM cases WHERE id=?", (case_id,))
-            self._conn().commit()
-            out["case"] = cur.rowcount > 0
-            out["ok"] = out["case"]
-            return out
-        except sqlite3.Error:
-            return out
-
     def delete_session(self, session_id: int, remove_evidence: bool = True) -> dict:
         """删除一次测试记录：数据库行 + **连带磁盘证据**（截图/日志）。
 
@@ -903,32 +724,6 @@ class SessionDB:
             return [dict(r) for r in rows]
         except sqlite3.Error:
             return []
-
-    def case_overview(self) -> dict:
-        """仪表盘汇总：用例总数 + 最近结论分布。"""
-        try:
-            row = self._conn().execute(
-                "SELECT COUNT(*) AS total,"
-                " SUM(CASE WHEN last_status='PASS' THEN 1 ELSE 0 END) AS pass,"
-                " SUM(CASE WHEN last_status='FAIL' THEN 1 ELSE 0 END) AS fail,"
-                " SUM(CASE WHEN last_status='BLOCKED' THEN 1 ELSE 0 END) AS blocked,"
-                " SUM(CASE WHEN last_status='ERROR' THEN 1 ELSE 0 END) AS error,"
-                " SUM(CASE WHEN last_status IS NULL THEN 1 ELSE 0 END) AS never_run"
-                " FROM cases WHERE COALESCE(kind,'test') != 'mock'").fetchone()
-            return dict(row) if row else {}
-        except sqlite3.Error:
-            return {}
-
-    def touch_case(self, case_id: int, session_id: int, status: str) -> None:
-        """会话 finish 时回写用例的运行统计。"""
-        try:
-            self._conn().execute(
-                "UPDATE cases SET last_session_id=?, last_run_at=?, last_status=?,"
-                " run_count=COALESCE(run_count,0)+1 WHERE id=?",
-                (session_id, self._now(), status, case_id))
-            self._conn().commit()
-        except sqlite3.Error:
-            pass
 
     # ── 读（Web UI 用）───────────────────────────────────────────
     def list_sessions(self, limit: int = 100, kind: str | None = "test",

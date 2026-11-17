@@ -576,6 +576,55 @@ def _loose(s: str) -> str:
     return re.sub(r"[\s\-_/（）()【】\[\]0-9A-Za-z.]+", "", s)
 
 
+def find_case_file_by_ref(ref: str | None, package: str | None = None) -> "Path | None":
+    """把 `--case` 给的标识解析成用例 md 文件。
+
+    用例的**唯一真相是磁盘上的 md 文件**（2026-11-17 起数据库里没有用例表）。
+    标识接受两种写法：
+
+      · 纯编号        `176`
+      · 模块_编号     `图库导入入口_168`
+
+    编号在本应用内**已经有重号**（`启动应用_03` 与 `重要日倒数_03` 并存，
+    文件名沿用 Excel 编号不能改），所以重号时必须用第二种写法。
+
+    `package` 给了就只在 `assets/cases/<package>/` 下找，没给就全库找。
+
+    找不到 / 有歧义都直接 `SystemExit` —— 这是 AI 传错参数，必须当场告诉它
+    候选是什么，让它换个写法重来，**不能默默挑一个**（挑错了会拿别的用例
+    的原文去跑，产出整条错误结论）。
+    """
+    if not ref:
+        return None
+    ref = str(ref).strip()
+    if not ref:
+        return None
+
+    root = CASES_DIR / package if package else CASES_DIR
+    files = sorted(root.rglob("*.md")) if root.is_dir() else []
+    if not files:
+        raise SystemExit(f"找不到用例目录：{root}")
+
+    # ① 模块_编号：文件名去掉包名前缀后全等
+    hits = []
+    for p in files:
+        stem = p.stem
+        if stem == ref or stem.endswith("_" + ref):
+            hits.append(p)
+    if not hits:
+        raise SystemExit(
+            f"找不到用例「{ref}」。\n"
+            f"  · 传编号（如 176）或 模块_编号（如图库导入入口_168）\n"
+            f"  · 文件名形如 <包名>_<模块>_<编号>.md\n"
+            f"  · 该目录下共 {len(files)} 条用例")
+
+    if len(hits) > 1:
+        names = "\n".join(f"    --case {p.stem}" for p in hits)
+        raise SystemExit(
+            f"用例「{ref}」有 {len(hits)} 条重号，请带上模块名区分：\n{names}")
+    return hits[0]
+
+
 def resolve_case_stem(package: str | None, title: str | None,
                       user_input: str | None = None) -> str | None:
     """把会话的「标题 + 用例原文」解析成**用例 md 的文件名**（不含 `.md`）。

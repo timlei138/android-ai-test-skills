@@ -553,12 +553,10 @@ def _module_stats() -> list[dict]:
 
 
 def _case_overview() -> dict:
-    """仪表盘顶部的用例总数 + 结论分布 —— 也从文件算。
+    """仪表盘顶部的用例总数 + 结论分布 —— 从文件算。
 
-    用户反馈：「仪表盘用例显示 0」。
-
-    原因和用例库一样：`/api/dashboard` 用的是 `db.case_overview()`，
-    它 `COUNT(*) FROM cases` —— 表空就是 0，而 assets/cases 下有 15 个文件。
+    用例的唯一真相是 `assets/cases` 下的 md 文件，数据库里没有用例表，
+    所以总数和每条用例的最近结论都得现扫一遍文件、再去会话里查。
     """
     items = _scan_case_files()
     ov = {
@@ -920,10 +918,6 @@ class Handler(BaseHTTPRequestHandler):
             for item in _scan_case_files():
                 if str(item["id"]) == key or item["title"] == key:
                     return self._json(_case_detail(item))
-            if key.isdigit():
-                c = get_db().get_case(int(key))
-                if c:
-                    return self._json(c)
             return self._json({"error": "not found"}, 404)
 
         # session id 现在是 `<uuid>:<local_id>`（也接受旧的纯数字）
@@ -1034,16 +1028,6 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/vision/test":
             return self._json(_test_vision())
 
-        m = re.match(r"^/api/cases/(\d+)/kind$", path)
-        if m:
-            length = int(self.headers.get("Content-Length") or 0)
-            try:
-                data = json.loads(self.rfile.read(length).decode("utf-8"))
-            except ValueError:
-                return self._json({"error": "bad body"}, 400)
-            ok = get_db().set_case_kind(int(m.group(1)), str(data.get("kind") or ""))
-            return self._json({"ok": ok}, 200 if ok else 400)
-
         # session id 可能是 `<run_id>:<local_id>` 复合串（含冒号），
         # 路由要按 `([^/]+)` 匹配，`(\d+)` 会 404。
         m = re.match(r"^/api/sessions/([^/]+)/kind$", path)
@@ -1059,26 +1043,69 @@ class Handler(BaseHTTPRequestHandler):
             return self._json({"ok": ok}, 200 if ok else 400)
 
         if path == "/api/cases":
+            # 新建用例 = 建一个 `assets/cases/<包名>/<包名>_<模块>_<编号>.md`。
+            #
+            # 文件名格式是**硬约定**（用例的标识就是文件名，`start --case`
+            # 按它定位），所以不让用户直接输入文件名，而是收三段再拼：
+            # 手拼一定能拼歪（中英文下划线、编号补零、模块名带空格）。
             length = int(self.headers.get("Content-Length") or 0)
             try:
                 data = json.loads(self.rfile.read(length).decode("utf-8"))
             except ValueError:
                 return self._json({"error": "bad body"}, 400)
-            title = str(data.get("title") or "").strip()
-            inp = str(data.get("input") or "").strip()
-            if not (title and inp):
+            package = str(data.get("package") or "").strip()
+            module = str(data.get("module") or "").strip()
+            num = str(data.get("num") or "").strip()
+            content = str(data.get("content") or "").strip()
+            if not (package and module and num):
                 return self._json({"ok": False,
-                                   "error": "标题与用例原文均必填"}, 400)
-            cid = get_db().add_case(title, inp,
-                                    str(data.get("package") or "").strip() or None)
-            return self._json({"ok": True, "case_id": cid})
+                                   "error": "包名 / 模块 / 编号 三项均必填"}, 400)
+            if not re.fullmatch(r"\d{2,4}", num):
+                return self._json({"ok": False,
+                                   "error": "编号必须是 2-4 位数字（如 176）"}, 400)
+            if not re.fullmatch(r"[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z0-9_]+)+", package):
+                return self._json({"ok": False,
+                                   "error": f"包名格式不对：{package}（应形如 com.zui.calendar）"}, 400)
+            if re.search(r'[\\/:*?"<>|\s]', module):
+                return self._json({"ok": False,
+                                   "error": f"模块名不能含空白或 \\ / : * ? \" < > |：{module}"}, 400)
+            stem = f"{package}_{module}_{num}"
+            if not SPEC_NAME_RE.match(stem):
+                return self._json({"ok": False,
+                                   "error": f"生成的用例名不合法：{stem}"}, 400)
+            d = CASES_DIR / package
+            try:
+                d.mkdir(parents=True, exist_ok=True)
+            except OSError as e:
+                return self._json({"ok": False, "error": f"建目录失败：{e}"}, 500)
+            fp = d / f"{stem}.md"
+            if fp.exists():
+                return self._json({
+                    "ok": False,
+                    "error": f"已存在同名用例：{stem}.md（编号 {num} 已被占用，"
+                             f"要么换编号，要么直接编辑那一条）"}, 409)
+            # 同编号但不同模块 = 重号：文件名其实不撞，但 `start --case <编号>`
+            # 会歧义。这里只提醒不拦 —— 现有 64 条里已经有 4 组重号（沿用
+            # Excel 编号），拦了就自相矛盾。AI 用模块_编号 消歧即可。
+            dup = [p.stem for p in d.glob(f"*_{num}.md")]
+            body = content or f"# {stem}\n\n## 步骤\n\n1. \n\n## 预期\n\n1. \n"
+            try:
+                fp.write_text(_normalize_crlf(body), encoding="utf-8", newline="")
+            except OSError as e:
+                return self._json({"ok": False, "error": f"写入失败：{e}"}, 500)
+            out = {"ok": True, "stem": stem,
+                   "path": str(fp.relative_to(ROOT)).replace("\\", "/")}
+            if dup:
+                out["warn"] = (f"编号 {num} 在本应用内已有其它用例："
+                               f"{'、'.join(dup)}。跑的时候要写 "
+                               f"`--case {module}_{num}` 消歧。")
+            return self._json(out)
 
         # ── 用例原文可编辑 ────────────────────────────────────
         #
-        # 写的是 `assets/cases/<应用>/<stem>.md` —— 用例的**唯一真相是文件**，
-        # 数据库只是"跑过的痕迹"。所以这里不写 sessions.user_input（那是历史
-        # 快照，改了等于篡改记录），只写文件；若 `cases` 表里恰有同名记录，
-        # 顺手同步它的 input，避免「文件改了、库还是旧的」两处不一致。
+        # 写的是 `assets/cases/<应用>/<stem>.md` —— 用例的**唯一真相是文件**。
+        # 所以这里不写 sessions.user_input（那是历史快照，改了等于篡改记录），
+        # 只写文件。
         #
         # ⚠️ 程序化描述（`_steps.yaml`）仍**只读**：它由"已验证成功的会话"沉淀，
         #    手工改动会破坏它与证据/知识卡的对应关系。改原文后重跑再沉淀即可。
@@ -1111,18 +1138,6 @@ class Handler(BaseHTTPRequestHandler):
                               newline="")
             except OSError as e:
                 return self._json({"error": f"写入失败：{e}"}, 500)
-            # 同名库记录同步（有才同步，没有就只动文件）
-            synced = False
-            db = _open_db()
-            if db is not None:
-                try:
-                    for c in db.list_cases(limit=100000, include_mock=True):
-                        if str(c.get("title") or "") == stem:
-                            synced = bool(db.update_case(int(c["id"]),
-                                                         user_input=content))
-                            break
-                except Exception:  # noqa: BLE001
-                    synced = False
             st = fp.stat()
             return self._json({
                 "ok": True,
@@ -1130,20 +1145,7 @@ class Handler(BaseHTTPRequestHandler):
                 "bytes": st.st_size,
                 "mtime": datetime.fromtimestamp(st.st_mtime)
                 .isoformat(timespec="seconds"),
-                "db_synced": synced,
             })
-
-        m = re.match(r"^/api/cases/(\d+)$", path)
-        if m:
-            # 数据库自增 id 的旧链接：用例**原文**请用
-            # POST /api/cases/<stem>/content（按文件名定位文件）。
-            # 这里保留拒绝是有意的 —— 数字 id 在文件库里没有对应文件，
-            # 猜一个改掉就是改错用例。
-            return self._json({
-                "error": "请按文件名编辑（POST /api/cases/<用例文件名>/content），"
-                         "不要用数据库自增 id。",
-                "readonly": True,
-            }, 403)
 
         m = re.match(r"^/api/case-specs/(.+)$", path)
         if m:
@@ -1180,11 +1182,30 @@ class Handler(BaseHTTPRequestHandler):
     def do_DELETE(self):  # noqa: N802
         qs = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
         path = urllib.parse.urlparse(self.path).path
-        m = re.match(r"^/api/cases/(\d+)$", path)
+        m = re.match(r"^/api/cases/([^/]+)$", path)
         if m:
-            # 级联删除：用例 + 全部历史测试记录（数据库与磁盘证据）+ 程序化描述文件。
-            # 不可恢复，前端已做二次确认。
-            return self._json(get_db().delete_case_cascade(int(m.group(1))))
+            # 删用例 = 只删**文件**（md + 自动导出的 _steps.yaml）。
+            #
+            # ★ 历史测试记录一律不动（2026-11-17 用户裁决）。
+            #   历史是「当时确实这么跑过」的事实，删用例不该抹掉事实；
+            #   反过来，历史里的会话仍指向一个已不存在的 stem —— 这是可接受的，
+            #   WebUI 用例库按 stem 关联会话，关联不上就不显示跑过次数而已。
+            stem = urllib.parse.unquote(m.group(1))
+            if not SPEC_NAME_RE.match(stem):
+                return self._json({"error": "bad name"}, 400)
+            removed = []
+            for ext in (".md", "_steps.yaml"):
+                fp = _find_spec(stem, ext)
+                if fp is not None:
+                    try:
+                        fp.unlink()
+                        removed.append(fp.name)
+                    except OSError as e:
+                        return self._json({"error": f"删除失败：{e}"}, 500)
+            if not removed:
+                return self._json({"ok": False, "error": "用例文件不存在"}, 404)
+            return self._json({"ok": True, "removed": removed,
+                               "note": "只删了用例文件，历史测试记录未动"})
         m = re.match(r"^/api/sessions/([^/]+)$", path)
         if m:
             # 默认连带删除磁盘证据；?evidence=0 只删库记录

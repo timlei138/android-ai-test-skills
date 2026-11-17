@@ -1111,7 +1111,7 @@ async function viewCaseLib() {
           <span class="c-act">
             <button class="ghost sm" data-del="${c.id}">删除</button>
           </span>
-        </div>`).join("") || "<div class='lt-empty'>该分类下暂无用例。跑完一次会话后用 <code>session.py case save --session &lt;id&gt;</code> 提升。</div>"}
+        </div>`).join("") || "<div class='lt-empty'>该分类下暂无用例。</div>"}
     </div>`;
 
   $$(".tab", main).forEach(el =>
@@ -1124,33 +1124,56 @@ async function viewCaseLib() {
 }
 
 function openCaseAdd() {
-  const m = modal("添加用例", `
-    <label class="fld">标题
-      <input id="ca-title" placeholder="如 联想日历_168_图库导入入口"></label>
-    <label class="fld">模块（包名）
+  // 文件名是用例的标识（`start --case` 按它定位），所以不让用户直接手输文件名，
+  // 而是收三段再拼 —— 手拼一定能拼歪（中英文下划线、编号补零、模块名带空格）。
+  const m = modal("新建用例", `
+    <label class="fld">包名
       <input id="ca-pkg" placeholder="如 com.zui.calendar"></label>
-    <label class="fld">用例原文（口述的步骤 + 预期）
+    <label class="fld">模块
+      <input id="ca-mod" placeholder="如 图库导入入口"></label>
+    <label class="fld">编号（沿用 Excel 里的编号）
+      <input id="ca-num" placeholder="如 168" inputmode="numeric"></label>
+    <div class="meta" id="ca-name" style="margin:6px 0 10px"></div>
+    <label class="fld">用例原文（可留空，留空先建骨架）
       <textarea id="ca-input" spellcheck="false"
         placeholder="前提：...&#10;操作步骤：&#10;1. ...&#10;预期结果：&#10;1. ..."></textarea></label>
     <div class="meta" id="ca-state"></div>`,
     `<button class="ghost" data-cancel>取消</button>
      <button data-ok>添加</button>`);
+
+  // 三段实时拼出文件名给用户看，避免"点了添加才发现拼错"
+  const preview = () => {
+    const pkg = $("#ca-pkg", m.el).value.trim();
+    const mod = $("#ca-mod", m.el).value.trim();
+    const num = $("#ca-num", m.el).value.trim();
+    const name = (pkg && mod && num) ? `${pkg}_${mod}_${num}` : "";
+    $("#ca-name", m.el).innerHTML = name
+      ? `将创建：<b>${esc(name)}.md</b>`
+      : "包名 / 模块 / 编号 三项填全后显示文件名";
+  };
+  ["#ca-pkg", "#ca-mod", "#ca-num"].forEach(sel => {
+    $(sel, m.el).addEventListener("input", preview);
+  });
+  preview();
+
   $("[data-cancel]", m.el).addEventListener("click", m.close);
   $("[data-ok]", m.el).addEventListener("click", async () => {
     const st = $("#ca-state", m.el);
     st.textContent = "保存中…";
     try {
-      await api("/api/cases", {
+      const r = await api("/api/cases", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: $("#ca-title", m.el).value,
           package: $("#ca-pkg", m.el).value,
-          input: $("#ca-input", m.el).value,
+          module: $("#ca-mod", m.el).value,
+          num: $("#ca-num", m.el).value,
+          content: $("#ca-input", m.el).value,
         }),
       });
       m.close();
       viewCaseLib();
+      toast(`已创建 ${r.stem}.md` + (r.warn ? `\n${r.warn}` : ""));
     } catch (e) {
       st.textContent = "保存失败：" + e.message;
     }
@@ -1238,8 +1261,7 @@ async function openCaseView(id) {
             body: JSON.stringify({ content }),
           });
           const kb = (r.bytes / 1024).toFixed(1);
-          toast(`已保存 · ${r.path} · ${kb} KB` +
-                (r.db_synced ? " · 库记录已同步" : ""));
+          toast(`已保存 · ${r.path} · ${kb} KB`);
           m.close();
           openCaseView(c.id);   // 重新拉一次，显示写回后的真实内容
         } catch (e) {
@@ -1279,11 +1301,10 @@ async function openCaseView(id) {
 
 function confirmDeleteCase(id) {
   const m = modal("删除用例", `
-    <div class="warn-text">确定删除用例 <b>#${esc(id)}</b> 吗？</div>
-    <div class="meta">将<b>一并删除</b>：<br>
-      · 该用例的<b>全部历史测试记录</b>（含截图、dump、日志）<br>
-      · 该用例的程序化描述文件（.yaml / .md）<br>
-      <b class="danger-text">不可恢复。</b></div>`,
+    <div class="warn-text">确定删除用例 <b>${esc(id)}</b> 吗？</div>
+    <div class="meta">将删除该用例的<b>文件</b>（.md 与自动导出的 _steps.yaml）。<br>
+      <b>历史测试记录一律保留</b> —— 已经跑过的记录、截图、dump 都还在「测试记录」里。<br>
+      <b class="danger-text">文件删除后不可恢复。</b></div>`,
     `<button class="ghost" data-cancel>取消</button>
      <button class="danger" data-ok>确认删除</button>`);
   $("[data-cancel]", m.el).addEventListener("click", m.close);
@@ -1292,12 +1313,11 @@ function confirmDeleteCase(id) {
     btn.disabled = true;
     btn.textContent = "删除中…";
     try {
-      const r = await api(`/api/cases/${id}`, { method: "DELETE" });
+      const r = await api(`/api/cases/${encodeURIComponent(id)}`, { method: "DELETE" });
       m.close();
       viewCaseLib();
-      toast(`已删除用例 #${id}` +
-            (r && r.sessions ? `，连带 ${r.sessions} 条测试记录` : "") +
-            (r && r.spec_files ? `、${r.spec_files} 个描述文件` : ""));
+      toast(`已删除 ${(r && r.removed ? r.removed.join("、") : id)}`
+            + "（历史测试记录未动）");
     } catch (e) {
       btn.disabled = false;
       btn.textContent = "确认删除";
